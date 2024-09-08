@@ -12,9 +12,33 @@
 #ifndef EBGeometry_GPU
 #define EBGeometry_GPU
 
-#if defined EBGEOMETRY_CUDA
-#include "cuda.h"
-#elif defined EBGEOMETRY_HIP
+// Can only define one GPU backend
+#if defined(EBGEOMETRY_CUDA) && defined(EBGEOMETRY_HIP)
+#error "Can not define both EBGEOMETRY_CUDA and EBGEOMETRY_HIP" 
 #endif
+
+// Include GPU library headers
+#if defined(EBGEOMETRY_CUDA)
+#include "cuda.h"
+#elif defined(EBGEOMETRY_HIP)
+#endif
+
+// CUDA definitions
+#if defined(EBGEOMETRY_CUDA)
+
+#define EBGEOMETRY_GPU_HOST __host__
+#define EBGEOMETRY_GPU_DEVICE __device__
+#define EBGEOMETRY_GPU_GLOBAL __global__
+#define EBGEOMETRY_GPU_HOST_DEVICE __host__ __device__
+
+#else
+
+#define EBGEOMETRY_GPU_HOST
+#define EBGEOMETRY_GPU_DEVICE
+#define EBGEOMETRY_GPU_GLOBAL
+#define EBGEOMETRY_GPU_HOST_DEVICE
+
+#endif // <--- End CUDA definition
+
 
 #endif
