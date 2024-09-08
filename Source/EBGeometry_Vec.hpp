@@ -46,6 +46,7 @@ namespace EBGeometry {
     /*!
       @brief Default constructor. Sets the vector to the zero vector.
     */
+    EBGEOMETRY_GPU_HOST_DEVICE
     Vec2T();
 
     /*!
@@ -53,6 +54,7 @@ namespace EBGeometry {
       @param[in] u Other vector
       @details Sets *this = u
     */
+    EBGEOMETRY_GPU_HOST_DEVICE        
     Vec2T(const Vec2T& u) noexcept;
 
     /*!
@@ -61,13 +63,17 @@ namespace EBGeometry {
       @param[in] a_y Second vector component
       @details Sets this->x = a_x and this->y = a_y
     */
+    EBGEOMETRY_GPU_HOST_DEVICE        
     constexpr Vec2T(const T& a_x, const T& a_y);
 
     /*!
       @brief Destructor (does nothing)
     */
+    EBGEOMETRY_GPU_HOST_DEVICE        
     ~Vec2T() = default;
 
+  protected:
+    
     /*!
       @brief First component in the vector
     */
@@ -81,6 +87,7 @@ namespace EBGeometry {
     /*!
       @brief Return av vector with x = y = 0
     */
+    EBGEOMETRY_GPU_HOST_DEVICE    
     inline static constexpr Vec2T<T>
     zero() noexcept;
 
