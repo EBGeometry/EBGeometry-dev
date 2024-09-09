@@ -13,6 +13,7 @@
 #define EBGeometry_GPUTypes
 
 // Our includes
+#include "EBGeometry_GPU.hpp"
 #include "EBGeometry_Types.hpp"
 
 namespace EBGeometry {
@@ -52,7 +53,7 @@ namespace EBGeometry {
     [[nodiscard]] inline Real
     max() noexcept
     {
-      return 1.E99;
+      return EBGeometry::MaximumReal;      
     }
 
     /*!
@@ -62,7 +63,7 @@ namespace EBGeometry {
     [[nodiscard]] inline Real
     min() noexcept
     {
-      return 1.E-99;
+      return EBGeometry::MinimumReal;
     }
 
     /*!
@@ -72,7 +73,7 @@ namespace EBGeometry {
     [[nodiscard]] inline Real
     lowest() noexcept
     {
-      return -1.E99;
+      return EBGeometry::LowestReal;
     }
   } // namespace Limits
 } // namespace EBGeometry

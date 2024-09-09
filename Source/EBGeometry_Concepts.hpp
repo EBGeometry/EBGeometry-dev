@@ -36,5 +36,6 @@ namespace EBGeometry {
       { a_func.(a_point) } -> EBGeometry::Real;
     };
   }
+}
 
 #endif
