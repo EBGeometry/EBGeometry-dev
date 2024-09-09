@@ -19,6 +19,7 @@
 
 // Our includes
 #include "EBGeometry_GPU.hpp"
+#include "EBGeometry_Types.hpp"
 
 namespace EBGeometry {
 
@@ -26,17 +27,17 @@ namespace EBGeometry {
     @brief Two-dimensional vector class with arithmetic operators.
     @details The class has a public-only interface. To change it's components one
     can call the member functions, or set components directly, e.g. vec.x = 5.0
-    @note Vec2T is a templated class primarily used with DCEL grids.
+    @note Vec2 is primarily a utility class used together with DCEL signed distance
+    functionality. 
   */
-  template <typename T>
-  class Vec2T
+  class Vec2
   {
   public:
     /*!
       @brief For outputting a vector to an output stream. 
     */
     friend std::ostream&
-    operator<<(std::ostream& os, const Vec2T<T>& vec)
+    operator<<(std::ostream& os, const Vec2& vec)
     {
       os << '(' << vec.m_x << ',' << vec.m_y << ')';
 
@@ -47,7 +48,7 @@ namespace EBGeometry {
       @brief Default constructor. Sets the vector to the zero vector.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec2T() noexcept;
+    inline Vec2() noexcept;
 
     /*!
       @brief Copy constructor
@@ -55,7 +56,7 @@ namespace EBGeometry {
       @details Sets *this = u
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec2T(const Vec2T& u) noexcept;
+    inline Vec2(const Vec2& u) noexcept;
 
     /*!
       @brief Full constructor
@@ -64,59 +65,74 @@ namespace EBGeometry {
       @details Sets this->x = a_x and this->y = a_y
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec2T(const T& a_x, const T& a_y) noexcept;
+    inline Vec2(const Real& a_x, const Real& a_y) noexcept;
 
     /*!
       @brief Destructor (does nothing)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline ~Vec2T() noexcept;
-
-  protected:
-    
-    /*!
-      @brief First component in the vector
-    */
-    T m_x;
+    inline ~Vec2() noexcept;
 
     /*!
-      @brief Second component in the vector
+      @brief Get x-component
     */
-    T m_y;
+    EBGEOMETRY_GPU_HOST_DEVICE
+    inline Real&
+    x() noexcept;
+    /*!
+      @brief Get x-component
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    inline const Real&
+    x() const noexcept;
+
+    /*!
+      @brief Get y-component
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    inline Real&
+    y() noexcept;
+
+    /*!
+      @brief Get y-component
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    inline const Real&
+    y() const noexcept;
 
     /*!
       @brief Return av vector with x = y = 0
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline static Vec2T<T>
+    inline static Vec2
     zero() noexcept;
 
     /*!
       @brief Return av vector with x = y = 1
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline static Vec2T<T>
+    inline static Vec2
     one() noexcept;
 
     /*!
       @brief Return minimum possible representative vector.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline static Vec2T<T>
+    inline static Vec2
     min() noexcept;
 
     /*!
       @brief Return maximum possible representative vector.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline static Vec2T<T>
+    inline static Vec2
     max() noexcept;
 
     /*!
       @brief Return a vector with inf components.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline static Vec2T<T>
+    inline static Vec2
     infinity() noexcept;
 
     /*!
@@ -124,8 +140,8 @@ namespace EBGeometry {
       @param[in] a_other Other vector
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec2T<T>&
-    operator=(const Vec2T& a_other) noexcept;
+    inline Vec2&
+    operator=(const Vec2& a_other) noexcept;
 
     /*!
       @brief Addition operator.
@@ -134,8 +150,8 @@ namespace EBGeometry {
       for y-component)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec2T<T>
-    operator+(const Vec2T& a_other) const noexcept;
+    inline Vec2
+    operator+(const Vec2& a_other) const noexcept;
 
     /*!
       @brief Subtraction operator.
@@ -144,35 +160,35 @@ namespace EBGeometry {
       for y-component)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec2T<T>
-    operator-(const Vec2T& a_other) const noexcept;
+    inline Vec2
+    operator-(const Vec2& a_other) const noexcept;
 
     /*!
-      @brief Negation operator. Returns a new Vec2T<T> with negated components
+      @brief Negation operator. Returns a new Vec2 with negated components
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec2T<T>
+    inline Vec2
     operator-() const noexcept;
 
     /*!
       @brief Multiplication operator
       @param[in] s Scalar to be multiplied
-      @details Returns a new Vec2T<T> with components x = s*this->x (and same for
+      @details Returns a new Vec2 with components x = s*this->x (and same for
       y)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec2T<T>
-    operator*(const T& s) const noexcept;
+    inline Vec2
+    operator*(const Real& s) const noexcept;
 
     /*!
       @brief Division operator
       @param[in] s Scalar to be multiplied
-      @details Returns a new Vec2T<T> with components x = (1/s)*this->x (and same
+      @details Returns a new Vec2 with components x = (1/s)*this->x (and same
       for y)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec2T<T>
-    operator/(const T& s) const noexcept;
+    inline Vec2
+    operator/(const Real& s) const noexcept;
 
     /*!
       @brief Addition operator
@@ -181,8 +197,8 @@ namespace EBGeometry {
       same for y)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec2T<T>&
-    operator+=(const Vec2T& a_other) noexcept;
+    inline Vec2&
+    operator+=(const Vec2& a_other) noexcept;
 
     /*!
       @brief Subtraction operator
@@ -191,8 +207,8 @@ namespace EBGeometry {
       same for y)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec2T<T>&
-    operator-=(const Vec2T& a_other) noexcept;
+    inline Vec2&
+    operator-=(const Vec2& a_other) noexcept;
 
     /*!
       @brief Multiplication operator
@@ -201,8 +217,8 @@ namespace EBGeometry {
       y)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec2T<T>&
-    operator*=(const T& s) noexcept;
+    inline Vec2&
+    operator*=(const Real& s) noexcept;
 
     /*!
       @brief Division operator operator
@@ -211,8 +227,8 @@ namespace EBGeometry {
       for y)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec2T<T>&
-    operator/=(const T& s) noexcept;
+    inline Vec2&
+    operator/=(const Real& s) noexcept;
 
     /*!
       @brief Dot product operator
@@ -220,8 +236,8 @@ namespace EBGeometry {
       @details Returns the dot product, i.e. this->x*a_other.x + this->y+a_other.y
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline T
-    dot(const Vec2T& a_other) const noexcept;
+    inline Real
+    dot(const Vec2& a_other) const noexcept;
 
     /*!
       @brief Compute length of vector
@@ -229,7 +245,7 @@ namespace EBGeometry {
       (this->y)*(this->y)]
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline T
+    inline Real
     length() const noexcept;
 
     /*!
@@ -238,27 +254,34 @@ namespace EBGeometry {
       (this->y)*(this->y)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline T
+    inline Real
     length2() const noexcept;
+
+  protected:
+    /*!
+      @brief First component in the vector
+    */
+    Real m_x;
+
+    /*!
+      @brief Second component in the vector
+    */
+    Real m_y;
   };
 
   /*!
     @brief Three-dimensional vector class with arithmetic operators.
     @details The class has a public-only interface. To change it's components one
     can call the member functions, or set components directly, e.g. vec.x = 5.0
-    @note Vec3T is a templated class primarily used with DCEL grids. It is always
-    3D, i.e. independent of Chombo configuration settings. This lets one use DCEL
-    functionality even though the simulation might only be 2D.
   */
-  template <typename T>
-  class Vec3T
+  class Vec3
   {
   public:
     /*!
       @brief For outputting a vector to an output stream. 
     */
     friend std::ostream&
-    operator<<(std::ostream& os, const Vec3T<T>& vec)
+    operator<<(std::ostream& os, const Vec3& vec)
     {
       os << '(' << vec[0] << ',' << vec[1] << ',' << vec[2] << ')';
 
@@ -269,7 +292,7 @@ namespace EBGeometry {
       @brief Default constructor. Sets the vector to the zero vector.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3T() noexcept;
+    inline Vec3() noexcept;
 
     /*!
       @brief Copy constructor
@@ -277,7 +300,7 @@ namespace EBGeometry {
       @details Sets *this = u
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3T(const Vec3T<T>& a_u) noexcept;
+    inline Vec3(const Vec3& a_u) noexcept;
 
     /*!
       @brief Full constructor
@@ -287,26 +310,26 @@ namespace EBGeometry {
       @details Sets this->x = a_x, this->y = a_y, and this->z = a_z
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3T(const T& a_x, const T& a_y, const T& a_z) noexcept;
+    inline Vec3(const Real& a_x, const Real& a_y, const Real& a_z) noexcept;
 
     /*!
       @brief Destructor (does nothing)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline ~Vec3T() noexcept;
+    inline ~Vec3() noexcept;
 
     /*!
       @brief Return av vector with x = y = z = 0
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline static Vec3T<T>
+    inline static Vec3
     zero() noexcept;
 
     /*!
       @brief Return av vector with x = y = z = 1
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline static Vec3T<T>
+    inline static Vec3
     one() noexcept;
 
     /*!
@@ -314,45 +337,36 @@ namespace EBGeometry {
       @param[in] a_dir Dircetion
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline static Vec3T<T>
+    inline static Vec3
     unit(const size_t a_dir) noexcept;
 
     /*!
       @brief Return a vector with minimum representable components.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline static Vec3T<T>
+    inline static Vec3
     min() noexcept;
 
     /*!
       @brief Return a vector with maximum representable components.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline static Vec3T<T>
+    inline static Vec3
     max() noexcept;
 
     /*!
       @brief Return a vector with inf components.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline static Vec3T<T>
+    inline static Vec3
     infinity() noexcept;
-
-    /*!
-      @brief Lexicographical comparison operator. 
-      This returns to true 
-      @param[in] u Other vector. 
-    */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    inline bool
-    lessLX(const Vec3T<T>& u) const noexcept;
 
     /*!
       @brief Return component in vector. (i=0 => x and so on)
       @param[in] i Index. Must be < 3
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline T&
+    inline Real&
     operator[](size_t i) noexcept;
 
     /*!
@@ -360,7 +374,7 @@ namespace EBGeometry {
       @param[in] i Index. Must be < 3
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline const T&
+    inline const Real&
     operator[](size_t i) const noexcept;
 
     /*!
@@ -369,7 +383,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     inline bool
-    operator==(const Vec3T<T>& u) const noexcept;
+    operator==(const Vec3& u) const noexcept;
 
     /*!
       @brief Comparison operator. Returns false if all components are the same
@@ -377,7 +391,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     inline bool
-    operator!=(const Vec3T<T>& u) const noexcept;
+    operator!=(const Vec3& u) const noexcept;
 
     /*!
       @brief "Smaller than" operator.
@@ -387,7 +401,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     inline bool
-    operator<(const Vec3T<T>& u) const noexcept;
+    operator<(const Vec3& u) const noexcept;
 
     /*!
       @brief "Greater than" operator.
@@ -396,7 +410,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     inline bool
-    operator>(const Vec3T<T>& u) const noexcept;
+    operator>(const Vec3& u) const noexcept;
 
     /*!
       @brief "Smaller or equal to" operator.
@@ -406,7 +420,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     inline bool
-    operator<=(const Vec3T<T>& u) const noexcept;
+    operator<=(const Vec3& u) const noexcept;
 
     /*!
       @brief "Greater or equal to" operator.
@@ -416,7 +430,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     inline bool
-    operator>=(const Vec3T<T>& u) const noexcept;
+    operator>=(const Vec3& u) const noexcept;
 
     /*!
       @brief Assignment operator. Sets components equal to the argument vector's
@@ -424,8 +438,8 @@ namespace EBGeometry {
       @param[in] u Other vector
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3T<T>&
-    operator=(const Vec3T<T>& u) noexcept;
+    inline Vec3&
+    operator=(const Vec3& u) noexcept;
 
     /*!
       @brief Addition operator. Returns a new vector with added components
@@ -433,8 +447,8 @@ namespace EBGeometry {
       @param[in] u Other vector
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3T<T>
-    operator+(const Vec3T<T>& u) const noexcept;
+    inline Vec3
+    operator+(const Vec3& u) const noexcept;
 
     /*!
       @brief Subtraction operator. Returns a new vector with subtracted components
@@ -442,14 +456,14 @@ namespace EBGeometry {
       @param[in] u Other vector
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3T<T>
-    operator-(const Vec3T<T>& u) const noexcept;
+    inline Vec3
+    operator-(const Vec3& u) const noexcept;
 
     /*!
       @brief Negation operator. Returns a vector with negated components
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3T<T>
+    inline Vec3
     operator-() const noexcept;
 
     /*!
@@ -459,8 +473,8 @@ namespace EBGeometry {
       @return Returns a new vector with X[i] = this->X[i] * s
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3T<T>
-    operator*(const T& s) const noexcept;
+    inline Vec3
+    operator*(const Real& s) const noexcept;
 
     /*!
       @brief Component-wise multiplication operator
@@ -469,8 +483,8 @@ namespace EBGeometry {
       component.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3T<T>
-    operator*(const Vec3T<T>& s) const noexcept;
+    inline Vec3
+    operator*(const Vec3& s) const noexcept;
 
     /*!
       @brief Division operator. Returns a vector with scalar divided components
@@ -478,8 +492,8 @@ namespace EBGeometry {
       @return Returns a new vector with X[i] = this->X[i] / s
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3T<T>
-    operator/(const T& s) const noexcept;
+    inline Vec3
+    operator/(const Real& s) const noexcept;
 
     /*!
       @brief Component-wise division operator.
@@ -487,8 +501,8 @@ namespace EBGeometry {
       @return Returns a new vector with X[i] = this->X[i]/v[i] for each component.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3T<T>
-    operator/(const Vec3T<T>& v) const noexcept;
+    inline Vec3
+    operator/(const Vec3& v) const noexcept;
 
     /*!
       @brief Vector addition operator.
@@ -497,8 +511,8 @@ namespace EBGeometry {
       this->X[0] + u.X[0]
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3T<T>&
-    operator+=(const Vec3T<T>& u) noexcept;
+    inline Vec3&
+    operator+=(const Vec3& u) noexcept;
 
     /*!
       @brief Vector subtraction operator.
@@ -507,8 +521,8 @@ namespace EBGeometry {
       this->X[0] - u.X[0]
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3T<T>&
-    operator-=(const Vec3T<T>& u) noexcept;
+    inline Vec3&
+    operator-=(const Vec3& u) noexcept;
 
     /*!
       @brief Vector multiplication operator.
@@ -517,8 +531,8 @@ namespace EBGeometry {
       this->X[0] * s
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3T<T>&
-    operator*=(const T& s) noexcept;
+    inline Vec3&
+    operator*=(const Real& s) noexcept;
 
     /*!
       @brief Vector division operator.
@@ -527,8 +541,8 @@ namespace EBGeometry {
       this->X[0] / s
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3T<T>&
-    operator/=(const T& s) noexcept;
+    inline Vec3&
+    operator/=(const Real& s) noexcept;
 
     /*!
       @brief Vector minimum function. Returns a new vector with componentwise
@@ -538,8 +552,8 @@ namespace EBGeometry {
       same for the other components)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3T<T>
-    min(const Vec3T<T>& u) noexcept;
+    inline Vec3
+    min(const Vec3& u) noexcept;
 
     /*!
       @brief Vector maximum function. Returns a new vector with componentwise
@@ -549,8 +563,8 @@ namespace EBGeometry {
       same for the other components)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3T<T>
-    max(const Vec3T<T>& u) noexcept;
+    inline Vec3
+    max(const Vec3& u) noexcept;
 
     /*!
       @brief Vector cross product
@@ -558,8 +572,8 @@ namespace EBGeometry {
       @returns Returns the cross product between (*this) and u
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3T<T>
-    cross(const Vec3T<T>& u) const noexcept;
+    inline Vec3
+    cross(const Vec3& u) const noexcept;
 
     /*!
       @brief Vector dot product
@@ -567,8 +581,8 @@ namespace EBGeometry {
       @returns Returns the dot product between (*this) and u
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline T
-    dot(const Vec3T<T>& u) const noexcept;
+    inline Real
+    dot(const Vec3& u) const noexcept;
 
     /*!
       @brief Return the direction which has the smallest component (can be
@@ -598,7 +612,7 @@ namespace EBGeometry {
       Y[0]*Y[0])
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline T
+    inline Real
     length() const noexcept;
 
     /*!
@@ -607,36 +621,36 @@ namespace EBGeometry {
       Y[0]*Y[0])
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline T
+    inline Real
     length2() const noexcept;
 
   protected:
     /*!
       @brief Vector components
     */
-    T m_X[3];
+    Real m_X[3];
   };
 
   /*!
-    @brief Multiplication operator in the form s*Vec2T
+    @brief Multiplication operator in the form s*Vec2
     @param[in] s Multiplication factor
     @param[in] a_other Other vector
     @return Returns a new vector with components x = s*a_other.x (and same for y)
   */
-  template <typename T>
-  inline Vec2T<T>
-  operator*(const T& s, const Vec2T<T>& a_other) noexcept;
+  EBGEOMETRY_GPU_HOST_DEVICE
+  inline Vec2
+  operator*(const Real& s, const Vec2& a_other) noexcept;
 
   /*!
-    @brief Division operator in the form s*Vec2T.
+    @brief Division operator in the form s*Vec2.
     @param[in] s Division factor
     @param[in] a_other Other vector
     @return Returns a new vector with components x = (1/s)*a_other.x (and same for
     y)
   */
-  template <typename T>
-  inline Vec2T<T>
-  operator/(const T& s, const Vec2T<T>& a_other) noexcept;
+  EBGEOMETRY_GPU_HOST_DEVICE
+  inline Vec2
+  operator/(const Real& s, const Vec2& a_other) noexcept;
 
   /*!
     @brief Minimum function. Returns new vector with component-wise minimums.
@@ -644,9 +658,9 @@ namespace EBGeometry {
     @param[in] v Other vector
     @return Returns new vector with components x = std::min(u.x, v.x).
   */
-  template <typename T>
-  inline Vec2T<T>
-  min(const Vec2T<T>& u, const Vec2T<T>& v) noexcept;
+  EBGEOMETRY_GPU_HOST_DEVICE
+  inline Vec2
+  min(const Vec2& u, const Vec2& v) noexcept;
 
   /*!
     @brief Maximum function. Returns new vector with component-wise minimums.
@@ -654,26 +668,26 @@ namespace EBGeometry {
     @param[in] v Other vector
     @return Returns new vector with components x = std::max(u.x, v.x).
   */
-  template <typename T>
-  inline Vec2T<T>
-  max(const Vec2T<T>& u, const Vec2T<T>& v) noexcept;
+  EBGEOMETRY_GPU_HOST_DEVICE
+  inline Vec2
+  max(const Vec2& u, const Vec2& v) noexcept;
 
   /*!
     @brief Dot product function.
     @param[in] u Vector
     @param[in] v Other vector
   */
-  template <typename T>
-  inline T
-  dot(const Vec2T<T>& u, const Vec2T<T>& v) noexcept;
+  EBGEOMETRY_GPU_HOST_DEVICE
+  inline Real
+  dot(const Vec2& u, const Vec2& v) noexcept;
 
   /*!
     @brief Length function
     @param[in] v Vector.
   */
-  template <typename T>
-  inline T
-  length(const Vec2T<T>& v) noexcept;
+  EBGEOMETRY_GPU_HOST_DEVICE
+  inline Real
+  length(const Vec2& v) noexcept;
 
   /*!
     @brief Multiplication operator.
@@ -681,19 +695,9 @@ namespace EBGeometry {
     @param[in] u Vector
     @return Returns new vector with components X[0] = s*X[0] and so on.
   */
-  template <class R, typename T>
-  inline Vec3T<T>
-  operator*(const R& s, const Vec3T<T>& u) noexcept;
-
-  /*!
-    @brief Multiplication operator.
-    @param[in] u One vector
-    @param[in] v Other vector
-    @return Returns new vector with components X[0] = u[0]*[v0] and so on
-  */
-  template <typename T>
-  inline Vec3T<T>
-  operator*(const Vec3T<T>& u, const Vec3T<T>& v) noexcept;
+  EBGEOMETRY_GPU_HOST_DEVICE  
+  inline Vec3
+  operator*(const Real& s, const Vec3& u) noexcept;
 
   /*!
     @brief Division operator.
@@ -701,9 +705,9 @@ namespace EBGeometry {
     @param[in] u Vector
     @return Returns new vector with components X[0] = X[0]/s and so on.
   */
-  template <class R, typename T>
-  inline Vec3T<T>
-  operator/(const R& s, const Vec3T<T>& u) noexcept;
+  EBGEOMETRY_GPU_HOST_DEVICE    
+  inline Vec3
+  operator/(const Real& s, const Vec3& u) noexcept;
 
   /*!
     @brief Minimum function. Returns new vector with component-wise minimums.
@@ -712,9 +716,9 @@ namespace EBGeometry {
     @return Returns new vector with components X[0] = std::min(u.X[0], v.X[0]) and
     so on
   */
-  template <typename T>
-  inline Vec3T<T>
-  min(const Vec3T<T>& u, const Vec3T<T>& v) noexcept;
+  EBGEOMETRY_GPU_HOST_DEVICE    
+  inline Vec3
+  min(const Vec3& u, const Vec3& v) noexcept;
 
   /*!
     @brief Maximum function. Returns new vector with component-wise minimums.
@@ -723,26 +727,26 @@ namespace EBGeometry {
     @return Returns new vector with components X[0] = std::max(u.X[0], v.X[0]) and
     so on
   */
-  template <typename T>
-  inline Vec3T<T>
-  max(const Vec3T<T>& u, const Vec3T<T>& v) noexcept;
+  EBGEOMETRY_GPU_HOST_DEVICE    
+  inline Vec3
+  max(const Vec3& u, const Vec3& v) noexcept;
 
   /*!
     @brief Dot product function.
     @param[in] u Vector
     @param[in] v Other vector
   */
-  template <typename T>
-  inline T
-  dot(const Vec3T<T>& u, const Vec3T<T>& v) noexcept;
+  EBGEOMETRY_GPU_HOST_DEVICE    
+  inline Real
+  dot(const Vec3& u, const Vec3& v) noexcept;
 
   /*!
     @brief Length function
     @param[in] v Vector.
   */
-  template <typename T>
-  inline T
-  length(const Vec3T<T>& v) noexcept;
+  EBGEOMETRY_GPU_HOST_DEVICE    
+  inline Real
+  length(const Vec3& v) noexcept;
 
 } // namespace EBGeometry
 
