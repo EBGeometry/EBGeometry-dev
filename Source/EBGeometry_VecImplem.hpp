@@ -85,19 +85,13 @@ namespace EBGeometry {
   inline Vec2
   Vec2::min() noexcept
   {
-    return Vec2(std::numeric_limits<Real>::lowest(), std::numeric_limits<Real>::lowest());
+    return Vec2(EBGeometry::Limits::lowest(), EBGeometry::Limits::lowest());
   }
 
   inline Vec2
   Vec2::max() noexcept
   {
-    return Vec2(std::numeric_limits<Real>::max(), std::numeric_limits<Real>::max());
-  }
-
-  inline Vec2
-  Vec2::infinity() noexcept
-  {
-    return Vec2(std::numeric_limits<Real>::infinity(), std::numeric_limits<Real>::infinity());
+    return Vec2(EBGeometry::Limits::max(), EBGeometry::Limits::max());
   }
 
   inline Vec2&
@@ -256,22 +250,13 @@ namespace EBGeometry {
   inline Vec3
   Vec3::min() noexcept
   {
-    return Vec3(
-      std::numeric_limits<Real>::lowest(), std::numeric_limits<Real>::lowest(), std::numeric_limits<Real>::lowest());
+    return Vec3(EBGeometry::Limits::lowest(), EBGeometry::Limits::lowest(), EBGeometry::Limits::lowest());
   }
 
   inline Vec3
   Vec3::max() noexcept
   {
-    return Vec3(std::numeric_limits<Real>::max(), std::numeric_limits<Real>::max(), std::numeric_limits<Real>::max());
-  }
-
-  inline Vec3
-  Vec3::infinity() noexcept
-  {
-    return Vec3(std::numeric_limits<Real>::infinity(),
-                std::numeric_limits<Real>::infinity(),
-                std::numeric_limits<Real>::infinity());
+    return Vec3(EBGeometry::Limits::max(), EBGeometry::Limits::max(), EBGeometry::Limits::max());
   }
 
   inline Vec3&

@@ -129,13 +129,6 @@ namespace EBGeometry {
     max() noexcept;
 
     /*!
-      @brief Return a vector with inf components.
-    */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline static Vec2
-    infinity() noexcept;
-
-    /*!
       @brief Assignment operator. Sets this.x = a_other.x and this.y = a_other.y
       @param[in] a_other Other vector
     */
@@ -353,13 +346,6 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] inline static Vec3
     max() noexcept;
-
-    /*!
-      @brief Return a vector with inf components.
-    */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline static Vec3
-    infinity() noexcept;
 
     /*!
       @brief Return component in vector. (i=0 => x and so on)
