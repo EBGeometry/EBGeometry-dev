@@ -20,7 +20,9 @@
 #include <utility>
 
 // Our includes
+#include "EBGeometry_Macros.hpp"
 #include "EBGeometry_Vec.hpp"
+#include "EBGeometry_GPUTypes.hpp"
 
 namespace EBGeometry {
 
@@ -376,12 +378,16 @@ namespace EBGeometry {
   inline Real&
   Vec3::operator[](size_t i) noexcept
   {
+    EBGEOMETRY_ASSERT(i <= 2);
+
     return m_X[i];
   }
 
   inline const Real&
   Vec3::operator[](size_t i) const noexcept
   {
+    EBGEOMETRY_ASSERT(i <= 2);
+
     return m_X[i];
   }
 

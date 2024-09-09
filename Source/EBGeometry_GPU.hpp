@@ -41,5 +41,4 @@
 
 #endif // <--- End CUDA definition
 
-
 #endif

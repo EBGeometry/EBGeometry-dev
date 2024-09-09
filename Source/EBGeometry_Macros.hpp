@@ -12,23 +12,23 @@
 #ifndef EBGeometry_Macros
 #define EBGeometry_Macros
 
+#include <cassert>
 #include <iostream>
 
 // Debugging macrros.
-#ifdef EBGEOMETRY_DEBUG
+#ifdef EBGEOMETRY_ENABLE_DEBUG
 
 // Expectation macro which prints an error message without exiting the program.
-#define EBGEOMETRY_EXPECT(cond)                                                                            \
-  if (!(cond)) {                                                                                           \
-    std::cerr << __FILE__ << " (L" << __LINE__ << "): Expectation '" << #cond << "' failed!" << std::endl; \
+#define EBGEOMETRY_EXPECT(cond) \
+  if (!(cond)) {                \
   }
 
 // Assertion macro which exits the program if the condition is violated.
-#define EBGEOMETRY_ASSERT(cond)                                                                          \
-  if (!(cond)) {                                                                                         \
-    std::cerr << __FILE__ << " (L" << __LINE__ << "): Assertion '" << #cond << "' failed!" << std::endl; \
-    std::exit(-1);                                                                                       \
+#define EBGEOMETRY_ASSERT(cond) \
+  if (!(cond)) {                \
+    std::abort();               \
   }
+
 #else
 #define EBGEOMETRY_EXPECT(cond) (void)0
 #define EBGEOMETRY_ASSERT(cond) (void)0

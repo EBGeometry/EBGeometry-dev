@@ -3,7 +3,8 @@ project(EBGeometry LANGUAGES CUDA CXX)
 enable_language(CUDA)
 
 add_compile_definitions(EBGEOMETRY_ENABLE_CUDA)
-add_compile_definitions(EBGEOMETRY_USE_DOUBLE)
+add_compile_definitions(EBGEOMETRY_USE_FLOAT)
+add_compile_definitions(EBGEOMETRY_ENABLE_DEBUG)
 
 if(NOT DEFINED CMAKE_CUDA_STANDARD)
     set(CMAKE_CUDA_STANDARD 20)
