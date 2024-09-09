@@ -394,9 +394,9 @@ namespace EBGeometry {
   inline Vec3
   Vec3::min(const Vec3& u) noexcept
   {
-    m_X[0] = std::min(m_X[0], u[0]);
-    m_X[1] = std::min(m_X[1], u[1]);
-    m_X[2] = std::min(m_X[2], u[2]);
+    m_X[0] = EBGeometry::min(m_X[0], u[0]);
+    m_X[1] = EBGeometry::min(m_X[1], u[1]);
+    m_X[2] = EBGeometry::min(m_X[2], u[2]);
 
     return *this;
   }
@@ -404,9 +404,9 @@ namespace EBGeometry {
   inline Vec3
   Vec3::max(const Vec3& u) noexcept
   {
-    m_X[0] = std::max(m_X[0], u[0]);
-    m_X[1] = std::max(m_X[1], u[1]);
-    m_X[2] = std::max(m_X[2], u[2]);
+    m_X[0] = EBGeometry::max(m_X[0], u[0]);
+    m_X[1] = EBGeometry::max(m_X[1], u[1]);
+    m_X[2] = EBGeometry::max(m_X[2], u[2]);
 
     return *this;
   }
@@ -510,13 +510,13 @@ namespace EBGeometry {
   inline Vec2
   min(const Vec2& u, const Vec2& v) noexcept
   {
-    return Vec2(std::min(u.x(), v.x()), std::min(u.y(), v.y()));
+    return Vec2(EBGeometry::min(u.x(), v.x()), EBGeometry::min(u.y(), v.y()));
   }
 
   inline Vec2
   max(const Vec2& u, const Vec2& v) noexcept
   {
-    return Vec2(std::max(u.x(), v.x()), std::max(u.y(), v.y()));
+    return Vec2(EBGeometry::max(u.x(), v.x()), EBGeometry::max(u.y(), v.y()));
   }
 
   inline Real
@@ -546,13 +546,13 @@ namespace EBGeometry {
   inline Vec3
   min(const Vec3& u, const Vec3& v) noexcept
   {
-    return Vec3(std::min(u[0], v[0]), std::min(u[1], v[1]), std::min(u[2], v[2]));
+    return Vec3(EBGeometry::min(u[0], v[0]), EBGeometry::min(u[1], v[1]), EBGeometry::min(u[2], v[2]));
   }
 
   inline Vec3
   max(const Vec3& u, const Vec3& v) noexcept
   {
-    return Vec3(std::max(u[0], v[0]), std::max(u[1], v[1]), std::max(u[2], v[2]));
+    return Vec3(EBGeometry::max(u[0], v[0]), EBGeometry::max(u[1], v[1]), EBGeometry::max(u[2], v[2]));
   }
 
   inline Real
