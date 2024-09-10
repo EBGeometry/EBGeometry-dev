@@ -19,6 +19,14 @@ addNumbers(Vec3* c, const Vec3* const a, const Vec3* const b)
   return;
 }
 
+EBGEOMETRY_GPU_GLOBAL
+void
+evalPlane(Real* val, const PlaneSDF* const plane, const Vec3* const point) {
+  *val = (*plane)(*point);
+
+  return;
+}
+
 int
 main()
 {
@@ -44,11 +52,35 @@ main()
 
   cudaFree(d_v1);
   cudaFree(d_v2);
-  cudaFree(d_v3);
+  //  cudaFree(d_v3);
+
+  const auto hostPlane = PlaneSDF();
+
+  PlaneSDF* devicePlane;
+
+  Real* value;
+  cudaMalloc((void**) &value, sizeof(Real));
+
+  cudaMalloc((void**) &devicePlane, sizeof(PlaneSDF));
+  cudaMemcpy(devicePlane, &hostPlane, sizeof(PlaneSDF), cudaMemcpyHostToDevice);
+
+  cudaMemcpy(&v3, d_v3, 3 * sizeof(Real), cudaMemcpyDeviceToHost);
+
+  evalPlane<<<1, 1>>>(value, devicePlane, d_v3);
+
+  Real hostValue;
+
+  cudaMemcpy(&v1, d_v3, 3 * sizeof(Real), cudaMemcpyDeviceToHost);
+  cudaMemcpy(&hostValue, value, sizeof(Real), cudaMemcpyDeviceToHost);    
+
+  //  cudaFree(d_v1);
+  //  cudaFree(d_v2);
+  //  cudaFree(dn_v3);
 
   std::cout << "v1 = " << v1 << std::endl;
   std::cout << "v2 = " << v2 << std::endl;
-  std::cout << "v3 = " << v3 << std::endl;    
+  std::cout << "v3 = " << v3 << std::endl;
+  std::cout << "value = " << hostValue << std::endl;      
 
   return 0;
 }
