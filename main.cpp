@@ -19,9 +19,10 @@ addNumbers(Vec3* c, const Vec3* const a, const Vec3* const b)
   return;
 }
 
+template <typename T>
 EBGEOMETRY_GPU_GLOBAL
 void
-evalPlane(Real* val, const PlaneSDF* const plane, const Vec3* const point) {
+evalPlane(Real* val, const T* const plane, const Vec3* const point) {
   *val = (*plane)(*point);
 
   return;
