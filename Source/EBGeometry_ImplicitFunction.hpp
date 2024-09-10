@@ -19,11 +19,13 @@
 namespace EBGeometry {
 
   /*!
-      @brief Encodable SFC concept -- class must have a static function static uint64_t encode(const Index&). This is the main interface for SFCs
-    */
-  template <typename ImpFunc>
-  concept ImplicitFunction = requires(const ImpFunc& func, const Vec3& x) {
-    { func.template operator()(x) } -> std::same_as<Real>;
+    @brief Encodable SFC concept -- class must have a static function static uint64_t encode(const Index&). This is the main interface for SFCs
+  */
+  template <typename F>
+  concept ImplicitFunction = requires(const F& f, const Vec3& x) {
+    { f.template operator()(x) } -> std::same_as<Real>;
+    { f.template putOnGPU() } -> std::same_as<F*>;
+    { f.template freeOnGPU() } -> std::same_as<void>;
   };
 } // namespace EBGeometry
 

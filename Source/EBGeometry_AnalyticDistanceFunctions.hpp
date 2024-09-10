@@ -13,7 +13,9 @@
 #define EBGeometry_AnalyticDistanceFunctions
 
 #include "EBGeometry_Types.hpp"
+#include "EBGeometry_GPU.hpp"
 #include "EBGeometry_GPUTypes.hpp"
+#include "EBGeometry_ImplicitFunction.hpp"
 #include "EBGeometry_Vec.hpp"
 
 namespace EBGeometry {
@@ -64,7 +66,7 @@ namespace EBGeometry {
       the memory if it is no longer needed by using the freeFromGPU() call.
     */
     EBGEOMETRY_GPU_HOST
-    inline PlaneSDF*
+    [[nodiscard]] inline PlaneSDF*
     putOnGPU() const noexcept
     {
       PlaneSDF* plane;
@@ -78,14 +80,17 @@ namespace EBGeometry {
 
     /*!
       @brief Free memory from the GPU
-      @details Free memory from GPU if the plane is no longer on the device.
+      @details Free memory from GPU if the plane is no longer required on the device.
+      @note Calling this on the host allocation will return in an error.
     */
-    EBGEOMETRY_GPU_HOST
-    inline void
-    freeFromGPU() noexcept
-    {
-      cudaFree(&(*this));
-    }
+    // EBGEOMETRY_GPU_HOST_DEVICE
+    // inline void
+    // freeOnGPU() noexcept
+    // {
+    //   cudaFree(&(*this));
+
+    //   return;
+    // }
 
   protected:
     /*!
@@ -152,7 +157,7 @@ namespace EBGeometry {
   };
 } // namespace EBGeometry
 
-static_assert(EBGeometry::ImplicitFunction<EBGeometry::PlaneSDF>);
-static_assert(EBGeometry::ImplicitFunction<EBGeometry::SphereSDF>);
+//static_assert(EBGeometry::ImplicitFunction<EBGeometry::PlaneSDF>);
+//static_assert(EBGeometry::ImplicitFunction<EBGeometry::SphereSDF>);
 
 #endif

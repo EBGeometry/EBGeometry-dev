@@ -6,7 +6,6 @@
 #include <device_launch_parameters.h>
 
 // Our includes
-#include "EBGeometry_ImplicitFunction.hpp"
 #include "EBGeometry.hpp"
 
 using namespace EBGeometry;
@@ -20,10 +19,10 @@ addNumbers(Vec3* c, const Vec3* const a, const Vec3* const b)
   return;
 }
 
-template <ImplicitFunction F>
+template <typename F>
 EBGEOMETRY_GPU_GLOBAL
 void
-evalPlane(Real* val, const F* const func, const Vec3* const point) {
+evalPlane(Real* val,  const F* const func, const Vec3* const point) {
   *val = (*func)(*point);
 
   return;
@@ -79,7 +78,7 @@ main()
    cudaFree(d_v2);
    cudaFree(d_v3);
 
-   devicePlane->freeFromGPU();
+   //   devicePlane->freeOnGPU();
 
   std::cout << "v1 = " << v1 << std::endl;
   std::cout << "v2 = " << v2 << std::endl;

@@ -27,6 +27,7 @@
 #if defined(EBGEOMETRY_ENABLE_CUDA)
 #include <cuda.h>
 
+#define EBGEOMETRY_ENABLE_GPU
 #define EBGEOMETRY_GPU_HOST __host__
 #define EBGEOMETRY_GPU_DEVICE __device__
 #define EBGEOMETRY_GPU_GLOBAL __global__
