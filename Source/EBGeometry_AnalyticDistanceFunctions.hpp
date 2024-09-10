@@ -70,7 +70,7 @@ namespace EBGeometry {
   };
 } // namespace EBGeometry
 
-//static_assert(EBGeometry::ImplicitFunction<PlaneSDF>);
+static_assert(EBGeometry::ImplicitFunction<EBGeometry::PlaneSDF>);
 
 #endif
 

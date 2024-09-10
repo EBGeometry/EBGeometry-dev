@@ -6,6 +6,7 @@
 #include <device_launch_parameters.h>
 
 // Our includes
+#include "EBGeometry_ImplicitFunction.hpp"
 #include "EBGeometry.hpp"
 
 using namespace EBGeometry;
@@ -19,10 +20,10 @@ addNumbers(Vec3* c, const Vec3* const a, const Vec3* const b)
   return;
 }
 
-template <typename T>
+template <ImplicitFunction F>
 EBGEOMETRY_GPU_GLOBAL
 void
-evalPlane(Real* val, const T* const plane, const Vec3* const point) {
+evalPlane(Real* val, const F* const plane, const Vec3* const point) {
   *val = (*plane)(*point);
 
   return;
