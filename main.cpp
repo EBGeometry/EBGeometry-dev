@@ -23,8 +23,8 @@ addNumbers(Vec3* c, const Vec3* const a, const Vec3* const b)
 template <ImplicitFunction F>
 EBGEOMETRY_GPU_GLOBAL
 void
-evalPlane(Real* val, const F* const plane, const Vec3* const point) {
-  *val = (*plane)(*point);
+evalPlane(Real* val, const F* const func, const Vec3* const point) {
+  *val = (*func)(*point);
 
   return;
 }
@@ -58,13 +58,13 @@ main()
 
   const auto hostPlane = PlaneSDF();
 
-  PlaneSDF* devicePlane;
+  PlaneSDF* devicePlane = hostPlane.putOnGPU();
 
   Real* value;
   cudaMalloc((void**) &value, sizeof(Real));
 
-  cudaMalloc((void**) &devicePlane, sizeof(PlaneSDF));
-  cudaMemcpy(devicePlane, &hostPlane, sizeof(PlaneSDF), cudaMemcpyHostToDevice);
+  //  cudaMalloc((void**) &devicePlane, sizeof(PlaneSDF));
+  //  cudaMemcpy(devicePlane, &hostPlane, sizeof(PlaneSDF), cudaMemcpyHostToDevice);
 
   cudaMemcpy(&v3, d_v3, 3 * sizeof(Real), cudaMemcpyDeviceToHost);
 
@@ -75,9 +75,11 @@ main()
   cudaMemcpy(&v1, d_v3, 3 * sizeof(Real), cudaMemcpyDeviceToHost);
   cudaMemcpy(&hostValue, value, sizeof(Real), cudaMemcpyDeviceToHost);    
 
-  //  cudaFree(d_v1);
-  //  cudaFree(d_v2);
-  //  cudaFree(dn_v3);
+   cudaFree(d_v1);
+   cudaFree(d_v2);
+   cudaFree(d_v3);
+
+   devicePlane->freeFromGPU();
 
   std::cout << "v1 = " << v1 << std::endl;
   std::cout << "v2 = " << v2 << std::endl;
