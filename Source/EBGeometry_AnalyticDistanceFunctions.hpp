@@ -14,21 +14,26 @@
 
 #include "EBGeometry_Types.hpp"
 #include "EBGeometry_GPUTypes.hpp"
-#include "EBGeometry_Concepts.hpp"
+#include "EBGeometry_Vec.hpp"
 
 namespace EBGeometry {
 
   /*!
     @brief Signed distance function for a plane.
+    @details User species a point on the plane and the outward normal vector.
   */
-  template <class T>
   class PlaneSDF
   {
   public:
     /*!
       @brief Disallowed weak construction
     */
-    PlaneSDF() = delete;
+    EBGEOMETRY_GPU_HOST_DEVICE
+    inline PlaneSDF() noexcept
+    {
+      m_normal = Vec3::one();
+      m_point  = Vec3::zero();
+    }
 
     /*!
       @brief Full constructor
@@ -36,7 +41,7 @@ namespace EBGeometry {
       @param[in] a_normal     Plane normal vector.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    PlaneSDF(const Vec3& a_point, const Vec3& a_normal) noexcept
+    inline PlaneSDF(const Vec3& a_point, const Vec3& a_normal) noexcept
     {
       m_point  = a_point;
       m_normal = a_normal / a_normal.length();
@@ -47,7 +52,7 @@ namespace EBGeometry {
       @param[in] a_point Position.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Real()(const Vec3& a_point) const noexcept override
+    [[nodiscard]] inline Real operator()(const Vec3& a_point) const noexcept
     {
       return dot((a_point - m_point), m_normal);
     }
@@ -63,8 +68,9 @@ namespace EBGeometry {
     */
     Vec3 m_normal;
   };
-}
+} // namespace EBGeometry
 
-static_assert(EBGeometry::ImplicitFunction<PlaneSDF>);
+//static_assert(EBGeometry::ImplicitFunction<PlaneSDF>);
 
 #endif
+

@@ -14,7 +14,8 @@ endif()
 # Source directories
 include_directories(Source)
 
-# Various tests
+# Build executable
 add_executable(main.out main.cpp)
 set_source_files_properties(main.cpp PROPERTIES LANGUAGE CUDA)
+set_target_properties(main.out PROPERTIES CUDA_ARCHITECTURES "native")
 set_target_properties(main.out PROPERTIES CUDA_SEPARABLE_COMPILATION ON)

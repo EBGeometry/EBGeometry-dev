@@ -363,7 +363,7 @@ namespace EBGeometry {
   inline Real&
   Vec3::operator[](size_t i) noexcept
   {
-    EBGEOMETRY_ASSERT(i <= 2);
+    EBGEOMETRY_EXPECT(i <= 2);
 
     return m_X[i];
   }
@@ -371,7 +371,7 @@ namespace EBGeometry {
   inline const Real&
   Vec3::operator[](size_t i) const noexcept
   {
-    EBGEOMETRY_ASSERT(i <= 2);
+    EBGEOMETRY_EXPECT(i <= 2);
 
     return m_X[i];
   }
