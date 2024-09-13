@@ -110,15 +110,13 @@ namespace EBGeometry {
     /*!
       @brief For building this sphere on the GPU
     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline SphereSDF**
-    putOnGPU() const noexcept
+    EBGEOMETRY_GPU_HOST
+    [[nodiscard]] inline void*
+    putOnGPU() const noexcept override
     {
       SphereSDF** sphere;
 
       cudaMalloc((void**)&sphere, sizeof(SphereSDF**));
-
-      // __global__ auto kernel = [=](SphereSDF** func) -> void { (*func) = new SphereSDF(); };
 
       makeImpFunc<<<1, 1>>>(sphere);
 
@@ -210,6 +208,22 @@ namespace EBGeometry {
 #else
       return 2.0;
 #endif
+    }
+
+    /*!
+      @brief For building this sphere on the GPU
+    */
+    EBGEOMETRY_GPU_HOST
+    [[nodiscard]] inline void*
+    putOnGPU() const noexcept override
+    {
+      BoxSDF** box;
+
+      cudaMalloc((void**)&box, sizeof(BoxSDF**));
+
+      makeImpFunc<<<1, 1>>>(box);
+
+      return box;
     }
 
   protected:

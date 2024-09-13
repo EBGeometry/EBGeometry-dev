@@ -31,9 +31,9 @@ evalPlane(Real* val,  const F* const func, const Vec3* const point) {
 EBGEOMETRY_GPU_GLOBAL
 void
 evalUnion(Real* val,  const ImplicitFunction* const f1, const ImplicitFunction* const f2, const Vec3* const point) {
-  UnionIF csgUnion(f1, f2);
+  //  UnionIF csgUnion(f1, f2);
   
-  *val = csgUnion.value(*point);
+  //  *val = csgUnion.value(*point);
 
   return;
 }
@@ -68,19 +68,19 @@ main()
   cudaMemcpy(point_device, &point_host, sizeof(Vec3), cudaMemcpyHostToDevice);
   cudaMemcpy(value_device, &value_host, sizeof(Real), cudaMemcpyHostToDevice);  
 
-  SphereSDF* sph = new SphereSDF();
+  ImplicitFunction* sph = new SphereSDF();
   //  Build the implicit functions
   ImplicitFunction** sphere = (ImplicitFunction**) sph->putOnGPU();
   ImplicitFunction** box;
-  ImplicitFunction** csgUnion;  
+//  ImplicitFunction** csgUnion;  
 
   //  cudaMalloc((void**) &sphere, sizeof(ImplicitFunction**));
   cudaMalloc((void**) &box, sizeof(ImplicitFunction**));
-  cudaMalloc((void**) &csgUnion, sizeof(UnionIF**));  
+  //  cudaMalloc((void**) &csgUnion, sizeof(UnionIF**));  
 
   //  makeImplicitFunction<SphereSDF><<<1,1>>>(sphere);
   makeImplicitFunction<BoxSDF><<<1,1>>>(box);
-  makeImplicitFunction<UnionIF><<<1,1>>>(csgUnion);  
+  //  makeImplicitFunction<UnionIF><<<1,1>>>(csgUnion);  
 
   cudaDeviceSynchronize();
 
@@ -95,9 +95,9 @@ main()
   std::cout << "box value = " << value_host << "\n";
 
   // Print union value
-  evalImplicitFunction<<<1,1>>>(value_device, csgUnion, point_device);
-  cudaMemcpy(&value_host, value_device, sizeof(Real), cudaMemcpyDeviceToHost);      
-  std::cout << "union value = " << value_host << "\n";    
+  // evalImplicitFunction<<<1,1>>>(value_device, csgUnion, point_device);
+  // cudaMemcpy(&value_host, value_device, sizeof(Real), cudaMemcpyDeviceToHost);      
+  // std::cout << "union value = " << value_host << "\n";    
   
 #if 0
   cudaMemcpy(&v3, d_v3, 3 * sizeof(Real), cudaMemcpyDeviceToHost);
