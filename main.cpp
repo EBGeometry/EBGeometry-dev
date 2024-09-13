@@ -38,27 +38,67 @@ evalUnion(Real* val,  const ImplicitFunction* const f1, const ImplicitFunction* 
   return;
 }
 
+
+template <typename T>
+__global__
+void makeImplicitFunction(ImplicitFunction** func)
+{
+  (*func) = new T();
+}
+
+__global__
+void evalImplicitFunction(Real* value, ImplicitFunction** func, Vec3* point)
+{
+  *value = (*func)->value(*point);  
+}
+
+
 int
 main()
 {
-  Vec3 v1 = Vec3::one();
-  Vec3 v2 = Vec3::one();
-  Vec3 v3 = Vec3::one();
+  Vec3 point_host = Vec3::one();
+  Real value_host = -1.0;
+  
+  Vec3* point_device;
+  Real* value_device;
 
-  Vec3* d_v1;
-  Vec3* d_v2;
-  Vec3* d_v3;
+  cudaMalloc((void**)&point_device, sizeof(Vec3));
+  cudaMalloc((void**)&value_device, sizeof(Real));  
 
-  cudaMalloc((void**)&d_v1, sizeof(Vec3));
-  cudaMalloc((void**)&d_v2, sizeof(Vec3));
-  cudaMalloc((void**)&d_v3, sizeof(Vec3));
+  cudaMemcpy(point_device, &point_host, sizeof(Vec3), cudaMemcpyHostToDevice);
+  cudaMemcpy(value_device, &value_host, sizeof(Real), cudaMemcpyHostToDevice);  
 
-  cudaMemcpy(d_v1, &v1, sizeof(Vec3), cudaMemcpyHostToDevice);
-  cudaMemcpy(d_v2, &v2, sizeof(Vec3), cudaMemcpyHostToDevice);
-  cudaMemcpy(d_v3, &v3, sizeof(Vec3), cudaMemcpyHostToDevice);
+  //  Build the implicit functions
+  ImplicitFunction** sphere;
+  ImplicitFunction** box;
+  ImplicitFunction** csgUnion;  
 
-  addNumbers<<<1, 1>>>(d_v3, d_v1, d_v2);
+  cudaMalloc((void**) &sphere, sizeof(ImplicitFunction**));
+  cudaMalloc((void**) &box, sizeof(ImplicitFunction**));
+  cudaMalloc((void**) &csgUnion, sizeof(UnionIF**));  
 
+  makeImplicitFunction<SphereSDF><<<1,1>>>(sphere);
+  makeImplicitFunction<BoxSDF><<<1,1>>>(box);
+  makeImplicitFunction<UnionIF><<<1,1>>>(csgUnion);  
+
+  cudaDeviceSynchronize();
+
+  // Print sphere value
+  evalImplicitFunction<<<1,1>>>(value_device, sphere, point_device);
+  cudaMemcpy(&value_host, value_device, sizeof(Real), cudaMemcpyDeviceToHost);      
+  std::cout << "sphere value = " << value_host << "\n";
+
+  // Print box value
+  evalImplicitFunction<<<1,1>>>(value_device, box, point_device);
+  cudaMemcpy(&value_host, value_device, sizeof(Real), cudaMemcpyDeviceToHost);      
+  std::cout << "box value = " << value_host << "\n";
+
+  // Print union value
+  evalImplicitFunction<<<1,1>>>(value_device, csgUnion, point_device);
+  cudaMemcpy(&value_host, value_device, sizeof(Real), cudaMemcpyDeviceToHost);      
+  std::cout << "union value = " << value_host << "\n";    
+  
+#if 0
   cudaMemcpy(&v3, d_v3, 3 * sizeof(Real), cudaMemcpyDeviceToHost);
 
   cudaFree(d_v1);
@@ -75,6 +115,7 @@ main()
 
   //  cudaMalloc((void**) &devicePlane, sizeof(PlaneSDF));
   //  cudaMemcpy(devicePlane, &hostPlane, sizeof(PlaneSDF), cudaMemcpyHostToDevice);
+
 
   cudaMemcpy(&v3, d_v3, 3 * sizeof(Real), cudaMemcpyDeviceToHost);
 
@@ -123,6 +164,8 @@ main()
   cudaDeviceSynchronize();
 
   std::cout << *v4 << "\t" << *val << "\t" << (hostPlane)(*v4) << "\t" << hostPlane2(*v4) << "\t" << std::endl;
+
+#endif
 
   return 0;
 }

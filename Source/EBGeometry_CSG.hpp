@@ -26,6 +26,10 @@ namespace EBGeometry {
   class UnionIF : public ImplicitFunction
   {
   public:
+#if 1
+    EBGEOMETRY_GPU_HOST_DEVICE
+    UnionIF() {}
+#endif
     /*!
       @brief Full constructor. Computes the CSG union
       @param[in] a_implicitFunctions List of primitives
@@ -42,8 +46,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     virtual ~UnionIF() noexcept
-    {
-    }    
+    {}
 
     /*!
       @brief Implicit function for a union.
@@ -53,8 +56,12 @@ namespace EBGeometry {
     [[nodiscard]] inline Real
     value(const Vec3& a_point) const noexcept override
     {
+#if 0 // Original code
       return EBGeometry::min(m_f1->value(a_point), m_f2->value(a_point));
-    }    
+#else
+      return 3.0;
+#endif
+    }
 
   protected:
     /*!

@@ -76,6 +76,11 @@ namespace EBGeometry {
   class SphereSDF : public ImplicitFunction
   {
   public:
+#if 1 // Remove later
+    EBGEOMETRY_GPU_HOST_DEVICE
+    SphereSDF()
+    {}
+#endif
     /*!
       @brief Full constructor.
       @param[in] a_center Sphere center
@@ -103,7 +108,11 @@ namespace EBGeometry {
     [[nodiscard]] inline Real
     value(const Vec3& a_point) const noexcept override
     {
+#if 0
       return (a_point - m_center).length() - m_radius;
+#else
+      return 1.0;
+#endif
     }
 
   protected:
@@ -125,6 +134,11 @@ namespace EBGeometry {
   class BoxSDF : public ImplicitFunction
   {
   public:
+#if 1 // Remove later
+    EBGEOMETRY_GPU_HOST_DEVICE
+    BoxSDF()
+    {}
+#endif
     /*!
       @brief Full constructor. Sets the low and high corner
       @param[in] a_loCorner   Lower left corner
@@ -152,9 +166,10 @@ namespace EBGeometry {
     [[nodiscard]] inline Real
     value(const Vec3& a_point) const noexcept override
     {
-      // For each coordinate direction, we have delta[dir] if a_point[dir] falls
-      // between xLo and xHi. In this case delta[dir] will be the signed distance
-      // to the closest box face in the dir-direction. Otherwise, if a_point[dir]
+#if 0 // Original code                                                            \
+      // For each coordinate direction, we have delta[dir] if a_point[dir] falls  \
+      // between xLo and xHi. In this case delta[dir] will be the signed distance \
+      // to the closest box face in the dir-direction. Otherwise, if a_point[dir] \
       // is outside the corner we have delta[dir] > 0.
       const Vec3 delta(EBGeometry::max(m_loCorner[0] - a_point[0], a_point[0] - m_hiCorner[0]),
                        EBGeometry::max(m_loCorner[1] - a_point[1], a_point[1] - m_hiCorner[1]),
@@ -168,6 +183,9 @@ namespace EBGeometry {
       const Real d = EBGeometry::min(Real(0.0), delta[delta.maxDir(false)]) + max(Vec3::zero(), delta).length();
 
       return d;
+#else
+      return 2.0;
+#endif
     }
 
   protected:
