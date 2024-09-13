@@ -68,16 +68,17 @@ main()
   cudaMemcpy(point_device, &point_host, sizeof(Vec3), cudaMemcpyHostToDevice);
   cudaMemcpy(value_device, &value_host, sizeof(Real), cudaMemcpyHostToDevice);  
 
+  SphereSDF* sph = new SphereSDF();
   //  Build the implicit functions
-  ImplicitFunction** sphere;
+  ImplicitFunction** sphere = (ImplicitFunction**) sph->putOnGPU();
   ImplicitFunction** box;
   ImplicitFunction** csgUnion;  
 
-  cudaMalloc((void**) &sphere, sizeof(ImplicitFunction**));
+  //  cudaMalloc((void**) &sphere, sizeof(ImplicitFunction**));
   cudaMalloc((void**) &box, sizeof(ImplicitFunction**));
   cudaMalloc((void**) &csgUnion, sizeof(UnionIF**));  
 
-  makeImplicitFunction<SphereSDF><<<1,1>>>(sphere);
+  //  makeImplicitFunction<SphereSDF><<<1,1>>>(sphere);
   makeImplicitFunction<BoxSDF><<<1,1>>>(box);
   makeImplicitFunction<UnionIF><<<1,1>>>(csgUnion);  
 

@@ -52,7 +52,10 @@ namespace EBGeometry {
       @param[in] a_point Physical point in space.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Real virtual value(const Vec3& a_point) const noexcept = 0;
+    [[nodiscard]] inline Real virtual value(const Vec3& a_point) const noexcept
+    {
+      return -1.0;
+    }
   };
 
 } // namespace EBGeometry

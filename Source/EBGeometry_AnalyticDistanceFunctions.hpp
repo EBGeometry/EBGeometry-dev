@@ -18,6 +18,13 @@
 #include "EBGeometry_ImplicitFunction.hpp"
 #include "EBGeometry_Vec.hpp"
 
+template <typename T>
+__global__ void
+makeImpFunc(T** sphere)
+{
+  (*sphere) = new T();
+};
+
 namespace EBGeometry {
 
   /*!
@@ -101,11 +108,28 @@ namespace EBGeometry {
     {}
 
     /*!
+      @brief For building this sphere on the GPU
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    [[nodiscard]] inline SphereSDF**
+    putOnGPU() const noexcept
+    {
+      SphereSDF** sphere;
+
+      cudaMalloc((void**)&sphere, sizeof(SphereSDF**));
+
+      // __global__ auto kernel = [=](SphereSDF** func) -> void { (*func) = new SphereSDF(); };
+
+      makeImpFunc<<<1, 1>>>(sphere);
+
+      return sphere;
+    }
+
+    /*!
       @brief Signed distance function for sphere.
       @param[in] a_point Position.
     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Real
+    EBGEOMETRY_GPU_HOST_DEVICE [[nodiscard]] inline Real
     value(const Vec3& a_point) const noexcept override
     {
 #if 0
