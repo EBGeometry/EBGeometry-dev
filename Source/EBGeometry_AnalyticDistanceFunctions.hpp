@@ -24,19 +24,9 @@ namespace EBGeometry {
     @brief Signed distance function for a plane.
     @details User species a point on the plane and the outward normal vector.
   */
-  class PlaneSDF
+  class PlaneSDF : public ImplicitFunction
   {
   public:
-    /*!
-      @brief Disallowed weak construction
-    */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    inline PlaneSDF() noexcept
-    {
-      m_normal = Vec3::one();
-      m_point  = Vec3::zero();
-    }
-
     /*!
       @brief Full constructor
       @param[in] a_point      Point on the plane
@@ -50,47 +40,22 @@ namespace EBGeometry {
     }
 
     /*!
+      @brief Destructor
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    virtual ~PlaneSDF() noexcept
+    {}
+
+    /*!
       @brief Signed distance function for sphere.
       @param[in] a_point Position.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] inline Real
-    operator()(const Vec3& a_point) const noexcept
+    value(const Vec3& a_point) const noexcept override
     {
       return dot((a_point - m_point), m_normal);
     }
-
-    /*!
-      @brief Copy plane to the GPU.
-      @details This allocates memory and performs the copy. It is up to the user to free
-      the memory if it is no longer needed by using the freeFromGPU() call.
-    */
-    EBGEOMETRY_GPU_HOST
-    [[nodiscard]] inline PlaneSDF*
-    putOnGPU() const noexcept
-    {
-      PlaneSDF* plane;
-
-      cudaMalloc((void**)&plane, sizeof(PlaneSDF));
-
-      cudaMemcpy(plane, &(*this), sizeof(PlaneSDF), cudaMemcpyHostToDevice);
-
-      return plane;
-    }
-
-    /*!
-      @brief Free memory from the GPU
-      @details Free memory from GPU if the plane is no longer required on the device.
-      @note Calling this on the host allocation will return in an error.
-    */
-    // EBGEOMETRY_GPU_HOST_DEVICE
-    // inline void
-    // freeOnGPU() noexcept
-    // {
-    //   cudaFree(&(*this));
-
-    //   return;
-    // }
 
   protected:
     /*!
@@ -108,19 +73,9 @@ namespace EBGeometry {
     @brief Signed distance field for sphere.
     @details User specifies the center and radius. 
   */
-  class SphereSDF
+  class SphereSDF : public ImplicitFunction
   {
   public:
-    /*!
-      @brief Default constructor. Sets center ot zero and radius to one.
-    */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    inline SphereSDF() noexcept
-    {
-      m_center = Vec3::zero();
-      m_radius = 1.0;
-    }
-
     /*!
       @brief Full constructor.
       @param[in] a_center Sphere center
@@ -134,12 +89,19 @@ namespace EBGeometry {
     }
 
     /*!
+      @brief Destructor
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    virtual ~SphereSDF() noexcept
+    {}
+
+    /*!
       @brief Signed distance function for sphere.
       @param[in] a_point Position.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Real
-    operator()(const Vec3& a_point) const noexcept
+    [[nodiscard]] inline Real
+    value(const Vec3& a_point) const noexcept override
     {
       return (a_point - m_center).length() - m_radius;
     }
@@ -155,9 +117,70 @@ namespace EBGeometry {
     */
     Real m_radius;
   };
-} // namespace EBGeometry
 
-//static_assert(EBGeometry::ImplicitFunction<EBGeometry::PlaneSDF>);
-//static_assert(EBGeometry::ImplicitFunction<EBGeometry::SphereSDF>);
+  /*!
+    @brief Signed distance field for an axis-aligned box.
+    @details User inputs low and high corners of the box. 
+  */
+  class BoxSDF : public ImplicitFunction
+  {
+  public:
+    /*!
+      @brief Full constructor. Sets the low and high corner
+      @param[in] a_loCorner   Lower left corner
+      @param[in] a_hiCorner   Upper right corner
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    inline BoxSDF(const Vec3& a_loCorner, const Vec3& a_hiCorner) noexcept
+    {
+      this->m_loCorner = a_loCorner;
+      this->m_hiCorner = a_hiCorner;
+    }
+
+    /*!
+      @brief Destructor
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    inline ~BoxSDF() noexcept
+    {}
+
+    /*!
+      @brief Signed distance function for sphere.
+      @param[in] a_point Position.
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    [[nodiscard]] inline Real
+    value(const Vec3& a_point) const noexcept override
+    {
+      // For each coordinate direction, we have delta[dir] if a_point[dir] falls
+      // between xLo and xHi. In this case delta[dir] will be the signed distance
+      // to the closest box face in the dir-direction. Otherwise, if a_point[dir]
+      // is outside the corner we have delta[dir] > 0.
+      const Vec3 delta(EBGeometry::max(m_loCorner[0] - a_point[0], a_point[0] - m_hiCorner[0]),
+                       EBGeometry::max(m_loCorner[1] - a_point[1], a_point[1] - m_hiCorner[1]),
+                       EBGeometry::max(m_loCorner[2] - a_point[2], a_point[2] - m_hiCorner[2]));
+
+      // Note: max is max(Vec3, Vec3) and not EBGeometry::max. It returns a
+      // vector with coordinate-wise largest components. Note that the first part
+      // EBGeometry::min(...) is the signed distance on the inside of the box (delta will
+      // have negative components). The other part max(Vec3::zero(), ...) is
+      // for outside the box.
+      const Real d = EBGeometry::min(Real(0.0), delta[delta.maxDir(false)]) + max(Vec3::zero(), delta).length();
+
+      return d;
+    }
+
+  protected:
+    /*!
+      @brief Low box corner
+    */
+    Vec3 m_loCorner;
+
+    /*!
+      @brief High box corner
+    */
+    Vec3 m_hiCorner;
+  };
+} // namespace EBGeometry
 
 #endif
