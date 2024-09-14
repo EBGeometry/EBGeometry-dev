@@ -19,6 +19,14 @@
 namespace EBGeometry {
 
   /*!
+    @brief Shortcut for GPU pointer. Note that this is mostly used so that users
+    know from the typename which pointers are intended to be pointers to data allocated
+    on the device.
+  */
+  template <typename T>
+  using GPUPointer = T**;
+
+  /*!
     @brief Minimum operation of two numbers.
     @param[in] x Number to compare.
     @param[in] y Number to compare.     

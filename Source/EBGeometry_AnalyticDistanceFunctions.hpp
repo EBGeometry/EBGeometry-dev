@@ -18,14 +18,19 @@
 #include "EBGeometry_ImplicitFunction.hpp"
 #include "EBGeometry_Vec.hpp"
 
-template <typename T>
-__global__ void
-makeImpFunc(T** sphere)
-{
-  (*sphere) = new T();
-};
-
 namespace EBGeometry {
+
+  /*!
+    @brief Function for building an arbitrary implicit function. Used when constructing
+    implicit functions on the GPU. The user inputs the implicit function type (T) and the
+    constructor arguments required for constructing the function. 
+  */
+  template <typename T, typename... Args>
+  __global__ static void
+  buildImplicitFunction(GPUPointer<T> implicitFunction, Args... args)
+  {
+    (*implicitFunction) = new T(*args...);
+  };
 
   /*!
     @brief Signed distance function for a plane.
@@ -114,11 +119,18 @@ namespace EBGeometry {
     [[nodiscard]] inline void*
     putOnGPU() const noexcept override
     {
-      SphereSDF** sphere;
+      GPUPointer<SphereSDF> sphere;
+      Vec3*                 sphereCenter;
+      Real*                 sphereRadius;
 
       cudaMalloc((void**)&sphere, sizeof(SphereSDF**));
+      cudaMalloc((void**)&sphereCenter, sizeof(Vec3));
+      cudaMalloc((void**)&sphereRadius, sizeof(Real));
 
-      makeImpFunc<<<1, 1>>>(sphere);
+      cudaMemcpy(sphereCenter, &m_center, sizeof(Vec3), cudaMemcpyHostToDevice);
+      cudaMemcpy(sphereRadius, &m_radius, sizeof(Real), cudaMemcpyHostToDevice);
+
+      buildImplicitFunction<<<1, 1>>>(sphere, sphereCenter, sphereRadius);
 
       return sphere;
     }
@@ -133,7 +145,7 @@ namespace EBGeometry {
 #if 0
       return (a_point - m_center).length() - m_radius;
 #else
-      return 1.0;
+      return m_radius;
 #endif
     }
 
@@ -221,7 +233,7 @@ namespace EBGeometry {
 
       cudaMalloc((void**)&box, sizeof(BoxSDF**));
 
-      makeImpFunc<<<1, 1>>>(box);
+      //      makeImpFunc<<<1, 1>>>(box);
 
       return box;
     }
@@ -237,6 +249,7 @@ namespace EBGeometry {
     */
     Vec3 m_hiCorner;
   };
+
 } // namespace EBGeometry
 
 #endif

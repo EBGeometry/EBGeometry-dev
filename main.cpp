@@ -68,7 +68,7 @@ main()
   cudaMemcpy(point_device, &point_host, sizeof(Vec3), cudaMemcpyHostToDevice);
   cudaMemcpy(value_device, &value_host, sizeof(Real), cudaMemcpyHostToDevice);  
 
-  ImplicitFunction* sph = new SphereSDF();
+  ImplicitFunction* sph = new SphereSDF(Vec3::one(), 1.23456);
   //  Build the implicit functions
   ImplicitFunction** sphere = (ImplicitFunction**) sph->putOnGPU();
   ImplicitFunction** box;
@@ -90,9 +90,9 @@ main()
   std::cout << "sphere value = " << value_host << "\n";
 
   // Print box value
-  evalImplicitFunction<<<1,1>>>(value_device, box, point_device);
-  cudaMemcpy(&value_host, value_device, sizeof(Real), cudaMemcpyDeviceToHost);      
-  std::cout << "box value = " << value_host << "\n";
+  // evalImplicitFunction<<<1,1>>>(value_device, box, point_device);
+  // cudaMemcpy(&value_host, value_device, sizeof(Real), cudaMemcpyDeviceToHost);      
+  // std::cout << "box value = " << value_host << "\n";
 
   // Print union value
   // evalImplicitFunction<<<1,1>>>(value_device, csgUnion, point_device);
@@ -153,7 +153,6 @@ main()
   std::cout << *v4 << std::endl;  
 
   Real* val;
-
 
 
   cudaMallocManaged((void**) &val, sizeof(Real));
