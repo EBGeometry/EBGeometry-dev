@@ -7,7 +7,7 @@
 pout.*
 *.mod
 
-**build/**
+**/build/**
 docs/**
 
 Examples/AMReX_DCEL/plt*

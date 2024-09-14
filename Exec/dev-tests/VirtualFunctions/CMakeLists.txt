@@ -4,6 +4,7 @@ enable_language(CUDA)
 
 add_compile_definitions(EBGEOMETRY_ENABLE_CUDA)
 add_compile_definitions(EBGEOMETRY_ENABLE_DEBUG)
+set(EBGEOMETRY_HOME "/home/robertm/Projects/EBGeometry-dev")
 
 if(NOT DEFINED CMAKE_CUDA_STANDARD)
     set(CMAKE_CUDA_STANDARD 20)
@@ -11,7 +12,7 @@ if(NOT DEFINED CMAKE_CUDA_STANDARD)
 endif()
 
 # Source directories
-include_directories(Source)
+include_directories(${EBGEOMETRY_HOME})
 
 # Build executable
 add_executable(main.out main.cpp)
