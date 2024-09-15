@@ -13,6 +13,7 @@
 #define EBGeometry_CSG
 
 // Our includes
+#include "EBGeometry_AnalyticDistanceFunctions.hpp"
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_GPUTypes.hpp"
 #include "EBGeometry_ImplicitFunction.hpp"
