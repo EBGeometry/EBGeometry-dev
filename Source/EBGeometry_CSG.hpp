@@ -29,7 +29,8 @@ namespace EBGeometry {
   public:
 #if 1
     EBGEOMETRY_GPU_HOST_DEVICE
-    UnionIF() {}
+    UnionIF()
+    {}
 #endif
     /*!
       @brief Full constructor. Computes the CSG union
@@ -63,19 +64,20 @@ namespace EBGeometry {
 #ifdef EBGEOMETRY_ENABLE_GPU
     EBGEOMETRY_GPU_HOST
     [[nodiscard]] virtual void*
-    putOnGPU() const noexcept override {
+    putOnGPU() const noexcept override
+    {
       GPUPointer<UnionIF> csgUnion;
-      
-      cudaMalloc((void**)&csgUnion, sizeof(GPUPointer<UnionIF>));
-      
-      auto f1_device = (GPUPointer<ImplicitFunction>) m_f1->putOnGPU();
-      auto f2_device = (GPUPointer<ImplicitFunction>) m_f2->putOnGPU();
 
-      buildImplicitFunction<<<1,1>>>(csgUnion, f1_device, f2_device);
+      cudaMalloc((void**)&csgUnion, sizeof(GPUPointer<UnionIF>));
+
+      auto f1_device = (GPUPointer<ImplicitFunction>)m_f1->putOnGPU();
+      auto f2_device = (GPUPointer<ImplicitFunction>)m_f2->putOnGPU();
+
+      buildImplicitFunction<<<1, 1>>>(csgUnion, f1_device, f2_device);
 
       return csgUnion;
     }
-#endif    
+#endif
 
   protected:
     /*!
