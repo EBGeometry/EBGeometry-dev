@@ -22,22 +22,24 @@
 namespace EBGeometry {
   namespace SFC {
 
-    inline Index::Index() noexcept : Index(0,0,0){
-    }
-    
-    inline Index::Index(unsigned int x, unsigned int y, unsigned int z) noexcept {
+    inline Index::Index() noexcept : Index(0, 0, 0)
+    {}
+
+    inline Index::Index(unsigned int x, unsigned int y, unsigned int z) noexcept
+    {
       m_indices[0] = x;
       m_indices[1] = y;
       m_indices[2] = z;
     }
 
-    inline Index::~Index() noexcept {
-    }    
+    inline Index::~Index() noexcept
+    {}
 
     inline unsigned int
-    Index::operator[](const int a_dir) const noexcept {
+    Index::operator[](const int a_dir) const noexcept
+    {
       EBGEOMETRY_EXPECT(a_dir <= 2);
-      EBGEOMETRY_EXPECT(a_dir >= 0);      
+      EBGEOMETRY_EXPECT(a_dir >= 0);
 
       return m_indices[a_dir];
     }

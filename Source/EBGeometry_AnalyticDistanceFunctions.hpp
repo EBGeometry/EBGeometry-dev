@@ -164,11 +164,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE [[nodiscard]] inline Real
     value(const Vec3& a_point) const noexcept override
     {
-#if 0
       return (a_point - m_center).length() - m_radius;
-#else
-      return m_radius;
-#endif
     }
 
   protected:
@@ -217,7 +213,6 @@ namespace EBGeometry {
     [[nodiscard]] inline Real
     value(const Vec3& a_point) const noexcept override
     {
-#if 0 // Original code                                                            \
       // For each coordinate direction, we have delta[dir] if a_point[dir] falls  \
       // between xLo and xHi. In this case delta[dir] will be the signed distance \
       // to the closest box face in the dir-direction. Otherwise, if a_point[dir] \
@@ -234,9 +229,6 @@ namespace EBGeometry {
       const Real d = EBGeometry::min(Real(0.0), delta[delta.maxDir(false)]) + max(Vec3::zero(), delta).length();
 
       return d;
-#else
-      return 2.0;
-#endif
     }
 
     /*!

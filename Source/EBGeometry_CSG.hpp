@@ -27,11 +27,6 @@ namespace EBGeometry {
   class UnionIF : public ImplicitFunction
   {
   public:
-#if 1
-    EBGEOMETRY_GPU_HOST_DEVICE
-    UnionIF()
-    {}
-#endif
     /*!
       @brief Full constructor. Computes the CSG union
       @param[in] a_implicitFunctions List of primitives

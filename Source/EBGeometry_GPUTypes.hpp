@@ -61,7 +61,7 @@ namespace EBGeometry {
     [[nodiscard]] inline Real
     max() noexcept
     {
-      return EBGeometry::MaximumReal;      
+      return EBGeometry::MaximumReal;
     }
 
     /*!

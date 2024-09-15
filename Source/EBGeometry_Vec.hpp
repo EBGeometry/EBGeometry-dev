@@ -731,7 +731,7 @@ namespace EBGeometry {
     @param[in] v Vector.
   */
   EBGEOMETRY_GPU_HOST_DEVICE
-[[nodiscard]]   inline Real
+  [[nodiscard]] inline Real
   length(const Vec3& v) noexcept;
 
 } // namespace EBGeometry

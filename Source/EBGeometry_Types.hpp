@@ -16,7 +16,7 @@
 
 #ifdef EBGEOMETRY_USE_DOUBLE
 namespace EBGeometry {
-  using Real = double;
+  using Real                 = double;
   constexpr Real MaximumReal = DBL_MAX;
   constexpr Real MinimumReal = DBL_MIN;
   constexpr Real LowestReal  = -DBL_MAX;

@@ -14,7 +14,7 @@
 
 // Can only define one GPU backend
 #if defined(EBGEOMETRY_ENABLE_CUDA) && defined(EBGEOMETRY_ENABLE_HIP)
-#error "Can not define both EBGEOMETRY_ENABLE_CUDA and EBGEOMETRY_ENABLE_HIP" 
+#error "Can not define both EBGEOMETRY_ENABLE_CUDA and EBGEOMETRY_ENABLE_HIP"
 #endif
 
 // Include GPU library headers
