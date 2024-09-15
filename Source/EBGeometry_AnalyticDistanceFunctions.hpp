@@ -68,6 +68,29 @@ namespace EBGeometry {
     {
       return dot((a_point - m_point), m_normal);
     }
+    
+    /*!
+      @brief Factory method for building the implicit function on the GPU.
+    */
+    EBGEOMETRY_GPU_HOST
+    [[nodiscard]] inline void*
+    putOnGPU() const noexcept override
+    {
+      GPUPointer<PlaneSDF> plane;
+      Vec3*                point;
+      Vec3*                normal;
+
+      cudaMalloc((void**)&plane, sizeof(GPUPointer<PlaneSDF>));
+      cudaMalloc((void**)&point, sizeof(Vec3));
+      cudaMalloc((void**)&normal, sizeof(Vec3));
+
+      cudaMemcpy(point, &m_point, sizeof(Vec3), cudaMemcpyHostToDevice);
+      cudaMemcpy(normal, &m_normal, sizeof(Vec3), cudaMemcpyHostToDevice);
+
+      buildImplicitFunction<<<1, 1>>>(plane, point, normal);
+
+      return plane;
+    }
 
   protected:
     /*!
@@ -113,7 +136,7 @@ namespace EBGeometry {
     {}
 
     /*!
-      @brief For building this sphere on the GPU
+      @brief Factory method for building the implicit function on the GPU.
     */
     EBGEOMETRY_GPU_HOST
     [[nodiscard]] inline void*
@@ -223,20 +246,29 @@ namespace EBGeometry {
     }
 
     /*!
-      @brief For building this sphere on the GPU
+      @brief Factory method for building the implicit function on the GPU.
     */
+#ifdef EBGEOMETRY_ENABLE_GPU
     EBGEOMETRY_GPU_HOST
     [[nodiscard]] inline void*
     putOnGPU() const noexcept override
     {
-      BoxSDF** box;
+      GPUPointer<BoxSDF> box;
+      Vec3*              loCorner;
+      Vec3*              hiCorner;
 
-      cudaMalloc((void**)&box, sizeof(BoxSDF**));
+      cudaMalloc((void**)&box, sizeof(GPUPointer<BoxSDF>));
+      cudaMalloc((void**)&loCorner, sizeof(Vec3));
+      cudaMalloc((void**)&hiCorner, sizeof(Vec3));
 
-      //      makeImpFunc<<<1, 1>>>(box);
+      cudaMemcpy(loCorner, &m_loCorner, sizeof(Vec3), cudaMemcpyHostToDevice);
+      cudaMemcpy(hiCorner, &m_hiCorner, sizeof(Vec3), cudaMemcpyHostToDevice);
+
+      buildImplicitFunction<<<1, 1>>>(box, loCorner, hiCorner);
 
       return box;
     }
+#endif
 
   protected:
     /*!
