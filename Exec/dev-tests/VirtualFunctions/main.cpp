@@ -10,22 +10,6 @@
 
 using namespace EBGeometry;
 
-EBGEOMETRY_GPU_GLOBAL
-void
-addNumbers(Vec3* c, const Vec3* const a, const Vec3* const b)
-{
-  *c = *a + *b;
-
-  return;
-}
-
-template <typename T>
-__global__ void
-makeImplicitFunction(ImplicitFunction** func)
-{
-  (*func) = new T();
-}
-
 __global__ void
 evalImplicitFunction(Real* value, ImplicitFunction** func, Vec3* point)
 {
