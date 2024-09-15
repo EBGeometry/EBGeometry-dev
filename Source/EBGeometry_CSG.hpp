@@ -57,18 +57,23 @@ namespace EBGeometry {
     [[nodiscard]] inline Real
     value(const Vec3& a_point) const noexcept override
     {
-#if 1 // Original code
       return EBGeometry::min(m_f1->value(a_point), m_f2->value(a_point));
-#else
-      return 3.0;
-#endif
     }
 
 #ifdef EBGEOMETRY_ENABLE_GPU
     EBGEOMETRY_GPU_HOST
     [[nodiscard]] virtual void*
     putOnGPU() const noexcept override {
-      return nullptr;
+      GPUPointer<UnionIF> csgUnion;
+      
+      cudaMalloc((void**)&csgUnion, sizeof(GPUPointer<UnionIF>));
+      
+      auto f1_device = (GPUPointer<ImplicitFunction>) m_f1->putOnGPU();
+      auto f2_device = (GPUPointer<ImplicitFunction>) m_f2->putOnGPU();
+
+      buildImplicitFunction<<<1,1>>>(csgUnion, f1_device, f2_device);
+
+      return csgUnion;
     }
 #endif    
 

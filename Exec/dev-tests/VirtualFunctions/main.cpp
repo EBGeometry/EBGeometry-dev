@@ -51,9 +51,11 @@ main()
 
   ImplicitFunction* sphere_host = new SphereSDF(Vec3::one(), 1.23456);
   ImplicitFunction* box_host = new BoxSDF(-Vec3::one(), Vec3::one());
+  ImplicitFunction* union_host = new UnionIF(sphere_host, box_host);  
   
   auto sphere_device = (GPUPointer<ImplicitFunction>) sphere_host->putOnGPU();
   auto box_device = (GPUPointer<ImplicitFunction>) box_host->putOnGPU();
+  auto union_device = (GPUPointer<ImplicitFunction>) union_host->putOnGPU();  
 
   cudaDeviceSynchronize();
 
@@ -68,11 +70,9 @@ main()
   std::cout << "box value = " << value_host << "\n";  
 
   // Print union value
-  UnionIF* union_host = new UnionIF(sphere_host, box_host);
-  std::cout << "union value = " << union_host->value(point_host) << "\n";
-  // evalImplicitFunction<<<1,1>>>(value_device, csgUnion, point_device);
-  // cudaMemcpy(&value_host, value_device, sizeof(Real), cudaMemcpyDeviceToHost);      
-  // std::cout << "union value = " << value_host << "\n";    
+  evalImplicitFunction<<<1,1>>>(value_device, union_device, point_device);
+  cudaMemcpy(&value_host, value_device, sizeof(Real), cudaMemcpyDeviceToHost);      
+  std::cout << "union value = " << value_host << "\n";    
 
   return 0;
 }
