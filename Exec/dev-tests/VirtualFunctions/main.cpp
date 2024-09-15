@@ -68,6 +68,8 @@ main()
   std::cout << "box value = " << value_host << "\n";  
 
   // Print union value
+  UnionIF* union_host = new UnionIF(sphere_host, box_host);
+  std::cout << "union value = " << union_host->value(point_host) << "\n";
   // evalImplicitFunction<<<1,1>>>(value_device, csgUnion, point_device);
   // cudaMemcpy(&value_host, value_device, sizeof(Real), cudaMemcpyDeviceToHost);      
   // std::cout << "union value = " << value_host << "\n";    

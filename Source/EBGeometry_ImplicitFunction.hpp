@@ -61,9 +61,11 @@ namespace EBGeometry {
       @details This function must create another implicit function on the GPU -- it is
       exceptionally important that implementations do this since vtables are not copyable from host to device.
     */
+#ifdef EBGEOMETRY_ENABLE_GPU
     EBGEOMETRY_GPU_HOST
     [[nodiscard]] virtual void*
     putOnGPU() const noexcept = 0;
+#endif
   };
 
 } // namespace EBGeometry

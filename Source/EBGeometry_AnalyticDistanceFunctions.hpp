@@ -68,10 +68,11 @@ namespace EBGeometry {
     {
       return dot((a_point - m_point), m_normal);
     }
-    
+
     /*!
       @brief Factory method for building the implicit function on the GPU.
     */
+#ifdef EBGEOMETRY_ENABLE_GPU
     EBGEOMETRY_GPU_HOST
     [[nodiscard]] inline void*
     putOnGPU() const noexcept override
@@ -91,6 +92,7 @@ namespace EBGeometry {
 
       return plane;
     }
+#endif
 
   protected:
     /*!
@@ -111,11 +113,6 @@ namespace EBGeometry {
   class SphereSDF : public ImplicitFunction
   {
   public:
-#if 1 // Remove later
-    EBGEOMETRY_GPU_HOST_DEVICE
-    SphereSDF()
-    {}
-#endif
     /*!
       @brief Full constructor.
       @param[in] a_center Sphere center
@@ -138,6 +135,7 @@ namespace EBGeometry {
     /*!
       @brief Factory method for building the implicit function on the GPU.
     */
+#ifdef EBGEOMETRY_ENABLE_GPU
     EBGEOMETRY_GPU_HOST
     [[nodiscard]] inline void*
     putOnGPU() const noexcept override
@@ -157,6 +155,7 @@ namespace EBGeometry {
 
       return sphere;
     }
+#endif
 
     /*!
       @brief Signed distance function for sphere.
@@ -191,11 +190,6 @@ namespace EBGeometry {
   class BoxSDF : public ImplicitFunction
   {
   public:
-#if 1 // Remove later
-    EBGEOMETRY_GPU_HOST_DEVICE
-    BoxSDF()
-    {}
-#endif
     /*!
       @brief Full constructor. Sets the low and high corner
       @param[in] a_loCorner   Lower left corner
