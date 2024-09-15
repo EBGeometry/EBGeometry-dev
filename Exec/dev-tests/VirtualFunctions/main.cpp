@@ -19,7 +19,7 @@ evalImplicitFunction(Real* value, ImplicitFunction** func, Vec3* point)
 int
 main()
 {
-  Vec3 point_host = Vec3::one();
+  Vec3 point_host = 8 * Vec3::one();
   Real value_host = -1.0;
 
   Vec3* point_device;
@@ -31,15 +31,22 @@ main()
   cudaMemcpy(point_device, &point_host, sizeof(Vec3), cudaMemcpyHostToDevice);
   cudaMemcpy(value_device, &value_host, sizeof(Real), cudaMemcpyHostToDevice);
 
+  ImplicitFunction* plane_host  = new PlaneSDF(Vec3::one(), Vec3::unit(2));
   ImplicitFunction* sphere_host = new SphereSDF(Vec3::one(), 1.23456);
   ImplicitFunction* box_host    = new BoxSDF(-Vec3::one(), Vec3::one());
   ImplicitFunction* union_host  = new UnionIF(sphere_host, box_host);
 
+  auto plane_device  = (GPUPointer<ImplicitFunction>)plane_host->putOnGPU();
   auto sphere_device = (GPUPointer<ImplicitFunction>)sphere_host->putOnGPU();
   auto box_device    = (GPUPointer<ImplicitFunction>)box_host->putOnGPU();
   auto union_device  = (GPUPointer<ImplicitFunction>)union_host->putOnGPU();
 
   cudaDeviceSynchronize();
+
+  // Print plane value
+  evalImplicitFunction<<<1, 1>>>(value_device, plane_device, point_device);
+  cudaMemcpy(&value_host, value_device, sizeof(Real), cudaMemcpyDeviceToHost);
+  std::cout << "plane value = " << value_host << "\n";
 
   // Print sphere value
   evalImplicitFunction<<<1, 1>>>(value_device, sphere_device, point_device);
