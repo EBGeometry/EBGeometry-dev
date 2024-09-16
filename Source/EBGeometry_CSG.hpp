@@ -101,6 +101,7 @@ namespace EBGeometry {
     [[nodiscard]] virtual UnionIF*
     buildOnHost() const noexcept override
     {
+      //      return new UnionIF(m_f1, m_f2);
       return nullptr;
     }
 
