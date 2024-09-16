@@ -25,24 +25,30 @@ main()
   Vec3* point_device;
   Real* value_device;
 
-  cudaMalloc((void**)&point_device, sizeof(Vec3));
-  cudaMalloc((void**)&value_device, sizeof(Real));
+  cudaMallocManaged((void**)&point_device, sizeof(Vec3));
+  cudaMallocManaged((void**)&value_device, sizeof(Real));
 
   cudaMemcpy(point_device, &point_host, sizeof(Vec3), cudaMemcpyHostToDevice);
   cudaMemcpy(value_device, &value_host, sizeof(Real), cudaMemcpyHostToDevice);
 
-  ImplicitFunction* plane_host  = new PlaneSDF(Vec3::one(), Vec3::unit(2));
+  //  ImplicitFunction* plane_host  = new PlaneSDF(Vec3::one(), Vec3::unit(2));
   ImplicitFunction* sphere_host = new SphereSDF(Vec3::one(), 1.23456);
   ImplicitFunction* box_host    = new BoxSDF(-Vec3::one(), Vec3::one());
   ImplicitFunction* union_host  = new UnionIF(sphere_host, box_host);
 
-  auto plane_device  = (GPUPointer<ImplicitFunction>)plane_host->putOnGPU();
-  auto sphere_device = (GPUPointer<ImplicitFunction>)sphere_host->putOnGPU();
-  auto box_device    = (GPUPointer<ImplicitFunction>)box_host->putOnGPU();
+  PlaneSDFFactory planeFactory(point_device, point_device);
+  ImplicitFunction* plane_host = planeFactory.buildOnHost();
+  ImplicitFunction** plane_device = (ImplicitFunction**) planeFactory.buildOnDevice();  
+
+  //  ImplicitFunction** plane_device  = (GPUPointer<ImplicitFunction>)plane_host->putOnGPU();
+  ImplicitFunction** sphere_device = (GPUPointer<ImplicitFunction>)sphere_host->putOnGPU();
+  ImplicitFunction** box_device    = (GPUPointer<ImplicitFunction>)box_host->putOnGPU();
   //  auto union_device  = (GPUPointer<ImplicitFunction>)union_host->putOnGPU();
 
   UnionIFFactory factory(sphere_device, box_device);
-  auto union_device = (GPUPointer<ImplicitFunction>) factory.buildOnDevice();
+  //  UnionIFFactory factory2(&sphere_host, &box_host);
+  auto union_device = (GPUPointer<ImplicitFunction>)factory.buildOnDevice();
+  //  auto union_device2 = (ImplicitFunction*) factory2.buildOnHost();
 
   cudaDeviceSynchronize();
 

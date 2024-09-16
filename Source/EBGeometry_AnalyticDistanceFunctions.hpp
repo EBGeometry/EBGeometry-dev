@@ -96,6 +96,46 @@ namespace EBGeometry {
   };
 
   /*!
+    @brief Factory method for building UnionIF objects on the host or device.
+  */
+  class PlaneSDFFactory : public ImplicitFunctionFactory<PlaneSDF>
+  {
+  public:
+    EBGEOMETRY_GPU_HOST
+    PlaneSDFFactory(const Vec3* a_point, const Vec3* a_normal) noexcept
+    {
+      m_point = a_point;
+      m_normal = a_normal;
+    };
+
+    EBGEOMETRY_GPU_HOST
+    [[nodiscard]] virtual PlaneSDF*
+    buildOnHost() const noexcept override
+    {
+      return new PlaneSDF(*m_point, *m_normal);
+    }
+
+    /*!
+      @brief Build implicit function on the device
+    */
+    EBGEOMETRY_GPU_HOST
+    [[nodiscard]] virtual PlaneSDF**
+    buildOnDevice() const noexcept override
+    {
+      PlaneSDF** plane = allocateImplicitFunctionOnDevice<PlaneSDF>();
+
+      createImplicitFunctionOnDevice<<<1, 1>>>(plane, m_point, m_normal);
+
+      return plane;
+    };
+  protected:
+
+    const Vec3* m_point;
+
+    const Vec3* m_normal;    
+  };
+
+  /*!
     @brief Signed distance field for sphere.
     @details User specifies the center and radius. 
   */
