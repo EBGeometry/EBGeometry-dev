@@ -39,7 +39,10 @@ main()
   auto plane_device  = (GPUPointer<ImplicitFunction>)plane_host->putOnGPU();
   auto sphere_device = (GPUPointer<ImplicitFunction>)sphere_host->putOnGPU();
   auto box_device    = (GPUPointer<ImplicitFunction>)box_host->putOnGPU();
-  auto union_device  = (GPUPointer<ImplicitFunction>)union_host->putOnGPU();
+  //  auto union_device  = (GPUPointer<ImplicitFunction>)union_host->putOnGPU();
+
+  UnionIFFactory factory(sphere_device, box_device);
+  auto union_device = (GPUPointer<ImplicitFunction>) factory.buildOnDevice();
 
   cudaDeviceSynchronize();
 

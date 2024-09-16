@@ -68,6 +68,27 @@ namespace EBGeometry {
 #endif
   };
 
+  /*!
+    @brief Parent class for building implicit functions
+  */
+  template <typename T>
+  class ImplicitFunctionFactory
+  {
+  public:
+    /*!
+      @brief Build implicit function on host
+    */
+    EBGEOMETRY_GPU_HOST
+    virtual T*
+    buildOnHost() const noexcept = 0;
+
+    /*!
+      @brief Build implicit function on the device
+    */
+    EBGEOMETRY_GPU_HOST
+    virtual GPUPointer<T>
+    buildOnDevice() const noexcept = 0;
+  };
 } // namespace EBGeometry
 
 #endif
