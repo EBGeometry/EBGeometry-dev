@@ -21,18 +21,6 @@
 namespace EBGeometry {
 
   /*!
-    @brief Function for building an arbitrary implicit function. Used when constructing
-    implicit functions on the GPU. The user inputs the implicit function type (T) and the
-    constructor arguments required for constructing the function. 
-  */
-  template <typename T, typename... Args>
-  __global__ static void
-  buildImplicitFunction(GPUPointer<T> implicitFunction, Args... args)
-  {
-    (*implicitFunction) = new T(*args...);
-  };
-
-  /*!
     @brief Signed distance function for a plane.
     @details User species a point on the plane and the outward normal vector.
   */
@@ -77,18 +65,19 @@ namespace EBGeometry {
     [[nodiscard]] inline void*
     putOnGPU() const noexcept override
     {
-      GPUPointer<PlaneSDF> plane;
-      Vec3*                point;
-      Vec3*                normal;
+      GPUPointer<PlaneSDF> plane = allocateImplicitFunctionOnDevice<PlaneSDF>();
 
-      cudaMalloc((void**)&plane, sizeof(GPUPointer<PlaneSDF>));
+      Vec3* point;
+      Vec3* normal;
+
+      //      cudaMalloc((void**)&plane, sizeof(GPUPointer<PlaneSDF>));
       cudaMalloc((void**)&point, sizeof(Vec3));
       cudaMalloc((void**)&normal, sizeof(Vec3));
 
       cudaMemcpy(point, &m_point, sizeof(Vec3), cudaMemcpyHostToDevice);
       cudaMemcpy(normal, &m_normal, sizeof(Vec3), cudaMemcpyHostToDevice);
 
-      buildImplicitFunction<<<1, 1>>>(plane, point, normal);
+      createImplicitFunctionOnDevice<<<1, 1>>>(plane, point, normal);
 
       return plane;
     }
@@ -140,18 +129,18 @@ namespace EBGeometry {
     [[nodiscard]] inline void*
     putOnGPU() const noexcept override
     {
-      GPUPointer<SphereSDF> sphere;
-      Vec3*                 sphereCenter;
-      Real*                 sphereRadius;
+      GPUPointer<SphereSDF> sphere = allocateImplicitFunctionOnDevice<SphereSDF>();
 
-      cudaMalloc((void**)&sphere, sizeof(SphereSDF**));
+      Vec3* sphereCenter;
+      Real* sphereRadius;
+
       cudaMalloc((void**)&sphereCenter, sizeof(Vec3));
       cudaMalloc((void**)&sphereRadius, sizeof(Real));
 
       cudaMemcpy(sphereCenter, &m_center, sizeof(Vec3), cudaMemcpyHostToDevice);
       cudaMemcpy(sphereRadius, &m_radius, sizeof(Real), cudaMemcpyHostToDevice);
 
-      buildImplicitFunction<<<1, 1>>>(sphere, sphereCenter, sphereRadius);
+      createImplicitFunctionOnDevice<<<1, 1>>>(sphere, sphereCenter, sphereRadius);
 
       return sphere;
     }
@@ -239,18 +228,18 @@ namespace EBGeometry {
     [[nodiscard]] inline void*
     putOnGPU() const noexcept override
     {
-      GPUPointer<BoxSDF> box;
-      Vec3*              loCorner;
-      Vec3*              hiCorner;
+      GPUPointer<BoxSDF> box = allocateImplicitFunctionOnDevice<BoxSDF>();
 
-      cudaMalloc((void**)&box, sizeof(GPUPointer<BoxSDF>));
+      Vec3* loCorner;
+      Vec3* hiCorner;
+
       cudaMalloc((void**)&loCorner, sizeof(Vec3));
       cudaMalloc((void**)&hiCorner, sizeof(Vec3));
 
       cudaMemcpy(loCorner, &m_loCorner, sizeof(Vec3), cudaMemcpyHostToDevice);
       cudaMemcpy(hiCorner, &m_hiCorner, sizeof(Vec3), cudaMemcpyHostToDevice);
 
-      buildImplicitFunction<<<1, 1>>>(box, loCorner, hiCorner);
+      createImplicitFunctionOnDevice<<<1, 1>>>(box, loCorner, hiCorner);
 
       return box;
     }

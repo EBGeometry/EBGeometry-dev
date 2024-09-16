@@ -61,14 +61,12 @@ namespace EBGeometry {
     [[nodiscard]] virtual void*
     putOnGPU() const noexcept override
     {
-      GPUPointer<UnionIF> csgUnion;
-
-      cudaMalloc((void**)&csgUnion, sizeof(GPUPointer<UnionIF>));
+      GPUPointer<UnionIF> csgUnion = allocateImplicitFunctionOnDevice<UnionIF>();
 
       auto f1_device = (GPUPointer<ImplicitFunction>)m_f1->putOnGPU();
       auto f2_device = (GPUPointer<ImplicitFunction>)m_f2->putOnGPU();
 
-      buildImplicitFunction<<<1, 1>>>(csgUnion, f1_device, f2_device);
+      createImplicitFunctionOnDevice<<<1, 1>>>(csgUnion, f1_device, f2_device);
 
       return csgUnion;
     }
