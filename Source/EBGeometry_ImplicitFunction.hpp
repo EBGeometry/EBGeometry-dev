@@ -14,6 +14,7 @@
 
 // Std includes
 #include <type_traits>
+#include <memory>
 
 // Our includes
 #include "EBGeometry_Types.hpp"
@@ -70,7 +71,7 @@ namespace EBGeometry {
       @brief Build implicit function on host
     */
     EBGEOMETRY_GPU_HOST
-    virtual T*
+    virtual std::shared_ptr<T>
     buildOnHost() const noexcept = 0;
 
     /*!

@@ -92,10 +92,10 @@ namespace EBGeometry {
       @brief Build plane on host. 
     */
     EBGEOMETRY_GPU_HOST
-    [[nodiscard]] virtual PlaneSDF*
+    [[nodiscard]] virtual std::shared_ptr<PlaneSDF>
     buildOnHost() const noexcept override
     {
-      return new PlaneSDF(*m_point, *m_normal);
+      return std::make_shared<PlaneSDF>(*m_point, *m_normal);
     }
 
     /*!
@@ -196,10 +196,10 @@ namespace EBGeometry {
       @brief Build sphere on host. 
     */
     EBGEOMETRY_GPU_HOST
-    [[nodiscard]] virtual SphereSDF*
+    [[nodiscard]] virtual std::shared_ptr<SphereSDF>
     buildOnHost() const noexcept override
     {
-      return new SphereSDF(*m_center, *m_radius);
+      return std::make_shared<SphereSDF>(*m_center, *m_radius);
     }
 
     /*!
@@ -315,10 +315,10 @@ namespace EBGeometry {
       @brief Build BoxSDF on host. 
     */
     EBGEOMETRY_GPU_HOST
-    [[nodiscard]] virtual BoxSDF*
+    [[nodiscard]] virtual std::shared_ptr<BoxSDF>
     buildOnHost() const noexcept override
     {
-      return new BoxSDF(*m_loCorner, *m_hiCorner);
+      return std::make_shared<BoxSDF>(*m_loCorner, *m_hiCorner);
     }
 
     /*!
