@@ -72,5 +72,8 @@ main()
   cudaDeviceSynchronize();
   std::cout << "union value = " << value_host << "\n";
 
+  cudaFree(point_device);
+  cudaFree(value_device);  
+
   return 0;
 }
