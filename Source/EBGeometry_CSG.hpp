@@ -56,22 +56,6 @@ namespace EBGeometry {
       return EBGeometry::min(m_f1->value(a_point), m_f2->value(a_point));
     }
 
-#ifdef EBGEOMETRY_ENABLE_GPU
-    EBGEOMETRY_GPU_HOST
-    [[nodiscard]] virtual void*
-    putOnGPU() const noexcept override
-    {
-      GPUPointer<UnionIF> csgUnion = allocateImplicitFunctionOnDevice<UnionIF>();
-
-      auto f1_device = (GPUPointer<ImplicitFunction>)m_f1->putOnGPU();
-      auto f2_device = (GPUPointer<ImplicitFunction>)m_f2->putOnGPU();
-
-      createImplicitFunctionOnDevice<<<1, 1>>>(csgUnion, f1_device, f2_device);
-
-      return csgUnion;
-    }
-#endif
-
   protected:
     /*!
       @brief First implicit function

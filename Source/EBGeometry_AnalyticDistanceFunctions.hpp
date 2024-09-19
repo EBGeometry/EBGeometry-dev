@@ -57,32 +57,6 @@ namespace EBGeometry {
       return dot((a_point - m_point), m_normal);
     }
 
-    /*!
-      @brief Factory method for building the implicit function on the GPU.
-    */
-#ifdef EBGEOMETRY_ENABLE_GPU
-    EBGEOMETRY_GPU_HOST
-    [[nodiscard]] inline void*
-    putOnGPU() const noexcept override
-    {
-      GPUPointer<PlaneSDF> plane = allocateImplicitFunctionOnDevice<PlaneSDF>();
-
-      Vec3* point;
-      Vec3* normal;
-
-      //      cudaMalloc((void**)&plane, sizeof(GPUPointer<PlaneSDF>));
-      cudaMalloc((void**)&point, sizeof(Vec3));
-      cudaMalloc((void**)&normal, sizeof(Vec3));
-
-      cudaMemcpy(point, &m_point, sizeof(Vec3), cudaMemcpyHostToDevice);
-      cudaMemcpy(normal, &m_normal, sizeof(Vec3), cudaMemcpyHostToDevice);
-
-      createImplicitFunctionOnDevice<<<1, 1>>>(plane, point, normal);
-
-      return plane;
-    }
-#endif
-
   protected:
     /*!
       @brief Point on plane
@@ -96,18 +70,27 @@ namespace EBGeometry {
   };
 
   /*!
-    @brief Factory method for building UnionIF objects on the host or device.
+    @brief Factory class for building PlaneSDF objects on the host or device.
   */
   class PlaneSDFFactory : public ImplicitFunctionFactory<PlaneSDF>
   {
   public:
+
+    /*!
+      @brief Constructor for creating PlaneSDF on the host or GPU
+      @param[in] a_point Point on the plane
+      @param[in] a_normal Plane normal vector (pointing outwards from the body).
+    */
     EBGEOMETRY_GPU_HOST
-    PlaneSDFFactory(const Vec3* a_point, const Vec3* a_normal) noexcept
+    inline PlaneSDFFactory(const Vec3* a_point, const Vec3* a_normal) noexcept
     {
       m_point = a_point;
       m_normal = a_normal;
     };
 
+    /*!
+      @brief Build plane on host. 
+    */
     EBGEOMETRY_GPU_HOST
     [[nodiscard]] virtual PlaneSDF*
     buildOnHost() const noexcept override
@@ -116,7 +99,7 @@ namespace EBGeometry {
     }
 
     /*!
-      @brief Build implicit function on the device
+      @brief Build plane on the device.
     */
     EBGEOMETRY_GPU_HOST
     [[nodiscard]] virtual PlaneSDF**
@@ -128,10 +111,17 @@ namespace EBGeometry {
 
       return plane;
     };
+    
   protected:
 
+    /*!
+      @brief Point on the plane
+    */
     const Vec3* m_point;
 
+    /*!
+      @brief Plane normal vector
+    */
     const Vec3* m_normal;    
   };
 
@@ -162,31 +152,6 @@ namespace EBGeometry {
     {}
 
     /*!
-      @brief Factory method for building the implicit function on the GPU.
-    */
-#ifdef EBGEOMETRY_ENABLE_GPU
-    EBGEOMETRY_GPU_HOST
-    [[nodiscard]] inline void*
-    putOnGPU() const noexcept override
-    {
-      GPUPointer<SphereSDF> sphere = allocateImplicitFunctionOnDevice<SphereSDF>();
-
-      Vec3* sphereCenter;
-      Real* sphereRadius;
-
-      cudaMalloc((void**)&sphereCenter, sizeof(Vec3));
-      cudaMalloc((void**)&sphereRadius, sizeof(Real));
-
-      cudaMemcpy(sphereCenter, &m_center, sizeof(Vec3), cudaMemcpyHostToDevice);
-      cudaMemcpy(sphereRadius, &m_radius, sizeof(Real), cudaMemcpyHostToDevice);
-
-      createImplicitFunctionOnDevice<<<1, 1>>>(sphere, sphereCenter, sphereRadius);
-
-      return sphere;
-    }
-#endif
-
-    /*!
       @brief Signed distance function for sphere.
       @param[in] a_point Position.
     */
@@ -207,6 +172,62 @@ namespace EBGeometry {
     */
     Real m_radius;
   };
+
+  /*!
+    @brief Factory class for building ShereSDF objects on the host or device.
+  */
+  class SphereSDFFactory : public ImplicitFunctionFactory<SphereSDF>
+  {
+  public:
+
+    /*!
+      @brief Constructor for creating SphereSDF on the host or GPU
+      @param[in] a_center Sphere center
+      @param[in] a_radius Sphere radius
+    */
+    EBGEOMETRY_GPU_HOST
+    inline SphereSDFFactory(const Vec3* a_center, const Real* a_radius) noexcept
+    {
+      m_center = a_center;
+      m_radius = a_radius;
+    }
+
+    /*!
+      @brief Build sphere on host. 
+    */
+    EBGEOMETRY_GPU_HOST
+    [[nodiscard]] virtual SphereSDF*
+    buildOnHost() const noexcept override
+    {
+      return new SphereSDF(*m_center, *m_radius);
+    }
+
+    /*!
+      @brief Build sphere on the device.
+    */
+    EBGEOMETRY_GPU_HOST
+    [[nodiscard]] virtual SphereSDF**
+    buildOnDevice() const noexcept override
+    {
+      SphereSDF** sphere = allocateImplicitFunctionOnDevice<SphereSDF>();
+
+      createImplicitFunctionOnDevice<<<1, 1>>>(sphere, m_center, m_radius);
+
+      return sphere;
+    };
+
+  protected:
+
+    /*!
+      @brief Sphere center
+    */
+    const Vec3* m_center;
+
+    /*!
+      @brief Sphere radius
+    */
+    const Real* m_radius;    
+  };  
 
   /*!
     @brief Signed distance field for an axis-aligned box.
@@ -260,31 +281,6 @@ namespace EBGeometry {
       return d;
     }
 
-    /*!
-      @brief Factory method for building the implicit function on the GPU.
-    */
-#ifdef EBGEOMETRY_ENABLE_GPU
-    EBGEOMETRY_GPU_HOST
-    [[nodiscard]] inline void*
-    putOnGPU() const noexcept override
-    {
-      GPUPointer<BoxSDF> box = allocateImplicitFunctionOnDevice<BoxSDF>();
-
-      Vec3* loCorner;
-      Vec3* hiCorner;
-
-      cudaMalloc((void**)&loCorner, sizeof(Vec3));
-      cudaMalloc((void**)&hiCorner, sizeof(Vec3));
-
-      cudaMemcpy(loCorner, &m_loCorner, sizeof(Vec3), cudaMemcpyHostToDevice);
-      cudaMemcpy(hiCorner, &m_hiCorner, sizeof(Vec3), cudaMemcpyHostToDevice);
-
-      createImplicitFunctionOnDevice<<<1, 1>>>(box, loCorner, hiCorner);
-
-      return box;
-    }
-#endif
-
   protected:
     /*!
       @brief Low box corner
@@ -295,6 +291,60 @@ namespace EBGeometry {
       @brief High box corner
     */
     Vec3 m_hiCorner;
+  };
+
+  /*!
+    @brief Factory class for building BoxSDF objects on the host or device.
+  */
+  class BoxSDFFactory : public ImplicitFunctionFactory<BoxSDF>
+  {
+  public:
+    /*!
+      @brief Constructor for creating BoxSDF objects on the host or GPU
+      @param[in] a_loCorner Lower-left corner of box.
+      @param[in] a_hiCorner Upper-right corner of box.
+    */
+    EBGEOMETRY_GPU_HOST
+    inline BoxSDFFactory(const Vec3* a_loCorner, const Vec3* a_hiCorner) noexcept
+    {
+      m_loCorner = a_loCorner;
+      m_hiCorner = a_hiCorner;
+    }
+
+    /*!
+      @brief Build BoxSDF on host. 
+    */
+    EBGEOMETRY_GPU_HOST
+    [[nodiscard]] virtual BoxSDF*
+    buildOnHost() const noexcept override
+    {
+      return new BoxSDF(*m_loCorner, *m_hiCorner);
+    }
+
+    /*!
+      @brief Build BoxSDF on the device.
+    */
+    EBGEOMETRY_GPU_HOST
+    [[nodiscard]] virtual BoxSDF**
+    buildOnDevice() const noexcept override
+    {
+      BoxSDF** box = allocateImplicitFunctionOnDevice<BoxSDF>();
+
+      createImplicitFunctionOnDevice<<<1, 1>>>(box, m_loCorner, m_hiCorner);
+
+      return box;
+    };
+
+  protected:
+    /*!
+      @brief Sphere center
+    */
+    const Vec3* m_loCorner;
+
+    /*!
+      @brief Sphere radius
+    */
+    const Vec3* m_hiCorner;
   };
 
 } // namespace EBGeometry

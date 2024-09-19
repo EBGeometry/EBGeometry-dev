@@ -13,7 +13,7 @@
 #define EBGeometry_ImplicitFunction
 
 // Std includes
-#include <concepts>
+#include <type_traits>
 
 // Our includes
 #include "EBGeometry_Types.hpp"
@@ -54,18 +54,6 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] virtual Real
     value(const Vec3& a_point) const noexcept = 0;
-
-    /*!
-      @brief Factory method for building the implicit function on the GPU. Returns a pointer to the
-      implicit function on the GPU. 
-      @details This function must create another implicit function on the GPU -- it is
-      exceptionally important that implementations do this since vtables are not copyable from host to device.
-    */
-#ifdef EBGEOMETRY_ENABLE_GPU
-    EBGEOMETRY_GPU_HOST
-    [[nodiscard]] virtual void*
-    putOnGPU() const noexcept = 0;
-#endif
   };
 
   /*!
@@ -75,6 +63,9 @@ namespace EBGeometry {
   class ImplicitFunctionFactory
   {
   public:
+
+    static_assert(std::is_base_of<ImplicitFunction, T>::value, "T is not a base of ImplicitFunction");
+    
     /*!
       @brief Build implicit function on host
     */
