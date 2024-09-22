@@ -23,6 +23,15 @@ namespace EBGeometry {
   namespace DCEL {
 
     /*!
+      @brief Enum for putting some logic into how vertex normal weights are calculated.
+    */
+    enum class VertexNormalWeight
+    {
+      None,
+      Angle
+    };
+
+    /*!
       @brief Class which represents a vertex node in a double-edge connected list
       (DCEL).
       @details This class is used in DCEL functionality which stores polygonal

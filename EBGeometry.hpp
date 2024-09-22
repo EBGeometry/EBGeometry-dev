@@ -1,6 +1,6 @@
 #include "Source/EBGeometry_AnalyticDistanceFunctions.hpp"
 #include "Source/EBGeometry_CSG.hpp"
-#include "Source/EBGeometry_DCEL.hpp"
+#include "Source/EBGeometry_DCEL_Vertex.hpp"
 #include "Source/EBGeometry_GPU.hpp"
 #include "Source/EBGeometry_ImplicitFunction.hpp"
 #include "Source/EBGeometry_Macros.hpp"
