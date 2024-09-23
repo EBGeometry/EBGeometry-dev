@@ -30,14 +30,14 @@ namespace EBGeometry {
     template <class Meta>
     inline Vertex<Meta>::Vertex(const Vec3& a_position) noexcept : Vertex<Meta>()
     {
-      m_position     = a_position;
+      m_position = a_position;
     }
 
     template <class Meta>
     inline Vertex<Meta>::Vertex(const Vec3& a_position, const Vec3& a_normal) noexcept : Vertex<Meta>()
     {
-      m_position     = a_position;
-      m_normal       = a_normal;
+      m_position = a_position;
+      m_normal   = a_normal;
     }
 
     template <class Meta>
@@ -99,30 +99,36 @@ namespace EBGeometry {
 
     template <class Meta>
     inline void
-    Vertex<Meta>::computeVertexNormalAverage(const FaceList a_faces,
-                                             const EdgeList a_edges,
-                                             const int      a_numFaces,
-                                             const int      a_numEdges) noexcept
-
+    Vertex<Meta>::computeVertexNormalAverage() noexcept
     {
-#warning "Vertex<Meta>::computeVertexNormalAverage is not implemented"
+      const EdgePointer curEdge = nullptr;
+
+      while (curEdge != m_outgoingEdge) {
+
+        if (curEdge == nullptr) {
+          // First iteration starts on the outgoing edge from this vertex.
+          curEdge = m_outgoingEdge;
+        }
+        else {
+          // Subsequent iterations. Jump to the other side of the edge
+          // and step so that we get the outgoing edge.
+          curEdge = curEdge->getPairEdge();
+          curEdge = curEdge->getNextEdge();
+        }
+
+        const FacePointer curFace = curEdge->getFace();
+
+        m_normal += curFace->getNormal();
+      }
+
+      this->normalizeNormalVector();
     }
 
     template <class Meta>
     inline void
-    Vertex<Meta>::computeVertexNormalAngleWeighted(const FaceList a_faces,
-                                                   const EdgeList a_edges,
-                                                   const int      a_numFaces,
-                                                   const int      a_numEdges) noexcept
+    Vertex<Meta>::computeVertexNormalAngleWeighted() noexcept
     {
 #warning "Vertex<Meta>::computeVertexNormalAngleWeighted is not implemented"
-    }
-
-    template <class Meta>
-    inline void
-    Vertex<Meta>::flip() noexcept
-    {
-      m_normal = -m_normal;
     }
 
     template <class Meta>

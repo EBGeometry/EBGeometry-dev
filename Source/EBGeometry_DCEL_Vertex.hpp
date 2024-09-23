@@ -37,7 +37,12 @@ namespace EBGeometry {
     {
     public:
       /*!
-	@brief Alias  to a half-edge
+	@brief Alias for a vertex
+      */
+      using VertexPointer = const Vertex<Meta>*;
+      
+      /*!
+	@brief Alias for a half-edge
       */
       using EdgePointer = const Edge<Meta>*;
 
@@ -45,16 +50,6 @@ namespace EBGeometry {
 	@brief Pointer to a polygon face
       */
       using FacePointer = const Face<Meta>*;
-
-      /*!
-	@brief Alias for edge list
-      */
-      using EdgeList = const Face<Meta>*;
-
-      /*!
-	@brief Alias for face list
-      */
-      using FaceList = const Face<Meta>*;
 
       /*!
 	@brief Empty constructor.
@@ -150,20 +145,13 @@ namespace EBGeometry {
       normalizeNormalVector() noexcept;
 
       /*!
-	@brief Compute the vertex normal, using an average the normal vector in this
-	vertex's face list.
+	@brief Compute the vertex normal, using an average of the normal vectors of all faces
+	sharing this vertex. 
 	@details This computes the vertex normal as n = sum(normal(face))/num(faces)
-	@param[in] a_faces List of faces.
-	@param[in] a_edges List of edges.	
-	@param[in] a_numFaces Number of faces in face list
-	@param[in] a_numEdges Number of edges in edge list	
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       inline void
-      computeVertexNormalAverage(const FaceList a_faces,
-                                 const EdgeList a_edges,
-                                 const int      a_numFaces,
-                                 const int      a_numEdges) noexcept;
+      computeVertexNormalAverage() noexcept;
 
       /*!
 	@brief Compute the vertex normal, using the pseudonormal algorithm which
@@ -171,17 +159,10 @@ namespace EBGeometry {
 	@details This computes the normal vector using the pseudnormal algorithm from
 	Baerentzen and Aanes in "Signed distance computation using the angle
 	weighted pseudonormal" (DOI: 10.1109/TVCG.2005.49)
-	@param[in] a_faces List of faces.
-	@param[in] a_edges List of edges.
-	@param[in] a_numFaces Number of faces in face list
-	@param[in] a_numEdges Number of edges in edge list
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       inline void
-      computeVertexNormalAngleWeighted(const FaceList a_faces,
-                                       const EdgeList a_edges,
-                                       const int      a_numFaces,
-                                       const int      a_numEdges) noexcept;
+      computeVertexNormalAngleWeighted() noexcept;
 
       /*!
 	@brief Flip the vertex normal vector
