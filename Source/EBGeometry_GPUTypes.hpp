@@ -18,8 +18,6 @@
 
 namespace EBGeometry {
 
-
-
   /*!
     @brief Minimum operation of two numbers.
     @param[in] x Number to compare.

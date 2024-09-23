@@ -102,14 +102,20 @@ namespace EBGeometry {
 
     template <class Meta>
     inline void
-    Vertex<Meta>::computeVertexNormalAverage() noexcept
+    Vertex<Meta>::computeVertexNormalAverage(const Face<Meta>* const a_faces,
+                                             const Edge<Meta>* const a_edges,
+                                             const int               a_numFaces,
+                                             const int               a_numEdges) noexcept
     {
 #warning "Vertex<Meta>::computeVertexNormalAverage is not implemented"
     }
 
     template <class Meta>
     inline void
-    Vertex<Meta>::computeVertexNormalAngleWeighted() noexcept
+    Vertex<Meta>::computeVertexNormalAngleWeighted(const Face<Meta>* const a_faces,
+                                                   const Edge<Meta>* const a_edges,
+                                                   const int               a_numFaces,
+                                                   const int               a_numEdges) noexcept
     {
 #warning "Vertex<Meta>::computeVertexNormalAngleWeighted is not implemented"
     }
