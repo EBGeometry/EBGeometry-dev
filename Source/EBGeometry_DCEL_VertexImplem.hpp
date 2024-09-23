@@ -24,27 +24,24 @@ namespace EBGeometry {
     {
       m_position     = Vec3::zero();
       m_normal       = Vec3::zero();
-      m_outgoingEdge = -1;
+      m_outgoingEdge = nullptr;
     }
 
     template <class Meta>
-    inline Vertex<Meta>::Vertex(const Vec3& a_position) noexcept
+    inline Vertex<Meta>::Vertex(const Vec3& a_position) noexcept : Vertex<Meta>()
     {
       m_position     = a_position;
-      m_normal       = Vec3::zero();
-      m_outgoingEdge = -1;
     }
 
     template <class Meta>
-    inline Vertex<Meta>::Vertex(const Vec3& a_position, const Vec3& a_normal) noexcept
+    inline Vertex<Meta>::Vertex(const Vec3& a_position, const Vec3& a_normal) noexcept : Vertex<Meta>()
     {
       m_position     = a_position;
       m_normal       = a_normal;
-      m_outgoingEdge = -1;
     }
 
     template <class Meta>
-    inline Vertex<Meta>::Vertex(const Vec3& a_position, const Vec3& a_normal, const int& a_edge) noexcept
+    inline Vertex<Meta>::Vertex(const Vec3& a_position, const Vec3& a_normal, const EdgePointer a_edge) noexcept
     {
       m_position     = a_position;
       m_normal       = a_normal;
@@ -65,7 +62,7 @@ namespace EBGeometry {
 
     template <class Meta>
     inline void
-    Vertex<Meta>::define(const Vec3& a_position, const Vec3& a_normal, const int& a_edge) noexcept
+    Vertex<Meta>::define(const Vec3& a_position, const Vec3& a_normal, const EdgePointer a_edge) noexcept
     {
       m_position     = a_position;
       m_normal       = a_normal;
@@ -88,7 +85,7 @@ namespace EBGeometry {
 
     template <class Meta>
     inline void
-    Vertex<Meta>::setEdge(const int& a_edge) noexcept
+    Vertex<Meta>::setEdge(const EdgePointer& a_edge) noexcept
     {
       m_outgoingEdge = a_edge;
     }
@@ -102,20 +99,21 @@ namespace EBGeometry {
 
     template <class Meta>
     inline void
-    Vertex<Meta>::computeVertexNormalAverage(const Face<Meta>* const a_faces,
-                                             const Edge<Meta>* const a_edges,
-                                             const int               a_numFaces,
-                                             const int               a_numEdges) noexcept
+    Vertex<Meta>::computeVertexNormalAverage(const FaceList a_faces,
+                                             const EdgeList a_edges,
+                                             const int      a_numFaces,
+                                             const int      a_numEdges) noexcept
+
     {
 #warning "Vertex<Meta>::computeVertexNormalAverage is not implemented"
     }
 
     template <class Meta>
     inline void
-    Vertex<Meta>::computeVertexNormalAngleWeighted(const Face<Meta>* const a_faces,
-                                                   const Edge<Meta>* const a_edges,
-                                                   const int               a_numFaces,
-                                                   const int               a_numEdges) noexcept
+    Vertex<Meta>::computeVertexNormalAngleWeighted(const FaceList a_faces,
+                                                   const EdgeList a_edges,
+                                                   const int      a_numFaces,
+                                                   const int      a_numEdges) noexcept
     {
 #warning "Vertex<Meta>::computeVertexNormalAngleWeighted is not implemented"
     }
@@ -156,17 +154,10 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline int&
-    Vertex<Meta>::getOutgoingEdge() noexcept
-    {
-      return (m_outgoingEdge);
-    }
-
-    template <class Meta>
-    inline const int&
+    inline Vertex<Meta>::EdgePointer
     Vertex<Meta>::getOutgoingEdge() const noexcept
     {
-      return (m_outgoingEdge);
+      return m_outgoingEdge;
     }
 
     template <class Meta>

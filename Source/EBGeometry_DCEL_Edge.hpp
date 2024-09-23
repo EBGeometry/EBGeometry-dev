@@ -23,17 +23,14 @@ namespace EBGeometry {
   namespace DCEL {
 
     /*!
-      @brief Class which represents a half-edge in a double-edge connected list
-      (DCEL).
+      @brief Class which represents a half-edge in a doubly connected edge list. 
       @details This class is used in DCEL functionality which stores polygonal
       surfaces in a mesh. The information contain in an Edge object contains the
       necessary object for logically circulating the inside of a polygon face. This
       means that a polygon face has a double-connected list of half-edges which
       circulate the interior of the face. The Edge object is such a half-edge; it
       represents the outgoing half-edge from a vertex, located such that it can be
-      logically represented as a half edge on the "inside" of a polygon face. It
-      contains pointers to the polygon face, vertex, and next half edge It also contains 
-      a pointer to the "pair" half edge, i.e. the
+      logically represented as a half edge on the "inside" of a polygon face. 
       corresponding half-edge on the other face that shares this edge. Since this
       class is used with DCEL functionality and signed distance fields, this class
       also has a signed distance function and thus a "normal vector". 
@@ -124,6 +121,14 @@ namespace EBGeometry {
       setFace(const int a_face) noexcept;
 
       /*!
+	@brief Set the normal vector
+	@param[in] a_normal Normal vector
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline void
+      setNormal(const Vec3& a_normal) noexcept;
+
+      /*!
 	@brief Flip surface normal
       */
       EBGEOMETRY_GPU_HOST_DEVICE
@@ -153,13 +158,6 @@ namespace EBGeometry {
       EBGEOMETRY_GPU_HOST_DEVICE
       [[nodiscard]] inline int
       getNextEdge() const noexcept;
-
-      /*!
-	@brief Compute the normal vector
-      */
-      EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline Vec3
-      computeNormal() const noexcept;
 
       /*!
 	@brief Get the normal vector
@@ -243,6 +241,11 @@ namespace EBGeometry {
       Vec3 m_normal;
 
       /*!
+	@brief Edge vector (pointing from starting vertex to end vertex)
+      */
+      Vec3 m_x2x1;
+
+      /*!
 	@brief Meta-data attached to this edge
       */
       Meta m_metaData;
@@ -269,6 +272,6 @@ namespace EBGeometry {
   } // namespace DCEL
 } // namespace EBGeometry
 
-#include "EBGeometry_DCEL_VertexImplem.hpp"
+#include "EBGeometry_DCEL_EdgeImplem.hpp"
 
 #endif

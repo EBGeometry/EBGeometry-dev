@@ -37,6 +37,26 @@ namespace EBGeometry {
     {
     public:
       /*!
+	@brief Alias  to a half-edge
+      */
+      using EdgePointer = const Edge<Meta>*;
+
+      /*!
+	@brief Pointer to a polygon face
+      */
+      using FacePointer = const Face<Meta>*;
+
+      /*!
+	@brief Alias for edge list
+      */
+      using EdgeList = const Face<Meta>*;
+
+      /*!
+	@brief Alias for face list
+      */
+      using FaceList = const Face<Meta>*;
+
+      /*!
 	@brief Empty constructor.
 	@details This initializes the position and the normal vector to zero
 	vectors, and the polygon face list is empty
@@ -70,7 +90,7 @@ namespace EBGeometry {
 	@param[in] a_edge Outgoing half-edge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Vertex(const Vec3& a_position, const Vec3& a_normal, const int& a_edge) noexcept;
+      inline Vertex(const Vec3& a_position, const Vec3& a_normal, const EdgePointer a_edge) noexcept;
 
       /*!
 	@brief Full copy constructor
@@ -91,12 +111,12 @@ namespace EBGeometry {
 	@brief Define function
 	@param[in] a_position Vertex position
 	@param[in] a_normal   Vertex normal vector
-	@param[in] a_edge     Index of outgoing edge	
+	@param[in] a_edge     Outgoing edge.
 	@details This sets the position, normal vector, and edge pointer.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       inline void
-      define(const Vec3& a_position, const Vec3& a_normal, const int& a_edge) noexcept;
+      define(const Vec3& a_position, const Vec3& a_normal, const EdgePointer a_edge) noexcept;
 
       /*!
 	@brief Set the vertex position
@@ -116,11 +136,11 @@ namespace EBGeometry {
 
       /*!
 	@brief Set the outgoing edge.
-	@param[in] a_edge Index of outgoing edge.
+	@param[in] a_edge Outgoing half-edge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       inline void
-      setEdge(const int& a_edge) noexcept;
+      setEdge(const EdgePointer& a_edge) noexcept;
 
       /*!
 	@brief Normalize the normal vector to a length of 1.
@@ -140,10 +160,10 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       inline void
-      computeVertexNormalAverage(const Face<Meta>* const a_faces,
-                                 const Edge<Meta>* const a_edges,
-                                 const int               a_numFaces,
-                                 const int               a_numEdges) noexcept;
+      computeVertexNormalAverage(const FaceList a_faces,
+                                 const EdgeList a_edges,
+                                 const int      a_numFaces,
+                                 const int      a_numEdges) noexcept;
 
       /*!
 	@brief Compute the vertex normal, using the pseudonormal algorithm which
@@ -158,10 +178,10 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       inline void
-      computeVertexNormalAngleWeighted(const Face<Meta>* const a_faces,
-                                       const Edge<Meta>* const a_edges,
-                                       const int               a_numFaces,
-                                       const int               a_numEdges) noexcept;
+      computeVertexNormalAngleWeighted(const FaceList a_faces,
+                                       const EdgeList a_edges,
+                                       const int      a_numFaces,
+                                       const int      a_numEdges) noexcept;
 
       /*!
 	@brief Flip the vertex normal vector
@@ -199,17 +219,10 @@ namespace EBGeometry {
       getNormal() const noexcept;
 
       /*!
-	@brief Return modifiable pointer to outgoing edge.
-      */
-      EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline int&
-      getOutgoingEdge() noexcept;
-
-      /*!
 	@brief Return immutable pointer to outgoing edge.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline const int&
+      [[nodiscard]] inline EdgePointer
       getOutgoingEdge() const noexcept;
 
       /*!
@@ -252,7 +265,7 @@ namespace EBGeometry {
       /*!
 	@brief Index of outgoing edge.
       */
-      int m_outgoingEdge;
+      EdgePointer m_outgoingEdge;
 
       /*!
 	@brief Vertex position

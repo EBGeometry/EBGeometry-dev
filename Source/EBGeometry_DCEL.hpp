@@ -16,6 +16,15 @@ namespace EBGeometry {
   namespace DCEL {
 
     /*!
+      @brief Enum for putting some logic into how vertex normal weights are calculated.
+    */
+    enum class VertexNormalWeight
+    {
+      None,
+      Angle
+    };
+
+    /*!
       @brief Default meta-data type for the DCEL primitives
     */
     using DefaultMetaData = short;
@@ -37,20 +46,12 @@ namespace EBGeometry {
     */
     template <class Meta = DefaultMetaData>
     class Face;
+
     /*!
       @brief Mesh class
     */
     template <class Meta = DefaultMetaData>
     class Mesh;
-
-    /*!
-      @brief Enum for putting some logic into how vertex normal weights are calculated.
-    */
-    enum class VertexNormalWeight
-    {
-      None,
-      Angle
-    };
   } // namespace DCEL
 } // namespace EBGeometry
 

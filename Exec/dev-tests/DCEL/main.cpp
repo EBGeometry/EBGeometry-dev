@@ -15,9 +15,9 @@ main()
 {
   Vec3 point = 8 * Vec3::one();
   Vec3 normal = 8 * Vec3::one();  
-  int edge = 1;
 
-  DCEL::Vertex<short> vert(point, normal, edge);
+  DCEL::Vertex<short> vert(point, normal, nullptr);
+  DCEL::Edge<short> edge(1,1,1,1);
 
   return 0;
 }
