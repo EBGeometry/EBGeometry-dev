@@ -174,42 +174,42 @@ namespace EBGeometry {
 	@brief Return modifiable vertex position.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Vec3&
+      [[nodiscard]] inline Vec3&
       getPosition() noexcept;
 
       /*!
 	@brief Return immutable vertex position.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline const Vec3&
+      [[nodiscard]] inline const Vec3&
       getPosition() const noexcept;
 
       /*!
 	@brief Return modifiable vertex normal vector.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Vec3&
+      [[nodiscard]] inline Vec3&
       getNormal() noexcept;
 
       /*!
 	@brief Return immutable vertex normal vector.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline const Vec3&
+      [[nodiscard]] inline const Vec3&
       getNormal() const noexcept;
 
       /*!
 	@brief Return modifiable pointer to outgoing edge.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline int&
+      [[nodiscard]] inline int&
       getOutgoingEdge() noexcept;
 
       /*!
 	@brief Return immutable pointer to outgoing edge.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline const int&
+      [[nodiscard]] inline const int&
       getOutgoingEdge() const noexcept;
 
       /*!
@@ -219,7 +219,7 @@ namespace EBGeometry {
 	by the sign of m_normal * |a_x0 - m_position|.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Real
+      [[nodiscard]] inline Real
       signedDistance(const Vec3& a_x0) const noexcept;
 
       /*!
@@ -229,7 +229,7 @@ namespace EBGeometry {
 	@return Returns the vector length of (a_x - m_position)
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Real
+      [[nodiscard]] inline Real
       unsignedDistance2(const Vec3& a_x0) const noexcept;
 
       /*!
@@ -237,7 +237,7 @@ namespace EBGeometry {
 	@return m_metaData
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Meta&
+      [[nodiscard]] inline Meta&
       getMetaData() noexcept;
 
       /*!
@@ -245,7 +245,7 @@ namespace EBGeometry {
 	@return m_metaData
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline const Meta&
+      [[nodiscard]] inline const Meta&
       getMetaData() const noexcept;
 
     protected:

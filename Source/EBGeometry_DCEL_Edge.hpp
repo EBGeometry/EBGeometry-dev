@@ -135,7 +135,7 @@ namespace EBGeometry {
 	@return Returns m_vertex
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline int
+      [[nodiscard]] inline int
       getVertex() const noexcept;
 
       /*!
@@ -143,7 +143,7 @@ namespace EBGeometry {
 	@return Returns m_pairEdge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline int
+      [[nodiscard]] inline int
       getPairEdge() const noexcept;
 
       /*!
@@ -151,14 +151,14 @@ namespace EBGeometry {
 	@return Returns m_nextEdge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline int
+      [[nodiscard]] inline int
       getNextEdge() const noexcept;
 
       /*!
 	@brief Compute the normal vector
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Vec3
+      [[nodiscard]] inline Vec3
       computeNormal() const noexcept;
 
       /*!
@@ -166,7 +166,7 @@ namespace EBGeometry {
 	@return Return m_normal
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline const Vec3&
+      [[nodiscard]] inline const Vec3&
       getNormal() const noexcept;
 
       /*!
@@ -174,7 +174,7 @@ namespace EBGeometry {
 	@return Returns m_face
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline int
+      [[nodiscard]] inline int
       getFace() const noexcept;
 
       /*!
@@ -182,7 +182,7 @@ namespace EBGeometry {
 	@return m_metaData
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Meta&
+      [[nodiscard]] inline Meta&
       getMetaData() noexcept;
 
       /*!
@@ -190,7 +190,7 @@ namespace EBGeometry {
 	@return m_metaData
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline const Meta&
+      [[nodiscard]] inline const Meta&
       getMetaData() const noexcept;
 
       /*!
@@ -201,7 +201,7 @@ namespace EBGeometry {
 	projection to the edge and compute the sign from the normal vector.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Real
+      [[nodiscard]] inline Real
       signedDistance(const Vec3& a_x0) const noexcept;
 
       /*!
@@ -213,15 +213,10 @@ namespace EBGeometry {
 	signedDistance()
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Real
+      [[nodiscard]] inline Real
       unsignedDistance2(const Vec3& a_x0) const noexcept;
 
     protected:
-      /*!
-	@brief Edge normal vector
-      */
-      Vec3 m_normal;
-
       /*!
 	@brief Index of starting vertex in vertex list
       */
@@ -241,6 +236,11 @@ namespace EBGeometry {
 	@brief Index of enclosing polygon face in face list.
       */
       int m_face;
+
+      /*!
+	@brief Edge normal vector
+      */
+      Vec3 m_normal;
 
       /*!
 	@brief Meta-data attached to this edge
