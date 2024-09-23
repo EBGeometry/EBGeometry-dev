@@ -57,6 +57,165 @@ namespace EBGeometry {
       EBGEOMETRY_GPU_HOST_DEVICE
       inline Edge(const Edge& a_otherEdge) noexcept;
 
+      /*!
+	@brief Partial constructor. Sets the starting vertex
+	@param[in] a_vertex Index of starting vertex in vertex list.
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline Edge(const int a_vertex) noexcept;
+
+      /*!
+	@brief Partial constructor. Sets everything except the normal vector.
+	@param[in] a_vertex Index of starting vertex in vertex list. 
+	@param[in] a_pairEdge Index of pair edge in edge list. 
+	@param[in] a_nextEdge Index of next edge in edge list. 
+	@param[in] a_face Face index in face list
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline Edge(const int a_vertex, const int a_pairEdge, const int a_nextEdge, const int a_face) noexcept;
+
+      /*!
+	@brief Destructor (does nothing).
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline ~Edge() noexcept;
+
+      /*!
+	@brief Define function. Sets everything except the normal vector.
+	@param[in] a_vertex Index of starting vertex in vertex list. 
+	@param[in] a_pairEdge Index of pair edge in edge list. 
+	@param[in] a_nextEdge Index of next edge in edge list. 
+	@param[in] a_face Face index in face list
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline void
+      define(const int a_vertex, const int a_pairEdge, const int a_nextEdge, const int a_face) noexcept;
+
+      /*!
+	@brief Set the starting vertex
+	@param[in] a_vertex Index of starting vertex in vertex list. 
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline void
+      setVertex(const int a_vertex) noexcept;
+
+      /*!
+	@brief Set the pair edge
+	@param[in] a_pairEdge Index of pair edge in edge list. 
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline void
+      setPairEdge(const int a_pairEdge) noexcept;
+
+      /*!
+	@brief Set the next edge
+	@param[in] a_nextEdge Index of next edge in edge list. 
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline void
+      setNextEdge(const int a_nextEdge) noexcept;
+
+      /*!
+	@brief Set the polygon face.
+	@param[in] a_face Index of face in face list. 
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline void
+      setFace(const int a_face) noexcept;
+
+      /*!
+	@brief Flip surface normal
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline void
+      flip() noexcept;
+
+      /*!
+	@brief Get starting vertex index.
+	@return Returns m_vertex
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline int
+      getVertex() const noexcept;
+
+      /*!
+	@brief Get pair edge index
+	@return Returns m_pairEdge
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline int
+      getPairEdge() const noexcept;
+
+      /*!
+	@brief Get next edge index
+	@return Returns m_nextEdge
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline int
+      getNextEdge() const noexcept;
+
+      /*!
+	@brief Compute the normal vector
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline Vec3
+      computeNormal() const noexcept;
+
+      /*!
+	@brief Get the normal vector
+	@return Return m_normal
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline const Vec3&
+      getNormal() const noexcept;
+
+      /*!
+	@brief Get face index.
+	@return Returns m_face
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline int
+      getFace() const noexcept;
+
+      /*!
+	@brief Get meta-data
+	@return m_metaData
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline Meta&
+      getMetaData() noexcept;
+
+      /*!
+	@brief Get meta-data
+	@return m_metaData
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline const Meta&
+      getMetaData() const noexcept;
+
+      /*!
+	@brief Get the signed distance to this half edge
+	@details This routine will check if the input point projects to the edge or
+	one of the vertices. If it projectes to one of the vertices we compute the
+	signed distance to the corresponding vertex. Otherwise we compute the
+	projection to the edge and compute the sign from the normal vector.
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline Real
+      signedDistance(const Vec3& a_x0) const noexcept;
+
+      /*!
+	@brief Get the signed distance to this half edge
+	@details This routine will check if the input point projects to the edge or
+	one of the vertices. If it projectes to one of the vertices we compute the
+	squared distance to the corresponding vertex. Otherwise we compute the
+	squared distance of the projection to the edge. This is faster than
+	signedDistance()
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline Real
+      unsignedDistance2(const Vec3& a_x0) const noexcept;
+
     protected:
       /*!
 	@brief Edge normal vector
