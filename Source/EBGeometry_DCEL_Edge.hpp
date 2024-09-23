@@ -44,6 +44,19 @@ namespace EBGeometry {
     class Edge
     {
     public:
+      /*!
+	@brief Default constructors. Creates an invalid edge
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline Edge() noexcept;
+
+      /*!
+	@brief Copy constructor. Copies all vertices, edges, and normal vectors.
+	@param[in] a_otherEdge Other edge
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline Edge(const Edge& a_otherEdge) noexcept;
+
     protected:
       /*!
 	@brief Edge normal vector
