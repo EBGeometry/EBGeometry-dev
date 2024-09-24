@@ -348,6 +348,13 @@ namespace EBGeometry {
     max() noexcept;
 
     /*!
+      @brief Return a vector with maximally negative representable components.
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    [[nodiscard]] inline static Vec3
+    lowest() noexcept;    
+
+    /*!
       @brief Return component in vector. (i=0 => x and so on)
       @param[in] i Index. Must be < 3
     */

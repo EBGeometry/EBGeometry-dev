@@ -250,7 +250,7 @@ namespace EBGeometry {
   inline Vec3
   Vec3::min() noexcept
   {
-    return Vec3(EBGeometry::Limits::lowest(), EBGeometry::Limits::lowest(), EBGeometry::Limits::lowest());
+    return Vec3(EBGeometry::Limits::min(), EBGeometry::Limits::min(), EBGeometry::Limits::min());
   }
 
   inline Vec3
@@ -258,6 +258,12 @@ namespace EBGeometry {
   {
     return Vec3(EBGeometry::Limits::max(), EBGeometry::Limits::max(), EBGeometry::Limits::max());
   }
+
+  inline Vec3
+  Vec3::lowest() noexcept
+  {
+    return Vec3(EBGeometry::Limits::lowest(), EBGeometry::Limits::lowest(), EBGeometry::Limits::lowest());
+  }  
 
   inline Vec3&
   Vec3::operator=(const Vec3& u) noexcept
