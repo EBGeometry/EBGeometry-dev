@@ -199,7 +199,6 @@ namespace EBGeometry {
     inline Real
     Edge<Meta>::signedDistance(const Vec3& a_x0) const noexcept
     {
-
       // Project point to edge
       const Real t = this->projectPointToEdge(a_x0);
 
