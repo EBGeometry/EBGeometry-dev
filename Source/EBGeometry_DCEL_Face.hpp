@@ -19,6 +19,7 @@
 #include "EBGeometry_GPU.hpp"
 #if 1
 #warning "EBGeometry_DCEL_Face.hpp -- must port the Polygon2D class"
+#else
 #include "EBGeometry_Polygon2D.hpp"
 #endif
 
@@ -75,7 +76,7 @@ namespace EBGeometry {
 	@param[in] a_edge Half-edge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline FaceT(const EdgePointer a_edge) noexcept;
+      inline Face(const EdgePointer a_edge) noexcept;
 
       /*!
 	@brief Partial constructor.
@@ -89,7 +90,7 @@ namespace EBGeometry {
 	@brief Destructor (does nothing)
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline ~FaceT() noexcept;
+      inline ~Face() noexcept;
 
       /*!
 	@brief Define function which sets the normal vector and half-edge
@@ -134,7 +135,7 @@ namespace EBGeometry {
 	@brief Get the half edge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline const EdgePointer
+      [[nodiscard]] inline EdgePointer
       getHalfEdge() const noexcept;
 
       /*!
@@ -164,7 +165,7 @@ namespace EBGeometry {
 	@param[in] a_dir Coordinate direction
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline const T&
+      [[nodiscard]] inline const Real&
       getCentroid(const size_t a_dir) const noexcept;
 
       /*!
@@ -227,7 +228,9 @@ namespace EBGeometry {
       EBGEOMETRY_GPU_HOST_DEVICE
       [[nodiscard]] inline Real
       unsignedDistance2(const Vec3& a_x0) const noexcept;
-
+#if 1
+#warning "EBGeometry_DCEL_Face -- must figure out a different getAllVertexCoordinates"
+#else
       /*!
 	@brief Return the coordinates of all the vertices on this polygon.
 	@details This builds a list of all the vertex coordinates and returns it.
@@ -243,6 +246,7 @@ namespace EBGeometry {
       EBGEOMETRY_GPU_HOST_DEVICE
       [[nodiscard]] inline std::vector<VertexPtr>
       gatherVertices() const noexcept;
+#endif
 
       /*!
 	@brief Get the lower-left-most coordinate of this polygon face
