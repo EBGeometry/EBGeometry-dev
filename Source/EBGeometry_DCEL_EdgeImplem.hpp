@@ -21,7 +21,7 @@ namespace EBGeometry {
     template <class Meta>
     inline Edge<Meta>::Edge() noexcept
     {
-      this->define(-1, -1, -1, -1);
+      this->define(nullptr, nullptr, nullptr, nullptr);
     }
 
     template <class Meta>
@@ -35,13 +35,16 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Edge<Meta>::Edge(const int a_vertex) noexcept : Edge()
+    inline Edge<Meta>::Edge(const VertexPointer a_vertex) noexcept : Edge()
     {
       m_vertex = a_vertex;
     }
 
     template <class Meta>
-    inline Edge<Meta>::Edge(const int a_vertex, const int a_pairEdge, const int a_nextEdge, const int a_face) noexcept
+    inline Edge<Meta>::Edge(const VertexPointer a_vertex,
+                            const EdgePointer   a_pairEdge,
+                            const EdgePointer   a_nextEdge,
+                            const FacePointer   a_face) noexcept
       : Edge()
     {
       this->define(a_vertex, a_pairEdge, a_nextEdge, a_face);
@@ -53,39 +56,42 @@ namespace EBGeometry {
 
     template <class Meta>
     inline void
-    Edge<Meta>::define(const int a_vertex, const int a_pairEdge, const int a_nextEdge, const int a_face) noexcept
+    Edge<Meta>::define(const VertexPointer a_vertex,
+                       const EdgePointer   a_pairEdge,
+                       const EdgePointer   a_nextEdge,
+                       const FacePointer   a_face) noexcept
     {
       this->setVertex(a_vertex);
       this->setPairEdge(a_pairEdge);
       this->setNextEdge(a_nextEdge);
       this->setFace(a_face);
-      this->setNormal(Vec3::one());
+      this->setNormal(Vec3::zero());
     }
 
     template <class Meta>
     inline void
-    Edge<Meta>::setVertex(const int a_vertex) noexcept
+    Edge<Meta>::setVertex(const VertexPointer a_vertex) noexcept
     {
       m_vertex = a_vertex;
     }
 
     template <class Meta>
     inline void
-    Edge<Meta>::setPairEdge(const int a_pairEdge) noexcept
+    Edge<Meta>::setPairEdge(const EdgePointer a_pairEdge) noexcept
     {
       m_pairEdge = a_pairEdge;
     }
 
     template <class Meta>
     inline void
-    Edge<Meta>::setNextEdge(const int a_nextEdge) noexcept
+    Edge<Meta>::setNextEdge(const EdgePointer a_nextEdge) noexcept
     {
       m_nextEdge = a_nextEdge;
     }
 
     template <class Meta>
     inline void
-    Edge<Meta>::setFace(const int a_face) noexcept
+    Edge<Meta>::setFace(const FacePointer a_face) noexcept
     {
       m_face = a_face;
     }
@@ -98,31 +104,38 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline void
-    Edge<Meta>::flip() noexcept
-    {
-      m_normal = -m_normal;
-    }
-
-    template <class Meta>
-    inline int
+    inline Edge<Meta>::VertexPointer
     Edge<Meta>::getVertex() const noexcept
     {
       return m_vertex;
     }
 
     template <class Meta>
-    inline int
+    inline Edge<Meta>::VertexPointer
+    Edge<Meta>::getOtherVertex() const noexcept
+    {
+      return (m_nextEdge->getVertex());
+    }
+
+    template <class Meta>
+    inline Edge<Meta>::EdgePointer
     Edge<Meta>::getPairEdge() const noexcept
     {
       return m_pairEdge;
     }
 
     template <class Meta>
-    inline int
+    inline Edge<Meta>::EdgePointer
     Edge<Meta>::getNextEdge() const noexcept
     {
       return m_nextEdge;
+    }
+
+    template <class Meta>
+    inline Edge<Meta>::FacePointer
+    Edge<Meta>::getFace() const noexcept
+    {
+      return m_face;
     }
 
     template <class Meta>
@@ -130,13 +143,6 @@ namespace EBGeometry {
     Edge<Meta>::getNormal() const noexcept
     {
       return (m_normal);
-    }
-
-    template <class Meta>
-    inline int
-    Edge<Meta>::getFace() const noexcept
-    {
-      return m_face;
     }
 
     template <class Meta>
@@ -154,28 +160,74 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Real
-    Edge<Meta>::projectPointToEdge(const Vec3& a_x0) const noexcept
-    {
-#warning "Edge<Meta>::projectPointToEdge -- not implemented"
-    }
-
-    template <class Meta>
     inline Vec3
     Edge<Meta>::getX2X1() const noexcept
     {
-#warning "Edge<Meta>::getX2X1 -- x2x1 should be a member. This function is not yet implemented"
+      const auto& x1 = this->getVertex()->getPosition();
+      const auto& x2 = this->getOtherVertex()->getPosition();
+
+      return x2 - x1;
+    }
+
+    template <class Meta>
+    inline Real
+    Edge<Meta>::projectPointToEdge(const Vec3& a_x0) const noexcept
+    {
+      const auto p    = a_x0 - m_vertex->getPosition();
+      const auto x2x1 = this->getX2X1();
+
+      return p.dot(x2x1) / (x2x1.dot(x2x1));
     }
 
     template <class Meta>
     inline Real
     Edge<Meta>::signedDistance(const Vec3& a_x0) const noexcept
-    {}
+    {
+
+      // Project point to edge
+      const Real t = this->projectPointToEdge(a_x0);
+
+      Real retval = 0.0;
+
+      if (t <= 0.0) {
+        // Closest point is the starting vertex.
+        retval = this->getVertex()->signedDistance(a_x0);
+      }
+      else if (t >= 1.0) {
+        retval = this->getOtherVertex()->signedDistance(a_x0);
+      }
+      else {
+        // Closest point is the edge itself.
+        const Vec3 x2x1      = this->getX2X1();
+        const Vec3 linePoint = m_vertex->getPosition() + t * x2x1;
+        const Vec3 delta     = a_x0 - linePoint;
+        const Real dot       = m_normal.dot(delta);
+
+        const int sgn = (dot > 0.0) ? 1 : -1;
+
+        retval = sgn * delta.length();
+      }
+
+      return retval;
+    }
 
     template <class Meta>
     inline Real
     Edge<Meta>::unsignedDistance2(const Vec3& a_x0) const noexcept
-    {}
+    {
+      constexpr Real zero = 0.0;
+      constexpr Real one  = 1.0;
+
+      // Project point to edge and restrict to edge length.
+      const auto t = std::min(std::max(zero, this->projectPointToEdge(a_x0)), one);
+
+      // Compute distance to this edge.
+      const Vec3 x2x1      = this->getX2X1();
+      const Vec3 linePoint = m_vertex->getPosition() + t * x2x1;
+      const Vec3 delta     = a_x0 - linePoint;
+
+      return delta.dot(delta);
+    }
   } // namespace DCEL
 } // namespace EBGeometry
 
