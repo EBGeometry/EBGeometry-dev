@@ -150,6 +150,13 @@ namespace EBGeometry {
       setNormal(const Vec3& a_normal) noexcept;
 
       /*!
+	@brief Compute the normal vector
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline void
+      computeNormal() noexcept;
+
+      /*!
 	@brief Get starting vertex
 	@return Returns m_vertex
       */

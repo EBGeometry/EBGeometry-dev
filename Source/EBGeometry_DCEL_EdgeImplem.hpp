@@ -104,6 +104,22 @@ namespace EBGeometry {
     }
 
     template <class Meta>
+    inline void
+    Edge<Meta>::computeNormal() noexcept
+    {
+      m_normal = Vec3::zero();
+
+      if (m_face != nullptr) {
+        m_normal += m_face->getNormal();
+      }
+      if (m_pairEdge != nullptr) {
+        m_normal += (m_pairEdge->getFace())->getNormal();
+      }
+
+      this->normalizeNormalVector();
+    }
+
+    template <class Meta>
     inline Edge<Meta>::VertexPointer
     Edge<Meta>::getVertex() const noexcept
     {
