@@ -13,11 +13,13 @@ using namespace EBGeometry;
 int
 main()
 {
-  Vec3 point = 8 * Vec3::one();
-  Vec3 normal = 8 * Vec3::one();  
+  Vec3 point  = 8 * Vec3::one();
+  Vec3 normal = 8 * Vec3::one();
 
   DCEL::Vertex<short> vert(point, normal, nullptr);
-  DCEL::Edge<short> edge(1,1,1,1);
+  DCEL::Edge<short>   edge(nullptr, nullptr, nullptr, nullptr);
+
+  
 
   return 0;
 }

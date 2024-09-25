@@ -14,14 +14,11 @@
 #define EBGeometry_DCEL_Face
 
 // Our includes
-#include "EBGeometry_Vec.hpp"
 #include "EBGeometry_DCEL.hpp"
 #include "EBGeometry_GPU.hpp"
-#if 1
-#warning "EBGeometry_DCEL_Face.hpp -- must port the Polygon2D class"
-#else
+#include "EBGeometry_GPUTypes.hpp"
 #include "EBGeometry_Polygon2D.hpp"
-#endif
+#include "EBGeometry_Vec.hpp"
 
 namespace EBGeometry {
   namespace DCEL {
@@ -124,12 +121,9 @@ namespace EBGeometry {
 	to the inside or outside of the polygon.
 	@param[in] a_algorithm Desired algorithm
       */
-#if 1
-#warning "setInsideOutsideAlgorithm is commented out")
-#else
+      EBGEOMETRY_GPU_HOST_DEVICE
       inline void
-      setInsideOutsideAlgorithm(typename Polygon2D<T>::InsideOutsideAlgorithm& a_algorithm) noexcept;
-#endif
+      setInsideOutsideAlgorithm(const Polygon2D::InsideOutsideAlgorithm& a_algorithm) noexcept;
 
       /*!
 	@brief Get the half edge
@@ -169,6 +163,20 @@ namespace EBGeometry {
       getCentroid(const size_t a_dir) const noexcept;
 
       /*!
+	@brief Get the area of this polygon face
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      [[nodiscard]] inline Real&
+      getArea() noexcept;
+
+      /*!
+	@brief Get the area of this polygon face
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      [[nodiscard]] inline const Real&
+      getArea() const noexcept;
+
+      /*!
 	@brief Get modifiable normal vector
       */
       EBGEOMETRY_GPU_HOST_DEVICE
@@ -199,13 +207,6 @@ namespace EBGeometry {
       getMetaData() const noexcept;
 
       /*!
-	@brief Compute the area of this polygon
-      */
-      EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline Real
-      computeArea() noexcept;
-
-      /*!
 	@brief Compute the signed distance to a point.
 	@param[in] a_x0 Point in space
 	@details This algorithm operates by checking if the input point projects to
@@ -228,25 +229,6 @@ namespace EBGeometry {
       EBGEOMETRY_GPU_HOST_DEVICE
       [[nodiscard]] inline Real
       unsignedDistance2(const Vec3& a_x0) const noexcept;
-#if 1
-#warning "EBGeometry_DCEL_Face -- must figure out a different getAllVertexCoordinates"
-#else
-      /*!
-	@brief Return the coordinates of all the vertices on this polygon.
-	@details This builds a list of all the vertex coordinates and returns it.
-      */
-      EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline std::vector<Vec3>
-      getAllVertexCoordinates() const noexcept;
-
-      /*!
-	@brief Return all the vertices on this polygon
-	@details This builds a list of all the vertices and returns it.
-      */
-      EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline std::vector<VertexPtr>
-      gatherVertices() const noexcept;
-#endif
 
       /*!
 	@brief Get the lower-left-most coordinate of this polygon face
@@ -287,16 +269,12 @@ namespace EBGeometry {
 	@brief 2D embedding of this polygon. This is the 2D view of the current
 	object projected along its normal vector cardinal.
       */
-#if 1
-#warning "EBGeometry_DCEL_Face.hpp -- poly2 should be a member"
-#else
-      std::shared_ptr<Polygon2D<T>> m_poly2;
+      Polygon2D m_poly2;
 
       /*!
 	@brief Algorithm for inside/outside tests
       */
-      typename Polygon2D<T>::InsideOutsideAlgorithm m_poly2Algorithm;
-#endif
+      Polygon2D::InsideOutsideAlgorithm m_poly2Algorithm;
 
       /*!
 	@brief Compute the centroid position of this polygon
@@ -327,18 +305,20 @@ namespace EBGeometry {
       normalizeNormalVector() noexcept;
 
       /*!
-	@brief Get the area of this polygon face
+	@brief Compute the area of this polygon
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline Real
-      getArea() noexcept;
+      inline void
+      computeArea() noexcept;
 
       /*!
-	@brief Get the area of this polygon face
+	@brief Return the coordinates of all the vertices on this polygon.
+	@details This builds a list of all the vertex coordinates and returns it. It is up to the user
+	to delete the list of vertex coordinates later (must be done using 'delete[]').
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline Real
-      getArea() const noexcept;
+      [[nodiscard]] inline Vec3*
+      getAllVertexCoordinates() const noexcept;
 
       /*!
 	@brief Compute the projection of a point onto the polygon face plane
