@@ -129,6 +129,22 @@ namespace EBGeometry {
     Vertex<Meta>::computeVertexNormalAngleWeighted() noexcept
     {
 #warning "Vertex<Meta>::computeVertexNormalAngleWeighted is not implemented"
+
+      m_normal = Vec3::zero();
+
+      // This routine computes the pseudonormal from pseudnormal algorithm from
+      // Baerentzen and Aanes in "Signed distance computation using the angle
+      // weighted pseudonormal" (DOI: 10.1109/TVCG.2005.49). This algorithm computes
+      // an average normal vector using the normal vectors of each face connected to
+      // this vertex, i.e. in the form
+      //
+      //    n = sum(w * n(face))/sum(w)
+      //
+      // where w are weights for each face. This weight is given by the subtended
+      // angle of the face, which means the angle spanned by the incoming/outgoing
+      // edges of the face that pass through this vertex.
+
+      VertexPointer originVertex = this;
     }
 
     template <class Meta>
