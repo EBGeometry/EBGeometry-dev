@@ -15,6 +15,7 @@
 // Our includes
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_GPUTypes.hpp"
+#include "EBGeometry_Macros.hpp"
 #include "EBGeometry_Vec.hpp"
 
 namespace EBGeometry {
@@ -60,10 +61,11 @@ namespace EBGeometry {
       /*!
 	@brief Full constructor
 	@param[in] a_normal Normal vector of the 3D polygon face
+	@param[in] a_numVertices Number of vertices
 	@param[in] a_points Vertex coordinates of the 3D polygon face
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      Polygon2D(const Vec3& a_normal, const Vec3* const a_points);
+      inline Polygon2D(const Vec3& a_normal, const int a_numVertices, const Vec3* const a_points) noexcept;
 
       /*!
 	@brief Destructor (does nothing)
@@ -125,6 +127,11 @@ namespace EBGeometry {
       int m_yDir;
 
       /*!
+	@brief Number of vertex points.
+      */
+      int m_numPoints;
+
+      /*!
 	@brief List of points in 2D.
 	@details This is the position of the vertices, projected into 2D
       */
@@ -144,11 +151,12 @@ namespace EBGeometry {
 	@brief Define function. This find the direction to ignore and then computes
 	the 2D points.
 	@param[in] a_normal Normal vector for polygon face
+	@param[in] a_numVertices Number of vertices	
 	@param[in] a_points Vertex coordinates for polygon face.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       inline void
-      define(const Vec3& a_normal, const Vec3* const a_points) noexcept;
+      define(const Vec3& a_normal, const int a_numVertices, const Vec3* const a_points) noexcept;
 
       /*!
 	@brief Compute the winding number for a point P with the 2D polygon
@@ -169,8 +177,8 @@ namespace EBGeometry {
       computeCrossingNumber(const Vec2& a_point) const noexcept;
 
       /*!
-	@brief Compute the subtended angle for a point P with the 2D polygon
-	@param[in] P 2D point
+	@brief Compute the subtended angle for a point a_point with the 2D polygon
+	@param[in] a_point 2D point
 	@return Returns subtended angle.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
@@ -180,6 +188,6 @@ namespace EBGeometry {
   } // namespace DCEL
 } // namespace EBGeometry
 
-//#include "EBGeometry_Polygon2DImplem.hpp"
+#include "EBGeometry_DCEL_Polygon2DImplem.hpp"
 
 #endif

@@ -13,6 +13,7 @@
 #define EBGeometry_DCEL_EdgeImplem
 
 // Our includes
+#include "EBGeometry_Macros.hpp"
 #include "EBGeometry_DCEL_Edge.hpp"
 
 namespace EBGeometry {
@@ -271,7 +272,5 @@ namespace EBGeometry {
     }
   } // namespace DCEL
 } // namespace EBGeometry
-
-#include "EBGeometry_DCEL_VertexImplem.hpp"
 
 #endif

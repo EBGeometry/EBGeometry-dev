@@ -15,9 +15,9 @@
 
 // Our includes
 #include "EBGeometry_DCEL.hpp"
+#include "EBGeometry_DCEL_Polygon2D.hpp"
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_GPUTypes.hpp"
-#include "EBGeometry_Polygon2D.hpp"
 #include "EBGeometry_Vec.hpp"
 
 namespace EBGeometry {
