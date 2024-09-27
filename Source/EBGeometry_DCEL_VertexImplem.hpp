@@ -94,6 +94,8 @@ namespace EBGeometry {
     inline void
     Vertex<Meta>::normalizeNormalVector() noexcept
     {
+      EBGEOMETRY_EXPECT(m_normal.length() > EBGeometry::Limits::min());
+
       m_normal = m_normal / m_normal.length();
     }
 
@@ -141,6 +143,7 @@ namespace EBGeometry {
       // where w are weights for each face. This weight is given by the subtended
       // angle of the face, which means the angle spanned by the incoming/outgoing
       // edges of the face that pass through this vertex.
+      EBGEOMETRY_EXPECT(m_outgoingEdge != nullptr);
 
       EdgePointer outgoingEdge = nullptr;
       EdgePointer incomingEdge = nullptr;
@@ -166,9 +169,9 @@ namespace EBGeometry {
         EBGEOMETRY_EXPECT(v1 != v2);
         EBGEOMETRY_EXPECT(v2 != v0);
 
-        const Vec3 x0 = v0->getPosition();
-        const Vec3 x1 = v1->getPosition();
-        const Vec3 x2 = v2->getPosition();
+        const Vec3& x0 = v0->getPosition();
+        const Vec3& x1 = v1->getPosition();
+        const Vec3& x2 = v2->getPosition();
 
         EBGEOMETRY_EXPECT(x0 != x1);
         EBGEOMETRY_EXPECT(x1 != x2);
