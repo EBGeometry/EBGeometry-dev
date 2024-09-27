@@ -189,6 +189,15 @@ namespace EBGeometry {
       getNextEdge() const noexcept;
 
       /*!
+	@brief Get the previous edge edge.
+	@details This requires iteration around the polygon. 
+	@return Returns previous edge.
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      [[nodiscard]] inline EdgePointer
+      getPreviousEdge() const noexcept;      
+
+      /*!
 	@brief Get polygon face.
 	@return Returns m_face
       */

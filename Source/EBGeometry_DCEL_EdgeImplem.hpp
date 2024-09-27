@@ -148,6 +148,23 @@ namespace EBGeometry {
     }
 
     template <class Meta>
+    inline Edge<Meta>::EdgePointer
+    Edge<Meta>::getPreviousEdge() const noexcept
+    {
+      EdgePointer curEdge  = this;
+      EdgePointer nextEdge = nullptr;
+
+      while (nextEdge != this) {
+        EdgePointer tmp = curEdge;
+
+        curEdge  = nextEdge;
+        nextEdge = curEdge->getNextEdge();
+      }
+
+      return curEdge;
+    }
+
+    template <class Meta>
     inline Edge<Meta>::FacePointer
     Edge<Meta>::getFace() const noexcept
     {

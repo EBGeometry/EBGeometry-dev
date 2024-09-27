@@ -128,11 +128,9 @@ namespace EBGeometry {
     inline void
     Vertex<Meta>::computeVertexNormalAngleWeighted() noexcept
     {
-#warning "Vertex<Meta>::computeVertexNormalAngleWeighted is not implemented"
-
       m_normal = Vec3::zero();
 
-      // This routine computes the pseudonormal from pseudnormal algorithm from
+      // This routine computes the pseudonormal using the pseudonormal algorithm by
       // Baerentzen and Aanes in "Signed distance computation using the angle
       // weighted pseudonormal" (DOI: 10.1109/TVCG.2005.49). This algorithm computes
       // an average normal vector using the normal vectors of each face connected to
@@ -144,7 +142,60 @@ namespace EBGeometry {
       // angle of the face, which means the angle spanned by the incoming/outgoing
       // edges of the face that pass through this vertex.
 
-      VertexPointer originVertex = this;
+      EdgePointer outgoingEdge = nullptr;
+      EdgePointer incomingEdge = nullptr;
+
+      while (outgoingEdge != m_outgoingEdge) {
+
+        // Get the incoming and outgoing edges out of the origin vertex.
+        outgoingEdge = (outgoingEdge == nullptr) ? m_outgoingEdge : outgoingEdge;
+        incomingEdge = outgoingEdge->getPreviousEdge();
+
+        EBGEOMETRY_EXPECT(outgoingEdge != nullptr);
+        EBGEOMETRY_EXPECT(incomingEdge != nullptr);
+
+        // Vertices are named v0,v1,v2:
+        // v0 = Origin vertex of incoming edge
+        // v1 = this vertex
+        // v2 = End vertex of outgoing edge.
+        VertexPointer v0 = outgoingEdge->getVertex();
+        VertexPointer v1 = this;
+        VertexPointer v2 = outgoingEdge->getOtherVertex();
+
+        EBGEOMETRY_EXPECT(v0 != v1);
+        EBGEOMETRY_EXPECT(v1 != v2);
+        EBGEOMETRY_EXPECT(v2 != v0);
+
+        const Vec3 x0 = v0->getPosition();
+        const Vec3 x1 = v1->getPosition();
+        const Vec3 x2 = v2->getPosition();
+
+        EBGEOMETRY_EXPECT(x0 != x1);
+        EBGEOMETRY_EXPECT(x1 != x2);
+        EBGEOMETRY_EXPECT(x2 != x0);
+
+        Vec3 a = x2 - x1;
+        Vec3 b = x0 - x1;
+
+        a = a / a.length();
+        b = b / b.length();
+
+        const Vec3& faceNormal = (outgoingEdge->getFace())->getNormal();
+        const Real  alpha      = acos(v1, dot(v2));
+
+        m_normal += alpha * faceNormal;
+
+        // Jump to the pair polygon.
+        outgoingEdge = outgoingEdge->getPairEdge();
+        EBGEOMETRY_EXPECT(outgoingEdge != nullptr);
+
+        // Fetch the edge in the next polygon which has this vertex
+        // as the starting vertex.
+        outgoingEdge = outgoingEdge->getNextEdge();
+        EBGEOMETRY_EXPECT(outgoingEdge != nullptr);
+      }
+
+      this->normalizeNormalVector();
     }
 
     template <class Meta>
