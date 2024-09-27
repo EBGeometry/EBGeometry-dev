@@ -15,30 +15,16 @@
 #include <cassert>
 #include <iostream>
 
+#define EBGEOMETRY_ALWAYS_EXPECT(cond)                                                     \
+  if (!(cond)) {                                                                           \
+    printf("Expectation '%s' failed on line %i in file %s!\n", #cond, __LINE__, __FILE__); \
+  }
+
 // Debugging macrros.
 #ifdef EBGEOMETRY_ENABLE_DEBUG
-
-// Expectation macro which prints an error message without exiting the program.
-#define EBGEOMETRY_EXPECT(cond)                                                           \
-  if (!(cond)) {                                                                          \
-    printf("Expectation '%s' failed on line %i in file %s\n", #cond, __LINE__, __FILE__); \
-  }
-
-// Assertion macro which exits the program if the condition is violated.
-#define EBGEOMETRY_ASSERT(cond) \
-  if (!(cond)) {                \
-    std::abort();               \
-  }
-
+#define EBGEOMETRY_EXPECT(cond) EBGEOMETRY_ALWAYS_EXPECT(cond)
 #else
 #define EBGEOMETRY_EXPECT(cond) (void)0
-#define EBGEOMETRY_ASSERT(cond) (void)0
 #endif
-
-// Expectation macro which prints an error message without exiting the program.
-#define EBGEOMETRY_ALWAYS_EXPECT(cond)                                                    \
-  if (!(cond)) {                                                                          \
-    printf("Expectation '%s' failed on line %i in file %s\n", #cond, __LINE__, __FILE__); \
-  }
 
 #endif
