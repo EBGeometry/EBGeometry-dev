@@ -103,24 +103,28 @@ namespace EBGeometry {
     inline void
     Vertex<Meta>::computeVertexNormalAverage() noexcept
     {
-      const EdgePointer curEdge = nullptr;
+      // This routine computes the normal vector using a weighted sum of all faces
+      // that share this vertex.
+      EBGEOMETRY_EXPECT(m_outgoingEdge != nullptr);
 
-      while (curEdge != m_outgoingEdge) {
+      EdgePointer outgoingEdge = nullptr;
 
-        if (curEdge == nullptr) {
-          // First iteration starts on the outgoing edge from this vertex.
-          curEdge = m_outgoingEdge;
-        }
-        else {
-          // Subsequent iterations. Jump to the other side of the edge
-          // and step so that we get the outgoing edge.
-          curEdge = curEdge->getPairEdge();
-          curEdge = curEdge->getNextEdge();
-        }
+      m_normal = Vec3::zero();
 
-        const FacePointer curFace = curEdge->getFace();
+      while (outgoingEdge != m_outgoingEdge) {
+        outgoingEdge = (outgoingEdge == nullptr) ? m_outgoingEdge : outgoingEdge;
 
-        m_normal += curFace->getNormal();
+        const Vec3& faceNormal = (outgoingEdge->getFace())->getNormal();
+
+        m_normal += faceNormal;
+
+        // Jump to the pair edge and advance so we get the outgoing edge (from this vertex) on
+        // the next polygon.
+        outgoingEdge = outgoingEdge->getPairEdge();
+        EBGEOMETRY_EXPECT(outgoingEdge != nullptr);
+
+        outgoingEdge = outgoingEdge->getNextEdge();
+        EBGEOMETRY_EXPECT(outgoingEdge != nullptr);
       }
 
       this->normalizeNormalVector();
@@ -132,7 +136,7 @@ namespace EBGeometry {
     {
       m_normal = Vec3::zero();
 
-      // This routine computes the pseudonormal using the pseudonormal algorithm by
+      // This routine computes the normal vector using the pseudonormal algorithm by
       // Baerentzen and Aanes in "Signed distance computation using the angle
       // weighted pseudonormal" (DOI: 10.1109/TVCG.2005.49). This algorithm computes
       // an average normal vector using the normal vectors of each face connected to
@@ -184,7 +188,7 @@ namespace EBGeometry {
         b = b / b.length();
 
         const Vec3& faceNormal = (outgoingEdge->getFace())->getNormal();
-        const Real  alpha      = acos(v1, dot(v2));
+        const Real  alpha      = acos(dot(a, b));
 
         m_normal += alpha * faceNormal;
 

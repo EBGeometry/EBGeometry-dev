@@ -107,14 +107,14 @@ namespace EBGeometry {
     inline void
     Edge<Meta>::computeNormal() noexcept
     {
-      m_normal = Vec3::zero();
 
-      if (m_face != nullptr) {
-        m_normal += m_face->getNormal();
-      }
-      if (m_pairEdge != nullptr) {
-        m_normal += (m_pairEdge->getFace())->getNormal();
-      }
+      EBGEOMETRY_EXPECT(m_face != nullptr);
+      EBGEOMETRY_EXPECT(m_pairEdge != nullptr);
+      EBGEOMETRY_EXPECT(m_pairEdge->getFace() != nullptr);
+
+      m_normal = Vec3::zero();
+      m_normal += m_face->getNormal();
+      m_normal += (m_pairEdge->getFace())->getNormal();
 
       this->normalizeNormalVector();
     }
@@ -130,6 +130,8 @@ namespace EBGeometry {
     inline Edge<Meta>::VertexPointer
     Edge<Meta>::getOtherVertex() const noexcept
     {
+      EBGEOMETRY_EXPECT(m_nextEdge != nullptr);
+
       return (m_nextEdge->getVertex());
     }
 
@@ -152,13 +154,17 @@ namespace EBGeometry {
     Edge<Meta>::getPreviousEdge() const noexcept
     {
       EdgePointer curEdge  = this;
-      EdgePointer nextEdge = nullptr;
+      EdgePointer nextEdge = curEdge->getNextEdge();
+
+      EBGEOMETRY_EXPECT(curEdge != nullptr);
+      EBGEOMETRY_EXPECT(nextEdge != nullptr);
 
       while (nextEdge != this) {
-        EdgePointer tmp = curEdge;
-
         curEdge  = nextEdge;
         nextEdge = curEdge->getNextEdge();
+
+        EBGEOMETRY_EXPECT(curEdge != nullptr);
+        EBGEOMETRY_EXPECT(nextEdge != nullptr);
       }
 
       return curEdge;
@@ -196,6 +202,9 @@ namespace EBGeometry {
     inline Vec3
     Edge<Meta>::getX2X1() const noexcept
     {
+      EBGEOMETRY_EXPECT(m_vertex != nullptr);
+      EBGEOMETRY_EXPECT(this->getOtherVertex() != nullptr);
+
       const auto& x1 = this->getVertex()->getPosition();
       const auto& x2 = this->getOtherVertex()->getPosition();
 
