@@ -22,10 +22,11 @@ namespace EBGeometry {
     template <class Meta>
     inline Face<Meta>::Face() noexcept
     {
-      m_halfEdge  = nullptr;
-      m_normal    = Vec3::zero();
-      m_centroid  = Vec3::zero();
-      m_polygon2D = Polygon2D();
+      m_halfEdge       = nullptr;
+      m_normal         = Vec3::zero();
+      m_centroid       = Vec3::zero();
+      m_polygon2D      = Polygon2D();
+      m_poly2Algorithm = Polygon2D::InsideOutsideAlgorithm::CrossingNumber;
     }
 
     template <class Meta>
