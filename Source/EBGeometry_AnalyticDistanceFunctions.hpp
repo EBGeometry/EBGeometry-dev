@@ -75,7 +75,6 @@ namespace EBGeometry {
   class PlaneSDFFactory : public ImplicitFunctionFactory<PlaneSDF>
   {
   public:
-
     /*!
       @brief Constructor for creating PlaneSDF on the host or GPU
       @param[in] a_point Point on the plane
@@ -84,7 +83,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST
     inline PlaneSDFFactory(const Vec3* a_point, const Vec3* a_normal) noexcept
     {
-      m_point = a_point;
+      m_point  = a_point;
       m_normal = a_normal;
     };
 
@@ -98,6 +97,7 @@ namespace EBGeometry {
       return std::make_shared<PlaneSDF>(*m_point, *m_normal);
     }
 
+#ifdef EBGEOMETRY_ENABLE_GPU
     /*!
       @brief Build plane on the device.
     */
@@ -111,9 +111,9 @@ namespace EBGeometry {
 
       return plane;
     };
-    
-  protected:
+#endif
 
+  protected:
     /*!
       @brief Point on the plane
     */
@@ -122,7 +122,7 @@ namespace EBGeometry {
     /*!
       @brief Plane normal vector
     */
-    const Vec3* m_normal;    
+    const Vec3* m_normal;
   };
 
   /*!
@@ -179,7 +179,6 @@ namespace EBGeometry {
   class SphereSDFFactory : public ImplicitFunctionFactory<SphereSDF>
   {
   public:
-
     /*!
       @brief Constructor for creating SphereSDF on the host or GPU
       @param[in] a_center Sphere center
@@ -202,6 +201,7 @@ namespace EBGeometry {
       return std::make_shared<SphereSDF>(*m_center, *m_radius);
     }
 
+#ifdef EBGEOMETRY_ENABLE_GPU
     /*!
       @brief Build sphere on the device.
     */
@@ -215,9 +215,9 @@ namespace EBGeometry {
 
       return sphere;
     };
+#endif
 
   protected:
-
     /*!
       @brief Sphere center
     */
@@ -226,8 +226,8 @@ namespace EBGeometry {
     /*!
       @brief Sphere radius
     */
-    const Real* m_radius;    
-  };  
+    const Real* m_radius;
+  };
 
   /*!
     @brief Signed distance field for an axis-aligned box.
@@ -321,6 +321,7 @@ namespace EBGeometry {
       return std::make_shared<BoxSDF>(*m_loCorner, *m_hiCorner);
     }
 
+#ifdef EBGEOMETRY_ENABLE_GPU
     /*!
       @brief Build BoxSDF on the device.
     */
@@ -334,6 +335,7 @@ namespace EBGeometry {
 
       return box;
     };
+#endif
 
   protected:
     /*!

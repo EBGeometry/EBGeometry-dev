@@ -88,6 +88,7 @@ namespace EBGeometry {
       return std::make_shared<UnionIF>(*m_f1, *m_f2);
     }
 
+#ifdef EBGEOMETRY_ENABLE_GPU
     /*!
       @brief Build implicit function on the device
     */
@@ -101,6 +102,7 @@ namespace EBGeometry {
 
       return csgUnion;
     };
+#endif
 
   protected:
     ImplicitFunction** m_f1;

@@ -118,12 +118,14 @@ namespace EBGeometry {
     virtual std::shared_ptr<T>
     buildOnHost() const noexcept = 0;
 
+#ifdef EBGEOMETRY_ENABLE_GPU
     /*!
       @brief Build implicit function on the device
     */
     EBGEOMETRY_GPU_HOST
     virtual GPUPointer<T>
     buildOnDevice() const noexcept = 0;
+#endif
   };
 } // namespace EBGeometry
 
