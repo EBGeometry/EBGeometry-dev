@@ -22,7 +22,6 @@ namespace EBGeometry {
     {
       m_xDir      = -1;
       m_yDir      = -1;
-      m_normal    = Vec3::zero();
       m_numPoints = 0.0;
       m_points    = nullptr;
     }

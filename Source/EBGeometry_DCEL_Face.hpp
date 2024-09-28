@@ -163,20 +163,6 @@ namespace EBGeometry {
       getCentroid(const int a_dir) const noexcept;
 
       /*!
-	@brief Get the area of this polygon face
-      */
-      EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline Real&
-      getArea() noexcept;
-
-      /*!
-	@brief Get the area of this polygon face
-      */
-      EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline const Real&
-      getArea() const noexcept;
-
-      /*!
 	@brief Get modifiable normal vector
       */
       EBGEOMETRY_GPU_HOST_DEVICE
@@ -269,7 +255,7 @@ namespace EBGeometry {
 	@brief 2D embedding of this polygon. This is the 2D view of the current
 	object projected along its normal vector cardinal.
       */
-      Polygon2D m_poly2;
+      Polygon2D m_polygon2D;
 
       /*!
 	@brief Algorithm for inside/outside tests
@@ -308,7 +294,7 @@ namespace EBGeometry {
 	@brief Compute the area of this polygon
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline void
+      inline Real
       computeArea() noexcept;
 
       /*!
