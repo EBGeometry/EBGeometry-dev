@@ -96,6 +96,7 @@ namespace EBGeometry {
 	@brief Encode an input point into a Morton index with a 64-bit representation.
 	@param[in] a_point 
       */
+      EBGEOMETRY_GPU_HOST_DEVICE
       [[nodiscard]] inline static uint64_t
       encode(const Index& a_point) noexcept;
 
@@ -103,6 +104,7 @@ namespace EBGeometry {
 	@brief Decode the 64-bit Morton code into an Index.
 	@param[in] a_code Morton code
       */
+      EBGEOMETRY_GPU_HOST_DEVICE
       [[nodiscard]] inline static Index
       decode(const uint64_t& a_code) noexcept;
 
@@ -124,6 +126,7 @@ namespace EBGeometry {
 	@brief Encode the input point into the SFC code.
 	@param[in] a_point 
       */
+      EBGEOMETRY_GPU_HOST_DEVICE
       [[nodiscard]] inline static uint64_t
       encode(const Index& a_point) noexcept;
 
@@ -131,6 +134,7 @@ namespace EBGeometry {
 	@brief Decode the 64-bit SFC code into an Index.
 	@param[in] a_code SFC code.
       */
+      EBGEOMETRY_GPU_HOST_DEVICE
       [[nodiscard]] inline static Index
       decode(const uint64_t& a_code) noexcept;
     };
