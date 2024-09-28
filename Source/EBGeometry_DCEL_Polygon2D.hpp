@@ -56,7 +56,7 @@ namespace EBGeometry {
 	@brief Disallowed constructor, use the one with the normal vector and points
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Polygon2D() noexcept = delete;
+      inline Polygon2D() noexcept;
 
       /*!
 	@brief Full constructor

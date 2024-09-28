@@ -152,7 +152,7 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       [[nodiscard]] inline Real&
-      getCentroid(const size_t a_dir) noexcept;
+      getCentroid(const int a_dir) noexcept;
 
       /*!
 	@brief Get immutable centroid position in specified coordinate direction
@@ -160,7 +160,7 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       [[nodiscard]] inline const Real&
-      getCentroid(const size_t a_dir) const noexcept;
+      getCentroid(const int a_dir) const noexcept;
 
       /*!
 	@brief Get the area of this polygon face
@@ -341,6 +341,6 @@ namespace EBGeometry {
   } // namespace DCEL
 } // namespace EBGeometry
 
-//#include "EBGeometry_DCEL_FaceImplem.hpp"
+#include "EBGeometry_DCEL_FaceImplem.hpp"
 
 #endif

@@ -18,6 +18,15 @@
 namespace EBGeometry {
   namespace DCEL {
 
+    inline Polygon2D::Polygon2D() noexcept
+    {
+      m_xDir      = -1;
+      m_yDir      = -1;
+      m_normal    = Vec3::zero();
+      m_numPoints = 0.0;
+      m_points    = nullptr;
+    }
+
     inline Polygon2D::Polygon2D(const Vec3& a_normal, const int a_numPoints, const Vec3* const a_points) noexcept
     {
       this->define(a_normal, a_numPoints, a_points);
