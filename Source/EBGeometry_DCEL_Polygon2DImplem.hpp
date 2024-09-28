@@ -18,9 +18,9 @@
 namespace EBGeometry {
   namespace DCEL {
 
-    inline Polygon2D::Polygon2D(const Vec3& a_normal, const int a_numVertices, const Vec3* const a_points) noexcept
+    inline Polygon2D::Polygon2D(const Vec3& a_normal, const int a_numPoints, const Vec3* const a_points) noexcept
     {
-      this->define(a_normal, a_numVertices, a_points);
+      this->define(a_normal, a_numPoints, a_points);
     }
 
     inline Polygon2D::~Polygon2D() noexcept
@@ -56,18 +56,34 @@ namespace EBGeometry {
 
     inline bool
     Polygon2D::isPointInsidePolygonWindingNumber(const Vec3& a_point) const noexcept
-    {}
-
-    inline bool
-    Polygon2D::isPointInsidePolygonSubtend(const Vec3& a_point) const noexcept
     {
-      return false;
+      const Vec2 projectedPoint = this->projectPoint(a_point);
+
+      const int windingNumber = this->computeWindingNumber(projectedPoint);
+
+      return windingNumber != 0;
     }
 
     inline bool
     Polygon2D::isPointInsidePolygonCrossingNumber(const Vec3& a_point) const noexcept
     {
-      return false;
+      const Vec2 projectedPoint = this->projectPoint(a_point);
+
+      const int crossingNumber = this->computeCrossingNumber(projectedPoint);
+
+      return (crossingNumber & 1);
+    }
+
+    inline bool
+    Polygon2D::isPointInsidePolygonSubtend(const Vec3& a_point) const noexcept
+    {
+      const Vec2 projectedPoint = this->projectPoint(a_point);
+
+      Real sumTheta = this->computeSubtendedAngle(projectedPoint);
+
+      sumTheta = std::abs(sumTheta) / (2. * M_PI);
+
+      return (round(sumTheta) == 1);
     }
 
     inline Vec2
@@ -111,46 +127,87 @@ namespace EBGeometry {
     inline int
     Polygon2D::computeWindingNumber(const Vec2& a_point) const noexcept
     {
-      int wn = 0; // the  winding number counter
+      int windingNumber = 0;
 
-      auto isLeft = [](const Vec2& P0, const Vec2& P1, const Vec2& P2) {
-        return (P1.x() - P0.x()) * (P2.y() - P0.y()) - (P2.x() - P0.x()) * (P1.y() - P0.y());
+      constexpr Real zero = Real(0.0);
+
+      auto isLeft = [](const Vec2& p0, const Vec2& p1, const Vec2& p2) {
+        return (p1.x() - p0.x()) * (p2.y() - p0.y()) - (p2.x() - p0.x()) * (p1.y() - p0.y());
       };
 
-      // loop through all edges of the polygon
-      for (int i = 0; i < m_numPoints; i++) { // edge from V[i] to  V[i+1]
+      // Loop through all edges of the polygon
+      for (int i = 0; i < m_numPoints; i++) {
 
         const Vec2& P  = a_point;
-        const Vec2& P1 = m_points[i];
-        const Vec2& P2 = m_points[(i + 1) % m_numPoints];
+        const Vec2& p1 = m_points[i];
+        const Vec2& p2 = m_points[(i + 1) % m_numPoints];
 
-        const Real res = isLeft(P1, P2, P);
+        const Real res = isLeft(p1, p2, P);
 
-        if (P1.y() <= P.y()) { // start y <= P.y
-          if (P2.y() > P.y())  // an upward crossing
-            if (res > 0.)      // P left of  edge
-              ++wn;            // have  a valid up intersect
+        if (p1.y() <= P.y()) {
+          if (p2.y() > P.y() && res > zero) {
+            windingNumber += 1;
+          }
         }
-        else {                 // start y > P.y (no test needed)
-          if (P2.y() <= P.y()) // a downward crossing
-            if (res < 0.)      // P right of  edge
-              --wn;            // have  a valid down intersect
+        else {
+          if (p2.y() <= P.y() && res < zero) {
+            windingNumber -= 1;
+          }
         }
       }
 
-      return wn;
+      return windingNumber;
     }
 
     inline int
     Polygon2D::computeCrossingNumber(const Vec2& a_point) const noexcept
     {
-      return 0;
+      int crossingNumber = 0;
+
+      for (int i = 0; i < m_numPoints; i++) {
+        const Vec2& p1 = m_points[i];
+        const Vec2& p2 = m_points[(i + 1) % m_numPoints];
+
+        const bool upwardCrossing   = (p1.y() <= a_point.y()) && (p2.y() > a_point.y());
+        const bool downwardCrossing = (p1.y() > a_point.y()) && (p2.y() <= a_point.y());
+
+        if (upwardCrossing || downwardCrossing) {
+          const Real t = (a_point.y() - p1.y()) / (p2.y() - p1.y());
+
+          if (a_point.x() < p1.x() + t * (p2.x() - p1.x())) {
+            crossingNumber += 1;
+          }
+        }
+      }
+
+      return crossingNumber;
     }
 
     inline Real
     Polygon2D::computeSubtendedAngle(const Vec2& a_point) const noexcept
     {
-      return 0.0;
+      Real sumTheta = 0.0;
+
+      for (int i = 0; i < m_numPoints; i++) {
+        const Vec2 p1 = m_points[i] - a_point;
+        const Vec2 p2 = m_points[(i + 1) % m_numPoints] - a_point;
+
+        const Real theta1 = atan2(p1.y(), p1.x());
+        const Real theta2 = atan2(p2.y(), p2.x());
+
+        Real dTheta = theta2 - theta1;
+
+        while (dTheta > M_PI) {
+          dTheta -= 2.0 * M_PI;
+        }
+        while (dTheta < -M_PI) {
+          dTheta += 2.0 * M_PI;
+        }
+
+        sumTheta += dTheta;
+      }
+
+      return sumTheta;
     }
   } // namespace DCEL
 } // namespace EBGeometry

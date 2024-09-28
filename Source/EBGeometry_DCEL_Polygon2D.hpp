@@ -61,11 +61,11 @@ namespace EBGeometry {
       /*!
 	@brief Full constructor
 	@param[in] a_normal Normal vector of the 3D polygon face
-	@param[in] a_numVertices Number of vertices
+	@param[in] a_numPoints Number of vertices
 	@param[in] a_points Vertex coordinates of the 3D polygon face
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Polygon2D(const Vec3& a_normal, const int a_numVertices, const Vec3* const a_points) noexcept;
+      inline Polygon2D(const Vec3& a_normal, const int a_numPoints, const Vec3* const a_points) noexcept;
 
       /*!
 	@brief Destructor (does nothing)
@@ -95,16 +95,6 @@ namespace EBGeometry {
       isPointInsidePolygonWindingNumber(const Vec3& a_point) const noexcept;
 
       /*!
-	@brief Check if a point is inside a 2D polygon, using the subtended angles
-	@param[in] a_point 3D point coordinates
-	@return Returns true if the 3D point projects to the inside of the 2D
-	polygon
-      */
-      EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline bool
-      isPointInsidePolygonSubtend(const Vec3& a_point) const noexcept;
-
-      /*!
 	@brief Check if a point is inside a 2D polygon, by computing the number of
 	times a ray crosses the polygon edges.
 	@param[in] a_point 3D point coordinates
@@ -114,6 +104,16 @@ namespace EBGeometry {
       EBGEOMETRY_GPU_HOST_DEVICE
       [[nodiscard]] inline bool
       isPointInsidePolygonCrossingNumber(const Vec3& a_point) const noexcept;
+
+      /*!
+	@brief Check if a point is inside a 2D polygon, using the subtended angles
+	@param[in] a_point 3D point coordinates
+	@return Returns true if the 3D point projects to the inside of the 2D
+	polygon
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      [[nodiscard]] inline bool
+      isPointInsidePolygonSubtend(const Vec3& a_point) const noexcept;      
 
     private:
       /*!
@@ -151,12 +151,12 @@ namespace EBGeometry {
 	@brief Define function. This find the direction to ignore and then computes
 	the 2D points.
 	@param[in] a_normal Normal vector for polygon face
-	@param[in] a_numVertices Number of vertices	
+	@param[in] a_numPoints Number of vertices	
 	@param[in] a_points Vertex coordinates for polygon face.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       inline void
-      define(const Vec3& a_normal, const int a_numVertices, const Vec3* const a_points) noexcept;
+      define(const Vec3& a_normal, const int a_numPoints, const Vec3* const a_points) noexcept;
 
       /*!
 	@brief Compute the winding number for a point P with the 2D polygon
