@@ -235,7 +235,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline const Edge<Meta>* 
+    inline const Edge<Meta>*
     Vertex<Meta>::getOutgoingEdge() const noexcept
     {
       return m_outgoingEdge;

@@ -221,7 +221,6 @@ namespace EBGeometry {
       getMetaData() const noexcept;
 
     protected:
-      
       /*!
 	@brief Outgoing edge.
       */

@@ -79,7 +79,100 @@ namespace EBGeometry {
     inline void
     Mesh<Meta>::sanityCheck() const noexcept
     {
-#warning "Mesh<Meta>::sanityCheck() - not implemented"
+      const std::string faceIsNullptr    = "nullptr face";
+      const std::string faceHasNoEdge    = "face with no edge";
+      const std::string faceIsDegenerate = "degenerate face";
+
+      const std::string edgeIsNullptr         = "nullptr edges";
+      const std::string edgeIsDegenerate      = "degenerate edge";
+      const std::string edgeHasNoPairEdge     = "no pair edge (not watertight)";
+      const std::string edgeHasNoNextEdge     = "no next edge (badly linked dcel)";
+      const std::string edgeHasNoPreviousEdge = "no previous edge (badly linked dcel)";
+      const std::string edgeHasNoVertex       = "no origin vertex found for half edge (badly linked dcel)";
+      const std::string edgeHasNoFace         = "no face found for half edge (badly linked dcel)";
+      const std::string edgeHasBadPrevNext    = "previous edge's next edge is not this edge (badly linked dcel)";
+      const std::string edgeHasBadNextPrev    = "next edge's previous edge is not this edge (badly linked dcel)";
+
+      const std::string vertexIsNullptr = "nullptr vertex";
+      const std::string vertexHasNoEdge = "no referenced edge for vertex (unreferenced vertex)";
+
+      std::map<std::string, size_t> warnings = {{faceIsNullptr, 0},
+                                                {faceHasNoEdge, 0},
+                                                {faceIsDegenerate, 0},
+                                                {edgeIsNullptr, 0},
+                                                {edgeIsDegenerate, 0},
+                                                {edgeHasNoPairEdge, 0},
+                                                {edgeHasNoNextEdge, 0},
+                                                {edgeHasNoPreviousEdge, 0},
+                                                {edgeHasNoVertex, 0},
+                                                {edgeHasNoFace, 0},
+                                                {edgeHasBadPrevNext, 0},
+                                                {edgeHasBadNextPrev, 0},
+                                                {vertexIsNullptr, 0},
+                                                {vertexHasNoEdge, 0}};
+
+#if 1
+#warning "Mesh<Meta>::sanityCheck -- need to check all faces, edges, and vertices"
+#else
+      for (const auto& f : m_faces) {
+        const auto& halfEdge = f->getHalfEdge();
+
+        // Check for duplicate vertices
+        auto vertices = f->gatherVertices();
+        std::sort(vertices.begin(), vertices.end());
+        auto       it           = std::unique(vertices.begin(), vertices.end());
+        const bool noDuplicates = (it == vertices.end());
+
+        if (f == nullptr) {
+          this->incrementWarning(warnings, faceIsNullptr);
+        }
+        else if (halfEdge == nullptr) {
+          this->incrementWarning(warnings, faceHasNoEdge);
+        }
+        if (!noDuplicates) {
+          this->incrementWarning(warnings, faceIsDegenerate);
+        }
+      }
+
+      for (const auto& e : m_edges) {
+        const auto& nextEdge  = e->getNextEdge();
+        const auto& pairEdge  = e->getPairEdge();
+        const auto& curVertex = e->getVertex();
+        const auto& curFace   = e->getFace();
+
+        // Check basic points for current edge.
+        if (e == nullptr) {
+          this->incrementWarning(warnings, edgeIsNullptr);
+        }
+        else if (e->getVertex() == e->getOtherVertex()) {
+          this->incrementWarning(warnings, edgeIsDegenerate);
+        }
+        else if (pairEdge == nullptr) {
+          this->incrementWarning(warnings, edgeHasNoPairEdge);
+        }
+        else if (nextEdge == nullptr) {
+          this->incrementWarning(warnings, edgeHasNoNextEdge);
+        }
+        else if (curVertex == nullptr) {
+          this->incrementWarning(warnings, edgeHasNoVertex);
+        }
+        else if (curFace == nullptr) {
+          this->incrementWarning(warnings, edgeHasNoFace);
+        }
+      }
+
+      // Vertex check
+      for (const auto& v : m_vertices) {
+        if (v == nullptr) {
+          this->incrementWarning(warnings, vertexIsNullptr);
+        }
+        else if (v->getOutgoingEdge() == nullptr) {
+          this->incrementWarning(warnings, vertexHasNoEdge);
+        }
+      }
+#endif
+
+      this->printWarnings(warnings);
     }
 
     template <class Meta>
@@ -296,13 +389,23 @@ namespace EBGeometry {
 
     template <class Meta>
     inline void
-    Mesh<Meta>::incrementWarning(std::map<std::string, size_t>& a_warnings, const std::string& a_warn) const noexcept
-    {}
+    Mesh<Meta>::incrementWarning(std::map<std::string, int>& a_warnings, const std::string& a_warn) const noexcept
+    {
+      a_warnings.at(a_warn) += 1;
+    }
 
     template <class Meta>
     inline void
-    Mesh<Meta>::printWarnings(const std::map<std::string, size_t>& a_warnings) const noexcept
-    {}
+    Mesh<Meta>::printWarnings(const std::map<std::string, int>& a_warnings) const noexcept
+    {
+      for (const auto& warn : a_warnings) {
+        if (warn.second > 0) {
+          std::cerr << "In file 'CD_DCELMeshImplem.H' function "
+                       "MeshT<T, Meta>::sanityCheck() - warnings about error '"
+                    << warn.first << "' = " << warn.second << "\n";
+        }
+      }
+    }
   } // namespace DCEL
 } // namespace EBGeometry
 

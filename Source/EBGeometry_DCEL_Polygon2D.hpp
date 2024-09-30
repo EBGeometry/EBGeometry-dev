@@ -113,7 +113,7 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       [[nodiscard]] inline bool
-      isPointInsidePolygonSubtend(const Vec3& a_point) const noexcept;      
+      isPointInsidePolygonSubtend(const Vec3& a_point) const noexcept;
 
     private:
       /*!

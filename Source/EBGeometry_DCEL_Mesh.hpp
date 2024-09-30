@@ -287,7 +287,7 @@ namespace EBGeometry {
       /*!
 	@brief Number of faces
       */
-      int m_numFaces;            
+      int m_numFaces;
 
       /*!
 	@brief Function which computes internal things for the polygon faces.
@@ -311,7 +311,7 @@ namespace EBGeometry {
 	@note This calls DCEL::Vertex<Meta>::computeVertexNormalAverage() or
 	DCEL::Vertex<Meta>::computeVertexNormalAngleWeighted()
       */
-      EBGEOMETRY_GPU_HOST_DEVICE      
+      EBGEOMETRY_GPU_HOST_DEVICE
       inline void
       reconcileVertices(const DCEL::VertexNormalWeight a_weight) noexcept;
 
@@ -344,18 +344,18 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST
       inline void
-      incrementWarning(std::map<std::string, size_t>& a_warnings, const std::string& a_warn) const noexcept;
+      incrementWarning(std::map<std::string, int>& a_warnings, const std::string& a_warn) const noexcept;
 
       /*!
 	@brief Print all warnings to std::cerr
 	@param[in] a_warnings All warnings
       */
-      EBGEOMETRY_GPU_HOST      
+      EBGEOMETRY_GPU_HOST
       inline void
-      printWarnings(const std::map<std::string, size_t>& a_warnings) const noexcept;
+      printWarnings(const std::map<std::string, int>& a_warnings) const noexcept;
     };
   } // namespace DCEL
-}
+} // namespace EBGeometry
 
 #include "EBGeometry_DCEL_MeshImplem.hpp"
 

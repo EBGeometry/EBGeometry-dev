@@ -352,7 +352,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] inline static Vec3
-    lowest() noexcept;    
+    lowest() noexcept;
 
     /*!
       @brief Return component in vector. (i=0 => x and so on)

@@ -23,7 +23,7 @@
 
 namespace EBGeometry {
 
-#ifdef EBGEOMETRY_ENABLE_GPU  
+#ifdef EBGEOMETRY_ENABLE_GPU
   /*!
     @brief Shortcut for GPU pointer. Note that this is mostly used so that users
     know from the typename which pointers are intended to be pointers to data allocated
@@ -32,7 +32,6 @@ namespace EBGeometry {
   template <typename T>
   using GPUPointer = T**;
 #endif
-
 
 #ifdef EBGEOMETRY_ENABLE_GPU
   /*!
@@ -65,7 +64,7 @@ namespace EBGeometry {
   {
     (*a_implicitFunction) = new T(*args...);
   };
-#endif    
+#endif
 
   /*!
     @brief Implicit function base class. 
@@ -108,9 +107,8 @@ namespace EBGeometry {
   class ImplicitFunctionFactory
   {
   public:
-
     static_assert(std::is_base_of<ImplicitFunction, T>::value, "T is not a base of ImplicitFunction");
-    
+
     /*!
       @brief Build implicit function on host
     */
