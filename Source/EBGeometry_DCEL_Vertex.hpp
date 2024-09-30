@@ -37,21 +37,6 @@ namespace EBGeometry {
     {
     public:
       /*!
-	@brief Alias for a vertex
-      */
-      using VertexPointer = const Vertex<Meta>*;
-      
-      /*!
-	@brief Alias for a half-edge
-      */
-      using EdgePointer = const Edge<Meta>*;
-
-      /*!
-	@brief Pointer to a polygon face
-      */
-      using FacePointer = const Face<Meta>*;
-
-      /*!
 	@brief Empty constructor.
 	@details This initializes the position and the normal vector to zero
 	vectors, and the polygon face list is empty
@@ -85,7 +70,7 @@ namespace EBGeometry {
 	@param[in] a_edge Outgoing half-edge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Vertex(const Vec3& a_position, const Vec3& a_normal, const EdgePointer a_edge) noexcept;
+      inline Vertex(const Vec3& a_position, const Vec3& a_normal, const Edge<Meta>* const a_edge) noexcept;
 
       /*!
 	@brief Full copy constructor
@@ -111,7 +96,7 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       inline void
-      define(const Vec3& a_position, const Vec3& a_normal, const EdgePointer a_edge) noexcept;
+      define(const Vec3& a_position, const Vec3& a_normal, const Edge<Meta>* const a_edge) noexcept;
 
       /*!
 	@brief Set the vertex position
@@ -135,7 +120,7 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       inline void
-      setEdge(const EdgePointer& a_edge) noexcept;
+      setEdge(const Edge<Meta>* const a_edge) noexcept;
 
       /*!
 	@brief Normalize the normal vector to a length of 1.
@@ -163,13 +148,6 @@ namespace EBGeometry {
       EBGEOMETRY_GPU_HOST_DEVICE
       inline void
       computeVertexNormalAngleWeighted() noexcept;
-
-      /*!
-	@brief Flip the vertex normal vector
-      */
-      EBGEOMETRY_GPU_HOST_DEVICE
-      inline void
-      flip() noexcept;
 
       /*!
 	@brief Return modifiable vertex position.
@@ -200,10 +178,10 @@ namespace EBGeometry {
       getNormal() const noexcept;
 
       /*!
-	@brief Return immutable pointer to outgoing edge.
+	@brief Return outgoing edge.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline EdgePointer
+      [[nodiscard]] inline const Edge<Meta>*
       getOutgoingEdge() const noexcept;
 
       /*!
@@ -243,10 +221,11 @@ namespace EBGeometry {
       getMetaData() const noexcept;
 
     protected:
+      
       /*!
-	@brief Index of outgoing edge.
+	@brief Outgoing edge.
       */
-      EdgePointer m_outgoingEdge;
+      const Edge<Meta>* m_outgoingEdge;
 
       /*!
 	@brief Vertex position

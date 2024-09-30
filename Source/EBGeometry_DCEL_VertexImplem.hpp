@@ -42,7 +42,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Vertex<Meta>::Vertex(const Vec3& a_position, const Vec3& a_normal, const EdgePointer a_edge) noexcept
+    inline Vertex<Meta>::Vertex(const Vec3& a_position, const Vec3& a_normal, const Edge<Meta>* const a_edge) noexcept
     {
       m_position     = a_position;
       m_normal       = a_normal;
@@ -63,7 +63,7 @@ namespace EBGeometry {
 
     template <class Meta>
     inline void
-    Vertex<Meta>::define(const Vec3& a_position, const Vec3& a_normal, const EdgePointer a_edge) noexcept
+    Vertex<Meta>::define(const Vec3& a_position, const Vec3& a_normal, const Edge<Meta>* const a_edge) noexcept
     {
       m_position     = a_position;
       m_normal       = a_normal;
@@ -86,7 +86,7 @@ namespace EBGeometry {
 
     template <class Meta>
     inline void
-    Vertex<Meta>::setEdge(const EdgePointer& a_edge) noexcept
+    Vertex<Meta>::setEdge(const Edge<Meta>* const a_edge) noexcept
     {
       m_outgoingEdge = a_edge;
     }
@@ -108,7 +108,7 @@ namespace EBGeometry {
       // that share this vertex.
       EBGEOMETRY_EXPECT(m_outgoingEdge != nullptr);
 
-      EdgePointer outgoingEdge = nullptr;
+      const Edge<Meta>* outgoingEdge = nullptr;
 
       m_normal = Vec3::zero();
 
@@ -150,8 +150,8 @@ namespace EBGeometry {
       // edges of the face that pass through this vertex.
       EBGEOMETRY_EXPECT(m_outgoingEdge != nullptr);
 
-      EdgePointer outgoingEdge = nullptr;
-      EdgePointer incomingEdge = nullptr;
+      const Edge<Meta>* outgoingEdge = nullptr;
+      const Edge<Meta>* incomingEdge = nullptr;
 
       while (outgoingEdge != m_outgoingEdge) {
 
@@ -166,9 +166,9 @@ namespace EBGeometry {
         // v0 = Origin vertex of incoming edge
         // v1 = this vertex
         // v2 = End vertex of outgoing edge.
-        VertexPointer v0 = outgoingEdge->getVertex();
-        VertexPointer v1 = this;
-        VertexPointer v2 = outgoingEdge->getOtherVertex();
+        const Vertex<Meta>* const v0 = outgoingEdge->getVertex();
+        const Vertex<Meta>* const v1 = this;
+        const Vertex<Meta>* const v2 = outgoingEdge->getOtherVertex();
 
         EBGEOMETRY_EXPECT(v0 != v1);
         EBGEOMETRY_EXPECT(v1 != v2);
@@ -235,7 +235,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Vertex<Meta>::EdgePointer
+    inline const Edge<Meta>* 
     Vertex<Meta>::getOutgoingEdge() const noexcept
     {
       return m_outgoingEdge;
