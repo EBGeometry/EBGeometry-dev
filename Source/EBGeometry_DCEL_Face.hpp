@@ -279,7 +279,7 @@ namespace EBGeometry {
 	@brief Compute the area of this polygon
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Real
+      [[nodiscard]] inline Real
       computeArea() noexcept;
 
       /*!
