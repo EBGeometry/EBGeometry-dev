@@ -15,6 +15,7 @@
 
 // Our includes
 #include "EBGeometry_DCEL.hpp"
+#include "EBGeometry_DCEL_Vertex.hpp"
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_GPUTypes.hpp"
 #include "EBGeometry_Vec.hpp"
@@ -42,21 +43,6 @@ namespace EBGeometry {
     {
     public:
       /*!
-	@brief Alias for a vertex
-      */
-      using VertexPointer = const Vertex<Meta>*;
-
-      /*!
-	@brief Alias for a half-edge
-      */
-      using EdgePointer = const Edge<Meta>*;
-
-      /*!
-	@brief Pointer to a polygon face
-      */
-      using FacePointer = const Face<Meta>*;
-
-      /*!
 	@brief Default constructors. Creates an invalid edge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
@@ -74,7 +60,7 @@ namespace EBGeometry {
 	@param[in] a_vertex Starting vertex.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Edge(const VertexPointer a_vertex) noexcept;
+      inline Edge(const Vertex<Meta>* const a_vertex) noexcept;
 
       /*!
 	@brief Partial constructor. Sets everything except the normal vector.
@@ -84,10 +70,10 @@ namespace EBGeometry {
 	@param[in] a_face Polygon face
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Edge(const VertexPointer a_vertex,
-                  const EdgePointer   a_pairEdge,
-                  const EdgePointer   a_nextEdge,
-                  const FacePointer   a_face) noexcept;
+      inline Edge(const Vertex<Meta>* const a_vertex,
+                  const Edge<Meta>* const   a_pairEdge,
+                  const Edge<Meta>* const   a_nextEdge,
+                  const Face<Meta>* const   a_face) noexcept;
 
       /*!
 	@brief Destructor (does nothing).
@@ -104,10 +90,10 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       inline void
-      define(const VertexPointer a_vertex,
-             const EdgePointer   a_pairEdge,
-             const EdgePointer   a_nextEdge,
-             const FacePointer   a_face) noexcept;
+      define(const Vertex<Meta>* const a_vertex,
+             const Edge<Meta>* const   a_pairEdge,
+             const Edge<Meta>* const   a_nextEdge,
+             const Face<Meta>* const   a_face) noexcept;
 
       /*!
 	@brief Set the starting vertex
@@ -115,7 +101,7 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       inline void
-      setVertex(const VertexPointer a_vertex) noexcept;
+      setVertex(const Vertex<Meta>* const a_vertex) noexcept;
 
       /*!
 	@brief Set the pair edge
@@ -123,7 +109,7 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       inline void
-      setPairEdge(const EdgePointer a_pairEdge) noexcept;
+      setPairEdge(const Edge<Meta>* const a_pairEdge) noexcept;
 
       /*!
 	@brief Set the next edge
@@ -131,7 +117,7 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       inline void
-      setNextEdge(const EdgePointer a_nextEdge) noexcept;
+      setNextEdge(const Edge<Meta>* const a_nextEdge) noexcept;
 
       /*!
 	@brief Set the polygon face.
@@ -139,7 +125,7 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       inline void
-      setFace(const FacePointer a_face) noexcept;
+      setFace(const Face<Meta>* const a_face) noexcept;
 
       /*!
 	@brief Set the normal vector
@@ -161,7 +147,7 @@ namespace EBGeometry {
 	@return Returns m_vertex
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline VertexPointer
+      [[nodiscard]] inline const Vertex<Meta>*
       getVertex() const noexcept;
 
       /*!
@@ -169,7 +155,7 @@ namespace EBGeometry {
 	@return Returns m_vertex
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline VertexPointer
+      [[nodiscard]] inline const Vertex<Meta>*
       getOtherVertex() const noexcept;
 
       /*!
@@ -177,7 +163,7 @@ namespace EBGeometry {
 	@return Returns m_pairEdge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline EdgePointer
+      [[nodiscard]] inline const Edge<Meta>*
       getPairEdge() const noexcept;
 
       /*!
@@ -185,7 +171,7 @@ namespace EBGeometry {
 	@return Returns m_nextEdge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline EdgePointer
+      [[nodiscard]] inline const Edge<Meta>*
       getNextEdge() const noexcept;
 
       /*!
@@ -194,15 +180,15 @@ namespace EBGeometry {
 	@return Returns previous edge.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline EdgePointer
-      getPreviousEdge() const noexcept;      
+      [[nodiscard]] inline const Edge<Meta>*
+      getPreviousEdge() const noexcept;
 
       /*!
 	@brief Get polygon face.
 	@return Returns m_face
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline FacePointer
+      [[nodiscard]] inline const Face<Meta>*
       getFace() const noexcept;
 
       /*!
@@ -256,22 +242,22 @@ namespace EBGeometry {
       /*!
 	@brief Starting vertex.
       */
-      VertexPointer m_vertex;
+      const Vertex<Meta>* m_vertex;
 
       /*!
 	@brief Pair edge.
       */
-      EdgePointer m_pairEdge;
+      const Edge<Meta>* m_pairEdge;
 
       /*!
 	@brief Next edge around the polygon.
       */
-      EdgePointer m_nextEdge;
+      const Edge<Meta>* m_nextEdge;
 
       /*!
 	@brief Polygon face connected to this half-edge.
       */
-      FacePointer m_face;
+      const Face<Meta>* m_face;
 
       /*!
 	@brief Edge normal vector

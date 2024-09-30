@@ -46,21 +46,6 @@ namespace EBGeometry {
     {
     public:
       /*!
-	@brief Alias for a vertex
-      */
-      using VertexPointer = const Vertex<Meta>*;
-
-      /*!
-	@brief Alias for a half-edge
-      */
-      using EdgePointer = const Edge<Meta>*;
-
-      /*!
-	@brief Pointer to a polygon face
-      */
-      using FacePointer = const Face<Meta>*;
-
-      /*!
 	@brief Default constructor. Sets the half-edge to zero and the
 	inside/outside algorithm to crossing number algorithm
       */
@@ -73,7 +58,7 @@ namespace EBGeometry {
 	@param[in] a_edge Half-edge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Face(const EdgePointer a_edge) noexcept;
+      inline Face(const Edge<Meta>* const a_edge) noexcept;
 
       /*!
 	@brief Partial constructor.
@@ -96,7 +81,7 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       inline void
-      define(const Vec3& a_normal, const EdgePointer a_edge) noexcept;
+      define(const Vec3& a_normal, const Edge<Meta>* const a_edge) noexcept;
 
       /*!
 	@brief Reconcile face. This will compute the normal vector, area, centroid,
@@ -114,7 +99,7 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       inline void
-      setHalfEdge(const EdgePointer& a_halfEdge) noexcept;
+      setHalfEdge(const Edge<Meta>* const a_halfEdge) noexcept;
 
       /*!
 	@brief Set the inside/outside algorithm when determining if a point projects
@@ -129,7 +114,7 @@ namespace EBGeometry {
 	@brief Get the half edge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline EdgePointer
+      [[nodiscard]] inline const Edge<Meta>*
       getHalfEdge() const noexcept;
 
       /*!
@@ -234,7 +219,7 @@ namespace EBGeometry {
       /*!
 	@brief This polygon's half-edge. A valid face will always have != nullptr
       */
-      EdgePointer m_halfEdge;
+      const Edge<Meta>* m_halfEdge;
 
       /*!
 	@brief Polygon face normal vector

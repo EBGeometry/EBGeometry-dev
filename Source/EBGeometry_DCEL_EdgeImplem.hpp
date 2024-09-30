@@ -36,16 +36,16 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Edge<Meta>::Edge(const VertexPointer a_vertex) noexcept : Edge()
+    inline Edge<Meta>::Edge(const Vertex<Meta>* const a_vertex) noexcept : Edge()
     {
       m_vertex = a_vertex;
     }
 
     template <class Meta>
-    inline Edge<Meta>::Edge(const VertexPointer a_vertex,
-                            const EdgePointer   a_pairEdge,
-                            const EdgePointer   a_nextEdge,
-                            const FacePointer   a_face) noexcept
+    inline Edge<Meta>::Edge(const Vertex<Meta>* const a_vertex,
+                            const Edge<Meta>* const   a_pairEdge,
+                            const Edge<Meta>* const   a_nextEdge,
+                            const Face<Meta>* const   a_face) noexcept
       : Edge()
     {
       this->define(a_vertex, a_pairEdge, a_nextEdge, a_face);
@@ -57,10 +57,10 @@ namespace EBGeometry {
 
     template <class Meta>
     inline void
-    Edge<Meta>::define(const VertexPointer a_vertex,
-                       const EdgePointer   a_pairEdge,
-                       const EdgePointer   a_nextEdge,
-                       const FacePointer   a_face) noexcept
+    Edge<Meta>::define(const Vertex<Meta>* const a_vertex,
+                       const Edge<Meta>* const   a_pairEdge,
+                       const Edge<Meta>* const   a_nextEdge,
+                       const Face<Meta>* const   a_face) noexcept
     {
       this->setVertex(a_vertex);
       this->setPairEdge(a_pairEdge);
@@ -71,28 +71,28 @@ namespace EBGeometry {
 
     template <class Meta>
     inline void
-    Edge<Meta>::setVertex(const VertexPointer a_vertex) noexcept
+    Edge<Meta>::setVertex(const Vertex<Meta>* const a_vertex) noexcept
     {
       m_vertex = a_vertex;
     }
 
     template <class Meta>
     inline void
-    Edge<Meta>::setPairEdge(const EdgePointer a_pairEdge) noexcept
+    Edge<Meta>::setPairEdge(const Edge<Meta>* const a_pairEdge) noexcept
     {
       m_pairEdge = a_pairEdge;
     }
 
     template <class Meta>
     inline void
-    Edge<Meta>::setNextEdge(const EdgePointer a_nextEdge) noexcept
+    Edge<Meta>::setNextEdge(const Edge<Meta>* const a_nextEdge) noexcept
     {
       m_nextEdge = a_nextEdge;
     }
 
     template <class Meta>
     inline void
-    Edge<Meta>::setFace(const FacePointer a_face) noexcept
+    Edge<Meta>::setFace(const Face<Meta>* const a_face) noexcept
     {
       m_face = a_face;
     }
@@ -121,14 +121,14 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Edge<Meta>::VertexPointer
+    inline const Vertex<Meta>*
     Edge<Meta>::getVertex() const noexcept
     {
       return m_vertex;
     }
 
     template <class Meta>
-    inline Edge<Meta>::VertexPointer
+    inline const Vertex<Meta>*
     Edge<Meta>::getOtherVertex() const noexcept
     {
       EBGEOMETRY_EXPECT(m_nextEdge != nullptr);
@@ -137,25 +137,25 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Edge<Meta>::EdgePointer
+    inline const Edge<Meta>*
     Edge<Meta>::getPairEdge() const noexcept
     {
       return m_pairEdge;
     }
 
     template <class Meta>
-    inline Edge<Meta>::EdgePointer
+    inline const Edge<Meta>*
     Edge<Meta>::getNextEdge() const noexcept
     {
       return m_nextEdge;
     }
 
     template <class Meta>
-    inline Edge<Meta>::EdgePointer
+    inline const Edge<Meta>*
     Edge<Meta>::getPreviousEdge() const noexcept
     {
-      EdgePointer curEdge  = this;
-      EdgePointer nextEdge = curEdge->getNextEdge();
+      const Edge<Meta>* curEdge  = this;
+      const Edge<Meta>* nextEdge = curEdge->getNextEdge();
 
       EBGEOMETRY_EXPECT(curEdge != nullptr);
       EBGEOMETRY_EXPECT(nextEdge != nullptr);
@@ -172,7 +172,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Edge<Meta>::FacePointer
+    inline const Face<Meta>*
     Edge<Meta>::getFace() const noexcept
     {
       return m_face;

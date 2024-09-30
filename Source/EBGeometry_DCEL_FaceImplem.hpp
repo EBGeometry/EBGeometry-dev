@@ -30,7 +30,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Face<Meta>::Face(const EdgePointer a_edge) noexcept : Face()
+    inline Face<Meta>::Face(const Edge<Meta>* const a_edge) noexcept : Face()
     {
       m_halfEdge = a_edge;
     }
@@ -48,7 +48,7 @@ namespace EBGeometry {
 
     template <class Meta>
     inline void
-    Face<Meta>::define(const Vec3& a_normal, const EdgePointer a_edge) noexcept
+    Face<Meta>::define(const Vec3& a_normal, const Edge<Meta>* const a_edge) noexcept
     {
       m_normal   = a_normal;
       m_halfEdge = a_edge;
@@ -67,7 +67,7 @@ namespace EBGeometry {
 
     template <class Meta>
     inline void
-    Face<Meta>::setHalfEdge(const EdgePointer& a_halfEdge) noexcept
+    Face<Meta>::setHalfEdge(const Edge<Meta>* const a_halfEdge) noexcept
     {
       m_halfEdge = a_halfEdge;
     }
@@ -80,7 +80,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Face<Meta>::EdgePointer
+    inline const Edge<Meta>*
     Face<Meta>::getHalfEdge() const noexcept
     {
       return m_halfEdge;
@@ -156,27 +156,27 @@ namespace EBGeometry {
 
       const bool inside = this->isPointInside(a_x0);
 
-      if(inside) {
-	minDist = m_normal.dot(a_x0 - m_centroid);
+      if (inside) {
+        minDist = m_normal.dot(a_x0 - m_centroid);
       }
       else {
-	EdgePointer curEdge = m_halfEdge;
+        const Edge<Meta>* curEdge = m_halfEdge;
 
-	while(true) {
-	  const Real curDist = curEdge->signedDistance(a_x0);
+        while (true) {
+          const Real curDist = curEdge->signedDistance(a_x0);
 
-	  minDist = (std::abs(curDist) < std::abs(minDist))? curDist : minDist;
+          minDist = (std::abs(curDist) < std::abs(minDist)) ? curDist : minDist;
 
-	  // Go to next edge and exit if we've circulated all half-edges
-	  // in this face. 
-	  curEdge = curEdge->getNextEdge();
+          // Go to next edge and exit if we've circulated all half-edges
+          // in this face.
+          curEdge = curEdge->getNextEdge();
 
-	  EBGEOMETRY_EXPECT(curEdge != nullptr);
-	  
-	  if(curEdge == m_halfEdge) {
-	    break;
-	  }
-	}
+          EBGEOMETRY_EXPECT(curEdge != nullptr);
+
+          if (curEdge == m_halfEdge) {
+            break;
+          }
+        }
       }
 
       return minDist;
@@ -190,32 +190,32 @@ namespace EBGeometry {
 
       const bool inside = this->isPointInside(a_x0);
 
-      if(inside) {
-	const Real curDist = m_normal.dot(a_x0 - m_centroid);
-	
-	minDist2 = curDist * curDist;
+      if (inside) {
+        const Real curDist = m_normal.dot(a_x0 - m_centroid);
+
+        minDist2 = curDist * curDist;
       }
       else {
-	EdgePointer curEdge = m_halfEdge;
+        const Edge<Meta>* curEdge = m_halfEdge;
 
-	while(true) {
-	  const Real curDist2 = curEdge->unsignedDistance2(a_x0);
+        while (true) {
+          const Real curDist2 = curEdge->unsignedDistance2(a_x0);
 
-	  minDist2 = (std::abs(curDist2) < std::abs(minDist2))? curDist2 : minDist2;
+          minDist2 = (std::abs(curDist2) < std::abs(minDist2)) ? curDist2 : minDist2;
 
-	  // Go to next edge and exit if we've circulated all half-edges
-	  // in this face. 
-	  curEdge = curEdge->getNextEdge();
+          // Go to next edge and exit if we've circulated all half-edges
+          // in this face.
+          curEdge = curEdge->getNextEdge();
 
-	  EBGEOMETRY_EXPECT(curEdge != nullptr);
-	  
-	  if(curEdge == m_halfEdge) {
-	    break;
-	  }
-	}
+          EBGEOMETRY_EXPECT(curEdge != nullptr);
+
+          if (curEdge == m_halfEdge) {
+            break;
+          }
+        }
       }
 
-      return minDist2;      
+      return minDist2;
     }
 
     template <class Meta>
@@ -226,14 +226,14 @@ namespace EBGeometry {
 
       EBGEOMETRY_EXPECT(m_halfEdge != nullptr);
 
-      EdgePointer curEdge = nullptr;
+      const Edge<Meta>* curEdge = nullptr;
 
       while (curEdge != m_halfEdge) {
         curEdge = (curEdge == nullptr) ? m_halfEdge : curEdge;
 
         EBGEOMETRY_EXPECT(curEdge != nullptr);
 
-        VertexPointer vertex = curEdge->getVertex();
+        const Vertex<Meta>* vertex = curEdge->getVertex();
 
         EBGEOMETRY_EXPECT(vertex != nullptr);
 
@@ -253,14 +253,14 @@ namespace EBGeometry {
 
       EBGEOMETRY_EXPECT(m_halfEdge != nullptr);
 
-      EdgePointer curEdge = nullptr;
+      const Edge<Meta>* curEdge = nullptr;
 
       while (curEdge != m_halfEdge) {
         curEdge = (curEdge == nullptr) ? m_halfEdge : curEdge;
 
         EBGEOMETRY_EXPECT(curEdge != nullptr);
 
-        VertexPointer vertex = curEdge->getVertex();
+        const Vertex<Meta>* vertex = curEdge->getVertex();
 
         EBGEOMETRY_EXPECT(vertex != nullptr);
 
@@ -280,14 +280,14 @@ namespace EBGeometry {
 
       int numEdges = 0;
 
-      EdgePointer curEdge = nullptr;
+      const Edge<Meta>* curEdge = nullptr;
 
       while (curEdge != m_halfEdge) {
         curEdge = (curEdge == nullptr) ? m_halfEdge : curEdge;
 
         EBGEOMETRY_EXPECT(curEdge != nullptr);
 
-        VertexPointer vertex = curEdge->getVertex();
+        const Vertex<Meta>* vertex = curEdge->getVertex();
 
         EBGEOMETRY_EXPECT(vertex != nullptr);
 
@@ -311,7 +311,7 @@ namespace EBGeometry {
       // that is orthogonal to the plane that they span.
       m_normal = Vec3::zero();
 
-      EdgePointer curEdge = nullptr;
+      const Edge<Meta>* curEdge = nullptr;
 
       while (curEdge != m_halfEdge) {
         curEdge = (curEdge == nullptr) ? m_halfEdge : curEdge;
@@ -320,9 +320,9 @@ namespace EBGeometry {
         EBGEOMETRY_EXPECT(curEdge->getNextEdge() != nullptr);
         EBGEOMETRY_EXPECT(curEdge->getNextEdge()->getNextEdge() != nullptr);
 
-        VertexPointer v0 = curEdge->getVertex();
-        VertexPointer v1 = curEdge->getNextEdge()->getVertex();
-        VertexPointer v2 = curEdge->getNextEdge()->getNextEdge()->getVertex();
+        const Vertex<Meta>* v0 = curEdge->getVertex();
+        const Vertex<Meta>* v1 = curEdge->getNextEdge()->getVertex();
+        const Vertex<Meta>* v2 = curEdge->getNextEdge()->getNextEdge()->getVertex();
 
         EBGEOMETRY_EXPECT(v0 != nullptr);
         EBGEOMETRY_EXPECT(v1 != nullptr);
@@ -354,8 +354,8 @@ namespace EBGeometry {
     {
 
       // Figure out number of vertices in this face.
-      int         counter = 0;
-      EdgePointer curEdge = nullptr;
+      int               counter = 0;
+      const Edge<Meta>* curEdge = nullptr;
 
       while (curEdge != m_halfEdge) {
         curEdge = (curEdge == nullptr) ? m_halfEdge : curEdge;
@@ -405,7 +405,7 @@ namespace EBGeometry {
     {
       Real area = 0.0;
 
-      EdgePointer curEdge = nullptr;
+      const Edge<Meta>* curEdge = nullptr;
 
       while (curEdge != m_halfEdge) {
         curEdge = (curEdge == nullptr) ? m_halfEdge : curEdge;
@@ -413,8 +413,8 @@ namespace EBGeometry {
         EBGEOMETRY_EXPECT(curEdge != nullptr);
         EBGEOMETRY_EXPECT(curEdge->getNextEdge() != nullptr);
 
-        VertexPointer v0 = curEdge->getVertex();
-        VertexPointer v1 = curEdge->getNextEdge()->getVertex();
+        const Vertex<Meta>* v0 = curEdge->getVertex();
+        const Vertex<Meta>* v1 = curEdge->getNextEdge()->getVertex();
 
         EBGEOMETRY_EXPECT(v0 != nullptr);
         EBGEOMETRY_EXPECT(v1 != nullptr);
