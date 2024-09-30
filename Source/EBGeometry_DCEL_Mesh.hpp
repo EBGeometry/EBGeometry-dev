@@ -20,6 +20,7 @@
 #include "EBGeometry_DCEL.hpp"
 #include "EBGeometry_DCEL_Edge.hpp"
 #include "EBGeometry_DCEL_Face.hpp"
+#include "EBGeometry_DCEL_Polygon2D.hpp"
 #include "EBGeometry_DCEL_Vertex.hpp"
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_GPUTypes.hpp"
@@ -146,14 +147,17 @@ namespace EBGeometry {
 	faces are nullptr, and so on. These messages are logged by calling
 	incrementWarning() which identifies types of errors that can occur, and how
 	many of those errors have occurred.
+	@note Only callable on host. 
       */
+      EBGEOMETRY_GPU_HOST
       inline void
       sanityCheck() const noexcept;
 
       /*!
 	@brief Search algorithm for direct signed distance computations
-	@param[in] a_algorithm Algorithm to use
+	@param[in] a_algorithm Algorithm to use.
       */
+      EBGEOMETRY_GPU_HOST_DEVICE
       inline void
       setSearchAlgorithm(const SearchAlgorithm a_algorithm) noexcept;
 
@@ -165,8 +169,9 @@ namespace EBGeometry {
 	There are multiple algorithms to use here.
 	@param[in] a_algorithm Algorithm to use
       */
+      EBGEOMETRY_GPU_HOST_DEVICE
       inline void
-      setInsideOutsideAlgorithm(typename Polygon2D<T>::InsideOutsideAlgorithm a_algorithm) noexcept;
+      setInsideOutsideAlgorithm(const Polygon2D::InsideOutsideAlgorithm a_algorithm) noexcept;
 
       /*!
 	@brief Reconcile function which computes the internal parameters in
@@ -177,80 +182,59 @@ namespace EBGeometry {
 	@details This will reconcile faces, edges, and vertices, e.g. computing the
 	area and normal vector for faces
       */
+      EBGEOMETRY_GPU_HOST_DEVICE
       inline void
       reconcile(const DCEL::VertexNormalWeight a_weight = DCEL::VertexNormalWeight::Angle) noexcept;
 
       /*!
-	@brief Flip the mesh, making all the normals change direction. 
-	@note Should be called AFTER all normals have been computed. 
+	@brief Get vertices in this mesh
+	@return m_vertices
       */
-      inline void
-      flip() noexcept;
-
-      /*!
-	@brief Get modifiable vertices in this mesh
-      */
-      inline std::vector<VertexPtr>&
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline VertexPointer
       getVertices() noexcept;
 
       /*!
-	@brief Get immutable vertices in this mesh
+	@brief Get  half-edges in this mesh
+	@return m_edges
       */
-      inline const std::vector<VertexPtr>&
-      getVertices() const noexcept;
-
-      /*!
-	@brief Return all vertex coordinates in the mesh.
-      */
-      inline std::vector<Vec3T<T>>
-      getAllVertexCoordinates() const noexcept;
-
-      /*!
-	@brief Get modifiable half-edges in this mesh
-      */
-      inline std::vector<EdgePtr>&
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline EdgePointer
       getEdges() noexcept;
 
       /*!
-	@brief Get immutable half-edges in this mesh
+	@brief Get faces in this mesh.
+	@return m_faces
       */
-      inline const std::vector<EdgePtr>&
-      getEdges() const noexcept;
-
-      /*!
-	@brief Get modifiable faces in this mesh
-      */
-      inline std::vector<FacePtr>&
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline FacePointer
       getFaces() noexcept;
-
-      /*!
-	@brief Get immutable faces in this mesh
-      */
-      inline const std::vector<FacePtr>&
-      getFaces() const noexcept;
 
       /*!
 	@brief Compute the signed distance from a point to this mesh
 	@param[in] a_x0 3D point in space.
 	@details This function will iterate through ALL faces in the mesh and return
 	the value with the smallest magnitude. This is horrendously slow, which is
-	why this function is almost never called. Rather, Mesh<T, Meta> can be embedded
+	why this function is almost never called. Rather, Mesh<Meta> can be embedded
 	in a bounding volume hierarchy for faster access.
 	@note This will call the other version with the object's search algorithm.
       */
-      inline T
+      EBGEOMETRY_GPU_HOST_DEVICE
+      inline Real
       signedDistance(const Vec3& a_x0) const noexcept;
 
       /*!
 	@brief Compute the signed distance from a point to this mesh
-	@param[in] a_x0        3D point in space.
-	@param[in] a_algorithm Search algorithm
 	@details This function will iterate through ALL faces in the mesh and return
 	the value with the smallest magnitude. This is horrendously slow, which is
-	why this function is almost never called. Rather, Mesh<T, Meta> can be embedded
-	in a bounding volume hierarchy for faster access.
+	why this function is almost never called. Rather, Mesh<Meta> can be embedded
+	in a bounding volume hierarchy for faster access.	
+	@param[in] a_x0 3D point in space.
+	@param[in] a_algorithm Search algorithm
+
       */
-      inline T
+      EBGEOMETRY_GPU_HOST_DEVICE      
+      inline Real
       signedDistance(const Vec3& a_x0, SearchAlgorithm a_algorithm) const noexcept;
 
       /*!
@@ -258,11 +242,12 @@ namespace EBGeometry {
 	@param[in] a_x0 3D point in space.
 	@details This function will iterate through ALL faces in the mesh and return
 	the value with the smallest magnitude. This is horrendously slow, which is
-	why this function is almost never called. Rather, Mesh<T, Meta> can be embedded
+	why this function is almost never called. Rather, Mesh<Meta> can be embedded
 	in a bounding volume hierarchy for faster access.
 	@note This will call the other version with the object's search algorithm.
       */
-      inline T
+      EBGEOMETRY_GPU_HOST_DEVICE      
+      inline Real
       unsignedDistance2(const Vec3& a_x0) const noexcept;
 
     protected:
@@ -272,67 +257,68 @@ namespace EBGeometry {
       SearchAlgorithm m_algorithm;
 
       /*!
-	@brief Mesh vertices
+	@brief Vertex list
       */
-      std::vector<VertexPtr> m_vertices;
+      const VertexPointer m_vertices;
 
       /*!
-	@brief Mesh half-edges
+	@brief Edge list
       */
-      std::vector<EdgePtr> m_edges;
+      const EdgePointer m_edges;
 
       /*!
-	@brief Mesh faces
+	@brief Face list
       */
-      std::vector<FacePtr> m_faces;
+      const FacePointer m_faces;
+
+      /*!
+	@brief Number of vertices
+      */
+      int m_numVertices;
+
+      /*!
+	@brief Number of edges
+      */
+      int m_numEdges;
+
+      /*!
+	@brief Number of faces
+      */
+      int m_numFaces;            
 
       /*!
 	@brief Function which computes internal things for the polygon faces.
-	@note This calls DCEL::FaceT<T, Meta>::reconcile()
+	@note This calls DCEL::Face<Meta>::reconcile()
       */
+      EBGEOMETRY_GPU_HOST_DEVICE
       inline void
       reconcileFaces() noexcept;
 
       /*!
 	@brief Function which computes internal things for the half-edges
-	@note This calls DCEL::EdgeT<T, Meta>::reconcile()
+	@note This calls DCEL::Edge<Meta>::reconcile()
       */
+      EBGEOMETRY_GPU_HOST_DEVICE
       inline void
       reconcileEdges() noexcept;
 
       /*!
 	@brief Function which computes internal things for the vertices
 	@param[in] a_weight Vertex angle weighting
-	@note This calls DCEL::VertexT<T, Meta>::computeVertexNormalAverage() or
-	DCEL::VertexT<T, Meta>::computeVertexNormalAngleWeighted()
+	@note This calls DCEL::Vertex<Meta>::computeVertexNormalAverage() or
+	DCEL::Vertex<Meta>::computeVertexNormalAngleWeighted()
       */
+      EBGEOMETRY_GPU_HOST_DEVICE      
       inline void
       reconcileVertices(const DCEL::VertexNormalWeight a_weight) noexcept;
-
-      /*!
-	@brief Flip all face normals
-      */
-      inline void
-      flipFaces() noexcept;
-
-      /*!
-	@brief Flip all edge normals
-      */
-      inline void
-      flipEdges() noexcept;
-
-      /*!
-	@brief Flip all vertex normal
-      */
-      inline void
-      flipVertices() noexcept;
 
       /*!
 	@brief Implementation of signed distance function which iterates through all
 	faces
 	@param[in] a_point 3D point
       */
-      inline T
+      EBGEOMETRY_GPU_HOST_DEVICE      
+      inline Real
       DirectSignedDistance(const Vec3& a_point) const noexcept;
 
       /*!
@@ -343,21 +329,25 @@ namespace EBGeometry {
 	than the other version).
 	@param[in] a_point 3D point
       */
-      inline T
+      EBGEOMETRY_GPU_HOST_DEVICE      
+      inline Real
       DirectSignedDistance2(const Vec3& a_point) const noexcept;
 
       /*!
 	@brief Increment a warning. This is used in sanityCheck() for locating holes
 	or bad inputs in the mesh.
 	@param[in] a_warnings Map of all registered warnings
-	@param[in] a_warn     Current warning to increment by
+	@param[in] a_warn Current warning to increment by
       */
+      EBGEOMETRY_GPU_HOST
       inline void
       incrementWarning(std::map<std::string, size_t>& a_warnings, const std::string& a_warn) const noexcept;
 
       /*!
 	@brief Print all warnings to std::cerr
+	@param[in] a_warnings All warnings
       */
+      EBGEOMETRY_GPU_HOST      
       inline void
       printWarnings(const std::map<std::string, size_t>& a_warnings) const noexcept;
     };
