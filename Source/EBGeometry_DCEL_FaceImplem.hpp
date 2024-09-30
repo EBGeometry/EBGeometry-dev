@@ -61,7 +61,6 @@ namespace EBGeometry {
       this->computeNormalVector();
       this->normalizeNormalVector();
       this->computeCentroid();
-      this->computeArea();
       this->computePolygon2D();
     }
 

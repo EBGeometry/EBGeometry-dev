@@ -40,7 +40,8 @@ namespace EBGeometry {
       into a bounding volume hierarchy.
 
       Note that the Mesh class does not own the DCEL mesh data, and is only given
-      pointer access to the raw data.
+      pointer access to the raw data. However, Mesh IS permitted to modify the DCEL
+      structures (vertices, edges, faces).
       
       @note This class is not for the light of heart -- it will almost always be
       instantiated through a file parser which reads vertices and edges from file
@@ -63,53 +64,31 @@ namespace EBGeometry {
       };
 
       /*!
-	@brief Alias for a vertex
-      */
-      using VertexPointer = const Vertex<Meta>*;
-
-      /*!
-	@brief Alias for a half-edge
-      */
-      using EdgePointer = const Edge<Meta>*;
-
-      /*!
-	@brief Pointer to a polygon face
-      */
-      using FacePointer = const Face<Meta>*;
-
-      /*!
 	@brief Default constructor. Leaves unobject in an unusable state
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       inline Mesh() noexcept;
 
       /*!
-	@brief Disallowed copy construction
-	@param[in] a_otherMesh Other mesh
-      */
-      EBGEOMETRY_GPU_HOST_DEVICE
-      inline Mesh(const Mesh& a_otherMesh) = delete;
-
-      /*!
 	@brief Full constructor. This provides the faces, edges, and vertices to the
 	mesh.
-	@param[in] a_numFaces Number of faces in face list
-	@param[in] a_numEdges Number of edges in edge list
-	@param[in] a_numVertices Number of vertices in vertex list	
-	@param[in] a_faces Polygon faces
-	@param[in] a_edges Half-edges
+	@param[in] a_numVertices Number of vertices in vertex list
+	@param[in] a_numEdges Number of edges in edge list	
+	@param[in] a_numFaces Number of faces in face list	
 	@param[in] a_vertices Vertices
+	@param[in] a_edges Half-edges	
+	@param[in] a_faces Polygon faces	
 	@note The constructor arguments should provide a complete DCEL mesh
 	description. This is usually done through a file parser which reads a mesh
 	file format and creates the DCEL mesh structure.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Mesh(const int           a_numFaces,
-                  const int           a_numEdges,
-                  const int           a_numVertices,
-                  const FacePointer   a_faces,
-                  const EdgePointer   a_edges,
-                  const VertexPointer a_vertices) noexcept;
+      inline Mesh(const int     a_numVertices,
+                  const int     a_numEdges,
+                  const int     a_numFaces,
+                  Vertex<Meta>* a_vertices,
+                  Edge<Meta>*   a_edges,
+                  Face<Meta>*   a_faces) noexcept;
 
       /*!
 	@brief Destructor (does nothing)
@@ -118,13 +97,13 @@ namespace EBGeometry {
       inline ~Mesh() noexcept;
 
       /*!
-	@brief Define function. Puts Mesh in usable state.
-	@param[in] a_numFaces Number of faces in face list
-	@param[in] a_numEdges Number of edges in edge list
-	@param[in] a_numVertices Number of vertices in vertex list	
-	@param[in] a_faces Polygon faces
-	@param[in] a_edges Half-edges
+	@brief Define function. Puts mesh in usable state. 
+	@param[in] a_numVertices Number of vertices in vertex list
+	@param[in] a_numEdges Number of edges in edge list	
+	@param[in] a_numFaces Number of faces in face list	
 	@param[in] a_vertices Vertices
+	@param[in] a_edges Half-edges
+	@param[in] a_faces Polygon faces	
 	@note The function arguments should provide a complete DCEL mesh
 	description. This is usually done through a file parser which reads a mesh
 	file format and creates the DCEL mesh structure. Note that this only
@@ -134,12 +113,12 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       inline void
-      define(const int           a_numFaces,
-             const int           a_numEdges,
-             const int           a_numVertices,
-             const FacePointer   a_faces,
-             const EdgePointer   a_edges,
-             const VertexPointer a_vertices) noexcept;
+      define(const int     a_numVertices,
+             const int     a_numEdges,
+             const int     a_numFaces,
+             Vertex<Meta>* a_vertices,
+             Edge<Meta>*   a_edges,
+             Face<Meta>*   a_faces) noexcept;
 
       /*!
 	@brief Perform a sanity check.
@@ -191,28 +170,52 @@ namespace EBGeometry {
 	@return m_vertices
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline VertexPointer
-      getVertices() noexcept;
+      [[nodiscard]] inline const Vertex<Meta>*
+      getVertices() const noexcept;
 
       /*!
-	@brief Get  half-edges in this mesh
+	@brief Get number of vertices in this mesh
+	@return m_numVertices
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      [[nodiscard]] inline int
+      getNumberOfVertices() const noexcept;
+
+      /*!
+	@brief Get half-edges in this mesh
 	@return m_edges
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline EdgePointer
-      getEdges() noexcept;
+      [[nodiscard]] inline const Edge<Meta>*
+      getEdges() const noexcept;
+
+      /*!
+	@brief Get number of half-edges in thius mesh
+	@return m_numEdges
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      [[nodiscard]] inline int
+      getNumberOfEdges() const noexcept;
 
       /*!
 	@brief Get faces in this mesh.
 	@return m_faces
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline FacePointer
-      getFaces() noexcept;
+      [[nodiscard]] inline const Face<Meta>*
+      getFaces() const noexcept;
+
+      /*!
+	@brief Get number of faces in this mesh.
+	@return m_numFaces
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      [[nodiscard]] inline int
+      getNumberOfFaces() const noexcept;
 
       /*!
 	@brief Compute the signed distance from a point to this mesh
-	@param[in] a_x0 3D point in space.
+	@param[in] a_point 3D point in space.
 	@details This function will iterate through ALL faces in the mesh and return
 	the value with the smallest magnitude. This is horrendously slow, which is
 	why this function is almost never called. Rather, Mesh<Meta> can be embedded
@@ -220,8 +223,8 @@ namespace EBGeometry {
 	@note This will call the other version with the object's search algorithm.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Real
-      signedDistance(const Vec3& a_x0) const noexcept;
+      [[nodiscard]] inline Real
+      signedDistance(const Vec3& a_point) const noexcept;
 
       /*!
 	@brief Compute the signed distance from a point to this mesh
@@ -229,26 +232,26 @@ namespace EBGeometry {
 	the value with the smallest magnitude. This is horrendously slow, which is
 	why this function is almost never called. Rather, Mesh<Meta> can be embedded
 	in a bounding volume hierarchy for faster access.	
-	@param[in] a_x0 3D point in space.
+	@param[in] a_point 3D point in space.
 	@param[in] a_algorithm Search algorithm
 
       */
-      EBGEOMETRY_GPU_HOST_DEVICE      
-      inline Real
-      signedDistance(const Vec3& a_x0, SearchAlgorithm a_algorithm) const noexcept;
+      EBGEOMETRY_GPU_HOST_DEVICE
+      [[nodiscard]] inline Real
+      signedDistance(const Vec3& a_point, SearchAlgorithm a_algorithm) const noexcept;
 
       /*!
 	@brief Compute the unsigned square distance from a point to this mesh
-	@param[in] a_x0 3D point in space.
+	@param[in] a_point 3D point in space.
 	@details This function will iterate through ALL faces in the mesh and return
 	the value with the smallest magnitude. This is horrendously slow, which is
 	why this function is almost never called. Rather, Mesh<Meta> can be embedded
 	in a bounding volume hierarchy for faster access.
 	@note This will call the other version with the object's search algorithm.
       */
-      EBGEOMETRY_GPU_HOST_DEVICE      
-      inline Real
-      unsignedDistance2(const Vec3& a_x0) const noexcept;
+      EBGEOMETRY_GPU_HOST_DEVICE
+      [[nodiscard]] inline Real
+      unsignedDistance2(const Vec3& a_point) const noexcept;
 
     protected:
       /*!
@@ -259,17 +262,17 @@ namespace EBGeometry {
       /*!
 	@brief Vertex list
       */
-      const VertexPointer m_vertices;
+      Vertex<Meta>* m_vertices;
 
       /*!
 	@brief Edge list
       */
-      const EdgePointer m_edges;
+      Edge<Meta>* m_edges;
 
       /*!
 	@brief Face list
       */
-      const FacePointer m_faces;
+      Face<Meta>* m_faces;
 
       /*!
 	@brief Number of vertices
@@ -317,8 +320,8 @@ namespace EBGeometry {
 	faces
 	@param[in] a_point 3D point
       */
-      EBGEOMETRY_GPU_HOST_DEVICE      
-      inline Real
+      EBGEOMETRY_GPU_HOST_DEVICE
+      [[nodiscard]] inline Real
       DirectSignedDistance(const Vec3& a_point) const noexcept;
 
       /*!
@@ -329,8 +332,8 @@ namespace EBGeometry {
 	than the other version).
 	@param[in] a_point 3D point
       */
-      EBGEOMETRY_GPU_HOST_DEVICE      
-      inline Real
+      EBGEOMETRY_GPU_HOST_DEVICE
+      [[nodiscard]] inline Real
       DirectSignedDistance2(const Vec3& a_point) const noexcept;
 
       /*!
@@ -354,6 +357,6 @@ namespace EBGeometry {
   } // namespace DCEL
 }
 
-//#include "EBGeometry_DCEL_MeshImplem.hpp"
+#include "EBGeometry_DCEL_MeshImplem.hpp"
 
 #endif
