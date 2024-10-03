@@ -121,11 +121,16 @@ namespace EBGeometry {
              Face<Meta>*   a_faces) noexcept;
 
       /*!
-	@brief Perform a sanity check.
+	@brief Perform a rough sanity check.
 	@details This will provide error messages if vertices are badly linked,
 	faces are nullptr, and so on. These messages are logged by calling
 	incrementWarning() which identifies types of errors that can occur, and how
 	many of those errors have occurred.
+
+	This routine does not check for self-intersections, since efficiently testing
+	for that requires a BVH structure. Please see the file parsers to check how to
+	perform those tests.
+	
 	@note Only callable on host. 
       */
       EBGEOMETRY_GPU_HOST

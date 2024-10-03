@@ -111,7 +111,7 @@ These include application-specific code and require installation of Chombo3 or A
 3. Format the source and example codes using ```clang-format```:
 
    ```
-   find Source Examples \( -name "*.hpp" -o -name "*.cpp" \) -exec clang-format -i {} +
+   find Source Exec \( -name "*.hpp" -o -name "*.cpp" \) -exec clang-format -i {} +
    ```
 
 4. Push the changes to GitHub

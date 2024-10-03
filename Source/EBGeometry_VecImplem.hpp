@@ -480,6 +480,13 @@ namespace EBGeometry {
     return (m_X[0] >= u[0] && m_X[1] >= u[1] && m_X[2] >= u[2]);
   }
 
+  inline bool
+  Vec3::lessLX(const Vec3& u) const noexcept
+  {
+    return (m_X[0] < u.m_X[0]) || (m_X[0] == u.m_X[0] && m_X[1] < u.m_X[1]) ||
+           (m_X[1] == u.m_X[1] && m_X[2] < u.m_X[2]);
+  }
+
   inline Real
   Vec3::dot(const Vec3& u) const noexcept
   {

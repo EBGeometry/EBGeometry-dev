@@ -416,6 +416,15 @@ namespace EBGeometry {
     operator<=(const Vec3& u) const noexcept;
 
     /*!
+      @brief Lexicographical comparison operator
+      @details Returns true if this Vec3 is lexicographically smaller than the other
+      @param[in] u Other vector
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    [[nodiscard]] inline bool
+    lessLX(const Vec3& u) const noexcept;
+
+    /*!
       @brief "Greater or equal to" operator.
       @details Returns true if this->x >= u.x AND this->y >= u.y AND this->z >=
       u.z
