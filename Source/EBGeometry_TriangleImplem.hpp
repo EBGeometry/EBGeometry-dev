@@ -20,12 +20,12 @@ namespace EBGeometry {
   template <typename MetaData>
   inline Triangle<MetaData>::Triangle() noexcept
   {
-    this->m_normal = Vec3::zero();
+    this->m_normal = Vec3::max();
 
     for (int i = 0; i < 3; i++) {
-      this->m_vertexPositions[i] = Vec3::zero();
-      this->m_vertexNormals[i]   = Vec3::zero();
-      this->m_edgeNormals[i]     = Vec3::zero();
+      this->m_vertexPositions[i] = Vec3::max();
+      this->m_vertexNormals[i]   = Vec3::max();
+      this->m_edgeNormals[i]     = Vec3::max();
     }
   }
 
@@ -169,6 +169,16 @@ namespace EBGeometry {
   [[nodiscard]] inline Real
   Triangle<MetaData>::signedDistance(const Vec3& a_x) noexcept
   {
+    // Perform extra checks in debug mode -- if any of these fail then something is uninitialized.
+#ifdef EBGEOMETRY_DEBUG
+    for (int i = 0; i < 3; i++) {
+      EBGEOMETRY_ALWAYS_EXPECT(std::abs(m_normal[i]) < EBGeometry::MaximumReal);
+      EBGEOMETRY_ALWAYS_EXPECT(std::abs(m_vertexPositions[i]) < EBGeometry::MaximumReal);
+      EBGEOMETRY_ALWAYS_EXPECT(std::abs(m_vertexNormals[i]) < EBGeometry::MaximumReal);
+      EBGEOMETRY_ALWAYS_EXPECT(std::abs(m_edgeNormals[i]) < EBGeometry::MaximumReal);
+    }
+#endif
+
 #warning "Triangle::signedDistance -- not implemented"
     return 0.0;
   }
