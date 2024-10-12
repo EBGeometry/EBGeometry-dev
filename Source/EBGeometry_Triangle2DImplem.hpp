@@ -65,6 +65,11 @@ namespace EBGeometry {
   {
     bool ret = false;
 
+    EBGEOMETRY_EXPECT(m_xDir >= 0);
+    EBGEOMETRY_EXPECT(m_xDir <= 2);
+    EBGEOMETRY_EXPECT(m_yDir >= 0);
+    EBGEOMETRY_EXPECT(m_yDir <= 2);
+
     switch (a_algorithm) {
     case InsideOutsideAlgorithm::SubtendedAngle: {
       ret = this->isPointInsidePolygonSubtend(a_point);
@@ -89,6 +94,11 @@ namespace EBGeometry {
   inline bool
   Triangle2D::isPointInsidePolygonWindingNumber(const Vec3& a_point) const noexcept
   {
+    EBGEOMETRY_EXPECT(m_xDir >= 0);
+    EBGEOMETRY_EXPECT(m_xDir <= 2);
+    EBGEOMETRY_EXPECT(m_yDir >= 0);
+    EBGEOMETRY_EXPECT(m_yDir <= 2);
+
     const Vec2 projectedPoint = this->projectPoint(a_point);
 
     const int windingNumber = this->computeWindingNumber(projectedPoint);
@@ -99,6 +109,11 @@ namespace EBGeometry {
   inline bool
   Triangle2D::isPointInsidePolygonCrossingNumber(const Vec3& a_point) const noexcept
   {
+    EBGEOMETRY_EXPECT(m_xDir >= 0);
+    EBGEOMETRY_EXPECT(m_xDir <= 2);
+    EBGEOMETRY_EXPECT(m_yDir >= 0);
+    EBGEOMETRY_EXPECT(m_yDir <= 2);
+
     const Vec2 projectedPoint = this->projectPoint(a_point);
 
     const int crossingNumber = this->computeCrossingNumber(projectedPoint);
@@ -109,6 +124,11 @@ namespace EBGeometry {
   inline bool
   Triangle2D::isPointInsidePolygonSubtend(const Vec3& a_point) const noexcept
   {
+    EBGEOMETRY_EXPECT(m_xDir >= 0);
+    EBGEOMETRY_EXPECT(m_xDir <= 2);
+    EBGEOMETRY_EXPECT(m_yDir >= 0);
+    EBGEOMETRY_EXPECT(m_yDir <= 2);
+
     const Vec2 projectedPoint = this->projectPoint(a_point);
 
     Real sumTheta = this->computeSubtendedAngle(projectedPoint);
@@ -121,6 +141,11 @@ namespace EBGeometry {
   inline Vec2
   Triangle2D::projectPoint(const Vec3& a_point) const noexcept
   {
+    EBGEOMETRY_EXPECT(m_xDir >= 0);
+    EBGEOMETRY_EXPECT(m_xDir <= 2);
+    EBGEOMETRY_EXPECT(m_yDir >= 0);
+    EBGEOMETRY_EXPECT(m_yDir <= 2);
+
     return Vec2(a_point[m_xDir], a_point[m_yDir]);
   }
 
