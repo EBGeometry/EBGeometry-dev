@@ -97,7 +97,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE bool
-    isPointInsidePolygonWindingNumber(const Vec3& a_point) const noexcept;
+    isPointInsideWindingNumber(const Vec3& a_point) const noexcept;
 
     /*!
       @brief Check if a point is inside a 2D polygon, by computing the number of
@@ -108,7 +108,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE bool
-    isPointInsidePolygonCrossingNumber(const Vec3& a_point) const noexcept;
+    isPointInsideCrossingNumber(const Vec3& a_point) const noexcept;
 
     /*!
       @brief Check if a point is inside a 2D polygon, using the subtended angles
@@ -118,7 +118,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE bool
-    isPointInsidePolygonSubtend(const Vec3& a_point) const noexcept;
+    isPointInsideSubtend(const Vec3& a_point) const noexcept;
 
   private:
     /*!

@@ -65,6 +65,10 @@ namespace EBGeometry {
     for (int i = 0; i < 3; i++) {
       this->m_vertexPositions[i] = a_vertexPositions[i];
     }
+
+    this->computeNormal();
+
+    m_triangle2D.define(m_normal, m_vertexPositions);
   }
 
   template <typename MetaData>
@@ -96,7 +100,17 @@ namespace EBGeometry {
   EBGEOMETRY_ALWAYS_INLINE void
   Triangle<MetaData>::computeNormal() noexcept
   {
-#warning "Triangle::computeNormal -- not implemented";
+    const Vec3 x1x0 = m_vertexPositions[1] - m_vertexPositions[0];
+    const Vec3 x2x1 = m_vertexPositions[2] - m_vertexPositions[1];
+
+    EBGEOMETRY_EXPECT(x1x0.length() > EBGeometry::Limits::eps());
+    EBGEOMETRY_EXPECT(x2x1.length() > EBGeometry::Limits::eps());
+
+    m_normal = x1x0.cross(x2x1);
+
+    EBGEOMETRY_EXPECT(m_normal.length() > EBGeometry::Limits::min());
+
+    m_normal = m_normal / m_normal.length();
   }
 
   template <typename MetaData>
@@ -170,20 +184,57 @@ namespace EBGeometry {
 
   template <typename MetaData>
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
-  Triangle<MetaData>::signedDistance(const Vec3& a_x) noexcept
+  Triangle<MetaData>::signedDistance(const Vec3& a_point) noexcept
   {
     // Perform extra checks in debug mode -- if any of these fail then something is uninitialized.
 #ifdef EBGEOMETRY_DEBUG
     for (int i = 0; i < 3; i++) {
-      EBGEOMETRY_ALWAYS_EXPECT(std::abs(m_normal[i]) < EBGeometry::MaximumReal);
-      EBGEOMETRY_ALWAYS_EXPECT(std::abs(m_vertexPositions[i]) < EBGeometry::MaximumReal);
-      EBGEOMETRY_ALWAYS_EXPECT(std::abs(m_vertexNormals[i]) < EBGeometry::MaximumReal);
-      EBGEOMETRY_ALWAYS_EXPECT(std::abs(m_edgeNormals[i]) < EBGeometry::MaximumReal);
+      EBGEOMETRY_ALWAYS_EXPECT(std::abs(m_normal[i]) < EBGeometry::Limits::max());
+      EBGEOMETRY_ALWAYS_EXPECT(std::abs(m_vertexPositions[i]) < EBGeometry::Limits::max());
+      EBGEOMETRY_ALWAYS_EXPECT(std::abs(m_vertexNormals[i]) < EBGeometry::Limits::max());
+      EBGEOMETRY_ALWAYS_EXPECT(std::abs(m_edgeNormals[i]) < EBGeometry::Limits::max());
     }
 #endif
 
-#warning "Triangle::signedDistance -- not implemented"
-    return 0.0;
+    // Check if projection falls inside.
+    const bool isPointInside = m_triangle2D.isPointInsideWindingNumber(a_point);
+
+    // Debug hook for algorithmic consistency.
+#ifdef EBGEOMETRY_DEBUG
+    const bool isPointInsideCrossingNumber = m_triangle2D.isPointInsideCrossingNumber(a_point);
+    const bool isPointInsideSubtend        = m_triangle2D.isPointInsideSubtend(a_point);
+
+    EBGEOMETRY_EXPECT(isPointInside == isPointInsideCrossingNumber);
+    EBGEOMETRY_EXPECT(isPointInside == isPointInsideSubtend);
+#endif
+
+    Real ret = EBGeometry::Limits::max();
+
+    if (isPointInside) [[likely]] {
+      ret = m_normal.dot(a_point - m_vertexPositions[0]);
+
+#ifdef EBGEOMETRY_DEBUG
+      EBGEOMETRY_EXPECT(ret == m_normal.dot(a_point - m_vertexPositions[1]));
+      EBGEOMETRY_EXPECT(ret == m_normal.dot(a_point - m_vertexPositions[2]));
+#endif
+    }
+    else {
+#warning "Triangle::signedDistance -- edge loop not implemented"
+    }
+
+    return ret;
+  }
+
+  template <typename MetaData>
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
+  Triangle<MetaData>::projectPointToEdge(const Vec3& a_point, const Vec3& a_x0, const Vec3& a_x1) const noexcept
+  {
+    const Vec3 a = a_point - a_x0;
+    const Vec3 b = a_x1 - a_x0;
+
+    EBGEOMETRY_EXPECT(b.length() > EBGeometry::Limits::min());
+
+    return a.dot(b) / (b.dot(b));
   }
 } // namespace EBGeometry
 

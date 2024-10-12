@@ -28,8 +28,7 @@ namespace EBGeometry {
   }
 
   EBGEOMETRY_ALWAYS_INLINE
-  Triangle2D::Triangle2D(const Vec3& a_normal, const Vec3 a_vertices[3]) noexcept
-    : Triangle2D()
+  Triangle2D::Triangle2D(const Vec3& a_normal, const Vec3 a_vertices[3]) noexcept : Triangle2D()
   {
     this->define(a_normal, a_vertices);
   }
@@ -75,17 +74,17 @@ namespace EBGeometry {
 
     switch (a_algorithm) {
     case InsideOutsideAlgorithm::SubtendedAngle: {
-      ret = this->isPointInsidePolygonSubtend(a_point);
+      ret = this->isPointInsideSubtend(a_point);
 
       break;
     }
     case InsideOutsideAlgorithm::CrossingNumber: {
-      ret = this->isPointInsidePolygonCrossingNumber(a_point);
+      ret = this->isPointInsideCrossingNumber(a_point);
 
       break;
     }
     case InsideOutsideAlgorithm::WindingNumber: {
-      ret = this->isPointInsidePolygonWindingNumber(a_point);
+      ret = this->isPointInsideWindingNumber(a_point);
 
       break;
     }
@@ -95,7 +94,7 @@ namespace EBGeometry {
   }
 
   EBGEOMETRY_ALWAYS_INLINE bool
-  Triangle2D::isPointInsidePolygonWindingNumber(const Vec3& a_point) const noexcept
+  Triangle2D::isPointInsideWindingNumber(const Vec3& a_point) const noexcept
   {
     EBGEOMETRY_EXPECT(m_xDir >= 0);
     EBGEOMETRY_EXPECT(m_xDir <= 2);
@@ -110,7 +109,7 @@ namespace EBGeometry {
   }
 
   EBGEOMETRY_ALWAYS_INLINE bool
-  Triangle2D::isPointInsidePolygonCrossingNumber(const Vec3& a_point) const noexcept
+  Triangle2D::isPointInsideCrossingNumber(const Vec3& a_point) const noexcept
   {
     EBGEOMETRY_EXPECT(m_xDir >= 0);
     EBGEOMETRY_EXPECT(m_xDir <= 2);
@@ -125,7 +124,7 @@ namespace EBGeometry {
   }
 
   EBGEOMETRY_ALWAYS_INLINE bool
-  Triangle2D::isPointInsidePolygonSubtend(const Vec3& a_point) const noexcept
+  Triangle2D::isPointInsideSubtend(const Vec3& a_point) const noexcept
   {
     EBGEOMETRY_EXPECT(m_xDir >= 0);
     EBGEOMETRY_EXPECT(m_xDir <= 2);

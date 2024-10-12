@@ -198,9 +198,8 @@ namespace EBGeometry {
     getMetaData() const noexcept;
 
     /*!
-      @brief Compute the signed distance to the triangle
-      @param[in] a_x Point
-      @return Returns the shorter signed distance from a_x to the triangle. 
+      @brief Compute the signed distance from the input point to the triangle
+      @param[in] a_point Input point
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
@@ -235,6 +234,19 @@ namespace EBGeometry {
       @brief Triangle meta-data normals
     */
     MetaData m_metaData;
+
+    /*!
+      @brief Returns the "projection" of a point to an edge.
+      @details This function parametrizes the edge as x(t) = x0 + (x1-x0)*t and
+      returns where on the this edge the point a_x0 projects. If projects onto the
+      edge if t = [0,1] and to one of the start/end vertices otherwise.
+      @param[in] a_point Query point
+      @param[in] a_x0 Starting edge coordinate
+      @param[in] a_x1 Final edge coordinate	
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
+    projectPointToEdge(const Vec3& a_point, const Vec3& a_x0, const Vec3& a_x1) const noexcept;
   };
 } // namespace EBGeometry
 

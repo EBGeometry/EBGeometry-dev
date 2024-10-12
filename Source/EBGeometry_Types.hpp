@@ -20,6 +20,7 @@ namespace EBGeometry {
   constexpr Real MaximumReal = DBL_MAX;
   constexpr Real MinimumReal = DBL_MIN;
   constexpr Real LowestReal  = -DBL_MAX;
+  constexpr Real Epsilon     = DBL_EPSILON;
 } // namespace EBGeometry
 #else
 namespace EBGeometry {
@@ -27,6 +28,7 @@ namespace EBGeometry {
   constexpr Real MaximumReal = FLT_MAX;
   constexpr Real MinimumReal = FLT_MIN;
   constexpr Real LowestReal  = -FLT_MAX;
+  constexpr Real Epsilon     = FLT_EPSILON;
 } // namespace EBGeometry
 #endif
 

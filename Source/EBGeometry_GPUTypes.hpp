@@ -58,7 +58,7 @@ namespace EBGeometry {
     }
 
     /*!
-      @brief Minium representable number.
+      @brief Minimum representable number.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
@@ -75,6 +75,16 @@ namespace EBGeometry {
     lowest() noexcept
     {
       return EBGeometry::LowestReal;
+    }
+
+    /*!
+      @brief Machine precision.
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
+    eps() noexcept
+    {
+      return EBGeometry::Epsilon;
     }
   } // namespace Limits
 } // namespace EBGeometry
