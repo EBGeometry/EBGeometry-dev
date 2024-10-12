@@ -16,6 +16,7 @@
 #include "EBGeometry_DCEL_Mesh.hpp"
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_GPUTypes.hpp"
+#include "EBGeometry_Macros.hpp"
 
 namespace EBGeometry {
   namespace Parser {
@@ -46,7 +47,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST
     template <typename Meta = DCEL::DefaultMetaData>
-    [[nodiscard]] inline static EBGeometry::DCEL::Mesh<Meta>*
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static EBGeometry::DCEL::Mesh<Meta>*
     readIntoDCEL(const std::string a_filename) noexcept;
 
   } // namespace Parser

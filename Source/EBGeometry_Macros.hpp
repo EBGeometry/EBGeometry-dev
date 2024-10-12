@@ -37,7 +37,7 @@
 
 #else
 #define EBGEOMETRY_ALWAYS_INLINE inline
-#endif 
+#endif
 
 #define EBGEOMETRY_INLINE inline
 // End inline macros

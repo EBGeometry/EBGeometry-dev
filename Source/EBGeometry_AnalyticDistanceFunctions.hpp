@@ -16,6 +16,7 @@
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_GPUTypes.hpp"
 #include "EBGeometry_ImplicitFunction.hpp"
+#include "EBGeometry_Macros.hpp"
 #include "EBGeometry_Vec.hpp"
 
 namespace EBGeometry {
@@ -33,7 +34,8 @@ namespace EBGeometry {
       @param[in] a_normal     Plane normal vector.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline PlaneSDF(const Vec3& a_point, const Vec3& a_normal) noexcept
+    EBGEOMETRY_ALWAYS_INLINE
+    PlaneSDF(const Vec3& a_point, const Vec3& a_normal) noexcept
     {
       m_point  = a_point;
       m_normal = a_normal / a_normal.length();
@@ -51,7 +53,7 @@ namespace EBGeometry {
       @param[in] a_point Position.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Real
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
     value(const Vec3& a_point) const noexcept override
     {
       return dot((a_point - m_point), m_normal);
@@ -81,7 +83,8 @@ namespace EBGeometry {
       @param[in] a_normal Plane normal vector (pointing outwards from the body).
     */
     EBGEOMETRY_GPU_HOST
-    inline PlaneSDFFactory(const Vec3* a_point, const Vec3* a_normal) noexcept
+    EBGEOMETRY_ALWAYS_INLINE
+    PlaneSDFFactory(const Vec3* a_point, const Vec3* a_normal) noexcept
     {
       m_point  = a_point;
       m_normal = a_normal;
@@ -138,7 +141,8 @@ namespace EBGeometry {
       @param[in] a_radius Sphere radius
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline SphereSDF(const Vec3& a_center, const Real& a_radius) noexcept
+    EBGEOMETRY_ALWAYS_INLINE
+    SphereSDF(const Vec3& a_center, const Real& a_radius) noexcept
     {
       this->m_center = a_center;
       this->m_radius = a_radius;
@@ -155,7 +159,7 @@ namespace EBGeometry {
       @brief Signed distance function for sphere.
       @param[in] a_point Position.
     */
-    EBGEOMETRY_GPU_HOST_DEVICE [[nodiscard]] inline Real
+    EBGEOMETRY_GPU_HOST_DEVICE [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
     value(const Vec3& a_point) const noexcept override
     {
       return (a_point - m_center).length() - m_radius;
@@ -185,7 +189,8 @@ namespace EBGeometry {
       @param[in] a_radius Sphere radius
     */
     EBGEOMETRY_GPU_HOST
-    inline SphereSDFFactory(const Vec3* a_center, const Real* a_radius) noexcept
+    EBGEOMETRY_ALWAYS_INLINE
+    SphereSDFFactory(const Vec3* a_center, const Real* a_radius) noexcept
     {
       m_center = a_center;
       m_radius = a_radius;
@@ -242,7 +247,8 @@ namespace EBGeometry {
       @param[in] a_hiCorner   Upper right corner
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline BoxSDF(const Vec3& a_loCorner, const Vec3& a_hiCorner) noexcept
+    EBGEOMETRY_ALWAYS_INLINE
+    BoxSDF(const Vec3& a_loCorner, const Vec3& a_hiCorner) noexcept
     {
       this->m_loCorner = a_loCorner;
       this->m_hiCorner = a_hiCorner;
@@ -252,7 +258,7 @@ namespace EBGeometry {
       @brief Destructor
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline ~BoxSDF() noexcept
+    EBGEOMETRY_ALWAYS_INLINE ~BoxSDF() noexcept
     {}
 
     /*!
@@ -260,7 +266,7 @@ namespace EBGeometry {
       @param[in] a_point Position.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Real
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
     value(const Vec3& a_point) const noexcept override
     {
       // For each coordinate direction, we have delta[dir] if a_point[dir] falls  \
@@ -305,7 +311,8 @@ namespace EBGeometry {
       @param[in] a_hiCorner Upper-right corner of box.
     */
     EBGEOMETRY_GPU_HOST
-    inline BoxSDFFactory(const Vec3* a_loCorner, const Vec3* a_hiCorner) noexcept
+    EBGEOMETRY_ALWAYS_INLINE
+    BoxSDFFactory(const Vec3* a_loCorner, const Vec3* a_hiCorner) noexcept
     {
       m_loCorner = a_loCorner;
       m_hiCorner = a_hiCorner;

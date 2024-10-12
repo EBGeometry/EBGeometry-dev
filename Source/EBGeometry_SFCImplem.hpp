@@ -22,20 +22,23 @@
 namespace EBGeometry {
   namespace SFC {
 
-    inline Index::Index() noexcept : Index(0, 0, 0)
+    EBGEOMETRY_ALWAYS_INLINE
+    Index::Index() noexcept
+      : Index(0, 0, 0)
     {}
 
-    inline Index::Index(unsigned int x, unsigned int y, unsigned int z) noexcept
+    EBGEOMETRY_ALWAYS_INLINE
+    Index::Index(unsigned int x, unsigned int y, unsigned int z) noexcept
     {
       m_indices[0] = x;
       m_indices[1] = y;
       m_indices[2] = z;
     }
 
-    inline Index::~Index() noexcept
+    EBGEOMETRY_ALWAYS_INLINE Index::~Index() noexcept
     {}
 
-    inline unsigned int
+    EBGEOMETRY_ALWAYS_INLINE unsigned int
     Index::operator[](const int a_dir) const noexcept
     {
       EBGEOMETRY_EXPECT(a_dir <= 2);
@@ -44,7 +47,7 @@ namespace EBGeometry {
       return m_indices[a_dir];
     }
 
-    inline uint64_t
+    EBGEOMETRY_ALWAYS_INLINE uint64_t
     Morton::encode(const Index& a_point) noexcept
     {
       uint64_t code = 0;
@@ -70,7 +73,7 @@ namespace EBGeometry {
       return code;
     }
 
-    inline Index
+    EBGEOMETRY_ALWAYS_INLINE Index
     Morton::decode(const uint64_t& a_code) noexcept
     {
       auto getEveryThirdBit = [](const uint64_t m) -> uint_fast32_t {
@@ -92,7 +95,7 @@ namespace EBGeometry {
       return Index(x, y, z);
     }
 
-    inline uint64_t
+    EBGEOMETRY_ALWAYS_INLINE uint64_t
     Nested::encode(const Index& a_point) noexcept
     {
       uint64_t code = 0;
@@ -106,7 +109,7 @@ namespace EBGeometry {
       return code;
     }
 
-    inline Index
+    EBGEOMETRY_ALWAYS_INLINE Index
     Nested::decode(const uint64_t& a_code) noexcept
     {
       const unsigned int z = a_code / (SFC::ValidSpan * SFC::ValidSpan);

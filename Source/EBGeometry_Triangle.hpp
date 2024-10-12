@@ -16,6 +16,7 @@
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_GPUTypes.hpp"
 #include "EBGeometry_Triangle2D.hpp"
+#include "EBGeometry_Macros.hpp"
 #include "EBGeometry_Vec.hpp"
 
 namespace EBGeometry {
@@ -51,27 +52,29 @@ namespace EBGeometry {
       @brief Default constructor. Does not put the triangle in a usable state.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Triangle() noexcept;
+    EBGEOMETRY_ALWAYS_INLINE
+    Triangle() noexcept;
 
     /*!
       @brief Copy constructor. Copies all data members from the other triangle.
       @param[in] a_otherTriangle Other triangle.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Triangle(const Triangle& a_otherTriangle) noexcept;
+    EBGEOMETRY_ALWAYS_INLINE
+    Triangle(const Triangle& a_otherTriangle) noexcept;
 
     /*!
       @brief Destructor (does nothing).
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline ~Triangle() noexcept;
+    EBGEOMETRY_ALWAYS_INLINE ~Triangle() noexcept;
 
     /*!
       @brief Set the triangle normal vector.
       @param[in] a_normal Normal vector (should be consistent with the vertex ordering!).
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     setNormal(const Vec3& a_normal) noexcept;
 
     /*!
@@ -79,7 +82,7 @@ namespace EBGeometry {
       @param[in] a_vertexPositions Vertex positions
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     setVertexPositions(const Vec3 a_vertexPositions[3]) noexcept;
 
     /*!
@@ -87,7 +90,7 @@ namespace EBGeometry {
       @param[in] a_vertexNormals Vertex normals
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     setVertexNormals(const Vec3 a_vertexNormals[3]) noexcept;
 
     /*!
@@ -95,7 +98,7 @@ namespace EBGeometry {
       @param[in] a_edgeNormals Edge normals
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     setEdgeNormals(const Vec3 a_edgeNormals[3]) noexcept;
 
     /*!
@@ -103,7 +106,7 @@ namespace EBGeometry {
       @param[in] a_metaData Triangle metadata.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     setMetaData(const MetaData& a_metaData) noexcept;
 
     /*!
@@ -111,7 +114,7 @@ namespace EBGeometry {
       @details This computes the normal vector from two of the triangle edges.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     computeNormal() noexcept;
 
     /*!
@@ -119,7 +122,7 @@ namespace EBGeometry {
       @return m_normal
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Vec3&
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3&
     getNormal() noexcept;
 
     /*!
@@ -127,7 +130,7 @@ namespace EBGeometry {
       @return m_normal
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline const Vec3&
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Vec3&
     getNormal() const noexcept;
 
     /*!
@@ -135,7 +138,7 @@ namespace EBGeometry {
       @return m_vertexPositions
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Vec3*
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3*
     getVertexPositions() noexcept;
 
     /*!
@@ -143,7 +146,7 @@ namespace EBGeometry {
       @return m_vertexPositions
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline const Vec3*
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Vec3*
     getVertexPositions() const noexcept;
 
     /*!
@@ -151,7 +154,7 @@ namespace EBGeometry {
       @return m_vertexNormals
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Vec3*
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3*
     getVertexNormals() noexcept;
 
     /*!
@@ -159,7 +162,7 @@ namespace EBGeometry {
       @return m_vertexNormals
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline const Vec3*
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Vec3*
     getVertexNormals() const noexcept;
 
     /*!
@@ -167,7 +170,7 @@ namespace EBGeometry {
       @return m_edgeNormals
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Vec3*
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3*
     getEdgeNormals() noexcept;
 
     /*!
@@ -175,7 +178,7 @@ namespace EBGeometry {
       @return m_edgeNormals
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline const Vec3*
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Vec3*
     getEdgeNormals() const noexcept;
 
     /*!
@@ -183,7 +186,7 @@ namespace EBGeometry {
       @return m_metaData
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline MetaData&
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE MetaData&
     getMetaData() noexcept;
 
     /*!
@@ -191,7 +194,7 @@ namespace EBGeometry {
       @return m_metaData
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline const MetaData&
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const MetaData&
     getMetaData() const noexcept;
 
     /*!
@@ -200,7 +203,7 @@ namespace EBGeometry {
       @return Returns the shorter signed distance from a_x to the triangle. 
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Real
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
     signedDistance(const Vec3& a_x) noexcept;
 
   protected:

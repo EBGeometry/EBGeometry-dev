@@ -13,12 +13,14 @@
 #define EBGeometry_TriangleImplem
 
 // Our includes
+#include "EBGeometry_Macros.hpp"
 #include "EBGeometry_Triangle.hpp"
 
 namespace EBGeometry {
 
   template <typename MetaData>
-  inline Triangle<MetaData>::Triangle() noexcept
+  EBGEOMETRY_ALWAYS_INLINE
+  Triangle<MetaData>::Triangle() noexcept
   {
     this->m_normal = Vec3::max();
 
@@ -30,7 +32,8 @@ namespace EBGeometry {
   }
 
   template <typename MetaData>
-  inline Triangle<MetaData>::Triangle(const Triangle& a_otherTriangle) noexcept
+  EBGEOMETRY_ALWAYS_INLINE
+  Triangle<MetaData>::Triangle(const Triangle& a_otherTriangle) noexcept
   {
     this->m_normal = a_otherTriangle.m_normal;
 
@@ -45,18 +48,18 @@ namespace EBGeometry {
   }
 
   template <typename MetaData>
-  inline Triangle<MetaData>::~Triangle() noexcept
+  EBGEOMETRY_ALWAYS_INLINE Triangle<MetaData>::~Triangle() noexcept
   {}
 
   template <typename MetaData>
-  inline void
+  EBGEOMETRY_ALWAYS_INLINE void
   Triangle<MetaData>::setNormal(const Vec3& a_normal) noexcept
   {
     this->m_normal = a_normal;
   }
 
   template <typename MetaData>
-  inline void
+  EBGEOMETRY_ALWAYS_INLINE void
   Triangle<MetaData>::setVertexPositions(const Vec3 a_vertexPositions[3]) noexcept
   {
     for (int i = 0; i < 3; i++) {
@@ -65,7 +68,7 @@ namespace EBGeometry {
   }
 
   template <typename MetaData>
-  inline void
+  EBGEOMETRY_ALWAYS_INLINE void
   Triangle<MetaData>::setVertexNormals(const Vec3 a_vertexNormals[3]) noexcept
   {
     for (int i = 0; i < 3; i++) {
@@ -74,7 +77,7 @@ namespace EBGeometry {
   }
 
   template <typename MetaData>
-  inline void
+  EBGEOMETRY_ALWAYS_INLINE void
   Triangle<MetaData>::setEdgeNormals(const Vec3 a_edgeNormals[3]) noexcept
   {
     for (int i = 0; i < 3; i++) {
@@ -83,90 +86,90 @@ namespace EBGeometry {
   }
 
   template <typename MetaData>
-  inline void
+  EBGEOMETRY_ALWAYS_INLINE void
   Triangle<MetaData>::setMetaData(const MetaData& a_metaData) noexcept
   {
     this->m_metaData = a_metaData;
   }
 
   template <typename MetaData>
-  inline void
+  EBGEOMETRY_ALWAYS_INLINE void
   Triangle<MetaData>::computeNormal() noexcept
   {
 #warning "Triangle::computeNormal -- not implemented";
   }
 
   template <typename MetaData>
-  [[nodiscard]] inline Vec3&
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3&
   Triangle<MetaData>::getNormal() noexcept
   {
     return (this->m_normal);
   }
 
   template <typename MetaData>
-  [[nodiscard]] inline const Vec3&
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Vec3&
   Triangle<MetaData>::getNormal() const noexcept
   {
     return (this->m_normal);
   }
 
   template <typename MetaData>
-  [[nodiscard]] inline Vec3*
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3*
   Triangle<MetaData>::getVertexPositions() noexcept
   {
     return (this->m_vertexPositions);
   }
 
   template <typename MetaData>
-  [[nodiscard]] inline const Vec3*
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Vec3*
   Triangle<MetaData>::getVertexPositions() const noexcept
   {
     return (this->m_vertexPositions);
   }
 
   template <typename MetaData>
-  [[nodiscard]] inline Vec3*
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3*
   Triangle<MetaData>::getVertexNormals() noexcept
   {
     return (this->m_vertexNormals);
   }
 
   template <typename MetaData>
-  [[nodiscard]] inline const Vec3*
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Vec3*
   Triangle<MetaData>::getVertexNormals() const noexcept
   {
     return (this->m_vertexNormals);
   }
   template <typename MetaData>
-  [[nodiscard]] inline Vec3*
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3*
   Triangle<MetaData>::getEdgeNormals() noexcept
   {
     return (this->m_edgeNormals);
   }
 
   template <typename MetaData>
-  [[nodiscard]] inline const Vec3*
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Vec3*
   Triangle<MetaData>::getEdgeNormals() const noexcept
   {
     return (this->m_edgeNormals);
   }
 
   template <typename MetaData>
-  [[nodiscard]] inline MetaData&
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE MetaData&
   Triangle<MetaData>::getMetaData() noexcept
   {
     return (this->m_metaData);
   }
 
   template <typename MetaData>
-  [[nodiscard]] inline const MetaData&
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const MetaData&
   Triangle<MetaData>::getMetaData() const noexcept
   {
     return (this->m_metaData);
   }
 
   template <typename MetaData>
-  [[nodiscard]] inline Real
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
   Triangle<MetaData>::signedDistance(const Vec3& a_x) noexcept
   {
     // Perform extra checks in debug mode -- if any of these fail then something is uninitialized.

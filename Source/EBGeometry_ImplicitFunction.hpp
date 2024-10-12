@@ -19,6 +19,7 @@
 // Our includes
 #include "EBGeometry_Types.hpp"
 #include "EBGeometry_GPUTypes.hpp"
+#include "EBGeometry_Macros.hpp"
 #include "EBGeometry_Vec.hpp"
 
 namespace EBGeometry {
@@ -39,8 +40,8 @@ namespace EBGeometry {
     @param[inout] implicitFunction Implicit function pointer to be allocated. 
   */
   template <typename T>
-  EBGEOMETRY_GPU_HOST inline GPUPointer<T>
-  allocateImplicitFunctionOnDevice() noexcept
+  EBGEOMETRY_GPU_HOST EBGEOMETRY_ALWAYS_INLINE GPUPointer<T>
+                                               allocateImplicitFunctionOnDevice() noexcept
   {
     GPUPointer<T> func;
 
@@ -79,7 +80,8 @@ namespace EBGeometry {
       @brief Base constructor.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline ImplicitFunction() noexcept
+    EBGEOMETRY_ALWAYS_INLINE
+    ImplicitFunction() noexcept
     {}
 
     /*!

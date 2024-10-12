@@ -19,6 +19,7 @@
 
 // Our includes
 #include "EBGeometry_GPU.hpp"
+#include "EBGeometry_Macros.hpp"
 #include "EBGeometry_Types.hpp"
 
 namespace EBGeometry {
@@ -48,7 +49,8 @@ namespace EBGeometry {
       @brief Default constructor. Sets the vector to the zero vector.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec2() noexcept;
+    EBGEOMETRY_ALWAYS_INLINE
+    Vec2() noexcept;
 
     /*!
       @brief Copy constructor
@@ -56,7 +58,8 @@ namespace EBGeometry {
       @details Sets *this = u
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec2(const Vec2& u) noexcept;
+    EBGEOMETRY_ALWAYS_INLINE
+    Vec2(const Vec2& u) noexcept;
 
     /*!
       @brief Full constructor
@@ -65,67 +68,68 @@ namespace EBGeometry {
       @details Sets this->x = a_x and this->y = a_y
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec2(const Real& a_x, const Real& a_y) noexcept;
+    EBGEOMETRY_ALWAYS_INLINE
+    Vec2(const Real& a_x, const Real& a_y) noexcept;
 
     /*!
       @brief Destructor (does nothing)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline ~Vec2() noexcept;
+    EBGEOMETRY_ALWAYS_INLINE ~Vec2() noexcept;
 
     /*!
       @brief Get x-component
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Real&
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real&
     x() noexcept;
     /*!
       @brief Get x-component
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline const Real&
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Real&
     x() const noexcept;
 
     /*!
       @brief Get y-component
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Real&
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real&
     y() noexcept;
 
     /*!
       @brief Get y-component
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline const Real&
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Real&
     y() const noexcept;
 
     /*!
       @brief Return av vector with x = y = 0
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline static Vec2
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static Vec2
     zero() noexcept;
 
     /*!
       @brief Return av vector with x = y = 1
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline static Vec2
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static Vec2
     one() noexcept;
 
     /*!
       @brief Return minimum possible representative vector.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline static Vec2
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static Vec2
     min() noexcept;
 
     /*!
       @brief Return maximum possible representative vector.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline static Vec2
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static Vec2
     max() noexcept;
 
     /*!
@@ -133,7 +137,7 @@ namespace EBGeometry {
       @param[in] a_other Other vector
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec2&
+    EBGEOMETRY_ALWAYS_INLINE Vec2&
     operator=(const Vec2& a_other) noexcept;
 
     /*!
@@ -143,7 +147,7 @@ namespace EBGeometry {
       for y-component)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Vec2
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec2
     operator+(const Vec2& a_other) const noexcept;
 
     /*!
@@ -153,14 +157,14 @@ namespace EBGeometry {
       for y-component)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Vec2
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec2
     operator-(const Vec2& a_other) const noexcept;
 
     /*!
       @brief Negation operator. Returns a new Vec2 with negated components
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Vec2
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec2
     operator-() const noexcept;
 
     /*!
@@ -170,7 +174,7 @@ namespace EBGeometry {
       y)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Vec2
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec2
     operator*(const Real& s) const noexcept;
 
     /*!
@@ -180,7 +184,7 @@ namespace EBGeometry {
       for y)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Vec2
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec2
     operator/(const Real& s) const noexcept;
 
     /*!
@@ -190,7 +194,7 @@ namespace EBGeometry {
       same for y)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec2&
+    EBGEOMETRY_ALWAYS_INLINE Vec2&
     operator+=(const Vec2& a_other) noexcept;
 
     /*!
@@ -200,7 +204,7 @@ namespace EBGeometry {
       same for y)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec2&
+    EBGEOMETRY_ALWAYS_INLINE Vec2&
     operator-=(const Vec2& a_other) noexcept;
 
     /*!
@@ -210,7 +214,7 @@ namespace EBGeometry {
       y)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec2&
+    EBGEOMETRY_ALWAYS_INLINE Vec2&
     operator*=(const Real& s) noexcept;
 
     /*!
@@ -220,7 +224,7 @@ namespace EBGeometry {
       for y)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec2&
+    EBGEOMETRY_ALWAYS_INLINE Vec2&
     operator/=(const Real& s) noexcept;
 
     /*!
@@ -229,7 +233,7 @@ namespace EBGeometry {
       @details Returns the dot product, i.e. this->x*a_other.x + this->y+a_other.y
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Real
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
     dot(const Vec2& a_other) const noexcept;
 
     /*!
@@ -238,7 +242,7 @@ namespace EBGeometry {
       (this->y)*(this->y)]
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Real
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
     length() const noexcept;
 
     /*!
@@ -247,7 +251,7 @@ namespace EBGeometry {
       (this->y)*(this->y)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Real
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
     length2() const noexcept;
 
   protected:
@@ -285,7 +289,8 @@ namespace EBGeometry {
       @brief Default constructor. Sets the vector to the zero vector.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3() noexcept;
+    EBGEOMETRY_ALWAYS_INLINE
+    Vec3() noexcept;
 
     /*!
       @brief Copy constructor
@@ -293,7 +298,8 @@ namespace EBGeometry {
       @details Sets *this = u
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3(const Vec3& a_u) noexcept;
+    EBGEOMETRY_ALWAYS_INLINE
+    Vec3(const Vec3& a_u) noexcept;
 
     /*!
       @brief Full constructor
@@ -303,26 +309,27 @@ namespace EBGeometry {
       @details Sets this->x = a_x, this->y = a_y, and this->z = a_z
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3(const Real& a_x, const Real& a_y, const Real& a_z) noexcept;
+    EBGEOMETRY_ALWAYS_INLINE
+    Vec3(const Real& a_x, const Real& a_y, const Real& a_z) noexcept;
 
     /*!
       @brief Destructor (does nothing)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline ~Vec3() noexcept;
+    EBGEOMETRY_ALWAYS_INLINE ~Vec3() noexcept;
 
     /*!
       @brief Return av vector with x = y = z = 0
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline static Vec3
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static Vec3
     zero() noexcept;
 
     /*!
       @brief Return av vector with x = y = z = 1
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline static Vec3
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static Vec3
     one() noexcept;
 
     /*!
@@ -330,28 +337,28 @@ namespace EBGeometry {
       @param[in] a_dir Dircetion
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline static Vec3
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static Vec3
     unit(const size_t a_dir) noexcept;
 
     /*!
       @brief Return a vector with minimum representable components.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline static Vec3
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static Vec3
     min() noexcept;
 
     /*!
       @brief Return a vector with maximum representable components.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline static Vec3
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static Vec3
     max() noexcept;
 
     /*!
       @brief Return a vector with maximally negative representable components.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline static Vec3
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static Vec3
     lowest() noexcept;
 
     /*!
@@ -359,7 +366,7 @@ namespace EBGeometry {
       @param[in] i Index. Must be < 3
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Real&
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real&
     operator[](size_t i) noexcept;
 
     /*!
@@ -367,7 +374,7 @@ namespace EBGeometry {
       @param[in] i Index. Must be < 3
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline const Real&
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Real&
     operator[](size_t i) const noexcept;
 
     /*!
@@ -375,7 +382,7 @@ namespace EBGeometry {
       @param[in] u Other vector
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline bool
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE bool
     operator==(const Vec3& u) const noexcept;
 
     /*!
@@ -383,7 +390,7 @@ namespace EBGeometry {
       @param[in] u Other vector
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline bool
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE bool
     operator!=(const Vec3& u) const noexcept;
 
     /*!
@@ -393,7 +400,7 @@ namespace EBGeometry {
       @param[in] u Other vector
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline bool
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE bool
     operator<(const Vec3& u) const noexcept;
 
     /*!
@@ -402,7 +409,7 @@ namespace EBGeometry {
       @param[in] u Other vector
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline bool
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE bool
     operator>(const Vec3& u) const noexcept;
 
     /*!
@@ -412,7 +419,7 @@ namespace EBGeometry {
       @param[in] u Other vector
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline bool
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE bool
     operator<=(const Vec3& u) const noexcept;
 
     /*!
@@ -421,7 +428,7 @@ namespace EBGeometry {
       @param[in] u Other vector
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline bool
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE bool
     lessLX(const Vec3& u) const noexcept;
 
     /*!
@@ -431,7 +438,7 @@ namespace EBGeometry {
       @param[in] u Other vector
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline bool
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE bool
     operator>=(const Vec3& u) const noexcept;
 
     /*!
@@ -440,7 +447,7 @@ namespace EBGeometry {
       @param[in] u Other vector
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3&
+    EBGEOMETRY_ALWAYS_INLINE Vec3&
     operator=(const Vec3& u) noexcept;
 
     /*!
@@ -449,7 +456,7 @@ namespace EBGeometry {
       @param[in] u Other vector
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Vec3
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3
     operator+(const Vec3& u) const noexcept;
 
     /*!
@@ -458,14 +465,14 @@ namespace EBGeometry {
       @param[in] u Other vector
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Vec3
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3
     operator-(const Vec3& u) const noexcept;
 
     /*!
       @brief Negation operator. Returns a vector with negated components
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Vec3
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3
     operator-() const noexcept;
 
     /*!
@@ -475,7 +482,7 @@ namespace EBGeometry {
       @return Returns a new vector with X[i] = this->X[i] * s
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Vec3
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3
     operator*(const Real& s) const noexcept;
 
     /*!
@@ -485,7 +492,7 @@ namespace EBGeometry {
       component.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Vec3
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3
     operator*(const Vec3& s) const noexcept;
 
     /*!
@@ -494,7 +501,7 @@ namespace EBGeometry {
       @return Returns a new vector with X[i] = this->X[i] / s
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Vec3
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3
     operator/(const Real& s) const noexcept;
 
     /*!
@@ -503,7 +510,7 @@ namespace EBGeometry {
       @return Returns a new vector with X[i] = this->X[i]/v[i] for each component.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Vec3
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3
     operator/(const Vec3& v) const noexcept;
 
     /*!
@@ -513,7 +520,7 @@ namespace EBGeometry {
       this->X[0] + u.X[0]
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3&
+    EBGEOMETRY_ALWAYS_INLINE Vec3&
     operator+=(const Vec3& u) noexcept;
 
     /*!
@@ -523,7 +530,7 @@ namespace EBGeometry {
       this->X[0] - u.X[0]
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3&
+    EBGEOMETRY_ALWAYS_INLINE Vec3&
     operator-=(const Vec3& u) noexcept;
 
     /*!
@@ -533,7 +540,7 @@ namespace EBGeometry {
       this->X[0] * s
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3&
+    EBGEOMETRY_ALWAYS_INLINE Vec3&
     operator*=(const Real& s) noexcept;
 
     /*!
@@ -543,7 +550,7 @@ namespace EBGeometry {
       this->X[0] / s
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    inline Vec3&
+    EBGEOMETRY_ALWAYS_INLINE Vec3&
     operator/=(const Real& s) noexcept;
 
     /*!
@@ -554,7 +561,7 @@ namespace EBGeometry {
       same for the other components)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Vec3
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3
     min(const Vec3& u) noexcept;
 
     /*!
@@ -565,7 +572,7 @@ namespace EBGeometry {
       same for the other components)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Vec3
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3
     max(const Vec3& u) noexcept;
 
     /*!
@@ -574,7 +581,7 @@ namespace EBGeometry {
       @returns Returns the cross product between (*this) and u
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Vec3
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3
     cross(const Vec3& u) const noexcept;
 
     /*!
@@ -583,7 +590,7 @@ namespace EBGeometry {
       @returns Returns the dot product between (*this) and u
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Real
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
     dot(const Vec3& u) const noexcept;
 
     /*!
@@ -594,7 +601,7 @@ namespace EBGeometry {
       @return Direction with the biggest component
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline size_t
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE size_t
     minDir(const bool a_doAbs) const noexcept;
 
     /*!
@@ -605,7 +612,7 @@ namespace EBGeometry {
       @return Direction with the biggest component
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline size_t
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE size_t
     maxDir(const bool a_doAbs) const noexcept;
 
     /*!
@@ -614,7 +621,7 @@ namespace EBGeometry {
       Y[0]*Y[0])
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Real
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
     length() const noexcept;
 
     /*!
@@ -623,7 +630,7 @@ namespace EBGeometry {
       Y[0]*Y[0])
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] inline Real
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
     length2() const noexcept;
 
   protected:
@@ -640,7 +647,7 @@ namespace EBGeometry {
     @return Returns a new vector with components x = s*a_other.x (and same for y)
   */
   EBGEOMETRY_GPU_HOST_DEVICE
-  inline Vec2
+  EBGEOMETRY_ALWAYS_INLINE Vec2
   operator*(const Real& s, const Vec2& a_other) noexcept;
 
   /*!
@@ -651,7 +658,7 @@ namespace EBGeometry {
     y)
   */
   EBGEOMETRY_GPU_HOST_DEVICE
-  inline Vec2
+  EBGEOMETRY_ALWAYS_INLINE Vec2
   operator/(const Real& s, const Vec2& a_other) noexcept;
 
   /*!
@@ -661,7 +668,7 @@ namespace EBGeometry {
     @return Returns new vector with components x = std::min(u.x, v.x).
   */
   EBGEOMETRY_GPU_HOST_DEVICE
-  inline Vec2
+  EBGEOMETRY_ALWAYS_INLINE Vec2
   min(const Vec2& u, const Vec2& v) noexcept;
 
   /*!
@@ -671,7 +678,7 @@ namespace EBGeometry {
     @return Returns new vector with components x = std::max(u.x, v.x).
   */
   EBGEOMETRY_GPU_HOST_DEVICE
-  inline Vec2
+  EBGEOMETRY_ALWAYS_INLINE Vec2
   max(const Vec2& u, const Vec2& v) noexcept;
 
   /*!
@@ -680,7 +687,7 @@ namespace EBGeometry {
     @param[in] v Other vector
   */
   EBGEOMETRY_GPU_HOST_DEVICE
-  inline Real
+  EBGEOMETRY_ALWAYS_INLINE Real
   dot(const Vec2& u, const Vec2& v) noexcept;
 
   /*!
@@ -688,7 +695,7 @@ namespace EBGeometry {
     @param[in] v Vector.
   */
   EBGEOMETRY_GPU_HOST_DEVICE
-  inline Real
+  EBGEOMETRY_ALWAYS_INLINE Real
   length(const Vec2& v) noexcept;
 
   /*!
@@ -698,7 +705,7 @@ namespace EBGeometry {
     @return Returns new vector with components X[0] = s*X[0] and so on.
   */
   EBGEOMETRY_GPU_HOST_DEVICE
-  inline Vec3
+  EBGEOMETRY_ALWAYS_INLINE Vec3
   operator*(const Real& s, const Vec3& u) noexcept;
 
   /*!
@@ -708,7 +715,7 @@ namespace EBGeometry {
     @return Returns new vector with components X[0] = X[0]/s and so on.
   */
   EBGEOMETRY_GPU_HOST_DEVICE
-  [[nodiscard]] inline Vec3
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3
   operator/(const Real& s, const Vec3& u) noexcept;
 
   /*!
@@ -719,7 +726,7 @@ namespace EBGeometry {
     so on
   */
   EBGEOMETRY_GPU_HOST_DEVICE
-  [[nodiscard]] inline Vec3
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3
   min(const Vec3& u, const Vec3& v) noexcept;
 
   /*!
@@ -730,7 +737,7 @@ namespace EBGeometry {
     so on
   */
   EBGEOMETRY_GPU_HOST_DEVICE
-  [[nodiscard]] inline Vec3
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3
   max(const Vec3& u, const Vec3& v) noexcept;
 
   /*!
@@ -739,7 +746,7 @@ namespace EBGeometry {
     @param[in] v Other vector
   */
   EBGEOMETRY_GPU_HOST_DEVICE
-  [[nodiscard]] inline Real
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
   dot(const Vec3& u, const Vec3& v) noexcept;
 
   /*!
@@ -747,7 +754,7 @@ namespace EBGeometry {
     @param[in] v Vector.
   */
   EBGEOMETRY_GPU_HOST_DEVICE
-  [[nodiscard]] inline Real
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
   length(const Vec3& v) noexcept;
 
 } // namespace EBGeometry

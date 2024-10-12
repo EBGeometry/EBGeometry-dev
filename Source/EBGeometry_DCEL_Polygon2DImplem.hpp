@@ -12,13 +12,14 @@
 #define EBGeometry_Polygon2DImplem
 
 // Our includes
-#include "EBGeometry_Macros.hpp"
 #include "EBGeometry_DCEL_Polygon2D.hpp"
+#include "EBGeometry_Macros.hpp"
 
 namespace EBGeometry {
   namespace DCEL {
 
-    inline Polygon2D::Polygon2D() noexcept
+    EBGEOMETRY_ALWAYS_INLINE
+    Polygon2D::Polygon2D() noexcept
     {
       m_xDir      = -1;
       m_yDir      = -1;
@@ -26,17 +27,18 @@ namespace EBGeometry {
       m_points    = nullptr;
     }
 
-    inline Polygon2D::Polygon2D(const Vec3& a_normal, const int a_numPoints, const Vec3* const a_points) noexcept
+    EBGEOMETRY_ALWAYS_INLINE
+    Polygon2D::Polygon2D(const Vec3& a_normal, const int a_numPoints, const Vec3* const a_points) noexcept
     {
       this->define(a_normal, a_numPoints, a_points);
     }
 
-    inline Polygon2D::~Polygon2D() noexcept
+    EBGEOMETRY_ALWAYS_INLINE Polygon2D::~Polygon2D() noexcept
     {
       delete[] m_points;
     }
 
-    inline bool
+    EBGEOMETRY_ALWAYS_INLINE bool
     Polygon2D::isPointInside(const Vec3& a_point, const InsideOutsideAlgorithm a_algorithm) const noexcept
     {
       bool ret = false;
@@ -62,7 +64,7 @@ namespace EBGeometry {
       return ret;
     }
 
-    inline bool
+    EBGEOMETRY_ALWAYS_INLINE bool
     Polygon2D::isPointInsidePolygonWindingNumber(const Vec3& a_point) const noexcept
     {
       const Vec2 projectedPoint = this->projectPoint(a_point);
@@ -72,7 +74,7 @@ namespace EBGeometry {
       return windingNumber != 0;
     }
 
-    inline bool
+    EBGEOMETRY_ALWAYS_INLINE bool
     Polygon2D::isPointInsidePolygonCrossingNumber(const Vec3& a_point) const noexcept
     {
       const Vec2 projectedPoint = this->projectPoint(a_point);
@@ -82,7 +84,7 @@ namespace EBGeometry {
       return (crossingNumber & 1);
     }
 
-    inline bool
+    EBGEOMETRY_ALWAYS_INLINE bool
     Polygon2D::isPointInsidePolygonSubtend(const Vec3& a_point) const noexcept
     {
       const Vec2 projectedPoint = this->projectPoint(a_point);
@@ -94,13 +96,13 @@ namespace EBGeometry {
       return (round(sumTheta) == 1);
     }
 
-    inline Vec2
+    EBGEOMETRY_ALWAYS_INLINE Vec2
     Polygon2D::projectPoint(const Vec3& a_point) const noexcept
     {
       return Vec2(a_point[m_xDir], a_point[m_yDir]);
     }
 
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Polygon2D::define(const Vec3& a_normal, const int a_numPoints, const Vec3* const a_points) noexcept
     {
       EBGEOMETRY_EXPECT(a_numPoints >= 3);
@@ -132,7 +134,7 @@ namespace EBGeometry {
       }
     }
 
-    inline int
+    EBGEOMETRY_ALWAYS_INLINE int
     Polygon2D::computeWindingNumber(const Vec2& a_point) const noexcept
     {
       int windingNumber = 0;
@@ -167,7 +169,7 @@ namespace EBGeometry {
       return windingNumber;
     }
 
-    inline int
+    EBGEOMETRY_ALWAYS_INLINE int
     Polygon2D::computeCrossingNumber(const Vec2& a_point) const noexcept
     {
       int crossingNumber = 0;
@@ -191,7 +193,7 @@ namespace EBGeometry {
       return crossingNumber;
     }
 
-    inline Real
+    EBGEOMETRY_ALWAYS_INLINE Real
     Polygon2D::computeSubtendedAngle(const Vec2& a_point) const noexcept
     {
       Real sumTheta = 0.0;

@@ -56,7 +56,8 @@ namespace EBGeometry {
 	@brief Disallowed constructor, use the one with the normal vector and points
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Polygon2D() noexcept;
+      EBGEOMETRY_ALWAYS_INLINE
+      Polygon2D() noexcept;
 
       /*!
 	@brief Full constructor
@@ -65,13 +66,14 @@ namespace EBGeometry {
 	@param[in] a_points Vertex coordinates of the 3D polygon face
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Polygon2D(const Vec3& a_normal, const int a_numPoints, const Vec3* const a_points) noexcept;
+      EBGEOMETRY_ALWAYS_INLINE
+      Polygon2D(const Vec3& a_normal, const int a_numPoints, const Vec3* const a_points) noexcept;
 
       /*!
 	@brief Destructor (does nothing)
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline ~Polygon2D() noexcept;
+      EBGEOMETRY_ALWAYS_INLINE ~Polygon2D() noexcept;
 
       /*!
 	@brief Check if a point is inside or outside the 2D polygon
@@ -80,7 +82,7 @@ namespace EBGeometry {
 	@details This will call the function corresponding to a_algorithm.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline bool
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE bool
       isPointInside(const Vec3& a_point, const InsideOutsideAlgorithm a_algorithm) const noexcept;
 
       /*!
@@ -91,7 +93,7 @@ namespace EBGeometry {
 	polygon
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline bool
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE bool
       isPointInsidePolygonWindingNumber(const Vec3& a_point) const noexcept;
 
       /*!
@@ -102,7 +104,7 @@ namespace EBGeometry {
 	polygon
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline bool
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE bool
       isPointInsidePolygonCrossingNumber(const Vec3& a_point) const noexcept;
 
       /*!
@@ -112,7 +114,7 @@ namespace EBGeometry {
 	polygon
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline bool
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE bool
       isPointInsidePolygonSubtend(const Vec3& a_point) const noexcept;
 
     private:
@@ -144,7 +146,7 @@ namespace EBGeometry {
 	@return 2D point, ignoring one of the coordinate directions.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline Vec2
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec2
       projectPoint(const Vec3& a_point) const noexcept;
 
       /*!
@@ -155,7 +157,7 @@ namespace EBGeometry {
 	@param[in] a_points Vertex coordinates for polygon face.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline void
+      EBGEOMETRY_ALWAYS_INLINE void
       define(const Vec3& a_normal, const int a_numPoints, const Vec3* const a_points) noexcept;
 
       /*!
@@ -164,7 +166,7 @@ namespace EBGeometry {
 	@return Returns winding number.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline int
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE int
       computeWindingNumber(const Vec2& a_point) const noexcept;
 
       /*!
@@ -173,7 +175,7 @@ namespace EBGeometry {
 	@return Returns crossing number.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline int
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE int
       computeCrossingNumber(const Vec2& a_point) const noexcept;
 
       /*!
@@ -182,7 +184,7 @@ namespace EBGeometry {
 	@return Returns subtended angle.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline Real
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
       computeSubtendedAngle(const Vec2& a_point) const noexcept;
     };
   } // namespace DCEL

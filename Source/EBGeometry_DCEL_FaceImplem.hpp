@@ -20,7 +20,8 @@ namespace EBGeometry {
   namespace DCEL {
 
     template <class Meta>
-    inline Face<Meta>::Face() noexcept
+    EBGEOMETRY_ALWAYS_INLINE
+    Face<Meta>::Face() noexcept
     {
       m_halfEdge       = nullptr;
       m_normal         = Vec3::zero();
@@ -30,24 +31,28 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Face<Meta>::Face(const Edge<Meta>* const a_edge) noexcept : Face()
+    EBGEOMETRY_ALWAYS_INLINE
+    Face<Meta>::Face(const Edge<Meta>* const a_edge) noexcept
+      : Face()
     {
       m_halfEdge = a_edge;
     }
 
     template <class Meta>
-    inline Face<Meta>::Face(const Face& a_otherFace) noexcept : Face()
+    EBGEOMETRY_ALWAYS_INLINE
+    Face<Meta>::Face(const Face& a_otherFace) noexcept
+      : Face()
     {
       m_halfEdge = a_otherFace.m_halfEdge;
       m_normal   = a_otherFace.m_normal;
     }
 
     template <class Meta>
-    inline Face<Meta>::~Face() noexcept
+    EBGEOMETRY_ALWAYS_INLINE Face<Meta>::~Face() noexcept
     {}
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Face<Meta>::define(const Vec3& a_normal, const Edge<Meta>* const a_edge) noexcept
     {
       m_normal   = a_normal;
@@ -55,7 +60,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Face<Meta>::reconcile() noexcept
     {
       this->computeNormalVector();
@@ -65,42 +70,42 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Face<Meta>::setHalfEdge(const Edge<Meta>* const a_halfEdge) noexcept
     {
       m_halfEdge = a_halfEdge;
     }
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Face<Meta>::setInsideOutsideAlgorithm(const Polygon2D::InsideOutsideAlgorithm& a_algorithm) noexcept
     {
       m_poly2Algorithm = a_algorithm;
     }
 
     template <class Meta>
-    inline const Edge<Meta>*
-    Face<Meta>::getHalfEdge() const noexcept
+    EBGEOMETRY_ALWAYS_INLINE const Edge<Meta>*
+                                   Face<Meta>::getHalfEdge() const noexcept
     {
       return m_halfEdge;
     }
 
     template <class Meta>
-    inline Vec3&
+    EBGEOMETRY_ALWAYS_INLINE Vec3&
     Face<Meta>::getCentroid() noexcept
     {
       return (m_centroid);
     }
 
     template <class Meta>
-    inline const Vec3&
+    EBGEOMETRY_ALWAYS_INLINE const Vec3&
     Face<Meta>::getCentroid() const noexcept
     {
       return (m_centroid);
     }
 
     template <class Meta>
-    inline Real&
+    EBGEOMETRY_ALWAYS_INLINE Real&
     Face<Meta>::getCentroid(const int a_dir) noexcept
     {
       EBGEOMETRY_EXPECT(a_dir >= 0);
@@ -110,7 +115,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline const Real&
+    EBGEOMETRY_ALWAYS_INLINE const Real&
     Face<Meta>::getCentroid(const int a_dir) const noexcept
     {
       EBGEOMETRY_EXPECT(a_dir >= 0);
@@ -120,35 +125,35 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Vec3&
+    EBGEOMETRY_ALWAYS_INLINE Vec3&
     Face<Meta>::getNormal() noexcept
     {
       return (m_normal);
     }
 
     template <class Meta>
-    inline const Vec3&
+    EBGEOMETRY_ALWAYS_INLINE const Vec3&
     Face<Meta>::getNormal() const noexcept
     {
       return (m_normal);
     }
 
     template <class Meta>
-    inline Meta&
+    EBGEOMETRY_ALWAYS_INLINE Meta&
     Face<Meta>::getMetaData() noexcept
     {
       return (m_metaData);
     }
 
     template <class Meta>
-    inline const Meta&
+    EBGEOMETRY_ALWAYS_INLINE const Meta&
     Face<Meta>::getMetaData() const noexcept
     {
       return (m_metaData);
     }
 
     template <class Meta>
-    inline Real
+    EBGEOMETRY_ALWAYS_INLINE Real
     Face<Meta>::signedDistance(const Vec3& a_x0) const noexcept
     {
       Real minDist = EBGeometry::Limits::max();
@@ -182,7 +187,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Real
+    EBGEOMETRY_ALWAYS_INLINE Real
     Face<Meta>::unsignedDistance2(const Vec3& a_x0) const noexcept
     {
       Real minDist2 = EBGeometry::Limits::max();
@@ -218,7 +223,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Vec3
+    EBGEOMETRY_ALWAYS_INLINE Vec3
     Face<Meta>::getSmallestCoordinate() const noexcept
     {
       Vec3 smallestCoordinate = Vec3::max();
@@ -245,7 +250,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Vec3
+    EBGEOMETRY_ALWAYS_INLINE Vec3
     Face<Meta>::getHighestCoordinate() const noexcept
     {
       Vec3 highestCoordinate = Vec3::lowest();
@@ -272,7 +277,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Face<Meta>::computeCentroid() noexcept
     {
       m_centroid = Vec3::zero();
@@ -302,7 +307,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Face<Meta>::computeNormal() noexcept
     {
       // Circulate through the polygon and find three vertices that do
@@ -348,7 +353,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Face<Meta>::computePolygon2D() noexcept
     {
 
@@ -390,7 +395,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Face<Meta>::normalizeNormalVector() noexcept
     {
       EBGEOMETRY_EXPECT(m_normal.length() > Real(0.0));
@@ -399,7 +404,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Real
+    EBGEOMETRY_ALWAYS_INLINE Real
     Face<Meta>::computeArea() noexcept
     {
       Real area = 0.0;
@@ -432,14 +437,14 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Vec3
+    EBGEOMETRY_ALWAYS_INLINE Vec3
     Face<Meta>::projectPointIntoFacePlane(const Vec3& a_p) const noexcept
     {
       return a_p - m_normal * (m_normal.dot(a_p - m_centroid));
     }
 
     template <class Meta>
-    inline bool
+    EBGEOMETRY_ALWAYS_INLINE bool
     Face<Meta>::isPointInsideFace(const Vec3& a_p) const noexcept
     {
       const Vec3 p = this->projectPointIntoFacePlane(a_p);

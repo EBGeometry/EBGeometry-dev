@@ -17,6 +17,7 @@
 #include "EBGeometry_DCEL.hpp"
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_GPUTypes.hpp"
+#include "EBGeometry_Macros.hpp"
 #include "EBGeometry_Vec.hpp"
 
 namespace EBGeometry {
@@ -42,7 +43,8 @@ namespace EBGeometry {
 	vectors, and the polygon face list is empty
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Vertex() noexcept;
+      EBGEOMETRY_ALWAYS_INLINE
+      Vertex() noexcept;
 
       /*!
 	@brief Partial constructor.
@@ -51,7 +53,8 @@ namespace EBGeometry {
 	to the zero vector. The polygon face list is empty.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Vertex(const Vec3& a_position) noexcept;
+      EBGEOMETRY_ALWAYS_INLINE
+      Vertex(const Vec3& a_position) noexcept;
 
       /*!
 	@brief Constructor.
@@ -61,7 +64,8 @@ namespace EBGeometry {
 	to a_normal. The polygon face list is empty.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Vertex(const Vec3& a_position, const Vec3& a_normal) noexcept;
+      EBGEOMETRY_ALWAYS_INLINE
+      Vertex(const Vec3& a_position, const Vec3& a_normal) noexcept;
 
       /*!
 	@brief Full constructor.
@@ -70,7 +74,8 @@ namespace EBGeometry {
 	@param[in] a_edge Outgoing half-edge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Vertex(const Vec3& a_position, const Vec3& a_normal, const Edge<Meta>* const a_edge) noexcept;
+      EBGEOMETRY_ALWAYS_INLINE
+      Vertex(const Vec3& a_position, const Vec3& a_normal, const Edge<Meta>* const a_edge) noexcept;
 
       /*!
 	@brief Full copy constructor
@@ -79,13 +84,14 @@ namespace EBGeometry {
 	from the other vertex. The polygon face list.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline Vertex(const Vertex& a_otherVertex) noexcept;
+      EBGEOMETRY_ALWAYS_INLINE
+      Vertex(const Vertex& a_otherVertex) noexcept;
 
       /*!
 	@brief Destructor (does nothing)
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline ~Vertex() noexcept;
+      EBGEOMETRY_ALWAYS_INLINE ~Vertex() noexcept;
 
       /*!
 	@brief Define function
@@ -95,7 +101,7 @@ namespace EBGeometry {
 	@details This sets the position, normal vector, and edge pointer.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline void
+      EBGEOMETRY_ALWAYS_INLINE void
       define(const Vec3& a_position, const Vec3& a_normal, const Edge<Meta>* const a_edge) noexcept;
 
       /*!
@@ -103,7 +109,7 @@ namespace EBGeometry {
 	@param[in] a_position Vertex position
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline void
+      EBGEOMETRY_ALWAYS_INLINE void
       setPosition(const Vec3& a_position) noexcept;
 
       /*!
@@ -111,7 +117,7 @@ namespace EBGeometry {
 	@param[in] a_normal Vertex normal vector
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline void
+      EBGEOMETRY_ALWAYS_INLINE void
       setNormal(const Vec3& a_normal) noexcept;
 
       /*!
@@ -119,14 +125,14 @@ namespace EBGeometry {
 	@param[in] a_edge Outgoing half-edge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline void
+      EBGEOMETRY_ALWAYS_INLINE void
       setEdge(const Edge<Meta>* const a_edge) noexcept;
 
       /*!
 	@brief Normalize the normal vector to a length of 1.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline void
+      EBGEOMETRY_ALWAYS_INLINE void
       normalizeNormalVector() noexcept;
 
       /*!
@@ -135,7 +141,7 @@ namespace EBGeometry {
 	@details This computes the vertex normal as n = sum(normal(face))/num(faces)
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline void
+      EBGEOMETRY_ALWAYS_INLINE void
       computeVertexNormalAverage() noexcept;
 
       /*!
@@ -146,43 +152,43 @@ namespace EBGeometry {
 	weighted pseudonormal" (DOI: 10.1109/TVCG.2005.49)
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      inline void
+      EBGEOMETRY_ALWAYS_INLINE void
       computeVertexNormalAngleWeighted() noexcept;
 
       /*!
 	@brief Return modifiable vertex position.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline Vec3&
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3&
       getPosition() noexcept;
 
       /*!
 	@brief Return immutable vertex position.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline const Vec3&
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Vec3&
       getPosition() const noexcept;
 
       /*!
 	@brief Return modifiable vertex normal vector.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline Vec3&
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3&
       getNormal() noexcept;
 
       /*!
 	@brief Return immutable vertex normal vector.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline const Vec3&
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Vec3&
       getNormal() const noexcept;
 
       /*!
 	@brief Return outgoing edge.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline const Edge<Meta>*
-      getOutgoingEdge() const noexcept;
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Edge<Meta>*
+                                                   getOutgoingEdge() const noexcept;
 
       /*!
 	@brief Get the signed distance to this vertex
@@ -191,7 +197,7 @@ namespace EBGeometry {
 	by the sign of m_normal * |a_x0 - m_position|.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline Real
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
       signedDistance(const Vec3& a_x0) const noexcept;
 
       /*!
@@ -201,7 +207,7 @@ namespace EBGeometry {
 	@return Returns the vector length of (a_x - m_position)
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline Real
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
       unsignedDistance2(const Vec3& a_x0) const noexcept;
 
       /*!
@@ -209,7 +215,7 @@ namespace EBGeometry {
 	@return m_metaData
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline Meta&
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Meta&
       getMetaData() noexcept;
 
       /*!
@@ -217,7 +223,7 @@ namespace EBGeometry {
 	@return m_metaData
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] inline const Meta&
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Meta&
       getMetaData() const noexcept;
 
     protected:

@@ -13,6 +13,7 @@
 #define EBGeometry_DCEL_MeshImplem
 
 // Std includes
+#include <algorithm>
 #include <vector>
 
 // Our includes
@@ -23,7 +24,8 @@ namespace EBGeometry {
   namespace DCEL {
 
     template <class Meta>
-    inline Mesh<Meta>::Mesh() noexcept
+    EBGEOMETRY_ALWAYS_INLINE
+    Mesh<Meta>::Mesh() noexcept
     {
       m_numFaces    = -1;
       m_numEdges    = -1;
@@ -37,23 +39,24 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Mesh<Meta>::Mesh(const int     a_numVertices,
-                            const int     a_numEdges,
-                            const int     a_numFaces,
-                            Vertex<Meta>* a_vertices,
-                            Edge<Meta>*   a_edges,
-                            Face<Meta>*   a_faces) noexcept
+    EBGEOMETRY_ALWAYS_INLINE
+    Mesh<Meta>::Mesh(const int     a_numVertices,
+                     const int     a_numEdges,
+                     const int     a_numFaces,
+                     Vertex<Meta>* a_vertices,
+                     Edge<Meta>*   a_edges,
+                     Face<Meta>*   a_faces) noexcept
       : Mesh<Meta>()
     {
       this->define(a_numVertices, a_numEdges, a_numFaces, a_vertices, a_edges, a_faces);
     }
 
     template <class Meta>
-    inline Mesh<Meta>::~Mesh() noexcept
+    EBGEOMETRY_ALWAYS_INLINE Mesh<Meta>::~Mesh() noexcept
     {}
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Mesh<Meta>::define(const int     a_numVertices,
                        const int     a_numEdges,
                        const int     a_numFaces,
@@ -79,7 +82,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Mesh<Meta>::sanityCheck() const noexcept
     {
       const std::string vertexIsNullptr            = "nullptr vertex";
@@ -206,14 +209,14 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Mesh<Meta>::setSearchAlgorithm(const SearchAlgorithm a_algorithm) noexcept
     {
       m_algorithm = a_algorithm;
     }
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Mesh<Meta>::setInsideOutsideAlgorithm(const Polygon2D::InsideOutsideAlgorithm a_algorithm) noexcept
     {
       EBGEOMETRY_EXPECT(m_numFaces > 0);
@@ -225,7 +228,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Mesh<Meta>::reconcile(const DCEL::VertexNormalWeight a_weight) noexcept
     {
       this->reconcileFaces();
@@ -234,56 +237,56 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline const Vertex<Meta>*
-    Mesh<Meta>::getVertices() const noexcept
+    EBGEOMETRY_ALWAYS_INLINE const Vertex<Meta>*
+                                   Mesh<Meta>::getVertices() const noexcept
     {
       return static_cast<const Vertex<Meta>*>(m_vertices);
     }
 
     template <class Meta>
-    inline int
+    EBGEOMETRY_ALWAYS_INLINE int
     Mesh<Meta>::getNumberOfVertices() const noexcept
     {
       return m_numVertices;
     }
 
     template <class Meta>
-    inline const Edge<Meta>*
-    Mesh<Meta>::getEdges() const noexcept
+    EBGEOMETRY_ALWAYS_INLINE const Edge<Meta>*
+                                   Mesh<Meta>::getEdges() const noexcept
     {
       return static_cast<const Edge<Meta>*>(m_edges);
     }
 
     template <class Meta>
-    inline int
+    EBGEOMETRY_ALWAYS_INLINE int
     Mesh<Meta>::getNumberOfEdges() const noexcept
     {
       return m_numEdges;
     }
 
     template <class Meta>
-    inline const Face<Meta>*
-    Mesh<Meta>::getFaces() const noexcept
+    EBGEOMETRY_ALWAYS_INLINE const Face<Meta>*
+                                   Mesh<Meta>::getFaces() const noexcept
     {
       return static_cast<const Face<Meta>*>(m_faces);
     }
 
     template <class Meta>
-    inline int
+    EBGEOMETRY_ALWAYS_INLINE int
     Mesh<Meta>::getNumberOfFaces() const noexcept
     {
       return m_numFaces;
     }
 
     template <class Meta>
-    inline Real
+    EBGEOMETRY_ALWAYS_INLINE Real
     Mesh<Meta>::signedDistance(const Vec3& a_point) const noexcept
     {
       return this->signedDistance(a_point, m_algorithm);
     }
 
     template <class Meta>
-    inline Real
+    EBGEOMETRY_ALWAYS_INLINE Real
     Mesh<Meta>::signedDistance(const Vec3& a_point, SearchAlgorithm a_algorithm) const noexcept
     {
       Real dist = EBGeometry::Limits::max();
@@ -305,7 +308,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Real
+    EBGEOMETRY_ALWAYS_INLINE Real
     Mesh<Meta>::unsignedDistance2(const Vec3& a_point) const noexcept
     {
       EBGEOMETRY_EXPECT(m_numFaces > 0);
@@ -323,7 +326,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Mesh<Meta>::reconcileFaces() noexcept
     {
       EBGEOMETRY_EXPECT(m_numFaces > 0);
@@ -335,7 +338,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Mesh<Meta>::reconcileEdges() noexcept
     {
       EBGEOMETRY_EXPECT(m_numEdges >= 3);
@@ -347,7 +350,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Mesh<Meta>::reconcileVertices(const DCEL::VertexNormalWeight a_weight) noexcept
     {
       EBGEOMETRY_EXPECT(m_numVertices >= 3);
@@ -370,7 +373,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Real
+    EBGEOMETRY_ALWAYS_INLINE Real
     Mesh<Meta>::DirectSignedDistance(const Vec3& a_point) const noexcept
     {
       EBGEOMETRY_EXPECT(m_numFaces > 0);
@@ -393,7 +396,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Real
+    EBGEOMETRY_ALWAYS_INLINE Real
     Mesh<Meta>::DirectSignedDistance2(const Vec3& a_point) const noexcept
     {
       EBGEOMETRY_EXPECT(m_numFaces > 0);
@@ -418,14 +421,14 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Mesh<Meta>::incrementWarning(std::map<std::string, int>& a_warnings, const std::string& a_warn) const noexcept
     {
       a_warnings.at(a_warn) += 1;
     }
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Mesh<Meta>::printWarnings(const std::map<std::string, int>& a_warnings) const noexcept
     {
       for (const auto& warn : a_warnings) {

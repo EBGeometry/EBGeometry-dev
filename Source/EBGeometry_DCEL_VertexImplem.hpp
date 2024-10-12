@@ -14,14 +14,15 @@
 #define EBGeometry_DCEL_VertexImplem
 
 // Our includes
-#include "EBGeometry_Macros.hpp"
 #include "EBGeometry_DCEL_Vertex.hpp"
+#include "EBGeometry_Macros.hpp"
 
 namespace EBGeometry {
   namespace DCEL {
 
     template <class Meta>
-    inline Vertex<Meta>::Vertex() noexcept
+    EBGEOMETRY_ALWAYS_INLINE
+    Vertex<Meta>::Vertex() noexcept
     {
       m_position     = Vec3::zero();
       m_normal       = Vec3::zero();
@@ -29,20 +30,25 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Vertex<Meta>::Vertex(const Vec3& a_position) noexcept : Vertex<Meta>()
+    EBGEOMETRY_ALWAYS_INLINE
+    Vertex<Meta>::Vertex(const Vec3& a_position) noexcept
+      : Vertex<Meta>()
     {
       m_position = a_position;
     }
 
     template <class Meta>
-    inline Vertex<Meta>::Vertex(const Vec3& a_position, const Vec3& a_normal) noexcept : Vertex<Meta>()
+    EBGEOMETRY_ALWAYS_INLINE
+    Vertex<Meta>::Vertex(const Vec3& a_position, const Vec3& a_normal) noexcept
+      : Vertex<Meta>()
     {
       m_position = a_position;
       m_normal   = a_normal;
     }
 
     template <class Meta>
-    inline Vertex<Meta>::Vertex(const Vec3& a_position, const Vec3& a_normal, const Edge<Meta>* const a_edge) noexcept
+    EBGEOMETRY_ALWAYS_INLINE
+    Vertex<Meta>::Vertex(const Vec3& a_position, const Vec3& a_normal, const Edge<Meta>* const a_edge) noexcept
     {
       m_position     = a_position;
       m_normal       = a_normal;
@@ -50,7 +56,8 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Vertex<Meta>::Vertex(const Vertex& a_otherVertex) noexcept
+    EBGEOMETRY_ALWAYS_INLINE
+    Vertex<Meta>::Vertex(const Vertex& a_otherVertex) noexcept
     {
       m_position     = a_otherVertex.m_position;
       m_normal       = a_otherVertex.m_normal;
@@ -58,11 +65,11 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Vertex<Meta>::~Vertex() noexcept
+    EBGEOMETRY_ALWAYS_INLINE Vertex<Meta>::~Vertex() noexcept
     {}
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Vertex<Meta>::define(const Vec3& a_position, const Vec3& a_normal, const Edge<Meta>* const a_edge) noexcept
     {
       m_position     = a_position;
@@ -71,28 +78,28 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Vertex<Meta>::setPosition(const Vec3& a_position) noexcept
     {
       m_position = a_position;
     }
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Vertex<Meta>::setNormal(const Vec3& a_normal) noexcept
     {
       m_normal = a_normal;
     }
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Vertex<Meta>::setEdge(const Edge<Meta>* const a_edge) noexcept
     {
       m_outgoingEdge = a_edge;
     }
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Vertex<Meta>::normalizeNormalVector() noexcept
     {
       EBGEOMETRY_EXPECT(m_normal.length() > EBGeometry::Limits::min());
@@ -101,7 +108,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Vertex<Meta>::computeVertexNormalAverage() noexcept
     {
       // This routine computes the normal vector using a weighted sum of all faces
@@ -132,7 +139,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline void
+    EBGEOMETRY_ALWAYS_INLINE void
     Vertex<Meta>::computeVertexNormalAngleWeighted() noexcept
     {
       m_normal = Vec3::zero();
@@ -207,42 +214,42 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Vec3&
+    EBGEOMETRY_ALWAYS_INLINE Vec3&
     Vertex<Meta>::getPosition() noexcept
     {
       return (m_position);
     }
 
     template <class Meta>
-    inline const Vec3&
+    EBGEOMETRY_ALWAYS_INLINE const Vec3&
     Vertex<Meta>::getPosition() const noexcept
     {
       return (m_position);
     }
 
     template <class Meta>
-    inline Vec3&
+    EBGEOMETRY_ALWAYS_INLINE Vec3&
     Vertex<Meta>::getNormal() noexcept
     {
       return (m_normal);
     }
 
     template <class Meta>
-    inline const Vec3&
+    EBGEOMETRY_ALWAYS_INLINE const Vec3&
     Vertex<Meta>::getNormal() const noexcept
     {
       return (m_normal);
     }
 
     template <class Meta>
-    inline const Edge<Meta>*
-    Vertex<Meta>::getOutgoingEdge() const noexcept
+    EBGEOMETRY_ALWAYS_INLINE const Edge<Meta>*
+                                   Vertex<Meta>::getOutgoingEdge() const noexcept
     {
       return m_outgoingEdge;
     }
 
     template <class Meta>
-    inline Real
+    EBGEOMETRY_ALWAYS_INLINE Real
     Vertex<Meta>::signedDistance(const Vec3& a_x0) const noexcept
     {
       const Vec3 delta = a_x0 - m_position;
@@ -254,7 +261,7 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Real
+    EBGEOMETRY_ALWAYS_INLINE Real
     Vertex<Meta>::unsignedDistance2(const Vec3& a_x0) const noexcept
     {
       const Vec3 delta = a_x0 - m_position;
@@ -263,14 +270,14 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    inline Meta&
+    EBGEOMETRY_ALWAYS_INLINE Meta&
     Vertex<Meta>::getMetaData() noexcept
     {
       return (m_metaData);
     }
 
     template <class Meta>
-    inline const Meta&
+    EBGEOMETRY_ALWAYS_INLINE const Meta&
     Vertex<Meta>::getMetaData() const noexcept
     {
       return (m_metaData);
