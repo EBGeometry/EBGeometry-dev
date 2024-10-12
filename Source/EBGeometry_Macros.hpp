@@ -26,5 +26,20 @@
 #else
 #define EBGEOMETRY_EXPECT(cond) (void)0
 #endif
+// End debugging macros
+
+// Inline macros
+#if defined(__CUDA_ARCH__) && defined(EBGEOMETRY_USE_CUDA)
+#define EBGEOMETRY_ALWAYS_INLINE __forceinline__
+
+#elif defined(__GNUC__)
+#define EBGEOMETRY_ALWAYS_INLINE inline __attribute__((always_inline))
+
+#else
+#define EBGEOMETRY_ALWAYS_INLINE inline
+#endif 
+
+#define EBGEOMETRY_INLINE inline
+// End inline macros
 
 #endif
