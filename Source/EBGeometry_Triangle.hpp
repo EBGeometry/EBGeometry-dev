@@ -15,11 +15,7 @@
 // Our includes
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_GPUTypes.hpp"
-#if 1
-#warning "Must write the Triangle2D class"
-#else
 #include "EBGeometry_Triangle2D.hpp"
-#endif
 #include "EBGeometry_Vec.hpp"
 
 namespace EBGeometry {
@@ -228,18 +224,14 @@ namespace EBGeometry {
     Vec3 m_edgeNormals[3];
 
     /*!
-      @brief Triangle meta-data normals
-    */
-    MetaData m_metaData;
-
-#if 1
-#warning "Must write the Triangle2D class"
-#else
-    /*!
       @brief 2D projection of the triangle to one of the Cartesian coordinate directions
     */
     Triangle2D m_triangle2D;
-#endif
+
+    /*!
+      @brief Triangle meta-data normals
+    */
+    MetaData m_metaData;
   };
 } // namespace EBGeometry
 
