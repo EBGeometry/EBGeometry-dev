@@ -13,6 +13,9 @@
 #ifndef EBGeometry_DCEL_VertexImplem
 #define EBGeometry_DCEL_VertexImplem
 
+// Std includes
+#include <cmath>
+
 // Our includes
 #include "EBGeometry_DCEL_Vertex.hpp"
 #include "EBGeometry_Macros.hpp"

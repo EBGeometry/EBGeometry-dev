@@ -11,6 +11,9 @@
 #ifndef EBGeometry_Triangle2DImplem
 #define EBGeometry_Triangle2DImplem
 
+// Std includes
+#include <cmath>
+
 // Our includes
 #include "EBGeometry_Macros.hpp"
 #include "EBGeometry_Triangle2D.hpp"
@@ -39,11 +42,11 @@ namespace EBGeometry {
   EBGEOMETRY_ALWAYS_INLINE void
   Triangle2D::define(const Vec3& a_normal, const Vec3 a_vertices[3]) noexcept
   {
-    int ignoreDir = 0;
+    int projectDir = 0;
 
     for (int dir = 1; dir < 3; dir++) {
-      if (std::abs(a_normal[dir] > std::abs(a_normal[ignoreDir]))) {
-        ignoreDir = dir;
+      if (std::abs(a_normal[dir]) > std::abs(a_normal[projectDir])) {
+        projectDir = dir;
       }
     }
 
@@ -51,7 +54,7 @@ namespace EBGeometry {
     m_yDir = 0;
 
     for (int dir = 0; dir < 3; dir++) {
-      if (dir != ignoreDir) {
+      if (dir != projectDir) {
         m_xDir = EBGeometry::min(m_xDir, dir);
         m_yDir = EBGeometry::max(m_yDir, dir);
       }

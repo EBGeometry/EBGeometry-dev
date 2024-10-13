@@ -12,6 +12,9 @@
 #ifndef EBGeometry_VecImplem
 #define EBGeometry_VecImplem
 
+// Std includes
+#include <cmath>
+
 // Our includes
 #include "EBGeometry_GPUTypes.hpp"
 #include "EBGeometry_Macros.hpp"

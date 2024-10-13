@@ -76,6 +76,17 @@ namespace EBGeometry {
       EBGEOMETRY_ALWAYS_INLINE ~Polygon2D() noexcept;
 
       /*!
+	@brief Define function. This find the direction to ignore and then computes
+	the 2D points.
+	@param[in] a_normal Normal vector for polygon face
+	@param[in] a_numPoints Number of vertices	
+	@param[in] a_points Vertex coordinates for polygon face.
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE void
+      define(const Vec3& a_normal, const int a_numPoints, const Vec3* const a_points) noexcept;
+
+      /*!
 	@brief Check if a point is inside or outside the 2D polygon
 	@param[in] a_point     3D point coordinates
 	@param[in] a_algorithm Inside/outside algorithm
@@ -117,7 +128,7 @@ namespace EBGeometry {
       [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE bool
       isPointInsidePolygonSubtend(const Vec3& a_point) const noexcept;
 
-    private:
+    protected:
       /*!
 	@brief The corresponding 2D x-direction (one direction is ignored)
       */
@@ -148,17 +159,6 @@ namespace EBGeometry {
       EBGEOMETRY_GPU_HOST_DEVICE
       [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec2
       projectPoint(const Vec3& a_point) const noexcept;
-
-      /*!
-	@brief Define function. This find the direction to ignore and then computes
-	the 2D points.
-	@param[in] a_normal Normal vector for polygon face
-	@param[in] a_numPoints Number of vertices	
-	@param[in] a_points Vertex coordinates for polygon face.
-      */
-      EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
-      define(const Vec3& a_normal, const int a_numPoints, const Vec3* const a_points) noexcept;
 
       /*!
 	@brief Compute the winding number for a point P with the 2D polygon
