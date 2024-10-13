@@ -34,7 +34,6 @@ jobs:
 
   Lint-clang-tidy:
     name: clang-tidy
-    needs: Formatting
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -48,7 +47,7 @@ jobs:
           clang-tidy Source/*.hpp
 
   Linux-GNU:
-    needs: Formatting
+    needs: [clang-tidy, Formatting]
     name: Linux-GNU
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -81,7 +80,7 @@ jobs:
           if [[ $? == 0 ]]; then exit 0; else exit 1; fi          
 
   Linux-Intel:
-    needs: Formatting
+    needs: [clang-tidy, Formatting]    
     name: Linux-Intel
     runs-on: ubuntu-latest
     timeout-minutes: 15
