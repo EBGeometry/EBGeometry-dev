@@ -219,7 +219,29 @@ namespace EBGeometry {
 #endif
     }
     else {
-#warning "Triangle::signedDistance -- edge loop not implemented"
+      // If this triggers then
+      auto sgn = [](const Real x) -> int { return (x > 0.0) ? 1 : -1; };
+
+      // Check distances to vertices.
+      for (int i = 0; i < 3; i++) {
+        const Vec3 delta = a_point - m_vertexPositions[i];
+
+        ret = (delta.length() > std::abs(ret)) ? ret : delta.length() * sgn(m_vertexNormals[i].dot(delta));
+      }
+
+      // Check distances to edges
+      for (int i = 0; i < 3; i++) {
+        const Vec3& a = m_vertexPositions[i];
+        const Vec3& b = m_vertexPositions[(i + 1) % 3];
+
+        const Real t = this->projectPointToEdge(a_point, a, b);
+
+        if (t > 0.0 && t < 1.0) {
+          const Vec3 delta = a_point - (a + t * (b - a));
+
+          ret = (delta.length() > std::abs(ret)) ? ret : delta.length() * sgn(m_edgeNormals[i].dot(delta));
+        }
+      }
     }
 
     return ret;
