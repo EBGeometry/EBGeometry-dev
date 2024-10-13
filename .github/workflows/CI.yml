@@ -13,23 +13,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Formatting:
-  #   name: Format source
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 10
 
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       directory: [Source, Examples]
-
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Run clang-format
-  #       uses: jidicula/clang-format-action@v4.10.1
-  #       with:
-  #         clang-format-version: '18'
-  #         check-path: ${{ matrix.directory }}
 
   Lint-clang-tidy:
     name: clang-tidy
@@ -46,7 +30,7 @@ jobs:
           clang-tidy Source/*.hpp
 
   Linux-GNU:
-    needs: Formatting
+    needs: Lint-clang-tidy
     name: Linux-GNU
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -79,7 +63,7 @@ jobs:
           if [[ $? == 0 ]]; then exit 0; else exit 1; fi          
 
   Linux-Intel:
-    needs: Formatting
+    needs: Lint-clang-tidy
     name: Linux-Intel
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -113,8 +97,27 @@ jobs:
           ./a.out
           if [[ $? == 0 ]]; then exit 0; else exit 1; fi
 
+  Formatting:
+    needs: Lint-clang-tidy
+    name: Format source
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    strategy:
+      fail-fast: false
+      matrix:
+        directory: [Source, Examples]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run clang-format
+        uses: jidicula/clang-format-action@v4.10.1
+        with:
+          clang-format-version: '18'
+          check-path: ${{ matrix.directory }}                    
+
   Build-documentation:
-    needs: Formatting
+    needs: [Lint-clang-tidy, Formatting]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4      
@@ -154,10 +157,12 @@ jobs:
         run: |
           cp -a Sphinx/build/html/* ./
           mv Sphinx/build/latex/ebgeometry.pdf ./
-          rm -rf Sphinx/build          
+          rm -rf Sphinx/build
+
+
 
   CI-passed:
-    needs: [Linux-GNU, Linux-Intel, Build-documentation]
+    needs: [Lint-clang-tidy, Linux-GNU, Linux-Intel, Build-documentation]
     runs-on: ubuntu-latest
     steps:
       - name: Do nothing
