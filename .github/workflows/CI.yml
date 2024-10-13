@@ -5,6 +5,8 @@ on:
   pull_request:
     branches : main
     types: [push, opened, synchronize, reopened, ready_for_review]
+  push:
+    branches : main
 
 concurrency:
   group: ${{ github.ref }}-${{ github.head_ref }}-code-format
