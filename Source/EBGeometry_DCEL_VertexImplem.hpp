@@ -28,7 +28,8 @@ namespace EBGeometry {
     {
       m_position     = Vec3::zero();
       m_normal       = Vec3::zero();
-      m_outgoingEdge = nullptr;
+      m_outgoingEdge = -1;
+      m_edgeList     = nullptr;
     }
 
     template <class Meta>
@@ -50,11 +51,10 @@ namespace EBGeometry {
 
     template <class Meta>
     EBGEOMETRY_ALWAYS_INLINE
-    Vertex<Meta>::Vertex(const Vec3& a_position, const Vec3& a_normal, const Edge<Meta>* const a_edge) noexcept
+    Vertex<Meta>::Vertex(const Vec3& a_position, const Vec3& a_normal, const int a_edge) noexcept
+      : Vertex<Meta>()
     {
-      m_position     = a_position;
-      m_normal       = a_normal;
-      m_outgoingEdge = a_edge;
+      this->define(a_position, a_normal, a_edge);
     }
 
     template <class Meta>
@@ -64,6 +64,7 @@ namespace EBGeometry {
       m_position     = a_otherVertex.m_position;
       m_normal       = a_otherVertex.m_normal;
       m_outgoingEdge = a_otherVertex.m_outgoingEdge;
+      m_edgeList     = a_otherVertex.m_edgeList;
     }
 
     template <class Meta>
@@ -72,7 +73,7 @@ namespace EBGeometry {
 
     template <class Meta>
     EBGEOMETRY_ALWAYS_INLINE void
-    Vertex<Meta>::define(const Vec3& a_position, const Vec3& a_normal, const Edge<Meta>* const a_edge) noexcept
+    Vertex<Meta>::define(const Vec3& a_position, const Vec3& a_normal, const int a_edge) noexcept
     {
       m_position     = a_position;
       m_normal       = a_normal;
@@ -95,9 +96,16 @@ namespace EBGeometry {
 
     template <class Meta>
     EBGEOMETRY_ALWAYS_INLINE void
-    Vertex<Meta>::setEdge(const Edge<Meta>* const a_edge) noexcept
+    Vertex<Meta>::setEdge(const int a_edge) noexcept
     {
       m_outgoingEdge = a_edge;
+    }
+
+    template <class Meta>
+    EBGEOMETRY_ALWAYS_INLINE void
+    Vertex<Meta>::setEdgeList(const Edge<Meta>* const a_edgeList) noexcept
+    {
+      m_edgeList = a_edgeList;
     }
 
     template <class Meta>
@@ -115,8 +123,13 @@ namespace EBGeometry {
     {
       // This routine computes the normal vector using a weighted sum of all faces
       // that share this vertex.
-      EBGEOMETRY_EXPECT(m_outgoingEdge != nullptr);
+      EBGEOMETRY_EXPECT(m_outgoingEdge >= 0);
+      EBGEOMETRY_EXPECT(m_edgeList != nullptr);
 
+#if 1
+#warning \
+  "EBGeometry_DCEL_VertexImplem::computeVertexNormalAverage is not implemented (maybe move this to external functionality?"
+#else
       const Edge<Meta>* outgoingEdge = nullptr;
 
       m_normal = Vec3::zero();
@@ -136,6 +149,7 @@ namespace EBGeometry {
         outgoingEdge = outgoingEdge->getNextEdge();
         EBGEOMETRY_EXPECT(outgoingEdge != nullptr);
       }
+#endif
 
       this->normalizeNormalVector();
     }
@@ -157,7 +171,13 @@ namespace EBGeometry {
       // where w are weights for each face. This weight is given by the subtended
       // angle of the face, which means the angle spanned by the incoming/outgoing
       // edges of the face that pass through this vertex.
-      EBGEOMETRY_EXPECT(m_outgoingEdge != nullptr);
+      EBGEOMETRY_EXPECT(m_outgoingEdge >= 0);
+      EBGEOMETRY_EXPECT(m_edgeList != nullptr);
+
+#if 1
+#warning \
+  "EBGeometry_DCEL_VertexImplem::computeVertexNormalAngleWeighted is not implemented (maybe move this to external functionality?      
+#else
 
       const Edge<Meta>* outgoingEdge = nullptr;
       const Edge<Meta>* incomingEdge = nullptr;
@@ -211,6 +231,7 @@ namespace EBGeometry {
         outgoingEdge = outgoingEdge->getNextEdge();
         EBGEOMETRY_EXPECT(outgoingEdge != nullptr);
       }
+#endif
 
       this->normalizeNormalVector();
     }
@@ -244,8 +265,8 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    EBGEOMETRY_ALWAYS_INLINE const Edge<Meta>*
-                                   Vertex<Meta>::getOutgoingEdge() const noexcept
+    EBGEOMETRY_ALWAYS_INLINE int
+    Vertex<Meta>::getOutgoingEdge() const noexcept
     {
       return m_outgoingEdge;
     }

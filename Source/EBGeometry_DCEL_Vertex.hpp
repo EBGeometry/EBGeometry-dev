@@ -24,11 +24,10 @@ namespace EBGeometry {
   namespace DCEL {
 
     /*!
-      @brief Class which represents a vertex node in a double-edge connected list
-      (DCEL).
+      @brief Class which represents a vertex node in a double-edge connected list (DCEL).
       @details This class is used in DCEL functionality which stores polygonal
       surfaces in a mesh. The Vertex class has a position, a normal vector, and a
-      pointer to one of the outgoing edges from the vertex. 
+      reference (index) to one of the outgoing edges from the vertex. 
       @note The normal vector is outgoing, i.e. a point x is "outside" the vertex if
       the dot product between n and (x - x0) is positive.
     */
@@ -70,16 +69,16 @@ namespace EBGeometry {
 	@brief Full constructor.
 	@param[in] a_position Vertex position
 	@param[in] a_normal Vertex normal vector
-	@param[in] a_edge Outgoing half-edge
+	@param[in] a_edge Outgoing half-edge index
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE
-      Vertex(const Vec3& a_position, const Vec3& a_normal, const Edge<Meta>* const a_edge) noexcept;
+      Vertex(const Vec3& a_position, const Vec3& a_normal, const int a_edge) noexcept;
 
       /*!
 	@brief Full copy constructor
 	@param[in] a_otherVertex Other vertex
-	@details This copies the position, normal vector, and outgoing edge pointer
+	@details This copies the position, normal vector, and outgoing edge index
 	from the other vertex. The polygon face list.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
@@ -96,12 +95,12 @@ namespace EBGeometry {
 	@brief Define function
 	@param[in] a_position Vertex position
 	@param[in] a_normal   Vertex normal vector
-	@param[in] a_edge     Outgoing edge.
-	@details This sets the position, normal vector, and edge pointer.
+	@param[in] a_edge     Outgoing half-edge index
+	@details This sets the position, normal vector, and half-edge index
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE void
-      define(const Vec3& a_position, const Vec3& a_normal, const Edge<Meta>* const a_edge) noexcept;
+      define(const Vec3& a_position, const Vec3& a_normal, const int a_edge) noexcept;
 
       /*!
 	@brief Set the vertex position
@@ -121,11 +120,19 @@ namespace EBGeometry {
 
       /*!
 	@brief Set the outgoing edge.
-	@param[in] a_edge Outgoing half-edge
+	@param[in] a_edge Outgoing half-edge index
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE void
-      setEdge(const Edge<Meta>* const a_edge) noexcept;
+      setEdge(const int a_edge) noexcept;
+
+      /*!
+	@brief Set the edge list.
+	@param[in] a_edgeList List (malloc'ed array) of edges
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE void
+      setEdgeList(const Edge<Meta>* const a_edgeList) noexcept;
 
       /*!
 	@brief Normalize the normal vector to a length of 1.
@@ -183,11 +190,11 @@ namespace EBGeometry {
       getNormal() const noexcept;
 
       /*!
-	@brief Return outgoing edge.
+	@brief Return outgoing edge index
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Edge<Meta>*
-                                                   getOutgoingEdge() const noexcept;
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE int
+      getOutgoingEdge() const noexcept;
 
       /*!
 	@brief Get the signed distance to this vertex
@@ -227,9 +234,14 @@ namespace EBGeometry {
 
     protected:
       /*!
+	@brief List of half-edges.
+      */
+      const Edge<Meta>* m_edgeList;
+
+      /*!
 	@brief Outgoing edge.
       */
-      const Edge<Meta>* m_outgoingEdge;
+      int m_outgoingEdge;
 
       /*!
 	@brief Vertex position
