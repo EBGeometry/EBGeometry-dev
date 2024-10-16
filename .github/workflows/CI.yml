@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  Formatting:
+  Lint-clang-format:
     name: clang-format
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -66,7 +66,7 @@ jobs:
         run: codespell          
 
   Linux-GNU:
-    needs: [Lint-clang-tidy, Formatting, Lint-codespell]
+    needs: [Lint-clang-tidy, Lint-clang-format, Lint-codespell]        
     name: Linux-GNU
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -99,7 +99,7 @@ jobs:
           if [[ $? == 0 ]]; then exit 0; else exit 1; fi          
 
   Linux-Intel:
-    needs: [Lint-clang-tidy, Formatting]    
+    needs: [Lint-clang-tidy, Lint-clang-format, Lint-codespell]    
     name: Linux-Intel
     runs-on: ubuntu-latest
     timeout-minutes: 15
