@@ -334,7 +334,7 @@ namespace EBGeometry {
 
     /*!
       @brief Return av vector with x = y = z = 1
-      @param[in] a_dir Dircetion
+      @param[in] a_dir Direction
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static Vec3

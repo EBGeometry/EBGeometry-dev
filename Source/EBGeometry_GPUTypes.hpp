@@ -32,7 +32,7 @@ namespace EBGeometry {
   }
 
   /*!
-    @brief Maximum operation of two numbres.
+    @brief Maximum operation of two numbers.
     @param[in] x Number to compare.
     @param[in] y Number to compare.     
   */

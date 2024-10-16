@@ -37,7 +37,7 @@ namespace EBGeometry {
 #ifdef EBGEOMETRY_ENABLE_GPU
   /*!
     @brief Allocate pointer for implicit function on the GPU
-    @param[inout] implicitFunction Implicit function pointer to be allocated. 
+    @param[in, out] implicitFunction Implicit function pointer to be allocated. 
   */
   template <typename T>
   EBGEOMETRY_GPU_HOST EBGEOMETRY_ALWAYS_INLINE GPUPointer<T>

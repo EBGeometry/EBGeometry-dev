@@ -6,7 +6,7 @@
 /*!
   @file   EBGeometry_DCEL_Vertex.hpp
   @brief  Declaration of a vertex class for use in DCEL descriptions of polygon
-  tesselations.
+  tessellations.
   @author Robert Marskar
 */
 

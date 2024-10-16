@@ -6,7 +6,7 @@
 /*!
   @file   EBGeometry_DCEL_Edge.hpp
   @brief  Declaration of an edge class for use in DCEL descriptions of polygon
-  tesselations.
+  tessellations.
   @author Robert Marskar
 */
 
