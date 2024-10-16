@@ -80,7 +80,7 @@ g++ -O3 -std=c++17 main.cpp -lstdc++fs
 ```
 
 <p align="center">
-   <img src="Docs/Sphinx/source/_static/example_f18.png" width="400" alt="F18 composite geomery"/>
+   <img src="Docs/Sphinx/source/_static/example_f18.png" width="400" alt="F18 composite geometry"/>
 </p>   	
 
 ### 5. Advanced examples

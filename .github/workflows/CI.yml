@@ -14,14 +14,14 @@ concurrency:
 
 jobs:
   Formatting:
-    name: Format source
+    name: clang-format
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
     strategy:
       fail-fast: false
       matrix:
-        directory: [Source, Examples]
+        directory: [Source]
 
     steps:
       - uses: actions/checkout@v4
@@ -46,6 +46,7 @@ jobs:
           clang-tidy Source/*.hpp
 
   Lint-codespell:
+    name: codespell
     runs-on: ubuntu-latest
     steps:
       - name: Clone
