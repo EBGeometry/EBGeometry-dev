@@ -45,8 +45,27 @@ jobs:
         run: |
           clang-tidy Source/*.hpp
 
+  Lint-codespell:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Dependencies
+        run: |
+          # Install Python packages
+          python -m pip install --upgrade pip
+          pip install codespell
+      - name: Run codespell
+        run: codespell          
+
   Linux-GNU:
-    needs: [Lint-clang-tidy, Formatting]
+    needs: [Lint-clang-tidy, Formatting, Lint-codespell]
     name: Linux-GNU
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -157,7 +176,7 @@ jobs:
           rm -rf Sphinx/build
 
   CI-passed:
-    needs: [Lint-clang-tidy, Linux-GNU, Linux-Intel, Build-documentation]
+    needs: [Linux-GNU, Linux-Intel, Build-documentation]
     runs-on: ubuntu-latest
     steps:
       - name: Do nothing
