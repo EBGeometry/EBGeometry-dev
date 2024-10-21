@@ -35,9 +35,13 @@ namespace EBGeometry {
       logically represented as a half edge on the "inside" of a polygon face. 
       corresponding half-edge on the other face that shares this edge. Since this
       class is used with DCEL functionality and signed distance fields, this class
-      also has a signed distance function and thus a "normal vector". 
+      also has a signed distance function and thus a "normal vector".
+      
       @note The normal vector is outgoing, i.e. a point x is "outside" if the dot
       product between n and (x - x0) is positive.
+
+      @note This class is GPU-copyable, with the exception of the vertex list which must
+      be set to point to the correct place on the GPU.
     */
     template <class Meta>
     class Edge
@@ -60,25 +64,27 @@ namespace EBGeometry {
 
       /*!
 	@brief Partial constructor. Sets the starting vertex
-	@param[in] a_vertex Starting vertex.
+	@param[in] a_vertex Starting vertex index.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE
-      Edge(const Vertex<Meta>* const a_vertex) noexcept;
+      Edge(const int a_vertex) noexcept;
 
       /*!
-	@brief Partial constructor. Sets everything except the normal vector.
-	@param[in] a_vertex Starting vertex
-	@param[in] a_pairEdge Pair edge (for jumping to opposite polygon)
-	@param[in] a_nextEdge Next edge around the polygon.
-	@param[in] a_face Polygon face
+	@brief Partial constructor. Sets everything except the normal vector and internal lists.
+	@param[in] a_vertex Starting vertex index
+	@param[in] a_previousEdge Previous edge index.
+	@param[in] a_pairEdge Pair edge index.
+	@param[in] a_nextEdge Next edge index.
+	@param[in] a_face Polygon face index.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE
-      Edge(const Vertex<Meta>* const a_vertex,
-           const Edge<Meta>* const   a_pairEdge,
-           const Edge<Meta>* const   a_nextEdge,
-           const Face<Meta>* const   a_face) noexcept;
+      Edge(const int a_vertex,
+           const int a_previousEdge,
+           const int a_pairEdge,
+           const int a_nextEdge,
+           const int a_face) noexcept;
 
       /*!
 	@brief Destructor (does nothing).
@@ -88,17 +94,19 @@ namespace EBGeometry {
 
       /*!
 	@brief Define function. Sets everything except the normal vector.
-	@param[in] a_vertex Starting vertex
-	@param[in] a_pairEdge Pair edge (for jumping to opposite polygon)
-	@param[in] a_nextEdge Next edge around the polygon.
-	@param[in] a_face Polygon face
+	@param[in] a_vertex Starting vertex index
+	@param[in] a_previousEdge Previous edge index.
+	@param[in] a_pairEdge Pair edge index.
+	@param[in] a_nextEdge Next edge index.
+	@param[in] a_face Polygon face index.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE void
-      define(const Vertex<Meta>* const a_vertex,
-             const Edge<Meta>* const   a_pairEdge,
-             const Edge<Meta>* const   a_nextEdge,
-             const Face<Meta>* const   a_face) noexcept;
+      define(const int a_vertex,
+             const int a_previousEdge,
+             const int a_pairEdge,
+             const int a_nextEdge,
+             const int a_face) noexcept;
 
       /*!
 	@brief Set the starting vertex
@@ -106,7 +114,15 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE void
-      setVertex(const Vertex<Meta>* const a_vertex) noexcept;
+      setVertex(const int a_vertex) noexcept;
+
+      /*!
+	@brief Set the previous edge
+	@param[in] a_previousEdge Previous edge
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE void
+      setPreviousEdge(const int a_previousEdge) noexcept;
 
       /*!
 	@brief Set the pair edge
@@ -114,7 +130,7 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE void
-      setPairEdge(const Edge<Meta>* const a_pairEdge) noexcept;
+      setPairEdge(const int a_pairEdge) noexcept;
 
       /*!
 	@brief Set the next edge
@@ -122,7 +138,7 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE void
-      setNextEdge(const Edge<Meta>* const a_nextEdge) noexcept;
+      setNextEdge(const int a_nextEdge) noexcept;
 
       /*!
 	@brief Set the polygon face.
@@ -130,7 +146,31 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE void
-      setFace(const Face<Meta>* const a_face) noexcept;
+      setFace(const int a_face) noexcept;
+
+      /*!
+	@brief Set the vertex list.
+	@param[in] a_vertexList List (malloc'ed array) of vertices
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE void
+      setVertexList(const Vertex<Meta>* const a_vertexList) noexcept;
+
+      /*!
+	@brief Set the edge list.
+	@param[in] a_edgeList List (malloc'ed array) of edges
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE void
+      setEdgeList(const Edge<Meta>* const a_edgeList) noexcept;
+
+      /*!
+	@brief Set the face list.
+	@param[in] a_faceList List (malloc'ed array) of faces
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE void
+      setFaceList(const Face<Meta>* const a_faceList) noexcept;
 
       /*!
 	@brief Set the normal vector
@@ -152,49 +192,48 @@ namespace EBGeometry {
 	@return Returns m_vertex
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Vertex<Meta>*
-                                                   getVertex() const noexcept;
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE int
+      getVertex() const noexcept;
 
       /*!
 	@brief Get the end vertex
 	@return Returns m_vertex
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Vertex<Meta>*
-                                                   getOtherVertex() const noexcept;
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE int
+      getOtherVertex() const noexcept;
+
+      /*!
+	@brief Get previous edge
+	@return Returns m_previousEdge
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE int
+      getPreviousEdge() const noexcept;
 
       /*!
 	@brief Get pair edge
 	@return Returns m_pairEdge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Edge<Meta>*
-                                                   getPairEdge() const noexcept;
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE int
+      getPairEdge() const noexcept;
 
       /*!
 	@brief Get next edge
 	@return Returns m_nextEdge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Edge<Meta>*
-                                                   getNextEdge() const noexcept;
-
-      /*!
-	@brief Get the previous edge edge.
-	@details This requires iteration around the polygon. 
-	@return Returns previous edge.
-      */
-      EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Edge<Meta>*
-                                                   getPreviousEdge() const noexcept;
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE int
+      getNextEdge() const noexcept;
 
       /*!
 	@brief Get polygon face.
 	@return Returns m_face
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Face<Meta>*
-                                                   getFace() const noexcept;
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE int
+      getFace() const noexcept;
 
       /*!
 	@brief Get the normal vector
@@ -245,24 +284,44 @@ namespace EBGeometry {
 
     protected:
       /*!
+	@brief Vertex list
+      */
+      const Vertex<Meta>* m_vertexList;
+
+      /*!
+	@brief Edge list
+      */
+      const Edge<Meta>* m_edgeList;
+
+      /*!
+	@brief Face list
+      */
+      const Face<Meta>* m_faceList;
+
+      /*!
 	@brief Starting vertex.
       */
-      const Vertex<Meta>* m_vertex;
+      int m_vertex;
+
+      /*!
+	@brief Previous edge
+      */
+      int m_previousEdge;
 
       /*!
 	@brief Pair edge.
       */
-      const Edge<Meta>* m_pairEdge;
+      int m_pairEdge;
 
       /*!
 	@brief Next edge around the polygon.
       */
-      const Edge<Meta>* m_nextEdge;
+      int m_nextEdge;
 
       /*!
 	@brief Polygon face connected to this half-edge.
       */
-      const Face<Meta>* m_face;
+      int m_face;
 
       /*!
 	@brief Edge normal vector

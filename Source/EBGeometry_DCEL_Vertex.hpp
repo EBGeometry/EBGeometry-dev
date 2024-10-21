@@ -27,9 +27,13 @@ namespace EBGeometry {
       @brief Class which represents a vertex node in a double-edge connected list (DCEL).
       @details This class is used in DCEL functionality which stores polygonal
       surfaces in a mesh. The Vertex class has a position, a normal vector, and a
-      reference (index) to one of the outgoing edges from the vertex. 
+      reference (index) to one of the outgoing edges from the vertex.
+      
       @note The normal vector is outgoing, i.e. a point x is "outside" the vertex if
       the dot product between n and (x - x0) is positive.
+
+      @note This class is GPU-copyable with the exception of the edge list which must be
+      set appropriately for the device storage.
     */
     template <class Meta>
     class Vertex
@@ -233,6 +237,7 @@ namespace EBGeometry {
       getMetaData() const noexcept;
 
     protected:
+      
       /*!
 	@brief List of half-edges.
       */

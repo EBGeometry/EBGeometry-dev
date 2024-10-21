@@ -18,7 +18,7 @@ main()
 
   EBGEOMETRY_EXPECT(1 == 2);
   DCEL::Vertex<short> vert(point, normal, 0);
-  DCEL::Edge<short>   edge(nullptr, nullptr, nullptr, nullptr);
+  DCEL::Edge<short>   edge();
 
   return 0;
 }
