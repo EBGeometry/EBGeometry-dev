@@ -87,56 +87,70 @@ namespace EBGeometry {
     {
       const std::string vertexHasNoEdge            = "no referenced edge for vertex (unreferenced vertex)";
       const std::string vertexPositionIsDegenerate = "vertex position is degenerate (shares coordinate)";
-      const std::string vertexPointerIsDegenerate  = "vertex pointer is degenerate (shares coordinate)";
-      const std::string edgeIsNullptr              = "nullptr edges";
-      const std::string edgeIsCircular             = "edge start and end vertices are identical";
-      const std::string edgeHasNoPairEdge          = "no pair edge (not watertight)";
-      const std::string edgeHasNoNextEdge          = "no next edge (badly linked dcel)";
-      const std::string edgeHasNoPreviousEdge      = "no previous edge (badly linked dcel)";
-      const std::string edgeHasNoStartVertex       = "no origin vertex found for half edge (badly linked dcel)";
-      const std::string edgeHasNoEndVertex         = "no end vertex found for half edge (badly linked dcel)";
-      const std::string edgeHasNoFace              = "no face found for half edge (badly linked dcel)";
-      const std::string edgeHasBadPrevNext         = "previous edge's next edge is not this edge (badly linked dcel)";
-      const std::string edgeHasBadNextPrev         = "next edge's previous edge is not this edge (badly linked dcel)";
-      const std::string faceIsNullptr              = "nullptr face";
-      const std::string faceHasNoEdge              = "face with no edge";
+      const std::string vertexHasNoVertexList      = "vertex has no vertex list";
+      const std::string vertexHasNoEdgeList        = "vertex has no edge list";
+      const std::string vertexHasNoFaceList        = "vertex has no face list";
 
-      std::map<std::string, int> warnings = {{vertexIsNullptr, 0},
-                                             {vertexHasNoEdge, 0},
+      const std::string edgeIsCircular        = "edge start and end vertices are identical";
+      const std::string edgeHasNoPairEdge     = "no pair edge (not watertight)";
+      const std::string edgeHasNoNextEdge     = "no next edge (badly linked dcel)";
+      const std::string edgeHasNoPreviousEdge = "no previous edge (badly linked dcel)";
+      const std::string edgeHasNoStartVertex  = "no origin vertex found for half edge (badly linked dcel)";
+      const std::string edgeHasNoEndVertex    = "no end vertex found for half edge (badly linked dcel)";
+      const std::string edgeHasNoFace         = "no face found for half edge (badly linked dcel)";
+      const std::string edgeHasBadPrevNext    = "previous edge's next edge is not this edge (badly linked dcel)";
+      const std::string edgeHasBadNextPrev    = "next edge's previous edge is not this edge (badly linked dcel)";
+      const std::string edgeHasNoVertexList   = "edge has no vertex list";
+      const std::string edgeHasNoEdgeList     = "edge has no edge list";
+      const std::string edgeHasNoFaceList     = "edge has no face list";
+
+      const std::string faceIsNullptr       = "nullptr face";
+      const std::string faceHasNoEdge       = "face has no edge";
+      const std::string faceHasNoVertexList = "face has no vertex list";
+      const std::string faceHasNoEdgeList   = "face has no edge list";
+      const std::string faceHasNoFaceList   = "face has no face list";
+
+      std::map<std::string, int> warnings = {{vertexHasNoEdge, 0},
                                              {vertexPositionIsDegenerate, 0},
-                                             {vertexPointerIsDegenerate, 0},
-                                             {edgeIsNullptr, 0},
                                              {edgeIsCircular, 0},
-                                             {edgeHasNoPairEdge, 0},
-                                             {edgeHasNoNextEdge, 0},
-                                             {edgeHasNoPreviousEdge, 0},
                                              {edgeHasNoStartVertex, 0},
                                              {edgeHasNoEndVertex, 0},
+                                             {edgeHasNoPreviousEdge, 0},
+                                             {edgeHasNoPairEdge, 0},
+                                             {edgeHasNoNextEdge, 0},
                                              {edgeHasNoFace, 0},
                                              {edgeHasBadPrevNext, 0},
                                              {edgeHasBadNextPrev, 0},
-                                             {faceIsNullptr, 0},
                                              {faceHasNoEdge, 0}};
 
       // CHECK STANDARD ISSUES FOR VERTICES
       EBGEOMETRY_ALWAYS_EXPECT(m_numVertices >= 3);
       EBGEOMETRY_ALWAYS_EXPECT(m_vertices != nullptr);
 
-      std::vector<Vec3>                vertexCoordinates;
-      std::vector<const Vertex<Meta>*> vertices;
+      std::vector<Vec3> vertexCoordinates;
 
       for (int i = 0; i < m_numVertices; i++) {
-        if (m_vertices[i] == nullptr) {
-          this->incrementWarning(warnings, vertexIsNullptr);
-        }
-        if (m_vertices[i].getEdge() == nullptr) {
+        const Vertex<Meta>& curVertex = m_vertices[i];
+
+        const int           edge       = curVertex.getEdge();
+        const Vertex<Meta>* vertexList = curVertex.getVertexList();
+        const Edge<Meta>*   edgeList   = curVertex.getEdgeList();
+        const Face<Meta>*   faceList   = curVertex.getFaceList();
+
+        if (edge < 0) {
           this->incrementWarning(warnings, vertexHasNoEdge);
         }
-
-        if (m_vertices[i] != nullptr) {
-          vertexCoordinates.push_back(m_vertices[i].getPosition());
-          vertices.push_back(m_vertices[i]);
+        if (vertexList == nullptr) {
+          this->incrementWarning(warnings, vertexHasNoVertexList);
         }
+        if (edgeList == nullptr) {
+          this->incrementWarning(warnings, vertexHasNoEdgeList);
+        }
+        if (faceList == nullptr) {
+          this->incrementWarning(warnings, vertexHasNoFaceList);
+        }
+
+        vertexCoordinates.push_back(m_vertices[i].getPosition());
       }
 
       // Sort vertices and vertex coordinates - then check for degenerate values.
@@ -144,14 +158,9 @@ namespace EBGeometry {
         return a.lessLX(b);
       });
 
-      std::sort(std::begin(vertices), std::end(vertices));
-
-      for (int i = 0; i < m_numVertices - 1; i++) {
-        if (vertexCoordinates[i] == vertexCoordinates[i + 1]) {
+      for (int i = 0; i < m_numVertices; i++) {
+        if (vertexCoordinates[i] == vertexCoordinates[(i + 1) % m_numVertices]) {
           this->incrementWarning(warnings, vertexPositionIsDegenerate);
-        }
-        if (vertices[i] == vertices[i + 1]) {
-          this->incrementWarning(warnings, vertexPointerIsDegenerate);
         }
       }
 
@@ -160,29 +169,59 @@ namespace EBGeometry {
       EBGEOMETRY_ALWAYS_EXPECT(m_edges != nullptr);
 
       for (int i = 0; i < m_numEdges; i++) {
-        const Edge<Meta>* const curEdge = m_edges[i];
+        const Edge<Meta>& curEdge = m_edges[i];
 
-        if (curEdge == nullptr) {
-          this->incrementWarning(warnings, edgeIsNullptr);
+        const int startVertex  = curEdge.getVertex();
+        const int endVertex    = curEdge.getOtherVertex();
+        const int previousEdge = curEdge.getPreviousEdge();
+        const int pairEdge     = curEdge.getPairEdge();
+        const int nextEdge     = curEdge.getNextEdge();
+        const int face         = curEdge.getFace();
+
+        const Vertex<Meta>* vertexList = curEdge.getVertexList();
+        const Edge<Meta>*   edgeList   = curEdge.getEdgeList();
+        const Face<Meta>*   faceList   = curEdge.getFaceList();
+
+        if (startVertex < 0) {
+          this->incrementWarning(warnings, edgeHasNoStartVertex);
         }
-        else {
-          if (curEdge->getVertex() == nullptr) {
-            this->incrementWarning(warnings, edgeHasNoStartVertex);
+        if (endVertex < 0) {
+          this->incrementWarning(warnings, edgeHasNoEndVertex);
+        }
+        if (previousEdge < 0) {
+          this->incrementWarning(warnings, edgeHasNoPreviousEdge);
+        }
+        if (pairEdge < 0) {
+          this->incrementWarning(warnings, edgeHasNoPairEdge);
+        }
+        if (nextEdge < 0) {
+          this->incrementWarning(warnings, edgeHasNoNextEdge);
+        }
+        if (face < 0) {
+          this->incrementWarning(warnings, edgeHasNoFace);
+        }
+        if (startVertex == endVertex) {
+          this->incrementWarning(warnings, edgeIsCircular);
+        }
+        if (vertexList == nullptr) {
+          this->incrementWarning(warnings, edgeHasNoVertexList);
+        }
+        if (edgeList == nullptr) {
+          this->incrementWarning(warnings, edgeHasNoEdgeList);
+        }
+        if (faceList == nullptr) {
+          this->incrementWarning(warnings, edgeHasNoFaceList);
+        }
+
+        // More nuanced issues
+        if (previousEdge > 0) {
+          if (m_edges[previousEdge].getNextEdge() != i) {
+            this->incrementWarning(warnings, edgeHasBadNextPrev);
           }
-          if (curEdge->getOtherVertex() == nullptr) {
-            this->incrementWarning(warnings, edgeHasNoEndVertex);
-          }
-          if (curEdge->getPairEge() == nullptr) {
-            this->incrementWarning(warnings, edgeHasNoPairEdge);
-          }
-          if (curEdge->getNextEdge() == nullptr) {
-            this->incrementWarning(warnings, edgeHasNoNextEdge);
-          }
-          if (curEdge->getVertex() != nullptr && (curEdge->getVertex() == curEdge->getOtherVertex())) {
-            this->incrementWarning(warnings, edgeIsCircular);
-          }
-          if (curEdge->getFace() != nullptr) {
-            this->incrementWarning(warnings, edgeHasNoFace);
+        }
+        if (nextEdge > 0) {
+          if (m_edges[nextEdge].getPreviousEdge() != i) {
+            this->incrementWarning(warnings, edgeHasBadPrevNext);
           }
         }
       }
@@ -192,15 +231,26 @@ namespace EBGeometry {
       EBGEOMETRY_ALWAYS_EXPECT(m_faces != nullptr);
 
       for (int i = 0; i < m_numFaces; i++) {
-        const Face<Meta>* const curFace = m_faces[i];
+        const Face<Meta>& curFace = m_faces[i];
 
-        if (curFace == nullptr) {
-          this->incrementWarning(warnings, faceIsNullptr);
+        const int edge = curFace.getEdge();
+
+        const Vertex<Meta>* vertexList = curFace.getVertexList();
+        const Edge<Meta>*   edgeList   = curFace.getEdgeList();
+        const Face<Meta>*   faceList   = curFace.getFaceList();
+
+        if (edge < 0) {
+          this->incrementWarning(warnings, faceHasNoEdge);
         }
-        else {
-          if (curFace->getEdge() == nullptr) {
-            this->incrementWarning(warnings, faceHasNoEdge);
-          }
+
+        if (vertexList == nullptr) {
+          this->incrementWarning(warnings, edgeHasNoVertexList);
+        }
+        if (edgeList == nullptr) {
+          this->incrementWarning(warnings, edgeHasNoEdgeList);
+        }
+        if (faceList == nullptr) {
+          this->incrementWarning(warnings, edgeHasNoFaceList);
         }
       }
 

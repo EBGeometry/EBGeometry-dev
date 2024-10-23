@@ -23,7 +23,7 @@ namespace EBGeometry {
     EBGEOMETRY_ALWAYS_INLINE
     Face<Meta>::Face() noexcept
     {
-      m_edge       = -1;
+      m_edge           = -1;
       m_normal         = Vec3::zero();
       m_centroid       = Vec3::zero();
       m_polygon2D      = Polygon2D();
