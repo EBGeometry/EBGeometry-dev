@@ -85,7 +85,6 @@ namespace EBGeometry {
     EBGEOMETRY_ALWAYS_INLINE void
     Mesh<Meta>::sanityCheck() const noexcept
     {
-      const std::string vertexIsNullptr            = "nullptr vertex";
       const std::string vertexHasNoEdge            = "no referenced edge for vertex (unreferenced vertex)";
       const std::string vertexPositionIsDegenerate = "vertex position is degenerate (shares coordinate)";
       const std::string vertexPointerIsDegenerate  = "vertex pointer is degenerate (shares coordinate)";
@@ -130,12 +129,12 @@ namespace EBGeometry {
         if (m_vertices[i] == nullptr) {
           this->incrementWarning(warnings, vertexIsNullptr);
         }
-        if (m_vertices[i]->getEdge() == nullptr) {
+        if (m_vertices[i].getEdge() == nullptr) {
           this->incrementWarning(warnings, vertexHasNoEdge);
         }
 
         if (m_vertices[i] != nullptr) {
-          vertexCoordinates.push_back(m_vertices[i]->getPosition());
+          vertexCoordinates.push_back(m_vertices[i].getPosition());
           vertices.push_back(m_vertices[i]);
         }
       }
@@ -223,7 +222,7 @@ namespace EBGeometry {
       EBGEOMETRY_EXPECT(m_faces != nullptr);
 
       for (int i = 0; i < m_numFaces; i++) {
-        m_faces[i]->setInsideOutsideAlgorithm(a_algorithm);
+        m_faces[i].setInsideOutsideAlgorithm(a_algorithm);
       }
     }
 
@@ -317,7 +316,7 @@ namespace EBGeometry {
       Real dist2 = EBGeometry::Limits::max();
 
       for (int i = 0; i < m_numFaces; i++) {
-        const Real curDist2 = m_faces[i]->unsignedDistance2(a_point);
+        const Real curDist2 = m_faces[i].unsignedDistance2(a_point);
 
         dist2 = (curDist2 < dist2) ? curDist2 : dist2;
       }
@@ -333,7 +332,7 @@ namespace EBGeometry {
       EBGEOMETRY_EXPECT(m_faces != nullptr);
 
       for (int i = 0; i < m_numFaces; i++) {
-        m_faces[i]->reconcile();
+        m_faces[i].reconcile();
       }
     }
 
@@ -345,7 +344,7 @@ namespace EBGeometry {
       EBGEOMETRY_EXPECT(m_edges != nullptr);
 
       for (int i = 0; i < m_numEdges; i++) {
-        m_edges[i]->reconcile();
+        m_edges[i].reconcile();
       }
     }
 
@@ -359,12 +358,12 @@ namespace EBGeometry {
       for (int i = 0; i < m_numVertices; i++) {
         switch (a_weight) {
         case DCEL::VertexNormalWeight::None: {
-          m_vertices[i]->computeVertexNormalAverage();
+          m_vertices[i].computeVertexNormalAverage();
 
           break;
         }
         case DCEL::VertexNormalWeight::Angle: {
-          m_vertices[i]->computeVertexNormalAngleWeighted();
+          m_vertices[i].computeVertexNormalAngleWeighted();
 
           break;
         }
@@ -383,7 +382,7 @@ namespace EBGeometry {
       Real minDist2 = EBGeometry::Limits::max();
 
       for (int i = 0; i < m_numFaces; i++) {
-        const Real curDist  = m_faces[i]->signedDistance(a_point);
+        const Real curDist  = m_faces[i].signedDistance(a_point);
         const Real curDist2 = curDist * curDist;
 
         if (curDist2 < minDist2) {
@@ -407,7 +406,7 @@ namespace EBGeometry {
       Real minDist2 = EBGeometry::Limits::max();
 
       for (int i = 0; i < m_numFaces; i++) {
-        const Real curDist2 = m_faces[i]->unsignedDistance2(a_point);
+        const Real curDist2 = m_faces[i].unsignedDistance2(a_point);
 
         if (curDist2 < minDist2) {
           minDist2 = curDist2;
@@ -417,7 +416,7 @@ namespace EBGeometry {
 
       EBGEOMETRY_EXPECT(closest >= 0);
 
-      return m_faces[closest]->signedDistance(a_point);
+      return m_faces[closest].signedDistance(a_point);
     }
 
     template <class Meta>
