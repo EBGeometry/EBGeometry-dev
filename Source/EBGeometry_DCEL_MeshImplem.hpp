@@ -482,8 +482,8 @@ namespace EBGeometry {
     {
       for (const auto& warn : a_warnings) {
         if (warn.second > 0) {
-          std::cerr << "In file 'CD_DCELMeshImplem.H' function "
-                       "MeshT<T, Meta>::sanityCheck() - warnings about error '"
+          std::cerr << "In file 'EBGeometry_DCEL_MeshImplem.H' function "
+                       "Mesh<Meta>::sanityCheck() - warnings about error '"
                     << warn.first << "' = " << warn.second << "\n";
         }
       }
