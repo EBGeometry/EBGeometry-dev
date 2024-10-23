@@ -191,38 +191,31 @@ namespace EBGeometry {
       EBGEOMETRY_EXPECT(m_edgeList != nullptr);
       EBGEOMETRY_EXPECT(m_faceList != nullptr);
 
-#if 1
-#warning \
-  "EBGeometry_DCEL_VertexImplem::computeVertexNormalAngleWeighted is not implemented (maybe move this to external functionality?)"
-#else
-
-      const Edge<Meta>* outgoingEdge = nullptr;
-      const Edge<Meta>* incomingEdge = nullptr;
+      int outgoingEdge = -1;
+      int incomingEdge = -1;
 
       while (outgoingEdge != m_outgoingEdge) {
 
         // Get the incoming and outgoing edges out of the origin vertex.
-        outgoingEdge = (outgoingEdge == nullptr) ? m_outgoingEdge : outgoingEdge;
-        incomingEdge = outgoingEdge->getPreviousEdge();
+        outgoingEdge = (outgoingEdge < 0) ? m_outgoingEdge : outgoingEdge;
+        incomingEdge = m_edgeList[outgoingEdge].getPreviousEdge();
 
-        EBGEOMETRY_EXPECT(outgoingEdge != nullptr);
-        EBGEOMETRY_EXPECT(incomingEdge != nullptr);
+        EBGEOMETRY_EXPECT(outgoingEdge >= 0);
+        EBGEOMETRY_EXPECT(incomingEdge >= 0);
 
         // Vertices are named v0,v1,v2:
         // v0 = Origin vertex of incoming edge
         // v1 = this vertex
         // v2 = End vertex of outgoing edge.
-        const Vertex<Meta>* const v0 = outgoingEdge->getVertex();
-        const Vertex<Meta>* const v1 = this;
-        const Vertex<Meta>* const v2 = outgoingEdge->getOtherVertex();
+        const int v0 = m_edgeList[outgoingEdge].getVertex();
+        const int v2 = m_edgeList[outgoingEdge].getOtherVertex();
 
-        EBGEOMETRY_EXPECT(v0 != v1);
-        EBGEOMETRY_EXPECT(v1 != v2);
-        EBGEOMETRY_EXPECT(v2 != v0);
+        EBGEOMETRY_EXPECT(v0 >= 0);
+        EBGEOMETRY_EXPECT(v2 >= 0);
 
-        const Vec3& x0 = v0->getPosition();
-        const Vec3& x1 = v1->getPosition();
-        const Vec3& x2 = v2->getPosition();
+        const Vec3& x0 = m_vertexList[v0].getPosition();
+        const Vec3& x1 = m_position;
+        const Vec3& x2 = m_vertexList[v2].getPosition();
 
         EBGEOMETRY_EXPECT(x0 != x1);
         EBGEOMETRY_EXPECT(x1 != x2);
@@ -234,21 +227,20 @@ namespace EBGeometry {
         a = a / a.length();
         b = b / b.length();
 
-        const Vec3& faceNormal = (outgoingEdge->getFace())->getNormal();
+        const Vec3& faceNormal = m_faceList[outgoingEdge].getNormal();
         const Real  alpha      = acos(dot(a, b));
 
         m_normal += alpha * faceNormal;
 
         // Jump to the pair polygon.
-        outgoingEdge = outgoingEdge->getPairEdge();
-        EBGEOMETRY_EXPECT(outgoingEdge != nullptr);
+        outgoingEdge = m_edgeList[outgoingEdge].getPairEdge();
+        EBGEOMETRY_EXPECT(outgoingEdge >= 0);
 
         // Fetch the edge in the next polygon which has this vertex
         // as the starting vertex.
-        outgoingEdge = outgoingEdge->getNextEdge();
-        EBGEOMETRY_EXPECT(outgoingEdge != nullptr);
+        outgoingEdge = m_edgeList[outgoingEdge].getNextEdge();
+        EBGEOMETRY_EXPECT(outgoingEdge >= 0);
       }
-#endif
 
       this->normalizeNormalVector();
     }
