@@ -23,7 +23,7 @@ namespace EBGeometry {
     EBGEOMETRY_ALWAYS_INLINE
     Face<Meta>::Face() noexcept
     {
-      m_halfEdge       = nullptr;
+      m_edge       = -1;
       m_normal         = Vec3::zero();
       m_centroid       = Vec3::zero();
       m_polygon2D      = Polygon2D();
@@ -32,10 +32,10 @@ namespace EBGeometry {
 
     template <class Meta>
     EBGEOMETRY_ALWAYS_INLINE
-    Face<Meta>::Face(const Edge<Meta>* const a_edge) noexcept
+    Face<Meta>::Face(const int a_edge) noexcept
       : Face()
     {
-      m_halfEdge = a_edge;
+      m_edge = a_edge;
     }
 
     template <class Meta>
@@ -43,8 +43,15 @@ namespace EBGeometry {
     Face<Meta>::Face(const Face& a_otherFace) noexcept
       : Face()
     {
-      m_halfEdge = a_otherFace.m_halfEdge;
-      m_normal   = a_otherFace.m_normal;
+      m_vertexList     = a_otherFace.m_vertexList;
+      m_edgeList       = a_otherFace.m_edgeList;
+      m_faceList       = a_otherFace.m_faceList;
+      m_edge           = a_otherFace.m_edge;
+      m_normal         = a_otherFace.m_normal;
+      m_centroid       = a_otherFace.m_centroid;
+      m_metaData       = a_otherFace.m_metaData;
+      m_polygon2D      = a_otherFace.m_polygon2D;
+      m_poly2Algorithm = a_otherFace.m_poly2Algorithm;
     }
 
     template <class Meta>
@@ -53,10 +60,10 @@ namespace EBGeometry {
 
     template <class Meta>
     EBGEOMETRY_ALWAYS_INLINE void
-    Face<Meta>::define(const Vec3& a_normal, const Edge<Meta>* const a_edge) noexcept
+    Face<Meta>::define(const Vec3& a_normal, const int a_edge) noexcept
     {
-      m_normal   = a_normal;
-      m_halfEdge = a_edge;
+      m_normal = a_normal;
+      m_edge   = a_edge;
     }
 
     template <class Meta>
@@ -71,9 +78,30 @@ namespace EBGeometry {
 
     template <class Meta>
     EBGEOMETRY_ALWAYS_INLINE void
-    Face<Meta>::setHalfEdge(const Edge<Meta>* const a_halfEdge) noexcept
+    Face<Meta>::setHalfEdge(const int a_halfEdge) noexcept
     {
-      m_halfEdge = a_halfEdge;
+      m_edge = a_halfEdge;
+    }
+
+    template <class Meta>
+    EBGEOMETRY_ALWAYS_INLINE void
+    Face<Meta>::setVertexList(const Vertex<Meta>* const a_vertexList) noexcept
+    {
+      m_vertexList = a_vertexList;
+    }
+
+    template <class Meta>
+    EBGEOMETRY_ALWAYS_INLINE void
+    Face<Meta>::setEdgeList(const Edge<Meta>* const a_edgeList) noexcept
+    {
+      m_edgeList = a_edgeList;
+    }
+
+    template <class Meta>
+    EBGEOMETRY_ALWAYS_INLINE void
+    Face<Meta>::setFaceList(const Face<Meta>* const a_faceList) noexcept
+    {
+      m_faceList = a_faceList;
     }
 
     template <class Meta>
@@ -84,10 +112,37 @@ namespace EBGeometry {
     }
 
     template <class Meta>
-    EBGEOMETRY_ALWAYS_INLINE const Edge<Meta>*
-                                   Face<Meta>::getHalfEdge() const noexcept
+    EBGEOMETRY_ALWAYS_INLINE int
+    Face<Meta>::getNumEdges() const noexcept
     {
-      return m_halfEdge;
+      EBGEOMETRY_EXPECT(m_edge >= 0);
+      EBGEOMETRY_EXPECT(m_vertexList != nullptr);
+      EBGEOMETRY_EXPECT(m_edgeList != nullptr);
+      EBGEOMETRY_EXPECT(m_faceList != nullptr);
+
+      int numEdges = 0;
+      int curEdge  = -1;
+
+      while (curEdge != m_edge) {
+        curEdge = (curEdge < 0) ? m_edge : curEdge;
+
+        EBGEOMETRY_EXPECT(curEdge >= 0);
+
+        numEdges += 1;
+
+        curEdge = m_edgeList[curEdge].getNextEdge();
+
+        EBGEOMETRY_EXPECT(curEdge >= 0);
+      }
+
+      return numEdges;
+    }
+
+    template <class Meta>
+    EBGEOMETRY_ALWAYS_INLINE int
+    Face<Meta>::getEdge() const noexcept
+    {
+      return m_edge;
     }
 
     template <class Meta>
@@ -156,6 +211,11 @@ namespace EBGeometry {
     EBGEOMETRY_ALWAYS_INLINE Real
     Face<Meta>::signedDistance(const Vec3& a_x0) const noexcept
     {
+      EBGEOMETRY_EXPECT(m_edge >= 0);
+      EBGEOMETRY_EXPECT(m_vertexList != nullptr);
+      EBGEOMETRY_EXPECT(m_edgeList != nullptr);
+      EBGEOMETRY_EXPECT(m_faceList != nullptr);
+
       Real minDist = EBGeometry::Limits::max();
 
       const bool inside = this->isPointInside(a_x0);
@@ -164,22 +224,19 @@ namespace EBGeometry {
         minDist = m_normal.dot(a_x0 - m_centroid);
       }
       else {
-        const Edge<Meta>* curEdge = m_halfEdge;
+        int curEdge = -1;
 
-        while (true) {
-          const Real curDist = curEdge->signedDistance(a_x0);
+        while (curEdge != m_edge) {
+          curEdge = (curEdge < 0) ? m_edge : curEdge;
+
+          const Real curDist = m_edgeList[curEdge].signedDistance(a_x0);
 
           minDist = (std::abs(curDist) < std::abs(minDist)) ? curDist : minDist;
 
           // Go to next edge and exit if we've circulated all half-edges
           // in this face.
-          curEdge = curEdge->getNextEdge();
-
-          EBGEOMETRY_EXPECT(curEdge != nullptr);
-
-          if (curEdge == m_halfEdge) {
-            break;
-          }
+          curEdge = m_edgeList[curEdge].getNextEdge();
+          EBGEOMETRY_EXPECT(curEdge >= 0);
         }
       }
 
@@ -190,6 +247,11 @@ namespace EBGeometry {
     EBGEOMETRY_ALWAYS_INLINE Real
     Face<Meta>::unsignedDistance2(const Vec3& a_x0) const noexcept
     {
+      EBGEOMETRY_EXPECT(m_edge >= 0);
+      EBGEOMETRY_EXPECT(m_vertexList != nullptr);
+      EBGEOMETRY_EXPECT(m_edgeList != nullptr);
+      EBGEOMETRY_EXPECT(m_faceList != nullptr);
+
       Real minDist2 = EBGeometry::Limits::max();
 
       const bool inside = this->isPointInside(a_x0);
@@ -200,22 +262,19 @@ namespace EBGeometry {
         minDist2 = curDist * curDist;
       }
       else {
-        const Edge<Meta>* curEdge = m_halfEdge;
+        int curEdge = -1;
+        while (curEdge != m_edge) {
+          curEdge = (curEdge < 0) ? m_edge : curEdge;
 
-        while (true) {
-          const Real curDist2 = curEdge->unsignedDistance2(a_x0);
+          const Real curDist2 = m_edgeList[curEdge].unsignedDistance2(a_x0);
 
           minDist2 = (std::abs(curDist2) < std::abs(minDist2)) ? curDist2 : minDist2;
 
           // Go to next edge and exit if we've circulated all half-edges
           // in this face.
-          curEdge = curEdge->getNextEdge();
+          curEdge = m_edgeList[curEdge].getNextEdge();
 
-          EBGEOMETRY_EXPECT(curEdge != nullptr);
-
-          if (curEdge == m_halfEdge) {
-            break;
-          }
+          EBGEOMETRY_EXPECT(curEdge >= 0);
         }
       }
 
@@ -226,24 +285,29 @@ namespace EBGeometry {
     EBGEOMETRY_ALWAYS_INLINE Vec3
     Face<Meta>::getSmallestCoordinate() const noexcept
     {
+      EBGEOMETRY_EXPECT(m_edge >= 0);
+      EBGEOMETRY_EXPECT(m_vertexList != nullptr);
+      EBGEOMETRY_EXPECT(m_edgeList != nullptr);
+      EBGEOMETRY_EXPECT(m_faceList != nullptr);
+
       Vec3 smallestCoordinate = Vec3::max();
 
-      EBGEOMETRY_EXPECT(m_halfEdge != nullptr);
+      int curEdge = -1;
 
-      const Edge<Meta>* curEdge = nullptr;
+      while (curEdge != m_edge) {
+        curEdge = (curEdge < 0) ? m_edge : curEdge;
 
-      while (curEdge != m_halfEdge) {
-        curEdge = (curEdge == nullptr) ? m_halfEdge : curEdge;
+        EBGEOMETRY_EXPECT(curEdge >= 0);
 
-        EBGEOMETRY_EXPECT(curEdge != nullptr);
+        const int vertex = m_edgeList[curEdge].getVertex();
 
-        const Vertex<Meta>* vertex = curEdge->getVertex();
+        EBGEOMETRY_EXPECT(vertex >= 0);
 
-        EBGEOMETRY_EXPECT(vertex != nullptr);
+        smallestCoordinate = min(smallestCoordinate, m_vertexList[vertex].getPosition());
 
-        smallestCoordinate = min(smallestCoordinate, vertex->getPosition());
+        curEdge = m_edgeList[curEdge].getNextEdge();
 
-        curEdge = curEdge->getNextEdge();
+        EBGEOMETRY_EXPECT(curEdge >= 0);
       }
 
       return smallestCoordinate;
@@ -253,24 +317,29 @@ namespace EBGeometry {
     EBGEOMETRY_ALWAYS_INLINE Vec3
     Face<Meta>::getHighestCoordinate() const noexcept
     {
+      EBGEOMETRY_EXPECT(m_edge >= 0);
+      EBGEOMETRY_EXPECT(m_vertexList != nullptr);
+      EBGEOMETRY_EXPECT(m_edgeList != nullptr);
+      EBGEOMETRY_EXPECT(m_faceList != nullptr);
+
       Vec3 highestCoordinate = Vec3::lowest();
 
-      EBGEOMETRY_EXPECT(m_halfEdge != nullptr);
+      int curEdge = -1;
 
-      const Edge<Meta>* curEdge = nullptr;
+      while (curEdge != m_edge) {
+        curEdge = (curEdge < 0) ? m_edge : curEdge;
 
-      while (curEdge != m_halfEdge) {
-        curEdge = (curEdge == nullptr) ? m_halfEdge : curEdge;
+        EBGEOMETRY_EXPECT(curEdge >= 0);
 
-        EBGEOMETRY_EXPECT(curEdge != nullptr);
+        const int vertex = m_edgeList[curEdge].getVertex();
 
-        const Vertex<Meta>* vertex = curEdge->getVertex();
+        EBGEOMETRY_EXPECT(vertex >= 0);
 
-        EBGEOMETRY_EXPECT(vertex != nullptr);
+        highestCoordinate = max(highestCoordinate, m_vertexList[vertex].getPosition());
 
-        highestCoordinate = max(highestCoordinate, vertex->getPosition());
+        curEdge = m_edgeList[curEdge].getNextEdge();
 
-        curEdge = curEdge->getNextEdge();
+        EBGEOMETRY_EXPECT(curEdge >= 0);
       }
 
       return highestCoordinate;
@@ -280,61 +349,78 @@ namespace EBGeometry {
     EBGEOMETRY_ALWAYS_INLINE void
     Face<Meta>::computeCentroid() noexcept
     {
+      EBGEOMETRY_EXPECT(m_edge >= 0);
+      EBGEOMETRY_EXPECT(m_vertexList != nullptr);
+      EBGEOMETRY_EXPECT(m_edgeList != nullptr);
+      EBGEOMETRY_EXPECT(m_faceList != nullptr);
+
       m_centroid = Vec3::zero();
 
-      int numEdges = 0;
+      int numVertices = 0;
+      int curEdge     = -1;
 
-      const Edge<Meta>* curEdge = nullptr;
+      while (curEdge != m_edge) {
+        curEdge = (curEdge < 0) ? m_edge : curEdge;
 
-      while (curEdge != m_halfEdge) {
-        curEdge = (curEdge == nullptr) ? m_halfEdge : curEdge;
+        EBGEOMETRY_EXPECT(curEdge >= 0);
 
-        EBGEOMETRY_EXPECT(curEdge != nullptr);
+        const int vertex = m_edgeList[curEdge].getVertex();
 
-        const Vertex<Meta>* vertex = curEdge->getVertex();
+        EBGEOMETRY_EXPECT(vertex >= 0);
 
-        EBGEOMETRY_EXPECT(vertex != nullptr);
+        m_centroid += m_vertexList[vertex].getPosition();
 
-        m_centroid += vertex->getPosition();
+        curEdge     = m_edgeList[curEdge].getNextEdge();
+        numVertices = numVertices + 1;
 
-        curEdge  = curEdge->getNextEdge();
-        numEdges = numEdges + 1;
+        EBGEOMETRY_EXPECT(curEdge >= 0);
       }
 
-      EBGEOMETRY_EXPECT(numEdges > 0);
+      EBGEOMETRY_EXPECT(numVertices > 0);
 
-      m_centroid = m_centroid / numEdges;
+      m_centroid = m_centroid / numVertices;
     }
 
     template <class Meta>
     EBGEOMETRY_ALWAYS_INLINE void
     Face<Meta>::computeNormal() noexcept
     {
+      EBGEOMETRY_EXPECT(m_edge >= 0);
+      EBGEOMETRY_EXPECT(m_vertexList != nullptr);
+      EBGEOMETRY_EXPECT(m_edgeList != nullptr);
+      EBGEOMETRY_EXPECT(m_faceList != nullptr);
+
       // Circulate through the polygon and find three vertices that do
       // not lie on a line. Use their coordinates to find the normal vector
       // that is orthogonal to the plane that they span.
       m_normal = Vec3::zero();
 
-      const Edge<Meta>* curEdge = nullptr;
+      int curEdge = -1;
 
-      while (curEdge != m_halfEdge) {
-        curEdge = (curEdge == nullptr) ? m_halfEdge : curEdge;
+      while (curEdge != m_edge) {
+        curEdge = (curEdge < 0) ? m_edge : curEdge;
 
-        EBGEOMETRY_EXPECT(curEdge != nullptr);
-        EBGEOMETRY_EXPECT(curEdge->getNextEdge() != nullptr);
-        EBGEOMETRY_EXPECT(curEdge->getNextEdge()->getNextEdge() != nullptr);
+        EBGEOMETRY_EXPECT(curEdge >= 0);
 
-        const Vertex<Meta>* v0 = curEdge->getVertex();
-        const Vertex<Meta>* v1 = curEdge->getNextEdge()->getVertex();
-        const Vertex<Meta>* v2 = curEdge->getNextEdge()->getNextEdge()->getVertex();
+        const int nextEdge = m_edgeList[curEdge].getNextEdge();
 
-        EBGEOMETRY_EXPECT(v0 != nullptr);
-        EBGEOMETRY_EXPECT(v1 != nullptr);
-        EBGEOMETRY_EXPECT(v2 != nullptr);
+        EBGEOMETRY_EXPECT(nextEdge >= 0);
 
-        const Vec3 x0 = v0->getPosition();
-        const Vec3 x1 = v1->getPosition();
-        const Vec3 x2 = v2->getPosition();
+        const int nextNextEdge = m_edgeList[nextEdge].getNextEdge();
+
+        EBGEOMETRY_EXPECT(nextNextEdge >= 0);
+
+        const int v0 = m_edgeList[curEdge].getVertex();
+        const int v1 = m_edgeList[nextEdge].getVertex();
+        const int v2 = m_edgeList[nextNextEdge].getVertex();
+
+        EBGEOMETRY_EXPECT(v0 >= 0);
+        EBGEOMETRY_EXPECT(v1 >= 0);
+        EBGEOMETRY_EXPECT(v2 >= 0);
+
+        const Vec3& x0 = m_vertexList[v0].getPosition();
+        const Vec3& x1 = m_vertexList[v1].getPosition();
+        const Vec3& x2 = m_vertexList[v2].getPosition();
 
         m_normal = (x2 - x1).cross(x2 - x0);
 
@@ -344,7 +430,9 @@ namespace EBGeometry {
         }
 
         // Go to next edge
-        curEdge = curEdge->getNextEdge();
+        curEdge = m_edgeList[curEdge].getNextEdge();
+
+        EBGEOMETRY_EXPECT(curEdge >= 0);
       }
 
       EBGEOMETRY_EXPECT(m_normal.length() > EBGeometry::Limits::min());
@@ -356,37 +444,36 @@ namespace EBGeometry {
     EBGEOMETRY_ALWAYS_INLINE void
     Face<Meta>::computePolygon2D() noexcept
     {
+      EBGEOMETRY_EXPECT(m_edge >= 0);
+      EBGEOMETRY_EXPECT(m_vertexList != nullptr);
+      EBGEOMETRY_EXPECT(m_edgeList != nullptr);
+      EBGEOMETRY_EXPECT(m_faceList != nullptr);
 
-      // Figure out number of vertices in this face.
-      int               counter = 0;
-      const Edge<Meta>* curEdge = nullptr;
+      const int numEdges = this->getNumEdges();
 
-      while (curEdge != m_halfEdge) {
-        curEdge = (curEdge == nullptr) ? m_halfEdge : curEdge;
+      Vec3* vertexCoordinates = new Vec3[numEdges];
 
-        EBGEOMETRY_EXPECT(curEdge != nullptr);
+      int curEdge = -1;
+      int counter = 0;
 
-        counter = counter + 1;
+      while (curEdge != m_edge) {
+        curEdge = (curEdge < 0) ? m_edge : curEdge;
 
-        curEdge = curEdge->getNextEdge();
-      }
+        EBGEOMETRY_EXPECT(curEdge >= 0);
 
-      // Get the vertex coordinates.
-      Vec3* vertexCoordinates = new Vec3[counter];
+        const int vertex = m_edgeList[curEdge].getVertex();
 
-      curEdge = nullptr;
-      counter = 0;
+        EBGEOMETRY_EXPECT(vertex >= 0);
 
-      while (curEdge != m_halfEdge) {
-        curEdge = (curEdge == nullptr) ? m_halfEdge : curEdge;
+        const Vec3& x = m_vertexList[vertex].getPosition();
 
-        EBGEOMETRY_EXPECT(curEdge != nullptr);
-        EBGEOMETRY_EXPECT(curEdge->getVertex() != nullptr);
+        vertexCoordinates[counter] = x;
 
-        vertexCoordinates[counter] = curEdge->getVertex()->getPosition();
+        curEdge = m_edgeList[curEdge].getNextEdge();
 
-        curEdge = curEdge->getNextEdge();
-        counter = counter + 1;
+        EBGEOMETRY_EXPECT(curEdge >= 0);
+
+        counter++;
       }
 
       m_polygon2D.define(m_normal, counter, vertexCoordinates);
@@ -407,28 +494,39 @@ namespace EBGeometry {
     EBGEOMETRY_ALWAYS_INLINE Real
     Face<Meta>::computeArea() noexcept
     {
+      EBGEOMETRY_EXPECT(m_edge >= 0);
+      EBGEOMETRY_EXPECT(m_vertexList != nullptr);
+      EBGEOMETRY_EXPECT(m_edgeList != nullptr);
+      EBGEOMETRY_EXPECT(m_faceList != nullptr);
+
       Real area = 0.0;
 
-      const Edge<Meta>* curEdge = nullptr;
+      int curEdge = -1;
 
-      while (curEdge != m_halfEdge) {
-        curEdge = (curEdge == nullptr) ? m_halfEdge : curEdge;
+      while (curEdge != m_edge) {
+        curEdge = (curEdge < 0) ? m_edge : curEdge;
 
-        EBGEOMETRY_EXPECT(curEdge != nullptr);
-        EBGEOMETRY_EXPECT(curEdge->getNextEdge() != nullptr);
+        EBGEOMETRY_EXPECT(curEdge >= 0);
 
-        const Vertex<Meta>* v0 = curEdge->getVertex();
-        const Vertex<Meta>* v1 = curEdge->getNextEdge()->getVertex();
+        const int nextEdge = m_edgeList[curEdge].getNextEdge();
 
-        EBGEOMETRY_EXPECT(v0 != nullptr);
-        EBGEOMETRY_EXPECT(v1 != nullptr);
+        EBGEOMETRY_EXPECT(nextEdge >= 0);
 
-        const Vec3 x0 = v0->getPosition();
-        const Vec3 x1 = v1->getPosition();
+        const int v0 = m_edgeList[curEdge].getVertex();
+        const int v1 = m_edgeList[nextEdge].getVertex();
+
+        EBGEOMETRY_EXPECT(v0 >= 0);
+        EBGEOMETRY_EXPECT(v1 >= 0);
+        EBGEOMETRY_EXPECT(v0 != v1);
+
+        const Vec3& x0 = m_vertexList[v0].getPosition();
+        const Vec3& x1 = m_vertexList[v1].getPosition();
 
         area += m_normal.dot(x1.cross(x0));
 
-        curEdge = curEdge->getNextEdge();
+        curEdge = m_edgeList[curEdge].getNextEdge();
+
+        EBGEOMETRY_EXPECT(curEdge >= 0);
       }
 
       area = 0.5 * std::abs(area);

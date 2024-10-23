@@ -56,12 +56,12 @@ namespace EBGeometry {
 
       /*!
 	@brief Partial constructor. Calls default constructor but associates a
-	half-edge
+	half-edge. Does not leave the face in a fully defined state. 
 	@param[in] a_edge Half-edge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE
-      Face(const Edge<Meta>* const a_edge) noexcept;
+      Face(const int a_edge) noexcept;
 
       /*!
 	@brief Partial constructor.
@@ -85,7 +85,7 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE void
-      define(const Vec3& a_normal, const Edge<Meta>* const a_edge) noexcept;
+      define(const Vec3& a_normal, const int a_edge) noexcept;
 
       /*!
 	@brief Reconcile face. This will compute the normal vector, area, centroid,
@@ -103,7 +103,31 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE void
-      setHalfEdge(const Edge<Meta>* const a_halfEdge) noexcept;
+      setHalfEdge(const int a_halfEdge) noexcept;
+
+      /*!
+	@brief Set the vertex list.
+	@param[in] a_vertexList List (malloc'ed array) of vertices
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE void
+      setVertexList(const Vertex<Meta>* const a_vertexList) noexcept;
+
+      /*!
+	@brief Set the edge list.
+	@param[in] a_edgeList List (malloc'ed array) of edges
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE void
+      setEdgeList(const Edge<Meta>* const a_edgeList) noexcept;
+
+      /*!
+	@brief Set the face list.
+	@param[in] a_faceList List (malloc'ed array) of faces
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE void
+      setFaceList(const Face<Meta>* const a_faceList) noexcept;
 
       /*!
 	@brief Set the inside/outside algorithm when determining if a point projects
@@ -115,11 +139,18 @@ namespace EBGeometry {
       setInsideOutsideAlgorithm(const Polygon2D::InsideOutsideAlgorithm& a_algorithm) noexcept;
 
       /*!
+	@brief Get the number of edges in the polygon
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE int
+      getNumEdges() const noexcept;
+
+      /*!
 	@brief Get the half edge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Edge<Meta>*
-                                                   getHalfEdge() const noexcept;
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE int
+      getEdge() const noexcept;
 
       /*!
 	@brief Get modifiable centroid
@@ -221,9 +252,24 @@ namespace EBGeometry {
 
     protected:
       /*!
-	@brief This polygon's half-edge. A valid face will always have != nullptr
+	@brief List of vertices.
       */
-      const Edge<Meta>* m_halfEdge;
+      const Vertex<Meta>* m_vertexList;
+
+      /*!
+	@brief List of half-edges.
+      */
+      const Edge<Meta>* m_edgeList;
+
+      /*!
+	@brief List of faces
+      */
+      const Face<Meta>* m_faceList;
+
+      /*!
+	@brief This polygon's half-edge. 
+      */
+      int m_edge;
 
       /*!
 	@brief Polygon face normal vector
