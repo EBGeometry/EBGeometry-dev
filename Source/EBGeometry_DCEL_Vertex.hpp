@@ -131,12 +131,28 @@ namespace EBGeometry {
       setEdge(const int a_edge) noexcept;
 
       /*!
+	@brief Set the vertex list.
+	@param[in] a_vertexList List (malloc'ed array) of vertices
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE void
+      setVertexList(const Vertex<Meta>* const a_vertexList) noexcept;
+
+      /*!
 	@brief Set the edge list.
 	@param[in] a_edgeList List (malloc'ed array) of edges
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE void
       setEdgeList(const Edge<Meta>* const a_edgeList) noexcept;
+
+      /*!
+	@brief Set the face list.
+	@param[in] a_faceList List (malloc'ed array) of faces
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE void
+      setFaceList(const Face<Meta>* const a_faceList) noexcept;
 
       /*!
 	@brief Normalize the normal vector to a length of 1.
@@ -237,11 +253,20 @@ namespace EBGeometry {
       getMetaData() const noexcept;
 
     protected:
-      
+      /*!
+	@brief List of vertices.
+      */
+      const Vertex<Meta>* m_vertexList;
+
       /*!
 	@brief List of half-edges.
       */
       const Edge<Meta>* m_edgeList;
+
+      /*!
+	@brief List of faces
+      */
+      const Face<Meta>* m_faceList;
 
       /*!
 	@brief Outgoing edge.

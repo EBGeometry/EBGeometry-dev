@@ -29,7 +29,9 @@ namespace EBGeometry {
       m_position     = Vec3::zero();
       m_normal       = Vec3::zero();
       m_outgoingEdge = -1;
+      m_vertexList   = nullptr;
       m_edgeList     = nullptr;
+      m_faceList     = nullptr;
     }
 
     template <class Meta>
@@ -64,7 +66,9 @@ namespace EBGeometry {
       m_position     = a_otherVertex.m_position;
       m_normal       = a_otherVertex.m_normal;
       m_outgoingEdge = a_otherVertex.m_outgoingEdge;
+      m_vertexList   = a_otherVertex.m_vertexList;
       m_edgeList     = a_otherVertex.m_edgeList;
+      m_faceList     = a_otherVertex.m_faceList;
     }
 
     template <class Meta>
@@ -103,9 +107,23 @@ namespace EBGeometry {
 
     template <class Meta>
     EBGEOMETRY_ALWAYS_INLINE void
+    Vertex<Meta>::setVertexList(const Vertex<Meta>* const a_vertexList) noexcept
+    {
+      m_vertexList = a_vertexList;
+    }
+
+    template <class Meta>
+    EBGEOMETRY_ALWAYS_INLINE void
     Vertex<Meta>::setEdgeList(const Edge<Meta>* const a_edgeList) noexcept
     {
       m_edgeList = a_edgeList;
+    }
+
+    template <class Meta>
+    EBGEOMETRY_ALWAYS_INLINE void
+    Vertex<Meta>::setFaceList(const Face<Meta>* const a_faceList) noexcept
+    {
+      m_faceList = a_faceList;
     }
 
     template <class Meta>
@@ -124,32 +142,29 @@ namespace EBGeometry {
       // This routine computes the normal vector using a weighted sum of all faces
       // that share this vertex.
       EBGEOMETRY_EXPECT(m_outgoingEdge >= 0);
+      EBGEOMETRY_EXPECT(m_vertexList != nullptr);
       EBGEOMETRY_EXPECT(m_edgeList != nullptr);
-
-#if 1
-#warning \
-  "EBGeometry_DCEL_VertexImplem::computeVertexNormalAverage is not implemented (maybe move this to external functionality?"
-#else
-      const Edge<Meta>* outgoingEdge = nullptr;
+      EBGEOMETRY_EXPECT(m_faceList != nullptr);
 
       m_normal = Vec3::zero();
 
-      while (outgoingEdge != m_outgoingEdge) {
-        outgoingEdge = (outgoingEdge == nullptr) ? m_outgoingEdge : outgoingEdge;
+      int curEdge = -1;
+      int curFace = -1;
 
-        const Vec3& faceNormal = (outgoingEdge->getFace())->getNormal();
+      while (curEdge != m_outgoingEdge) {
+        curEdge = (curEdge < 0) ? m_outgoingEdge : curEdge;
+        curFace = m_edgeList[curEdge].getFace();
 
-        m_normal += faceNormal;
+        m_normal += m_faceList[curFace].getNormal();
 
         // Jump to the pair edge and advance so we get the outgoing edge (from this vertex) on
         // the next polygon.
-        outgoingEdge = outgoingEdge->getPairEdge();
-        EBGEOMETRY_EXPECT(outgoingEdge != nullptr);
+        curEdge = m_edgeList[curEdge].getPairEdge();
+        EBGEOMETRY_EXPECT(curEdge >= 0);
 
-        outgoingEdge = outgoingEdge->getNextEdge();
-        EBGEOMETRY_EXPECT(outgoingEdge != nullptr);
+        curEdge = m_edgeList[curEdge].getNextEdge();
+        EBGEOMETRY_EXPECT(curEdge >= 0);
       }
-#endif
 
       this->normalizeNormalVector();
     }
@@ -172,11 +187,13 @@ namespace EBGeometry {
       // angle of the face, which means the angle spanned by the incoming/outgoing
       // edges of the face that pass through this vertex.
       EBGEOMETRY_EXPECT(m_outgoingEdge >= 0);
+      EBGEOMETRY_EXPECT(m_vertexList != nullptr);
       EBGEOMETRY_EXPECT(m_edgeList != nullptr);
+      EBGEOMETRY_EXPECT(m_faceList != nullptr);
 
 #if 1
 #warning \
-  "EBGeometry_DCEL_VertexImplem::computeVertexNormalAngleWeighted is not implemented (maybe move this to external functionality?      
+  "EBGeometry_DCEL_VertexImplem::computeVertexNormalAngleWeighted is not implemented (maybe move this to external functionality?)"
 #else
 
       const Edge<Meta>* outgoingEdge = nullptr;
