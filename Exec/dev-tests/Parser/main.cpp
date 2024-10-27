@@ -16,7 +16,6 @@ main()
   Vec3 point  = 8 * Vec3::one();
   Vec3 normal = 8 * Vec3::one();
 
-  EBGEOMETRY_EXPECT(1 == 2);
   DCEL::Vertex<short> vert(point, normal, 0);
   DCEL::Edge<short>   edge;
 

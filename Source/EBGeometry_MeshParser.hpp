@@ -4,13 +4,13 @@
  */
 
 /*!
-  @file   EBGeometry_Parser.hpp
+  @file   EBGeometry_MeshParser.hpp
   @brief  Utility functions for reading files into EBGeometry data structures
   @author Robert Marskar
 */
 
-#ifndef EBGeometry_Parser
-#define EBGeometry_Parser
+#ifndef EBGeometry_MeshParser
+#define EBGeometry_MeshParser
 
 // Our includes
 #include "EBGeometry_DCEL_Mesh.hpp"
@@ -19,7 +19,12 @@
 #include "EBGeometry_Macros.hpp"
 
 namespace EBGeometry {
-  namespace Parser {
+
+  /*!
+    @brief Namespace for parsing files into various distance functions representations. None of these functions
+    are callabled on the device.
+  */
+  namespace MeshParser {
 
     /*!
       @brief Enum for separating ASCII and binary files
@@ -45,12 +50,33 @@ namespace EBGeometry {
       @brief Read a file containing a single watertight object and return it as a DCEL mesh
       @param[in] a_filename File name
     */
-    EBGEOMETRY_GPU_HOST
     template <typename Meta = DCEL::DefaultMetaData>
+    EBGEOMETRY_GPU_HOST    
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static EBGeometry::DCEL::Mesh<Meta>*
     readIntoDCEL(const std::string a_filename) noexcept;
 
-  } // namespace Parser
+    /*!
+      @brief Get file type
+      @param[in] a_filenames 
+    */
+    EBGEOMETRY_GPU_HOST
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static MeshParser::FileType
+    getFileType(const std::string a_filename) noexcept;
+
+    /*!
+      @brief Compress polygon soup. This removes degenerate polygons (e.g., triangles).
+      @details This will iterate through 
+      @param[in, out] a_vertices Vertices
+      @param[in, out] a_polygons Planar polygons.
+    */
+    EBGEOMETRY_GPU_HOST
+    EBGEOMETRY_ALWAYS_INLINE static void
+    removeDegeneratePolygonsFromSoup(std::vector<EBGeometry::Vec3>& a_vertices,
+                                     std::vector<std::vector<int>>& a_polygons) noexcept;
+
+  } // namespace MeshParser
 } // namespace EBGeometry
+
+#include "EBGeometry_MeshParserImplem.hpp"
 
 #endif
