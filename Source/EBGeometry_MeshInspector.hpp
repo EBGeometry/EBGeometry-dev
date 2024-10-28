@@ -45,7 +45,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST
     EBGEOMETRY_ALWAYS_INLINE static void
-    removeDegeneratePolygonsFromSoup(std::vector<EBGeometry::Vec3>& a_vertices,
+    removeDegenerateVerticesFromSoup(std::vector<EBGeometry::Vec3>& a_vertices,
                                      std::vector<std::vector<int>>& a_polygons) noexcept;
 
   } // namespace MeshInspector

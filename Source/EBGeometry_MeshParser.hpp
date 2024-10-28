@@ -54,8 +54,8 @@ namespace EBGeometry {
       @brief Read a file containing a single watertight object and return it as a DCEL mesh
       @param[in] a_filename File name
     */
-    template <typename Meta = DCEL::DefaultMetaData>
-    EBGEOMETRY_GPU_HOST [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static EBGeometry::DCEL::Mesh<Meta>*
+    template <typename MetaData = DCEL::DefaultMetaData>
+    EBGEOMETRY_GPU_HOST [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static EBGeometry::DCEL::Mesh<MetaData>*
     readIntoDCEL(const std::string a_filename) noexcept;
 
     /*!
@@ -65,6 +65,71 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static MeshParser::FileType
     getFileType(const std::string a_filename) noexcept;
+
+    /*!
+      @brief MeshParser class for reading STL files into DCEL mesh files. 
+    */
+    template <typename MetaData>
+    class STL
+    {
+    public:
+#if 0
+      /*!
+	@brief Read a single STL object from the input file. The file can be binary or ASCII. 
+	If the STL file contains multiple solids, this routine returns the first one. 
+	@param[in] a_filename STL file name. 
+      */
+      inline static std::shared_ptr<Mesh>
+      readSingle(const std::string a_filename) noexcept;
+
+      /*!
+	@brief Read a single STL object from the input file. The file can be binary or ASCII. 
+	@param[in] a_filename STL file name. 
+      */
+      inline static std::vector<std::pair<std::shared_ptr<Mesh>, std::string>>
+      readMulti(const std::string a_filename) noexcept;
+
+    protected:
+      /*!
+	@brief Check if the input STL file is an ASCII file or a binary
+	@param[in] a_filename File name
+	@return Returns Encoding::ASCII or Encoding::Binary,
+      */
+      inline static Encoding
+      getEncoding(const std::string a_filename) noexcept;
+
+      /*!
+	@brief ASCII reader STL files, possibly containing multiple objects. Each object becomes a DCEL mesh
+	@param[in] a_filename Input filename
+      */
+      inline static std::vector<std::pair<std::shared_ptr<Mesh>, std::string>>
+      readASCII(const std::string a_filename) noexcept;
+
+      /*!
+	@brief Binary reader for STL files, possibly containing multiple objects. Each object becomes a DCEL mesh
+	@param[in] a_filename Input filename
+      */
+      inline static std::vector<std::pair<std::shared_ptr<Mesh>, std::string>>
+      readBinary(const std::string a_filename) noexcept;
+
+      /*!
+	@brief Read an STL object as a triangle soup into a raw vertices and facets
+	@param[out] a_vertices   Vertices
+	@param[out] a_facets     STL facets
+	@param[out] a_objectName Object name
+	@param[out] a_fileContents File contents
+	@param[out] a_firstLine  Line number in a_filename containing the 'solid' identifier. 
+	@param[out] a_lastLine   Line number in a_filename containing the 'endsolid' identifier. 
+      */
+      inline static void
+      readSTLSoupASCII(std::vector<Vec3>&                a_vertices,
+                       std::vector<std::vector<size_t>>& a_facets,
+                       std::string&                      a_objectName,
+                       const std::vector<std::string>&   a_fileContents,
+                       const size_t                      a_firstLine,
+                       const size_t                      a_lastLine) noexcept;
+#endif
+    };
   } // namespace MeshParser
 } // namespace EBGeometry
 

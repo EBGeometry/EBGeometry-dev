@@ -52,7 +52,7 @@ namespace EBGeometry {
   }
 
   EBGEOMETRY_ALWAYS_INLINE void
-  MeshInspector::removeDegeneratePolygonsFromSoup(std::vector<EBGeometry::Vec3>& a_vertices,
+  MeshInspector::removeDegenerateVerticesFromSoup(std::vector<EBGeometry::Vec3>& a_vertices,
                                                   std::vector<std::vector<int>>& a_polygons) noexcept
   {
     // Polygon soups might contain degenerate vertices. For example, STL files define individual facets rather
