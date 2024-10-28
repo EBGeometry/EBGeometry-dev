@@ -65,18 +65,6 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static MeshParser::FileType
     getFileType(const std::string a_filename) noexcept;
-
-    /*!
-      @brief Compress polygon soup. This removes degenerate polygons (e.g., triangles).
-      @details This will iterate through 
-      @param[in, out] a_vertices Vertices
-      @param[in, out] a_polygons Planar polygons.
-    */
-    EBGEOMETRY_GPU_HOST
-    EBGEOMETRY_ALWAYS_INLINE static void
-    removeDegeneratePolygonsFromSoup(std::vector<EBGeometry::Vec3>& a_vertices,
-                                     std::vector<std::vector<int>>& a_polygons) noexcept;
-
   } // namespace MeshParser
 } // namespace EBGeometry
 
