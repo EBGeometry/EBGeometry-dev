@@ -69,35 +69,29 @@ namespace EBGeometry {
     /*!
       @brief MeshParser class for reading STL files into DCEL mesh files. 
     */
-    template <typename MetaData>
     class STL
     {
     public:
-#if 0
       /*!
 	@brief Read a single STL object from the input file. The file can be binary or ASCII. 
 	If the STL file contains multiple solids, this routine returns the first one. 
-	@param[in] a_filename STL file name. 
+	@param[in] a_filename STL file name.
+	@return Returns a DCEL mesh 
       */
-      inline static std::shared_ptr<Mesh>
-      readSingle(const std::string a_filename) noexcept;
-
-      /*!
-	@brief Read a single STL object from the input file. The file can be binary or ASCII. 
-	@param[in] a_filename STL file name. 
-      */
-      inline static std::vector<std::pair<std::shared_ptr<Mesh>, std::string>>
-      readMulti(const std::string a_filename) noexcept;
+      template <typename MetaData = DCEL::DefaultMetaData>
+      EBGEOMETRY_GPU_HOST EBGEOMETRY_INLINE static EBGeometry::DCEL::Mesh<MetaData>*
+      read(const std::string a_filename) noexcept;
 
     protected:
       /*!
 	@brief Check if the input STL file is an ASCII file or a binary
 	@param[in] a_filename File name
-	@return Returns Encoding::ASCII or Encoding::Binary,
+	@return Returns FileEncoding::ASCII or FileEncoding::Binary,
       */
-      inline static Encoding
+      EBGEOMETRY_GPU_HOST
+      EBGEOMETRY_INLINE static FileEncoding
       getEncoding(const std::string a_filename) noexcept;
-
+#if 0
       /*!
 	@brief ASCII reader STL files, possibly containing multiple objects. Each object becomes a DCEL mesh
 	@param[in] a_filename Input filename

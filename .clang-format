@@ -18,6 +18,7 @@ AllowShortLoopsOnASingleLine: false
 AlwaysBreakAfterReturnType: All
 AlwaysBreakBeforeMultilineStrings: false
 AlwaysBreakTemplateDeclarations: true
+AttributeMacros: [EBGEOMETRY_INLINE, EBGEOMETRY_ALWAYS_INLINE]
 BinPackArguments: false
 BinPackParameters: false
 BraceWrapping:   
@@ -88,6 +89,7 @@ SpacesInContainerLiterals: true
 SpacesInCStyleCastParentheses: false
 SpacesInParentheses: false
 SpacesInSquareBrackets: false
+StatementAttributeLikeMacros: [EBGEOMETRY_GPU_HOST, EBGEOMETRY_GPU_DEVICE, EBGEOMETRY_GPU_HOST_DEVICE,EBGEOMETRY_INLINE, EBGEOMETRY_ALWAYS_LINE]
 Standard:        Cpp11
 TabWidth:        2
 UseTab:          Never
