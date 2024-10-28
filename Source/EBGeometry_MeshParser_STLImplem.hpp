@@ -20,7 +20,6 @@
 
 // Our includes
 #include "EBGeometry_Macros.hpp"
-#include "EBGeometry_MeshInspector.hpp"
 #include "EBGeometry_MeshParser.hpp"
 #include "EBGeometry_MeshParser_STL.hpp"
 
@@ -109,9 +108,124 @@ namespace EBGeometry {
     EBGEOMETRY_INLINE std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
                       STL::readBinary(const std::string a_fileName) noexcept
     {
+      EBGEOMETRY_ALWAYS_EXPECT(MeshParser::getFileType(a_fileName) == MeshParser::FileType::STL);
+      EBGEOMETRY_ALWAYS_EXPECT(MeshParser::STL::getEncoding(a_fileName) == MeshParser::FileEncoding::Binary);
+
       std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>> meshes;
 
+      using VertexList   = std::vector<Vec3>;
+      using TriangleList = std::vector<std::vector<int>>;
+
+      // Read the file.
+      std::ifstream is(a_fileName);
+      if (is.is_open()) {
+
+        // Read the header and discard that info.
+        char header[80];
+        is.read(header, 80);
+
+        // Read number of triangles
+        char tmp[4];
+        is.read(tmp, 4);
+        uint32_t numTriangles;
+        memcpy(&numTriangles, &tmp, 4);
+
+        std::map<uint16_t, std::pair<VertexList, TriangleList>> verticesAndTriangles;
+
+        // Read triangles into raw vertices and triangles
+        char normal[12];
+        char v1[12];
+        char v2[12];
+        char v3[12];
+        char att[2];
+
+        float x;
+        float y;
+        float z;
+
+        uint16_t id;
+
+        for (int i = 0; i < numTriangles; i++) {
+          is.read(normal, 12);
+          is.read(v1, 12);
+          is.read(v2, 12);
+          is.read(v3, 12);
+          is.read(att, 2);
+
+          char* ptr = nullptr;
+
+          Vec3 v[3];
+
+          ptr = v1;
+          memcpy(&x, ptr, 4);
+          ptr += 4;
+          memcpy(&y, ptr, 4);
+          ptr += 4;
+          memcpy(&z, ptr, 4);
+          v[0] = Vec3(x, y, z);
+
+          ptr = v2;
+          memcpy(&x, ptr, 4);
+          ptr += 4;
+          memcpy(&y, ptr, 4);
+          ptr += 4;
+          memcpy(&z, ptr, 4);
+          v[1] = Vec3(x, y, z);
+
+          ptr = v3;
+          memcpy(&x, ptr, 4);
+          ptr += 4;
+          memcpy(&y, ptr, 4);
+          ptr += 4;
+          memcpy(&z, ptr, 4);
+          v[2] = Vec3(x, y, z);
+
+          memcpy(&id, &att, 2);
+
+          if (verticesAndTriangles.find(id) == verticesAndTriangles.end()) {
+            verticesAndTriangles.emplace(id, std::make_pair(VertexList(), TriangleList()));
+          }
+
+          auto& objectVertices = verticesAndTriangles.at(id).first;
+          auto& objectFacets   = verticesAndTriangles.at(id).second;
+
+          // Insert a new triangle.
+          std::vector<int> curFacet;
+          for (int j = 0; j < 3; j++) {
+            objectVertices.emplace_back(v[j]);
+            curFacet.emplace_back(objectVertices.size() - 1);
+          }
+
+          objectFacets.emplace_back(curFacet);
+        }
+
 #warning "EBGeometry_MeshParser_STLImplem.hpp - working on readBinary function"
+
+        // Turn the triangle soup into a mesh.
+        int curID = 0;
+        for (auto& soup : verticesAndTriangles) {
+          auto& vertices = soup.second.first;
+          auto& facets   = soup.second.second;
+
+          auto mesh = new EBGeometry::DCEL::Mesh<MetaData>();
+
+          if (MeshParser::containsDegeneratePolygons(vertices, facets)) {
+            std::cerr << "Parser::STL::readBinary - input STL has degenerate faces\n";
+          }
+
+          MeshParser::removeDegenerateVerticesFromSoup(vertices, facets);
+          //          MeshParser::soupToDCEL(*mesh, vertices, facets);
+
+          const std::string strID = std::to_string(curID);
+
+          meshes.emplace_back(mesh, strID);
+
+          curID++;
+        }
+      }
+      else {
+        std::cerr << "EBGeometry::MeshParser::STL::readBinary -- could not open file '" + a_fileName + "'\n";
+      }
 
       return meshes;
     }

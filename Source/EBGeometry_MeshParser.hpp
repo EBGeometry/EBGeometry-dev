@@ -66,6 +66,43 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static MeshParser::FileType
     getFileType(const std::string a_filename) noexcept;
+
+    /*!
+      @brief Check if polygons in a polygon soup contain degenerate vertices
+      @param[out] a_vertices Vertices
+      @param[out] a_polygons Polygons
+    */
+    EBGEOMETRY_GPU_HOST
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static bool
+    containsDegeneratePolygons(const std::vector<EBGeometry::Vec3>& a_vertices,
+                               const std::vector<std::vector<int>>& a_polygons) noexcept;
+
+    /*!
+      @brief Compress polygon soup. This removes degenerate polygons (e.g., triangles).
+      @details This will iterate through 
+      @param[in, out] a_vertices Vertices
+      @param[in, out] a_polygons Planar polygons.
+    */
+    EBGEOMETRY_GPU_HOST
+    EBGEOMETRY_ALWAYS_INLINE static void
+    removeDegenerateVerticesFromSoup(std::vector<EBGeometry::Vec3>& a_vertices,
+                                     std::vector<std::vector<int>>& a_polygons) noexcept;
+
+    /*!
+      @brief Turn raw vertices into a DCEL mesh.
+      @details The input vector of vertices contains the coordinates of each vertex. The polygon list
+      contains the list of polygons (outer vector), where each entry contains a list of vertices (inner vector)
+      that describe which vertices make up the polygon. 
+      @param[in]  a_vertices Vertex list.
+      @param[in]  a_polygons POlygon list. 
+      @return Returns an allocated DCEL mesh. It is up to the user to properly free memory from this mesh when it
+      is no longer required. 
+    */
+    template <typename MetaData>
+    EBGEOMETRY_GPU_HOST [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static EBGeometry::DCEL::Mesh<MetaData>
+    turnPolygonSoupIntoDCEL(const std::vector<EBGeometry::Vec3>& a_vertices,
+                            const std::vector<std::vector<int>>& a_polygons) noexcept;
+
   } // namespace MeshParser
 } // namespace EBGeometry
 
