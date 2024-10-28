@@ -12,6 +12,10 @@
 #ifndef EBGeometry_MeshParserImplem
 #define EBGeometry_MeshParserImplem
 
+// Std includes
+#include <map>
+#include <utility>
+
 // Our includes
 #include "EBGeometry_MeshParser.hpp"
 
@@ -20,6 +24,7 @@ namespace EBGeometry {
   template <typename Meta>
   EBGEOMETRY_ALWAYS_INLINE EBGeometry::DCEL::Mesh<Meta>*
                            MeshParser::readIntoDCEL(const std::string a_filename) noexcept
+
   {
 #warning "MeshParser::readIntoDCEL -- not implemented"
 
@@ -47,9 +52,59 @@ namespace EBGeometry {
   MeshParser::removeDegeneratePolygonsFromSoup(std::vector<EBGeometry::Vec3>& a_vertices,
                                                std::vector<std::vector<int>>& a_polygons) noexcept
   {
-#warning "MeshParser::removeDegeneratePolygonsFromSoup"
-  }
+    // Polygon soups might contain degenerate vertices. For example, STL files define individual facets rather
+    // than links between vertices, and in this case many vertices will be degenerate. Here, we create a map of
+    // the original vertices, and delete vertices that are degenerate. The polygons are rearranged so that they
+    // reference unique vertices.
+    EBGEOMETRY_ALWAYS_EXPECT(a_vertices.size() >= 3);
+    EBGEOMETRY_ALWAYS_EXPECT(a_polygons.size() >= 1);
 
+    std::vector<std::pair<Vec3, int>> vertexMap;
+    std::map<int, int>                indexMap;
+
+    // Create a map of the original vertices and sort it lexicographically.
+    for (int i = 0; i < a_vertices.size(); i++) {
+      vertexMap.emplace_back(a_vertices[i], i);
+    }
+
+    std::sort(vertexMap.begin(), vertexMap.end(), [](const std::pair<Vec3, int>& A, const std::pair<Vec3, int>& B) {
+      const Vec3& a = A.first;
+      const Vec3& b = B.first;
+
+      return a.lessLX(b);
+    });
+
+    // Compress the vertex vector, and rebuild the index map
+    a_vertices.resize(0);
+
+    a_vertices.emplace_back(vertexMap.front().first);
+    indexMap.emplace(vertexMap.front().second, 0);
+
+    for (int i = 1; i < vertexMap.size(); i++) {
+      const auto& oldIndex = vertexMap[i].second;
+      const auto& curVert  = vertexMap[i].first;
+      const auto& prevVert = vertexMap[i - 1].first;
+
+      if (curVert != prevVert) {
+        a_vertices.emplace_back(curVert);
+      }
+
+      indexMap.emplace(oldIndex, a_vertices.size() - 1);
+    }
+
+    // Update polygon indexing.
+    for (int i = 0; i < a_polygons.size(); i++) {
+      std::vector<int>& polygon = a_polygons[i];
+
+      EBGEOMETRY_EXPECT(polygon.size() >= 3);
+
+      for (int v = 0; v < polygon.size(); v++) {
+        EBGEOMETRY_EXPECT(polygon[v] >= 0);
+
+        polygon[v] = indexMap.at(polygon[v]);
+      }
+    }
+  }
 } // namespace EBGeometry
 
 #endif

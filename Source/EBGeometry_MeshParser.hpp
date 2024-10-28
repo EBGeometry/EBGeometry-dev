@@ -12,11 +12,15 @@
 #ifndef EBGeometry_MeshParser
 #define EBGeometry_MeshParser
 
+// Std includes
+#include <vector>
+
 // Our includes
 #include "EBGeometry_DCEL_Mesh.hpp"
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_GPUTypes.hpp"
 #include "EBGeometry_Macros.hpp"
+#include "EBGeometry_Vec.hpp"
 
 namespace EBGeometry {
 
@@ -51,8 +55,7 @@ namespace EBGeometry {
       @param[in] a_filename File name
     */
     template <typename Meta = DCEL::DefaultMetaData>
-    EBGEOMETRY_GPU_HOST    
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static EBGeometry::DCEL::Mesh<Meta>*
+    EBGEOMETRY_GPU_HOST [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static EBGeometry::DCEL::Mesh<Meta>*
     readIntoDCEL(const std::string a_filename) noexcept;
 
     /*!
