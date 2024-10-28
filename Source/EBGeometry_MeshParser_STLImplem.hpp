@@ -9,8 +9,8 @@
   @author Robert Marskar
 */
 
-#ifndef EBGeometry_MeshParserImplem
-#define EBGeometry_MeshParserImplem
+#ifndef EBGeometry_MeshParser_STLImplem
+#define EBGeometry_MeshParser_STLImplem
 
 // Std includes
 #include <utility>
@@ -31,29 +31,29 @@ namespace EBGeometry {
     EBGEOMETRY_INLINE EBGeometry::DCEL::Mesh<MetaData>*
                       STL::readSingle(const std::string a_fileName) noexcept
     {
-      return ((STL::readMulti(a_fileName)).front()).first;
+      return ((STL::readMulti<MetaData>(a_fileName)).front()).first;
     }
 
     template <typename MetaData>
     EBGEOMETRY_INLINE std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
                       STL::readMulti(const std::string a_fileName) noexcept
     {
-      const auto fileEncoding = MeshParser::STL::getEncoding(a_filename);
+      const auto fileEncoding = MeshParser::STL::getEncoding(a_fileName);
 
       EBGEOMETRY_ALWAYS_EXPECT(MeshParser::getFileType(a_fileName) == MeshParser::FileType::STL);
       EBGEOMETRY_ALWAYS_EXPECT(fileEncoding == MeshParser::FileEncoding::ASCII ||
-                               fileEncoding == MeshParser::fileEncoding::Binary);
+                               fileEncoding == MeshParser::FileEncoding::Binary);
 
       std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>> meshes;
 
       switch (fileEncoding) {
       case MeshParser::FileEncoding::ASCII: {
-        //        meshes = EBGeometry::MeshParser::STL::readASCII(fileName);
+        meshes = EBGeometry::MeshParser::STL::readASCII<MetaData>(a_fileName);
 
         break;
       }
       case MeshParser::FileEncoding::Binary: {
-        //        meshes = EBGeometry::MeshParser::STL::readBinary(fileName);
+        meshes = EBGeometry::MeshParser::STL::readBinary<MetaData>(a_fileName);
 
         break;
       }
@@ -62,12 +62,12 @@ namespace EBGeometry {
       return meshes;
     }
 
-    EBGEOMETRY_INLINE FileEncoding
-    STL::getEncoding(const std::string a_filename) noexcept
+    EBGEOMETRY_INLINE MeshParser::FileEncoding
+                      STL::getEncoding(const std::string a_fileName) noexcept
     {
       MeshParser::FileEncoding fileEncoding = MeshParser::FileEncoding::Unknown;
 
-      std::ifstream is(a_filename, std::istringstream::in | std::ios::binary);
+      std::ifstream is(a_fileName, std::istringstream::in | std::ios::binary);
 
       if (is.good()) {
         char chars[256];
@@ -88,10 +88,43 @@ namespace EBGeometry {
         // clang-format on
       }
       else {
-        std::cerr << "MeshParser::STL::getEncoding -- could not open file '" + a_filename + "'\n";
+        std::cerr << "MeshParser::STL::getEncoding -- could not open file '" + a_fileName + "'\n";
       }
 
       return fileEncoding;
+    }
+
+    template <typename MetaData>
+    EBGEOMETRY_INLINE std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
+                      STL::readASCII(const std::string a_fileName) noexcept
+    {
+      std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>> meshes;
+
+#warning "EBGeometry_MeshParser_STLImplem.hpp - working on readASCII function"
+
+      return meshes;
+    }
+
+    template <typename MetaData>
+    EBGEOMETRY_INLINE std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
+                      STL::readBinary(const std::string a_fileName) noexcept
+    {
+      std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>> meshes;
+
+#warning "EBGeometry_MeshParser_STLImplem.hpp - working on readBinary function"
+
+      return meshes;
+    }
+
+    EBGEOMETRY_INLINE void
+    STL::readSTLSoupASCII(std::vector<Vec3>&              a_vertices,
+                          std::vector<std::vector<int>>&  a_facets,
+                          std::string&                    a_objectName,
+                          const std::vector<std::string>& a_fileContents,
+                          const int                       a_firstLine,
+                          const int                       a_lastLine) noexcept
+    {
+#warning "EBGeometry_MeshParser_STLImplem.hpp - working on readSTLSoupASCII function"
     }
   } // namespace MeshParser
 } // namespace EBGeometry

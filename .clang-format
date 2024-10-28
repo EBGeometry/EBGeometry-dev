@@ -18,7 +18,7 @@ AllowShortLoopsOnASingleLine: false
 AlwaysBreakAfterReturnType: All
 AlwaysBreakBeforeMultilineStrings: false
 AlwaysBreakTemplateDeclarations: true
-AttributeMacros: [EBGEOMETRY_INLINE, EBGEOMETRY_ALWAYS_INLINE, EBGEOMETRY_GPU_HOST, EBGEOMETRY_GPU_DEVICE, EBGEOMETRY_GPU_HOST_DEVICE]
+#AttributeMacros: [EBGEOMETRY_INLINE, EBGEOMETRY_ALWAYS_INLINE, EBGEOMETRY_GPU_HOST, EBGEOMETRY_GPU_DEVICE, EBGEOMETRY_GPU_HOST_DEVICE]
 BinPackArguments: false
 BinPackParameters: false
 BraceWrapping:   

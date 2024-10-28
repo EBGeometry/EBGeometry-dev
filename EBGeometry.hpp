@@ -12,6 +12,7 @@
 #include "Source/EBGeometry_Macros.hpp"
 #include "Source/EBGeometry_MeshInspector.hpp"
 #include "Source/EBGeometry_MeshParser.hpp"
+#include "Source/EBGeometry_MeshParser_STL.hpp"
 #include "Source/EBGeometry_SFC.hpp"
 #include "Source/EBGeometry_Triangle.hpp"
 #include "Source/EBGeometry_Triangle2D.hpp"

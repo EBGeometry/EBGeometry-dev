@@ -37,7 +37,7 @@ namespace EBGeometry {
 	@param[in] a_fileName STL file name.
 	@return Returns a DCEL mesh
       */
-      template <typename MetaData = EBGeometry::DCEL::DefaultMetaData>
+      template <typename MetaData>
       EBGEOMETRY_GPU_HOST [[nodiscard]] EBGEOMETRY_INLINE static EBGeometry::DCEL::Mesh<MetaData>*
       readSingle(const std::string a_fileName) noexcept;
 
@@ -47,7 +47,7 @@ namespace EBGeometry {
 	@return Returns DCEL meshes for each object in the input file. The returned strings are identifiers
 	for the STL objects.
       */
-      template <typename MetaData = EBGeometry::DCEL::DefaultMetaData>
+      template <typename MetaData>
       EBGEOMETRY_GPU_HOST [[nodiscard]]
       EBGEOMETRY_INLINE static std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
       readMulti(const std::string a_fileName) noexcept;
@@ -66,7 +66,7 @@ namespace EBGeometry {
 	@brief ASCII reader STL files, possibly containing multiple objects. Each object becomes a DCEL mesh
 	@param[in] a_filename Input filename
       */
-      template <typename MetaData = EBGeometry::DCEL::DefaultMetaData>
+      template <typename MetaData>
       EBGEOMETRY_GPU_HOST [[nodiscard]]
       EBGEOMETRY_INLINE static std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
       readASCII(const std::string a_filename) noexcept;
@@ -75,10 +75,10 @@ namespace EBGeometry {
 	@brief Binary reader for STL files, possibly containing multiple objects. Each object becomes a DCEL mesh
 	@param[in] a_filename Input filename
       */
-      template <typename MetaData = EBGeometry::DCEL::DefaultMetaData>
-      EBGEOMETRY_GPU_HOST [[nodiscard]]
-      EBGEOMETRY_INLINE static std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
-      readBinary(const std::string a_filename) noexcept;
+      template <typename MetaData>
+      EBGEOMETRY_GPU_HOST
+        [[nodiscard]] EBGEOMETRY_INLINE static std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
+        readBinary(const std::string a_filename) noexcept;
 
       /*!
 	@brief Read an STL object as a triangle soup into a raw vertices and facets
@@ -89,7 +89,8 @@ namespace EBGeometry {
 	@param[out] a_firstLine  Line number in a_filename containing the 'solid' identifier. 
 	@param[out] a_lastLine   Line number in a_filename containing the 'endsolid' identifier. 
       */
-      EBGEOMETRY_GPU_HOST EBGEOMETRY_INLINE static void
+      EBGEOMETRY_GPU_HOST
+      EBGEOMETRY_INLINE static void
       readSTLSoupASCII(std::vector<Vec3>&              a_vertices,
                        std::vector<std::vector<int>>&  a_facets,
                        std::string&                    a_objectName,
@@ -100,6 +101,6 @@ namespace EBGeometry {
   } // namespace MeshParser
 } // namespace EBGeometry
 
-#include "EBGeometry_MeshParserImplem.hpp"
+#include "EBGeometry_MeshParser_STLImplem.hpp"
 
 #endif

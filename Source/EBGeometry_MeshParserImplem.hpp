@@ -32,7 +32,7 @@ namespace EBGeometry {
                            MeshParser::readIntoDCEL(const std::string a_filename) noexcept
 
   {
-#warning "MeshParser::readIntoDCEL -- not implemented"
+#warning "MeshParser::readIntoDCEL -- readIntoDCEL not implemented"
 
     return nullptr;
   }
@@ -52,38 +52,6 @@ namespace EBGeometry {
     }
 
     return fileType;
-  }
-
-  EBGEOMETRY_INLINE MeshParser::FileEncoding
-                    MeshParser::STL::getEncoding(const std::string a_filename) noexcept
-  {
-    MeshParser::FileEncoding fileEncoding = MeshParser::FileEncoding::Unknown;
-
-    std::ifstream is(a_filename, std::istringstream::in | std::ios::binary);
-
-    if (is.good()) {
-      char chars[256];
-      is.read(chars, 256);
-
-      std::string buffer(chars, static_cast<size_t>(is.gcount()));
-      std::transform(buffer.begin(), buffer.end(), buffer.begin(), ::tolower);
-
-      // clang-format off
-      if(buffer.find("solid") != std::string::npos && buffer.find("\n")    != std::string::npos &&
-	 buffer.find("facet") != std::string::npos && buffer.find("normal")!= std::string::npos) {
-	
-	fileEncoding = MeshParser::FileEncoding::ASCII;
-      }
-      else {
-	fileEncoding = MeshParser::FileEncoding::Binary;
-      }
-      // clang-format on
-    }
-    else {
-      std::cerr << "MeshParser::STL::getEncoding -- could not open file '" + a_filename + "'\n";
-    }
-
-    return fileEncoding;
   }
 } // namespace EBGeometry
 
