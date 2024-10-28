@@ -95,7 +95,8 @@ namespace EBGeometry {
 
     template <class Meta>
     EBGEOMETRY_ALWAYS_INLINE void
-    Edge<Meta>::setPreviousEdge(const int a_previousEdge) noexcept {
+    Edge<Meta>::setPreviousEdge(const int a_previousEdge) noexcept
+    {
       m_previousEdge = a_previousEdge;
     }
 
