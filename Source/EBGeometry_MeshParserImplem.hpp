@@ -268,22 +268,54 @@ namespace EBGeometry {
 
       EBGEOMETRY_EXPECT(edgeIndex == (numEdges - 1));
 
-      // Associate pair edges
+      // Associate pair edges - we've built a map of all the outgoing edges from each vertex, so
+      // we iterate through that map and look for the other edges in the neighboring polygons that
+      // share start/end vertices.
       for (const auto& m : outgoingEdgesMap) {
         const auto& vertex        = m.first;
         const auto& outgoingEdges = m.second;
 
         for (auto& curOutgoingEdgeIndex : outgoingEdges) {
-          Edge<MetaData>& curEdge = edges[curOutgoingEdgeIndex];
+          Edge<MetaData>& curOutgoingEdge = edges[curOutgoingEdgeIndex];
 
-          const int startVertex = curEdge.getVertex();
-          const int endVertex   = curEdge.getOtherVertex();
+          EBGEOMETRY_EXPECT(curOutgoingEdgeIndex >= 0);
+          EBGEOMETRY_EXPECT(curOutgoingEdgeIndex < numEdges);
+          EBGEOMETRY_EXPECT(curOutgoingEdge.getVertex() == vertex);
+
+          const int curVertexStart = curOutgoingEdge.getVertex();
+          const int curVertexEnd   = curOutgoingEdge.getOtherVertex();
+
+          EBGEOMETRY_EXPECT(curVertexStart >= 0);
+          EBGEOMETRY_EXPECT(curVertexStart < numVertices);
+          EBGEOMETRY_EXPECT(curVertexEnd >= 0);
+          EBGEOMETRY_EXPECT(curVertexEnd < numVertices);
 
           // Now go through all the other outgoing edges, and look for an edge which points
           // opposite to this one.
           for (auto& otherOutgoingEdgeIndex : outgoingEdges) {
+            EBGEOMETRY_EXPECT(otherOutgoingEdgeIndex >= 0);
+            EBGEOMETRY_EXPECT(otherOutgoingEdgeIndex < numEdges);
+
             if (otherOutgoingEdgeIndex != curOutgoingEdgeIndex) {
-#warning "MeshParser::turnPolygonSoupIntoDCEL -- working on this function. Need to reconcile pair edges."
+              const int incomingEdgeIndex = edges[otherOutgoingEdgeIndex].getPreviousEdge();
+
+              EBGEOMETRY_EXPECT(incomingEdgeIndex >= 0);
+              EBGEOMETRY_EXPECT(incomingEdgeIndex < numEdges);
+
+              Edge<MetaData>& otherIncomingEdge = edges[incomingEdgeIndex];
+
+              const int otherVertexStart = otherIncomingEdge.getVertex();
+              const int otherVertexEnd   = otherIncomingEdge.getOtherVertex();
+
+              EBGEOMETRY_EXPECT(otherVertexStart >= 0);
+              EBGEOMETRY_EXPECT(otherVertexStart < numVertices);
+              EBGEOMETRY_EXPECT(otherVertexEnd >= 0);
+              EBGEOMETRY_EXPECT(otherVertexEnd < numVertices);
+
+              if ((curVertexStart == otherVertexEnd) && (curVertexEnd == otherVertexStart)) {
+                curOutgoingEdge.setPairEdge(incomingEdgeIndex);
+                otherIncomingEdge.setPairEdge(curOutgoingEdgeIndex);
+              }
             }
           }
         }
