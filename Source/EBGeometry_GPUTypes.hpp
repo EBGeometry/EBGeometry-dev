@@ -25,7 +25,8 @@ namespace EBGeometry {
     @param[in] y Number to compare.     
   */
   EBGEOMETRY_GPU_HOST_DEVICE
-  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+  Real
   min(const Real& x, const Real& y) noexcept
   {
     return x <= y ? x : y;
@@ -37,7 +38,8 @@ namespace EBGeometry {
     @param[in] y Number to compare.     
   */
   EBGEOMETRY_GPU_HOST_DEVICE
-  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+  Real
   max(const Real& x, const Real& y) noexcept
   {
     return x >= y ? x : y;
@@ -51,7 +53,8 @@ namespace EBGeometry {
       @brief Maximum representable number.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    Real
     max() noexcept
     {
       return EBGeometry::MaximumReal;
@@ -61,7 +64,8 @@ namespace EBGeometry {
       @brief Minimum representable number.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    Real
     min() noexcept
     {
       return EBGeometry::MinimumReal;
@@ -71,7 +75,8 @@ namespace EBGeometry {
       @brief Lowest representable number.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    Real
     lowest() noexcept
     {
       return EBGeometry::LowestReal;
@@ -81,7 +86,8 @@ namespace EBGeometry {
       @brief Machine precision.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    Real
     eps() noexcept
     {
       return EBGeometry::Epsilon;

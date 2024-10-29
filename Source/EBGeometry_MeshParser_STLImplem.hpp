@@ -27,15 +27,17 @@ namespace EBGeometry {
   namespace MeshParser {
 
     template <typename MetaData>
-    EBGEOMETRY_INLINE EBGeometry::DCEL::Mesh<MetaData>*
-                      STL::readSingle(const std::string a_fileName) noexcept
+    EBGEOMETRY_INLINE
+    EBGeometry::DCEL::Mesh<MetaData>*
+    STL::readSingle(const std::string a_fileName) noexcept
     {
       return ((STL::readMulti<MetaData>(a_fileName)).front()).first;
     }
 
     template <typename MetaData>
-    EBGEOMETRY_INLINE std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
-                      STL::readMulti(const std::string a_fileName) noexcept
+    EBGEOMETRY_INLINE
+    std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
+    STL::readMulti(const std::string a_fileName) noexcept
     {
       const auto fileEncoding = MeshParser::STL::getEncoding(a_fileName);
 
@@ -61,8 +63,9 @@ namespace EBGeometry {
       return meshes;
     }
 
-    EBGEOMETRY_INLINE MeshParser::FileEncoding
-                      STL::getEncoding(const std::string a_fileName) noexcept
+    EBGEOMETRY_INLINE
+    MeshParser::FileEncoding
+    STL::getEncoding(const std::string a_fileName) noexcept
     {
       MeshParser::FileEncoding fileEncoding = MeshParser::FileEncoding::Unknown;
 
@@ -94,8 +97,9 @@ namespace EBGeometry {
     }
 
     template <typename MetaData>
-    EBGEOMETRY_INLINE std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
-                      STL::readASCII(const std::string a_fileName) noexcept
+    EBGEOMETRY_INLINE
+    std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
+    STL::readASCII(const std::string a_fileName) noexcept
     {
       std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>> meshes;
 
@@ -105,8 +109,9 @@ namespace EBGeometry {
     }
 
     template <typename MetaData>
-    EBGEOMETRY_INLINE std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
-                      STL::readBinary(const std::string a_fileName) noexcept
+    EBGEOMETRY_INLINE
+    std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
+    STL::readBinary(const std::string a_fileName) noexcept
     {
       EBGEOMETRY_ALWAYS_EXPECT(MeshParser::getFileType(a_fileName) == MeshParser::FileType::STL);
       EBGEOMETRY_ALWAYS_EXPECT(MeshParser::STL::getEncoding(a_fileName) == MeshParser::FileEncoding::Binary);
@@ -225,7 +230,8 @@ namespace EBGeometry {
       return meshes;
     }
 
-    EBGEOMETRY_INLINE void
+    EBGEOMETRY_INLINE
+    void
     STL::readSTLSoupASCII(std::vector<Vec3>&              a_vertices,
                           std::vector<std::vector<int>>&  a_facets,
                           std::string&                    a_objectName,

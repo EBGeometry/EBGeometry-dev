@@ -52,7 +52,8 @@ namespace EBGeometry {
       @param[in] a_point Position.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    Real
     value(const Vec3& a_point) const noexcept override
     {
       return EBGeometry::min(m_f1->value(a_point), m_f2->value(a_point));

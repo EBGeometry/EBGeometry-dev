@@ -65,13 +65,15 @@ namespace EBGeometry {
 	@brief Destructor.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE ~Index() noexcept;
+      EBGEOMETRY_ALWAYS_INLINE
+      ~Index() noexcept;
 
       /*!
 	@brief Get the index
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE unsigned int
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      unsigned int
       operator[](const int a_dir) const noexcept;
 
     protected:
@@ -102,7 +104,8 @@ namespace EBGeometry {
 	@param[in] a_point 
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static uint64_t
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      static uint64_t
       encode(const Index& a_point) noexcept;
 
       /*!
@@ -110,7 +113,8 @@ namespace EBGeometry {
 	@param[in] a_code Morton code
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static Index
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      static Index
       decode(const uint64_t& a_code) noexcept;
 
     protected:
@@ -132,7 +136,8 @@ namespace EBGeometry {
 	@param[in] a_point 
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static uint64_t
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      static uint64_t
       encode(const Index& a_point) noexcept;
 
       /*!
@@ -140,7 +145,8 @@ namespace EBGeometry {
 	@param[in] a_code SFC code.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static Index
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      static Index
       decode(const uint64_t& a_code) noexcept;
     };
   } // namespace SFC

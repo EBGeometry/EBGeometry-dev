@@ -76,7 +76,8 @@ namespace EBGeometry {
 	@brief Destructor (does nothing)
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE ~Face() noexcept;
+      EBGEOMETRY_ALWAYS_INLINE
+      ~Face() noexcept;
 
       /*!
 	@brief Define function which sets the normal vector and half-edge
@@ -84,7 +85,8 @@ namespace EBGeometry {
 	@param[in] a_edge   Half edge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       define(const Vec3& a_normal, const int a_edge) noexcept;
 
       /*!
@@ -94,7 +96,8 @@ namespace EBGeometry {
 	complete with half edges and there can be no dangling edges.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       reconcile() noexcept;
 
       /*!
@@ -102,7 +105,8 @@ namespace EBGeometry {
 	@param[in] a_edge Half edge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       setEdge(const int a_edge) noexcept;
 
       /*!
@@ -110,7 +114,8 @@ namespace EBGeometry {
 	@param[in] a_vertexList List (malloc'ed array) of vertices
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       setVertexList(const Vertex<MetaData>* const a_vertexList) noexcept;
 
       /*!
@@ -118,7 +123,8 @@ namespace EBGeometry {
 	@param[in] a_edgeList List (malloc'ed array) of edges
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       setEdgeList(const Edge<MetaData>* const a_edgeList) noexcept;
 
       /*!
@@ -126,7 +132,8 @@ namespace EBGeometry {
 	@param[in] a_faceList List (malloc'ed array) of faces
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       setFaceList(const Face<MetaData>* const a_faceList) noexcept;
 
       /*!
@@ -135,35 +142,40 @@ namespace EBGeometry {
 	@param[in] a_algorithm Desired algorithm
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       setInsideOutsideAlgorithm(const Polygon2D::InsideOutsideAlgorithm& a_algorithm) noexcept;
 
       /*!
 	@brief Get the number of edges in the polygon
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE int
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      int
       getNumEdges() const noexcept;
 
       /*!
 	@brief Get the half edge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE int
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      int
       getEdge() const noexcept;
 
       /*!
 	@brief Get modifiable centroid
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3&
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      Vec3&
       getCentroid() noexcept;
 
       /*!
 	@brief Get immutable centroid
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Vec3&
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      const Vec3&
       getCentroid() const noexcept;
 
       /*!
@@ -171,7 +183,8 @@ namespace EBGeometry {
 	@param[in] a_dir Coordinate direction
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real&
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      Real&
       getCentroid(const int a_dir) noexcept;
 
       /*!
@@ -179,21 +192,24 @@ namespace EBGeometry {
 	@param[in] a_dir Coordinate direction
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Real&
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      const Real&
       getCentroid(const int a_dir) const noexcept;
 
       /*!
 	@brief Get modifiable normal vector
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3&
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      Vec3&
       getNormal() noexcept;
 
       /*!
 	@brief Get immutable normal vector
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Vec3&
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      const Vec3&
       getNormal() const noexcept;
 
       /*!
@@ -201,7 +217,8 @@ namespace EBGeometry {
 	@return m_metaData
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE MetaData&
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      MetaData&
       getMetaData() noexcept;
 
       /*!
@@ -209,7 +226,8 @@ namespace EBGeometry {
 	@return m_metaData
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const MetaData&
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      const MetaData&
       getMetaData() const noexcept;
 
       /*!
@@ -221,7 +239,8 @@ namespace EBGeometry {
 	Otherwise, we check the distance to the edges of the polygon.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      Real
       signedDistance(const Vec3& a_x0) const noexcept;
 
       /*!
@@ -233,21 +252,24 @@ namespace EBGeometry {
 	to the edges of the polygon.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      Real
       unsignedDistance2(const Vec3& a_x0) const noexcept;
 
       /*!
 	@brief Get the lower-left-most coordinate of this polygon face
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      Vec3
       getSmallestCoordinate() const noexcept;
 
       /*!
 	@brief Get the upper-right-most coordinate of this polygon face
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      Vec3
       getHighestCoordinate() const noexcept;
 
     protected:
@@ -301,35 +323,40 @@ namespace EBGeometry {
 	@brief Compute the centroid position of this polygon
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       computeCentroid() noexcept;
 
       /*!
 	@brief Compute the normal position of this polygon
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       computeNormal() noexcept;
 
       /*!
 	@brief Compute the 2D embedding of this polygon
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       computePolygon2D() noexcept;
 
       /*!
 	@brief Normalize the normal vector, ensuring it has a length of 1
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       normalizeNormalVector() noexcept;
 
       /*!
 	@brief Compute the area of this polygon
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      Real
       computeArea() noexcept;
 
       /*!
@@ -338,7 +365,8 @@ namespace EBGeometry {
 	to delete the list of vertex coordinates later (must be done using 'delete[]').
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3*
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      Vec3*
       getAllVertexCoordinates() const noexcept;
 
       /*!
@@ -346,7 +374,8 @@ namespace EBGeometry {
 	@param[in] a_p Point in space
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Vec3
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      Vec3
       projectPointIntoFacePlane(const Vec3& a_p) const noexcept;
 
       /*!
@@ -356,7 +385,8 @@ namespace EBGeometry {
 	otherwise.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE bool
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      bool
       isPointInsideFace(const Vec3& a_p) const noexcept;
     };
   } // namespace DCEL

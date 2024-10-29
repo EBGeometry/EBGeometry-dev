@@ -48,8 +48,7 @@ namespace EBGeometry {
 
     template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE
-    Edge<MetaData>::Edge(const int a_vertex) noexcept
-      : Edge()
+    Edge<MetaData>::Edge(const int a_vertex) noexcept : Edge()
     {
       m_vertex = a_vertex;
     }
@@ -67,11 +66,13 @@ namespace EBGeometry {
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE Edge<MetaData>::~Edge() noexcept
+    EBGEOMETRY_ALWAYS_INLINE
+    Edge<MetaData>::~Edge() noexcept
     {}
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE void
+    EBGEOMETRY_ALWAYS_INLINE
+    void
     Edge<MetaData>::define(const int a_vertex,
                            const int a_previousEdge,
                            const int a_pairEdge,
@@ -87,70 +88,80 @@ namespace EBGeometry {
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE void
+    EBGEOMETRY_ALWAYS_INLINE
+    void
     Edge<MetaData>::setVertex(const int a_vertex) noexcept
     {
       m_vertex = a_vertex;
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE void
+    EBGEOMETRY_ALWAYS_INLINE
+    void
     Edge<MetaData>::setPreviousEdge(const int a_previousEdge) noexcept
     {
       m_previousEdge = a_previousEdge;
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE void
+    EBGEOMETRY_ALWAYS_INLINE
+    void
     Edge<MetaData>::setPairEdge(const int a_pairEdge) noexcept
     {
       m_pairEdge = a_pairEdge;
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE void
+    EBGEOMETRY_ALWAYS_INLINE
+    void
     Edge<MetaData>::setNextEdge(const int a_nextEdge) noexcept
     {
       m_nextEdge = a_nextEdge;
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE void
+    EBGEOMETRY_ALWAYS_INLINE
+    void
     Edge<MetaData>::setFace(const int a_face) noexcept
     {
       m_face = a_face;
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE void
+    EBGEOMETRY_ALWAYS_INLINE
+    void
     Edge<MetaData>::setVertexList(const Vertex<MetaData>* const a_vertexList) noexcept
     {
       m_vertexList = a_vertexList;
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE void
+    EBGEOMETRY_ALWAYS_INLINE
+    void
     Edge<MetaData>::setEdgeList(const Edge<MetaData>* const a_edgeList) noexcept
     {
       m_edgeList = a_edgeList;
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE void
+    EBGEOMETRY_ALWAYS_INLINE
+    void
     Edge<MetaData>::setFaceList(const Face<MetaData>* const a_faceList) noexcept
     {
       m_faceList = a_faceList;
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE void
+    EBGEOMETRY_ALWAYS_INLINE
+    void
     Edge<MetaData>::setNormal(const Vec3& a_normal) noexcept
     {
       m_normal = a_normal;
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE void
+    EBGEOMETRY_ALWAYS_INLINE
+    void
     Edge<MetaData>::computeNormal() noexcept
     {
       EBGEOMETRY_EXPECT(m_edgeList != nullptr);
@@ -167,14 +178,16 @@ namespace EBGeometry {
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE int
+    EBGEOMETRY_ALWAYS_INLINE
+    int
     Edge<MetaData>::getVertex() const noexcept
     {
       return m_vertex;
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE int
+    EBGEOMETRY_ALWAYS_INLINE
+    int
     Edge<MetaData>::getOtherVertex() const noexcept
     {
       EBGEOMETRY_EXPECT(m_edgeList != nullptr);
@@ -184,56 +197,64 @@ namespace EBGeometry {
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE int
+    EBGEOMETRY_ALWAYS_INLINE
+    int
     Edge<MetaData>::getPreviousEdge() const noexcept
     {
       return m_previousEdge;
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE int
+    EBGEOMETRY_ALWAYS_INLINE
+    int
     Edge<MetaData>::getPairEdge() const noexcept
     {
       return m_pairEdge;
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE int
+    EBGEOMETRY_ALWAYS_INLINE
+    int
     Edge<MetaData>::getNextEdge() const noexcept
     {
       return m_nextEdge;
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE int
+    EBGEOMETRY_ALWAYS_INLINE
+    int
     Edge<MetaData>::getFace() const noexcept
     {
       return m_face;
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE const Vec3&
+    EBGEOMETRY_ALWAYS_INLINE
+    const Vec3&
     Edge<MetaData>::getNormal() const noexcept
     {
       return (m_normal);
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE MetaData&
+    EBGEOMETRY_ALWAYS_INLINE
+    MetaData&
     Edge<MetaData>::getMetaData() noexcept
     {
       return (m_metaData);
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE const MetaData&
+    EBGEOMETRY_ALWAYS_INLINE
+    const MetaData&
     Edge<MetaData>::getMetaData() const noexcept
     {
       return (m_metaData);
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE Vec3
+    EBGEOMETRY_ALWAYS_INLINE
+    Vec3
     Edge<MetaData>::getX2X1() const noexcept
     {
       EBGEOMETRY_EXPECT(m_vertexList != nullptr);
@@ -247,7 +268,8 @@ namespace EBGeometry {
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE Real
+    EBGEOMETRY_ALWAYS_INLINE
+    Real
     Edge<MetaData>::projectPointToEdge(const Vec3& a_x0) const noexcept
     {
       EBGEOMETRY_EXPECT(m_vertexList != nullptr);
@@ -260,7 +282,8 @@ namespace EBGeometry {
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE Real
+    EBGEOMETRY_ALWAYS_INLINE
+    Real
     Edge<MetaData>::signedDistance(const Vec3& a_x0) const noexcept
     {
       EBGEOMETRY_EXPECT(m_vertexList != nullptr);
@@ -296,7 +319,8 @@ namespace EBGeometry {
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE Real
+    EBGEOMETRY_ALWAYS_INLINE
+    Real
     Edge<MetaData>::unsignedDistance2(const Vec3& a_x0) const noexcept
     {
       EBGEOMETRY_EXPECT(m_vertexList != nullptr);

@@ -27,8 +27,9 @@
 namespace EBGeometry {
 
   template <typename MetaData>
-  EBGEOMETRY_ALWAYS_INLINE EBGeometry::DCEL::Mesh<MetaData>*
-                           MeshParser::readIntoDCEL(const std::string a_fileName) noexcept
+  EBGEOMETRY_ALWAYS_INLINE
+  EBGeometry::DCEL::Mesh<MetaData>*
+  MeshParser::readIntoDCEL(const std::string a_fileName) noexcept
 
   {
     const MeshParser::FileType fileType = MeshParser::getFileType(a_fileName);
@@ -56,8 +57,9 @@ namespace EBGeometry {
     return mesh;
   }
 
-  EBGEOMETRY_ALWAYS_INLINE MeshParser::FileType
-                           MeshParser::getFileType(const std::string a_fileName) noexcept
+  EBGEOMETRY_ALWAYS_INLINE
+  MeshParser::FileType
+  MeshParser::getFileType(const std::string a_fileName) noexcept
   {
     const std::string ext = a_fileName.substr(a_fileName.find_last_of(".") + 1);
 
@@ -73,7 +75,8 @@ namespace EBGeometry {
     return fileType;
   }
 
-  EBGEOMETRY_ALWAYS_INLINE bool
+  EBGEOMETRY_ALWAYS_INLINE
+  bool
   MeshParser::containsDegeneratePolygons(const std::vector<EBGeometry::Vec3>& a_vertices,
                                          const std::vector<std::vector<int>>& a_polygons) noexcept
   {
@@ -102,7 +105,8 @@ namespace EBGeometry {
     return false;
   }
 
-  EBGEOMETRY_ALWAYS_INLINE void
+  EBGEOMETRY_ALWAYS_INLINE
+  void
   MeshParser::removeDegenerateVerticesFromSoup(std::vector<EBGeometry::Vec3>& a_vertices,
                                                std::vector<std::vector<int>>& a_polygons) noexcept
   {
@@ -161,8 +165,9 @@ namespace EBGeometry {
   }
 
   template <typename MetaData>
-  EBGEOMETRY_ALWAYS_INLINE EBGeometry::DCEL::Mesh<MetaData>*
-                           MeshParser::turnPolygonSoupIntoDCEL(const std::vector<EBGeometry::Vec3>& a_vertices,
+  EBGEOMETRY_ALWAYS_INLINE
+  EBGeometry::DCEL::Mesh<MetaData>*
+  MeshParser::turnPolygonSoupIntoDCEL(const std::vector<EBGeometry::Vec3>& a_vertices,
                                       const std::vector<std::vector<int>>& a_faces) noexcept
   {
 

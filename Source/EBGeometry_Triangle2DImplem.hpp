@@ -36,10 +36,12 @@ namespace EBGeometry {
     this->define(a_normal, a_vertices);
   }
 
-  EBGEOMETRY_ALWAYS_INLINE Triangle2D::~Triangle2D() noexcept
+  EBGEOMETRY_ALWAYS_INLINE
+  Triangle2D::~Triangle2D() noexcept
   {}
 
-  EBGEOMETRY_ALWAYS_INLINE void
+  EBGEOMETRY_ALWAYS_INLINE
+  void
   Triangle2D::define(const Vec3& a_normal, const Vec3 a_vertices[3]) noexcept
   {
     int projectDir = 0;
@@ -65,7 +67,8 @@ namespace EBGeometry {
     }
   }
 
-  EBGEOMETRY_ALWAYS_INLINE bool
+  EBGEOMETRY_ALWAYS_INLINE
+  bool
   Triangle2D::isPointInside(const Vec3& a_point, const InsideOutsideAlgorithm a_algorithm) const noexcept
   {
     bool ret = false;
@@ -96,7 +99,8 @@ namespace EBGeometry {
     return ret;
   }
 
-  EBGEOMETRY_ALWAYS_INLINE bool
+  EBGEOMETRY_ALWAYS_INLINE
+  bool
   Triangle2D::isPointInsideWindingNumber(const Vec3& a_point) const noexcept
   {
     EBGEOMETRY_EXPECT(m_xDir >= 0);
@@ -111,7 +115,8 @@ namespace EBGeometry {
     return windingNumber != 0;
   }
 
-  EBGEOMETRY_ALWAYS_INLINE bool
+  EBGEOMETRY_ALWAYS_INLINE
+  bool
   Triangle2D::isPointInsideCrossingNumber(const Vec3& a_point) const noexcept
   {
     EBGEOMETRY_EXPECT(m_xDir >= 0);
@@ -126,7 +131,8 @@ namespace EBGeometry {
     return (crossingNumber & 1);
   }
 
-  EBGEOMETRY_ALWAYS_INLINE bool
+  EBGEOMETRY_ALWAYS_INLINE
+  bool
   Triangle2D::isPointInsideSubtend(const Vec3& a_point) const noexcept
   {
     EBGEOMETRY_EXPECT(m_xDir >= 0);
@@ -143,7 +149,8 @@ namespace EBGeometry {
     return (round(sumTheta) == 1);
   }
 
-  EBGEOMETRY_ALWAYS_INLINE Vec2
+  EBGEOMETRY_ALWAYS_INLINE
+  Vec2
   Triangle2D::projectPoint(const Vec3& a_point) const noexcept
   {
     EBGEOMETRY_EXPECT(m_xDir >= 0);
@@ -154,7 +161,8 @@ namespace EBGeometry {
     return Vec2(a_point[m_xDir], a_point[m_yDir]);
   }
 
-  EBGEOMETRY_ALWAYS_INLINE int
+  EBGEOMETRY_ALWAYS_INLINE
+  int
   Triangle2D::computeWindingNumber(const Vec2& a_point) const noexcept
   {
     int windingNumber = 0;
@@ -189,7 +197,8 @@ namespace EBGeometry {
     return windingNumber;
   }
 
-  EBGEOMETRY_ALWAYS_INLINE int
+  EBGEOMETRY_ALWAYS_INLINE
+  int
   Triangle2D::computeCrossingNumber(const Vec2& a_point) const noexcept
   {
     int crossingNumber = 0;
@@ -213,7 +222,8 @@ namespace EBGeometry {
     return crossingNumber;
   }
 
-  EBGEOMETRY_ALWAYS_INLINE Real
+  EBGEOMETRY_ALWAYS_INLINE
+  Real
   Triangle2D::computeSubtendedAngle(const Vec2& a_point) const noexcept
   {
     Real sumTheta = 0.0;

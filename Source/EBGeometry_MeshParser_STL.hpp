@@ -38,7 +38,9 @@ namespace EBGeometry {
 	@return Returns a DCEL mesh
       */
       template <typename MetaData>
-      EBGEOMETRY_GPU_HOST [[nodiscard]] EBGEOMETRY_INLINE static EBGeometry::DCEL::Mesh<MetaData>*
+      EBGEOMETRY_GPU_HOST
+      [[nodiscard]] EBGEOMETRY_INLINE
+      static EBGeometry::DCEL::Mesh<MetaData>*
       readSingle(const std::string a_fileName) noexcept;
 
       /*!
@@ -48,8 +50,9 @@ namespace EBGeometry {
 	for the STL objects.
       */
       template <typename MetaData>
-      EBGEOMETRY_GPU_HOST [[nodiscard]]
-      EBGEOMETRY_INLINE static std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
+      EBGEOMETRY_GPU_HOST
+      [[nodiscard]] EBGEOMETRY_INLINE
+      static std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
       readMulti(const std::string a_fileName) noexcept;
 
     protected:
@@ -58,8 +61,9 @@ namespace EBGeometry {
 	@param[in] a_filename File name
 	@return Returns FileEncoding::ASCII or FileEncoding::Binary,
       */
-      EBGEOMETRY_GPU_HOST [[nodiscard]]
-      EBGEOMETRY_INLINE static FileEncoding
+      EBGEOMETRY_GPU_HOST
+      [[nodiscard]] EBGEOMETRY_INLINE
+      static FileEncoding
       getEncoding(const std::string a_filename) noexcept;
 
       /*!
@@ -67,8 +71,9 @@ namespace EBGeometry {
 	@param[in] a_filename Input filename
       */
       template <typename MetaData>
-      EBGEOMETRY_GPU_HOST [[nodiscard]]
-      EBGEOMETRY_INLINE static std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
+      EBGEOMETRY_GPU_HOST
+      [[nodiscard]] EBGEOMETRY_INLINE
+      static std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
       readASCII(const std::string a_filename) noexcept;
 
       /*!
@@ -77,8 +82,9 @@ namespace EBGeometry {
       */
       template <typename MetaData>
       EBGEOMETRY_GPU_HOST
-        [[nodiscard]] EBGEOMETRY_INLINE static std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
-        readBinary(const std::string a_filename) noexcept;
+      [[nodiscard]] EBGEOMETRY_INLINE
+      static std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
+      readBinary(const std::string a_filename) noexcept;
 
       /*!
 	@brief Read an STL object as a triangle soup into a raw vertices and facets
@@ -90,7 +96,8 @@ namespace EBGeometry {
 	@param[out] a_lastLine   Line number in a_filename containing the 'endsolid' identifier. 
       */
       EBGEOMETRY_GPU_HOST
-      EBGEOMETRY_INLINE static void
+      EBGEOMETRY_INLINE
+      static void
       readSTLSoupASCII(std::vector<Vec3>&              a_vertices,
                        std::vector<std::vector<int>>&  a_facets,
                        std::string&                    a_objectName,

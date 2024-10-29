@@ -40,8 +40,10 @@ namespace EBGeometry {
     @param[in, out] implicitFunction Implicit function pointer to be allocated. 
   */
   template <typename T>
-  EBGEOMETRY_GPU_HOST EBGEOMETRY_ALWAYS_INLINE GPUPointer<T>
-                                               allocateImplicitFunctionOnDevice() noexcept
+  EBGEOMETRY_GPU_HOST
+  EBGEOMETRY_ALWAYS_INLINE
+  GPUPointer<T>
+  allocateImplicitFunctionOnDevice() noexcept
   {
     GPUPointer<T> func;
 

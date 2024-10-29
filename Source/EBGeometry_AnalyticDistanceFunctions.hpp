@@ -53,7 +53,8 @@ namespace EBGeometry {
       @param[in] a_point Position.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    Real
     value(const Vec3& a_point) const noexcept override
     {
       return dot((a_point - m_point), m_normal);
@@ -159,7 +160,9 @@ namespace EBGeometry {
       @brief Signed distance function for sphere.
       @param[in] a_point Position.
     */
-    EBGEOMETRY_GPU_HOST_DEVICE [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
+    EBGEOMETRY_GPU_HOST_DEVICE
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    Real
     value(const Vec3& a_point) const noexcept override
     {
       return (a_point - m_center).length() - m_radius;
@@ -258,7 +261,8 @@ namespace EBGeometry {
       @brief Destructor
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE ~BoxSDF() noexcept
+    EBGEOMETRY_ALWAYS_INLINE
+    ~BoxSDF() noexcept
     {}
 
     /*!
@@ -266,7 +270,8 @@ namespace EBGeometry {
       @param[in] a_point Position.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    Real
     value(const Vec3& a_point) const noexcept override
     {
       // For each coordinate direction, we have delta[dir] if a_point[dir] falls  \

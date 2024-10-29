@@ -55,8 +55,10 @@ namespace EBGeometry {
       supports multiple file formats. 
       @param[in] a_filename File name
     */
-    template <typename MetaData = DCEL::DefaultMetaData>
-    EBGEOMETRY_GPU_HOST [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static EBGeometry::DCEL::Mesh<MetaData>*
+    template <typename MetaData>
+    EBGEOMETRY_GPU_HOST
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    static EBGeometry::DCEL::Mesh<MetaData>*
     readIntoDCEL(const std::string a_filename) noexcept;
 
     /*!
@@ -64,7 +66,8 @@ namespace EBGeometry {
       @param[in] a_filenames 
     */
     EBGEOMETRY_GPU_HOST
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static MeshParser::FileType
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    static MeshParser::FileType
     getFileType(const std::string a_filename) noexcept;
 
     /*!
@@ -73,7 +76,8 @@ namespace EBGeometry {
       @param[out] a_polygons Polygons
     */
     EBGEOMETRY_GPU_HOST
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static bool
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    static bool
     containsDegeneratePolygons(const std::vector<EBGeometry::Vec3>& a_vertices,
                                const std::vector<std::vector<int>>& a_polygons) noexcept;
 
@@ -84,7 +88,8 @@ namespace EBGeometry {
       @param[in, out] a_polygons Planar polygons.
     */
     EBGEOMETRY_GPU_HOST
-    EBGEOMETRY_ALWAYS_INLINE static void
+    EBGEOMETRY_ALWAYS_INLINE
+    static void
     removeDegenerateVerticesFromSoup(std::vector<EBGeometry::Vec3>& a_vertices,
                                      std::vector<std::vector<int>>& a_polygons) noexcept;
 
@@ -99,7 +104,9 @@ namespace EBGeometry {
       is no longer required. 
     */
     template <typename MetaData>
-    EBGEOMETRY_GPU_HOST [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static EBGeometry::DCEL::Mesh<MetaData>*
+    EBGEOMETRY_GPU_HOST
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    static EBGeometry::DCEL::Mesh<MetaData>*
     turnPolygonSoupIntoDCEL(const std::vector<EBGeometry::Vec3>& a_vertices,
                             const std::vector<std::vector<int>>& a_polygons) noexcept;
 

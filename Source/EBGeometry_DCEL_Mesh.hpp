@@ -97,7 +97,8 @@ namespace EBGeometry {
 	@brief Destructor (does nothing)
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE ~Mesh() noexcept;
+      EBGEOMETRY_ALWAYS_INLINE
+      ~Mesh() noexcept;
 
       /*!
 	@brief Define function. Puts mesh in usable state. 
@@ -115,7 +116,8 @@ namespace EBGeometry {
 	reconcile function (which is called by Mesh<MetaData>::define).
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       define(const int         a_numVertices,
              const int         a_numEdges,
              const int         a_numFaces,
@@ -137,7 +139,8 @@ namespace EBGeometry {
 	@note Only callable on host. 
       */
       EBGEOMETRY_GPU_HOST
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       sanityCheck() const noexcept;
 
       /*!
@@ -145,7 +148,8 @@ namespace EBGeometry {
 	@param[in] a_algorithm Algorithm to use.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       setSearchAlgorithm(const SearchAlgorithm a_algorithm) noexcept;
 
       /*!
@@ -157,7 +161,8 @@ namespace EBGeometry {
 	@param[in] a_algorithm Algorithm to use
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       setInsideOutsideAlgorithm(const Polygon2D::InsideOutsideAlgorithm a_algorithm) noexcept;
 
       /*!
@@ -170,7 +175,8 @@ namespace EBGeometry {
 	area and normal vector for faces
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       reconcile(const DCEL::VertexNormalWeight a_weight = DCEL::VertexNormalWeight::Angle) noexcept;
 
       /*!
@@ -186,15 +192,17 @@ namespace EBGeometry {
 	@return m_vertices
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Vertex<MetaData>*
-                                                   getVertices() const noexcept;
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      const Vertex<MetaData>*
+      getVertices() const noexcept;
 
       /*!
 	@brief Get number of vertices in this mesh
 	@return m_numVertices
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE int
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      int
       getNumberOfVertices() const noexcept;
 
       /*!
@@ -202,15 +210,17 @@ namespace EBGeometry {
 	@return m_edges
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Edge<MetaData>*
-                                                   getEdges() const noexcept;
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      const Edge<MetaData>*
+      getEdges() const noexcept;
 
       /*!
 	@brief Get number of half-edges in thius mesh
 	@return m_numEdges
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE int
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      int
       getNumberOfEdges() const noexcept;
 
       /*!
@@ -218,15 +228,17 @@ namespace EBGeometry {
 	@return m_faces
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Face<MetaData>*
-                                                   getFaces() const noexcept;
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      const Face<MetaData>*
+      getFaces() const noexcept;
 
       /*!
 	@brief Get number of faces in this mesh.
 	@return m_numFaces
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE int
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      int
       getNumberOfFaces() const noexcept;
 
       /*!
@@ -239,7 +251,8 @@ namespace EBGeometry {
 	@note This will call the other version with the object's search algorithm.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      Real
       signedDistance(const Vec3& a_point) const noexcept;
 
       /*!
@@ -253,7 +266,8 @@ namespace EBGeometry {
 
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      Real
       signedDistance(const Vec3& a_point, SearchAlgorithm a_algorithm) const noexcept;
 
       /*!
@@ -266,7 +280,8 @@ namespace EBGeometry {
 	@note This will call the other version with the object's search algorithm.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      Real
       unsignedDistance2(const Vec3& a_point) const noexcept;
 
     protected:
@@ -310,7 +325,8 @@ namespace EBGeometry {
 	@note This calls DCEL::Face<MetaData>::reconcile()
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       reconcileFaces() noexcept;
 
       /*!
@@ -318,7 +334,8 @@ namespace EBGeometry {
 	@note This calls DCEL::Edge<MetaData>::reconcile()
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       reconcileEdges() noexcept;
 
       /*!
@@ -328,7 +345,8 @@ namespace EBGeometry {
 	DCEL::Vertex<MetaData>::computeVertexNormalAngleWeighted()
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       reconcileVertices(const DCEL::VertexNormalWeight a_weight) noexcept;
 
       /*!
@@ -337,7 +355,8 @@ namespace EBGeometry {
 	@param[in] a_point 3D point
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      Real
       DirectSignedDistance(const Vec3& a_point) const noexcept;
 
       /*!
@@ -349,7 +368,8 @@ namespace EBGeometry {
 	@param[in] a_point 3D point
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      Real
       DirectSignedDistance2(const Vec3& a_point) const noexcept;
 
       /*!
@@ -359,7 +379,8 @@ namespace EBGeometry {
 	@param[in] a_warn Current warning to increment by
       */
       EBGEOMETRY_GPU_HOST
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       incrementWarning(std::map<std::string, int>& a_warnings, const std::string& a_warn) const noexcept;
 
       /*!
@@ -367,7 +388,8 @@ namespace EBGeometry {
 	@param[in] a_warnings All warnings
       */
       EBGEOMETRY_GPU_HOST
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       printWarnings(const std::map<std::string, int>& a_warnings) const noexcept;
     };
   } // namespace DCEL

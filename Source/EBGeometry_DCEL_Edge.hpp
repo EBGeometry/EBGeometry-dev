@@ -90,7 +90,8 @@ namespace EBGeometry {
 	@brief Destructor (does nothing).
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE ~Edge() noexcept;
+      EBGEOMETRY_ALWAYS_INLINE
+      ~Edge() noexcept;
 
       /*!
 	@brief Define function. Sets everything except the normal vector.
@@ -101,7 +102,8 @@ namespace EBGeometry {
 	@param[in] a_face Polygon face index.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       define(const int a_vertex,
              const int a_previousEdge,
              const int a_pairEdge,
@@ -113,7 +115,8 @@ namespace EBGeometry {
 	@param[in] a_vertex Starting vertex.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       setVertex(const int a_vertex) noexcept;
 
       /*!
@@ -121,7 +124,8 @@ namespace EBGeometry {
 	@param[in] a_previousEdge Previous edge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       setPreviousEdge(const int a_previousEdge) noexcept;
 
       /*!
@@ -129,7 +133,8 @@ namespace EBGeometry {
 	@param[in] a_pairEdge Pair edge (for jumping to the opposite polygon)
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       setPairEdge(const int a_pairEdge) noexcept;
 
       /*!
@@ -137,7 +142,8 @@ namespace EBGeometry {
 	@param[in] a_nextEdge Next edge around the polygon
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       setNextEdge(const int a_nextEdge) noexcept;
 
       /*!
@@ -145,7 +151,8 @@ namespace EBGeometry {
 	@param[in] a_face Polygon face.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       setFace(const int a_face) noexcept;
 
       /*!
@@ -153,7 +160,8 @@ namespace EBGeometry {
 	@param[in] a_vertexList List (malloc'ed array) of vertices
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       setVertexList(const Vertex<MetaData>* const a_vertexList) noexcept;
 
       /*!
@@ -161,7 +169,8 @@ namespace EBGeometry {
 	@param[in] a_edgeList List (malloc'ed array) of edges
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       setEdgeList(const Edge<MetaData>* const a_edgeList) noexcept;
 
       /*!
@@ -169,7 +178,8 @@ namespace EBGeometry {
 	@param[in] a_faceList List (malloc'ed array) of faces
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       setFaceList(const Face<MetaData>* const a_faceList) noexcept;
 
       /*!
@@ -177,14 +187,16 @@ namespace EBGeometry {
 	@param[in] a_normal Normal vector
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       setNormal(const Vec3& a_normal) noexcept;
 
       /*!
 	@brief Compute the normal vector
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE void
+      EBGEOMETRY_ALWAYS_INLINE
+      void
       computeNormal() noexcept;
 
       /*!
@@ -192,7 +204,8 @@ namespace EBGeometry {
 	@return Returns m_vertex
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE int
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      int
       getVertex() const noexcept;
 
       /*!
@@ -200,7 +213,8 @@ namespace EBGeometry {
 	@return Returns m_vertex
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE int
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      int
       getOtherVertex() const noexcept;
 
       /*!
@@ -208,7 +222,8 @@ namespace EBGeometry {
 	@return Returns m_previousEdge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE int
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      int
       getPreviousEdge() const noexcept;
 
       /*!
@@ -216,7 +231,8 @@ namespace EBGeometry {
 	@return Returns m_pairEdge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE int
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      int
       getPairEdge() const noexcept;
 
       /*!
@@ -224,7 +240,8 @@ namespace EBGeometry {
 	@return Returns m_nextEdge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE int
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      int
       getNextEdge() const noexcept;
 
       /*!
@@ -232,7 +249,8 @@ namespace EBGeometry {
 	@return Returns m_face
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE int
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      int
       getFace() const noexcept;
 
       /*!
@@ -240,7 +258,8 @@ namespace EBGeometry {
 	@return Return m_normal
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Vec3&
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      const Vec3&
       getNormal() const noexcept;
 
       /*!
@@ -248,7 +267,8 @@ namespace EBGeometry {
 	@return m_metaData
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE MetaData&
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      MetaData&
       getMetaData() noexcept;
 
       /*!
@@ -256,7 +276,8 @@ namespace EBGeometry {
 	@return m_metaData
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const MetaData&
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      const MetaData&
       getMetaData() const noexcept;
 
       /*!
@@ -267,7 +288,8 @@ namespace EBGeometry {
 	projection to the edge and compute the sign from the normal vector.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      Real
       signedDistance(const Vec3& a_x0) const noexcept;
 
       /*!
@@ -279,7 +301,8 @@ namespace EBGeometry {
 	signedDistance()
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Real
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      Real
       unsignedDistance2(const Vec3& a_x0) const noexcept;
 
     protected:
@@ -338,7 +361,8 @@ namespace EBGeometry {
 	@details Returns the vector pointing from the starting index to the end index
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE Vec3
+      EBGEOMETRY_ALWAYS_INLINE
+      Vec3
       getX2X1() const noexcept;
 
       /*!
@@ -348,7 +372,8 @@ namespace EBGeometry {
 	edge if t = [0,1] and to one of the start/end vertices otherwise.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      EBGEOMETRY_ALWAYS_INLINE Real
+      EBGEOMETRY_ALWAYS_INLINE
+      Real
       projectPointToEdge(const Vec3& a_x0) const noexcept;
     };
 
