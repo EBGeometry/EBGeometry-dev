@@ -13,7 +13,6 @@
 #define EBGeometry_MeshParserImplem
 
 // Std includes
-#include <map>
 #include <utility>
 #include <fstream>
 #include <sstream>
@@ -210,8 +209,11 @@ namespace EBGeometry {
       // Allocate storage for the mesh.
       Mesh<MetaData>* mesh = new Mesh<MetaData>(numVertices, numEdges, numFaces, vertices, edges, faces);
 
-      // Build DCEL faces, edges, and vertices.
+      // Build DCEL faces, edges, and vertices. In order to build the DCEL edge pairs we keep track of
+      // all outgoing edges from each vertex.
       int edgeIndex = 0;
+
+      std::map<int, std::vector<int>> outgoingEdgesMap;
 
       for (int faceIndex = 0; faceIndex < a_faces.size(); faceIndex++) {
         EBGEOMETRY_ALWAYS_EXPECT(a_faces[faceIndex].size() >= 3);
@@ -242,6 +244,9 @@ namespace EBGeometry {
           curEdge.setVertex(vertIndex);
           curVert.setEdge(edgeIndex);
 
+          // Add a reference of the current face to the vertex-face map.
+          outgoingEdgesMap[vertIndex].emplace_back(edgeIndex);
+
           // Move on to the vertex in the face list and define the next half edge.
           edgeIndex++;
         }
@@ -263,7 +268,26 @@ namespace EBGeometry {
 
       EBGEOMETRY_EXPECT(edgeIndex == (numEdges - 1));
 
+      // Associate pair edges
+      for (const auto& m : outgoingEdgesMap) {
+        const auto& vertex        = m.first;
+        const auto& outgoingEdges = m.second;
+
+        for (auto& curOutgoingEdgeIndex : outgoingEdges) {
+          Edge<MetaData>& curEdge = edges[curOutgoingEdgeIndex];
+
+          const int startVertex = curEdge.getVertex();
+          const int endVertex   = curEdge.getOtherVertex();
+
+          // Now go through all the other outgoing edges, and look for an edge which points
+          // opposite to this one.
+          for (auto& otherOutgoingEdgeIndex : outgoingEdges) {
+            if (otherOutgoingEdgeIndex != curOutgoingEdgeIndex) {
 #warning "MeshParser::turnPolygonSoupIntoDCEL -- working on this function. Need to reconcile pair edges."
+            }
+          }
+        }
+      }
 
       // Do a sanity check and then reconcile the mesh, which will compute internal parameters like normal
       // vectors for the vertices, edges, and faces.

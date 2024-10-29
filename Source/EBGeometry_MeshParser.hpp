@@ -14,6 +14,7 @@
 
 // Std includes
 #include <vector>
+#include <map>
 
 // Our includes
 #include "EBGeometry_DCEL_Mesh.hpp"
@@ -122,7 +123,7 @@ namespace EBGeometry {
 	@param[in] a_fileName STL file name.
 	@return Returns a DCEL mesh
       */
-      template <typename MetaData>      
+      template <typename MetaData>
       EBGEOMETRY_GPU_HOST
       [[nodiscard]] EBGEOMETRY_INLINE
       static EBGeometry::DCEL::Mesh<MetaData>*
@@ -189,7 +190,7 @@ namespace EBGeometry {
                        const std::vector<std::string>& a_fileContents,
                        const int                       a_firstLine,
                        const int                       a_lastLine) noexcept;
-    };    
+    };
 
   } // namespace MeshParser
 } // namespace EBGeometry
