@@ -78,9 +78,9 @@ namespace EBGeometry {
 
     template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE void
-    Face<MetaData>::setHalfEdge(const int a_halfEdge) noexcept
+    Face<MetaData>::setEdge(const int a_edge) noexcept
     {
-      m_edge = a_halfEdge;
+      m_edge = a_edge;
     }
 
     template <class MetaData>

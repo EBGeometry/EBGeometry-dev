@@ -277,15 +277,16 @@ namespace EBGeometry {
     }
 
     template <class MetaData>
-    EBGEOMETRY_ALWAYS_INLINE
-    void Mesh<MetaData>::freeMem() noexcept {
+    EBGEOMETRY_ALWAYS_INLINE void
+    Mesh<MetaData>::freeMem() noexcept
+    {
       EBGEOMETRY_EXPECT(m_vertices != nullptr);
       EBGEOMETRY_EXPECT(m_edges != nullptr);
-      EBGEOMETRY_EXPECT(m_faces != nullptr);            
-      
+      EBGEOMETRY_EXPECT(m_faces != nullptr);
+
       delete[] m_vertices;
       delete[] m_edges;
-      delete[] m_faces;            
+      delete[] m_faces;
     }
 
     template <class MetaData>

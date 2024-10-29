@@ -163,26 +163,105 @@ namespace EBGeometry {
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE EBGeometry::DCEL::Mesh<MetaData>*
                            MeshParser::turnPolygonSoupIntoDCEL(const std::vector<EBGeometry::Vec3>& a_vertices,
-                                      const std::vector<std::vector<int>>& a_polygons) noexcept
+                                      const std::vector<std::vector<int>>& a_faces) noexcept
   {
-#warning "MeshParser::turnPolygonSoupIntoDCEL -- working on this function"
+
     using namespace EBGeometry::DCEL;
 
     // Figure out the number of vertices, edges, and polygons.
     const int numVertices = a_vertices.size();
-    const int numFaces    = a_polygons.size();
+    const int numFaces    = a_faces.size();
 
     int numEdges = 0;
-    for (const auto& polygon : a_polygons) {
+    for (const auto& polygon : a_faces) {
       numEdges += polygon.size();
     }
 
-    // Build vertex, edge, and half edge vectors.
+    // Allocate vertex, edge, and half edge lists.
     Vertex<MetaData>* vertices = new Vertex<MetaData>[numVertices];
     Edge<MetaData>*   edges    = new Edge<MetaData>[numEdges];
     Face<MetaData>*   faces    = new Face<MetaData>[numFaces];
 
+    for (int v = 0; v < numVertices; v++) {
+      vertices[v].setVertexList(vertices);
+      vertices[v].setEdgeList(edges);
+      vertices[v].setFaceList(faces);
+    }
+
+    for (int e = 0; e < numEdges; e++) {
+      edges[e].setVertexList(vertices);
+      edges[e].setEdgeList(edges);
+      edges[e].setFaceList(faces);
+    }
+
+    for (int f = 0; f < numFaces; f++) {
+      faces[f].setVertexList(vertices);
+      faces[f].setEdgeList(edges);
+      faces[f].setFaceList(faces);
+    }
+
+    // Allocate storage for the mesh.
     Mesh<MetaData>* mesh = new Mesh<MetaData>(numVertices, numEdges, numFaces, vertices, edges, faces);
+
+    // Build DCEL faces, edges, and vertices.
+    int edgeIndex = 0;
+
+    for (int faceIndex = 0; faceIndex < a_faces.size(); faceIndex++) {
+      EBGEOMETRY_ALWAYS_EXPECT(a_faces[faceIndex].size() >= 3);
+
+      const auto& faceVertices    = a_faces[faceIndex];
+      const auto  numFaceVertices = faceVertices.size();
+
+      // Build the face -- it already has associated vertex, edge, and face lists so we only need
+      // to associate the half edge.
+      faces[faceIndex].setEdge(edgeIndex);
+
+      // Now build the actual edges -- each edge must reference the origin vertex.
+      const int firstEdge = edgeIndex;
+      const int lastEdge  = firstEdge + numFaceVertices - 1;
+
+      for (int v = 0; v < numFaceVertices; v++) {
+        const int vertIndex = faceVertices[v];
+
+        EBGEOMETRY_EXPECT(vertIndex >= 0);
+        EBGEOMETRY_EXPECT(edgeIndex >= 0);
+        EBGEOMETRY_EXPECT(vertIndex < numVertices);
+        EBGEOMETRY_EXPECT(edgeIndex < numEdges);
+
+        Edge<MetaData>&   curEdge = edges[edgeIndex];
+        Vertex<MetaData>& curVert = vertices[vertIndex];
+
+        curEdge.setFace(faceIndex);
+        curEdge.setVertex(vertIndex);
+        curVert.setEdge(edgeIndex);
+
+        // Move on to the vertex in the face list and define the next half edge.
+        edgeIndex++;
+      }
+
+      // Fix up the indexing of next/previous edges for the newly defined edges -- After that, they have
+      // everything except the pair edge (and internal things like normal vectors).
+      edges[firstEdge].setPreviousEdge(lastEdge);
+      edges[lastEdge].setNextEdge(firstEdge);
+
+      for (int i = firstEdge; i < lastEdge; i++) {
+        if (i > firstEdge) {
+          edges[i].setPreviousEdge(i - 1);
+        }
+        if (i < lastEdge) {
+          edges[i].setNextEdge(i + 1);
+        }
+      }
+    }
+
+    EBGEOMETRY_EXPECT(edgeIndex == (numEdges - 1));
+
+#warning "MeshParser::turnPolygonSoupIntoDCEL -- working on this function. Need to reconcile pair edges."
+
+    // Do a sanity check and then reconcile the mesh, which will compute internal parameters like normal
+    // vectors for the vertices, edges, and faces.
+    mesh->sanityCheck();
+    mesh->reconcile();
 
     return mesh;
   }

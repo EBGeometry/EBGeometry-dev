@@ -99,11 +99,11 @@ namespace EBGeometry {
 
       /*!
 	@brief Set the half edge
-	@param[in] a_halfEdge Half edge
+	@param[in] a_edge Half edge
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE void
-      setHalfEdge(const int a_halfEdge) noexcept;
+      setEdge(const int a_edge) noexcept;
 
       /*!
 	@brief Set the vertex list.

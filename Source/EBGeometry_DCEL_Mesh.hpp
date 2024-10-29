@@ -178,7 +178,8 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE
-      void freeMem() noexcept;
+      void
+      freeMem() noexcept;
 
       /*!
 	@brief Get vertices in this mesh
