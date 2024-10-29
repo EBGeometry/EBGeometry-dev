@@ -37,7 +37,7 @@ namespace EBGeometry {
 	@param[in] a_fileName STL file name.
 	@return Returns a DCEL mesh
       */
-      template <typename MetaData>
+      template <typename MetaData>      
       EBGEOMETRY_GPU_HOST
       [[nodiscard]] EBGEOMETRY_INLINE
       static EBGeometry::DCEL::Mesh<MetaData>*
@@ -63,7 +63,7 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST
       [[nodiscard]] EBGEOMETRY_INLINE
-      static FileEncoding
+      static MeshParser::FileEncoding
       getEncoding(const std::string a_filename) noexcept;
 
       /*!

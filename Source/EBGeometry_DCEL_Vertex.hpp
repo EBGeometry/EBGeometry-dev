@@ -163,6 +163,33 @@ namespace EBGeometry {
       setFaceList(const Face<MetaData>* const a_faceList) noexcept;
 
       /*!
+	@brief Get the vertex list
+	@return m_vertexList
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE
+      const Vertex<MetaData>*
+      getVertexList() const noexcept;
+
+      /*!
+	@brief Get the edge list
+	@return m_edgeList
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE
+      const Edge<MetaData>*
+      getEdgeList() const noexcept;
+
+      /*!
+	@brief Get the face list.
+	@return m_faceList
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE
+      const Face<MetaData>*
+      getFaceList() const noexcept;
+
+      /*!
 	@brief Normalize the normal vector to a length of 1.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
@@ -191,6 +218,15 @@ namespace EBGeometry {
       EBGEOMETRY_ALWAYS_INLINE
       void
       computeVertexNormalAngleWeighted() noexcept;
+
+      /*!
+	@brief Get the outgoing edge
+	@return m_edge
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE
+      int
+      getEdge() const noexcept;
 
       /*!
 	@brief Return modifiable vertex position.

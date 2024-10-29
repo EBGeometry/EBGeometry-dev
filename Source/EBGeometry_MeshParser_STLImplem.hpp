@@ -17,6 +17,7 @@
 #include <fstream>
 #include <sstream>
 #include <cstring>
+#include <cstdint>
 
 // Our includes
 #include "EBGeometry_Macros.hpp"
@@ -57,6 +58,11 @@ namespace EBGeometry {
         meshes = EBGeometry::MeshParser::STL::readBinary<MetaData>(a_fileName);
 
         break;
+      }
+      case MeshParser::FileEncoding::Unknown: {
+	std::cerr << "In file EBGeometry_MeshParser_STLImplem.hpp function STL::readMulti - unknown file encoding encountered\n";
+
+	break;
       }
       }
 

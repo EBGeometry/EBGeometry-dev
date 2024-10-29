@@ -71,7 +71,7 @@ namespace EBGeometry {
     void
     Face<MetaData>::reconcile() noexcept
     {
-      this->computeNormalVector();
+      this->computeNormal();
       this->normalizeNormalVector();
       this->computeCentroid();
       this->computePolygon2D();
@@ -108,6 +108,30 @@ namespace EBGeometry {
     {
       m_faceList = a_faceList;
     }
+
+    template <class MetaData>
+    EBGEOMETRY_ALWAYS_INLINE
+    const Vertex<MetaData>*
+    Face<MetaData>::getVertexList() const noexcept
+    {
+      return (m_vertexList);
+    }
+
+    template <class MetaData>
+    EBGEOMETRY_ALWAYS_INLINE
+    const Edge<MetaData>*
+    Face<MetaData>::getEdgeList() const noexcept
+    {
+      return (m_edgeList);
+    }
+
+    template <class MetaData>
+    EBGEOMETRY_ALWAYS_INLINE
+    const Face<MetaData>*
+    Face<MetaData>::getFaceList() const noexcept
+    {
+      return (m_faceList);
+    }       
 
     template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE
@@ -509,7 +533,7 @@ namespace EBGeometry {
     void
     Face<MetaData>::normalizeNormalVector() noexcept
     {
-      EBGEOMETRY_EXPECT(m_normal.length() > Real(0.0));
+      EBGEOMETRY_EXPECT(m_normal.length() > EBGeometry::Limits::min());
 
       m_normal = m_normal / m_normal.length();
     }

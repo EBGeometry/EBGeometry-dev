@@ -137,6 +137,33 @@ namespace EBGeometry {
       setFaceList(const Face<MetaData>* const a_faceList) noexcept;
 
       /*!
+	@brief Get the vertex list
+	@return m_vertexList
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE
+      const Vertex<MetaData>*
+      getVertexList() const noexcept;
+
+      /*!
+	@brief Get the edge list
+	@return m_edgeList
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE
+      const Edge<MetaData>*
+      getEdgeList() const noexcept;
+
+      /*!
+	@brief Get the face list.
+	@return m_faceList
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE
+      const Face<MetaData>*
+      getFaceList() const noexcept;      
+
+      /*!
 	@brief Set the inside/outside algorithm when determining if a point projects
 	to the inside or outside of the polygon.
 	@param[in] a_algorithm Desired algorithm

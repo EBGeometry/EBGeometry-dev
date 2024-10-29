@@ -425,7 +425,7 @@ namespace EBGeometry {
       EBGEOMETRY_EXPECT(m_edges != nullptr);
 
       for (int i = 0; i < m_numEdges; i++) {
-        m_edges[i].reconcile();
+        m_edges[i].computeNormal();
       }
     }
 

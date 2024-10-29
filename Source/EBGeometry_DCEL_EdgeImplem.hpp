@@ -153,6 +153,30 @@ namespace EBGeometry {
 
     template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE
+    const Vertex<MetaData>*
+    Edge<MetaData>::getVertexList() const noexcept
+    {
+      return (m_vertexList);
+    }
+
+    template <class MetaData>
+    EBGEOMETRY_ALWAYS_INLINE
+    const Edge<MetaData>*
+    Edge<MetaData>::getEdgeList() const noexcept
+    {
+      return (m_edgeList);
+    }
+
+    template <class MetaData>
+    EBGEOMETRY_ALWAYS_INLINE
+    const Face<MetaData>*
+    Edge<MetaData>::getFaceList() const noexcept
+    {
+      return (m_faceList);
+    }
+
+    template <class MetaData>
+    EBGEOMETRY_ALWAYS_INLINE
     void
     Edge<MetaData>::setNormal(const Vec3& a_normal) noexcept
     {
@@ -168,13 +192,23 @@ namespace EBGeometry {
       EBGEOMETRY_EXPECT(m_faceList != nullptr);
       EBGEOMETRY_EXPECT(m_face >= 0);
       EBGEOMETRY_EXPECT(m_pairEdge >= 0);
-      EBGEOMETRY_EXPECT(m_faceList[m_pairEdge].getFace() >= 0);
+      EBGEOMETRY_EXPECT(m_edgeList[m_pairEdge].getFace() >= 0);
 
       m_normal = Vec3::zero();
       m_normal += m_faceList[m_face].getNormal();
       m_normal += m_faceList[m_edgeList[m_pairEdge].getFace()].getNormal();
 
       this->normalizeNormalVector();
+    }
+
+    template <class MetaData>
+    EBGEOMETRY_ALWAYS_INLINE
+    void
+    Edge<MetaData>::normalizeNormalVector() noexcept
+    {
+      EBGEOMETRY_EXPECT(m_normal.length() > EBGeometry::Limits::min());
+
+      m_normal = m_normal / m_normal.length();
     }
 
     template <class MetaData>

@@ -30,7 +30,6 @@ namespace EBGeometry {
   EBGEOMETRY_ALWAYS_INLINE
   EBGeometry::DCEL::Mesh<MetaData>*
   MeshParser::readIntoDCEL(const std::string a_fileName) noexcept
-
   {
     const MeshParser::FileType fileType = MeshParser::getFileType(a_fileName);
 
@@ -51,6 +50,9 @@ namespace EBGeometry {
 #else
       mesh = MeshParser::PLY::readSingle<MetaData>(a_fileName);
 #endif
+    }
+    case MeshParser::FileType::Unsupported: {
+      std::cerr << "In file EBGeometry_MeshParserImplem.hpp: MeshParser::readIntoDCEL - unsupported file type\n";
     }
     }
 

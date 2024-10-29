@@ -134,6 +134,30 @@ namespace EBGeometry {
 
     template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE
+    const Vertex<MetaData>*
+    Vertex<MetaData>::getVertexList() const noexcept
+    {
+      return (m_vertexList);
+    }
+
+    template <class MetaData>
+    EBGEOMETRY_ALWAYS_INLINE
+    const Edge<MetaData>*
+    Vertex<MetaData>::getEdgeList() const noexcept
+    {
+      return (m_edgeList);
+    }
+
+    template <class MetaData>
+    EBGEOMETRY_ALWAYS_INLINE
+    const Face<MetaData>*
+    Vertex<MetaData>::getFaceList() const noexcept
+    {
+      return (m_faceList);
+    }
+
+    template <class MetaData>
+    EBGEOMETRY_ALWAYS_INLINE
     void
     Vertex<MetaData>::normalizeNormalVector() noexcept
     {
@@ -252,6 +276,14 @@ namespace EBGeometry {
       }
 
       this->normalizeNormalVector();
+    }
+
+    template <class MetaData>
+    EBGEOMETRY_ALWAYS_INLINE
+    int
+    Vertex<MetaData>::getEdge() const noexcept
+    {
+      return (m_outgoingEdge);
     }
 
     template <class MetaData>
