@@ -232,8 +232,8 @@ namespace EBGeometry {
           const int vertIndex = faceVertices[v];
 
           EBGEOMETRY_EXPECT(vertIndex >= 0);
-          EBGEOMETRY_EXPECT(edgeIndex >= 0);
           EBGEOMETRY_EXPECT(vertIndex < numVertices);
+          EBGEOMETRY_EXPECT(edgeIndex >= 0);
           EBGEOMETRY_EXPECT(edgeIndex < numEdges);
 
           Edge<MetaData>&   curEdge = edges[edgeIndex];
