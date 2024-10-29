@@ -168,8 +168,6 @@ namespace EBGeometry {
 #warning "MeshParser::turnPolygonSoupIntoDCEL -- working on this function"
     using namespace EBGeometry::DCEL;
 
-    Mesh<MetaData>* mesh = new Mesh<MetaData>();
-
     // Figure out the number of vertices, edges, and polygons.
     const int numVertices = a_vertices.size();
     const int numFaces    = a_polygons.size();
@@ -183,6 +181,8 @@ namespace EBGeometry {
     Vertex<MetaData>* vertices = new Vertex<MetaData>[numVertices];
     Edge<MetaData>*   edges    = new Edge<MetaData>[numEdges];
     Face<MetaData>*   faces    = new Face<MetaData>[numFaces];
+
+    Mesh<MetaData>* mesh = new Mesh<MetaData>(numVertices, numEdges, numFaces, vertices, edges, faces);
 
     return mesh;
   }

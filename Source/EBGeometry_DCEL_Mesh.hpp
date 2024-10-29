@@ -174,6 +174,13 @@ namespace EBGeometry {
       reconcile(const DCEL::VertexNormalWeight a_weight = DCEL::VertexNormalWeight::Angle) noexcept;
 
       /*!
+	@brief Free memory by deleting the vertex, edge, and face arrays
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE
+      void freeMem() noexcept;
+
+      /*!
 	@brief Get vertices in this mesh
 	@return m_vertices
       */
