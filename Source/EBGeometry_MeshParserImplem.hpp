@@ -86,10 +86,11 @@ namespace EBGeometry {
       EBGEOMETRY_ALWAYS_EXPECT(a_vertices.size() >= 3);
       EBGEOMETRY_ALWAYS_EXPECT(a_polygons.size() >= 1);
 
+      // indexMap contains a map of the old-to-new indexing.
       std::vector<std::pair<Vec3, int>> vertexMap;
       std::map<int, int>                indexMap;
 
-      // Create a map of the original vertices and sort it lexicographically.
+      // Create a map of the original vertices and sort it using a lexical comparison operator.
       for (int i = 0; i < a_vertices.size(); i++) {
         vertexMap.emplace_back(a_vertices[i], i);
       }
@@ -112,6 +113,7 @@ namespace EBGeometry {
         const auto& curVert  = vertexMap[i].first;
         const auto& prevVert = vertexMap[i - 1].first;
 
+        // Insert the unique vertex.
         if (curVert != prevVert) {
           a_vertices.emplace_back(curVert);
         }
@@ -205,9 +207,6 @@ namespace EBGeometry {
         faces[f].setEdgeList(edges);
         faces[f].setFaceList(faces);
       }
-
-      // Allocate storage for the mesh.
-      Mesh<MetaData>* mesh = new Mesh<MetaData>(numVertices, numEdges, numFaces, vertices, edges, faces);
 
       // Build DCEL faces, edges, and vertices. In order to build the DCEL edge pairs we keep track of
       // all outgoing edges from each vertex.
@@ -321,8 +320,10 @@ namespace EBGeometry {
         }
       }
 
-      // Do a sanity check and then reconcile the mesh, which will compute internal parameters like normal
-      // vectors for the vertices, edges, and faces.
+      // Allocate a mesh. THen do a sanity check and then reconcile the mesh, which will compute
+      // internal parameters like normal vectors for the vertices, edges, and faces.
+      Mesh<MetaData>* mesh = new Mesh<MetaData>(numVertices, numEdges, numFaces, vertices, edges, faces);
+
       mesh->sanityCheck();
 #if 1
 #warning "EBGeometry_MashParserImplem -- reconcile function turned off for now"
