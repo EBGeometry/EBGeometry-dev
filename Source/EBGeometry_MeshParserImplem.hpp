@@ -26,20 +26,40 @@
 
 namespace EBGeometry {
 
-  template <typename Meta>
-  EBGEOMETRY_ALWAYS_INLINE EBGeometry::DCEL::Mesh<Meta>*
-                           MeshParser::readIntoDCEL(const std::string a_filename) noexcept
+  template <typename MetaData>
+  EBGEOMETRY_ALWAYS_INLINE EBGeometry::DCEL::Mesh<MetaData>*
+                           MeshParser::readIntoDCEL(const std::string a_fileName) noexcept
 
   {
-#warning "MeshParser::readIntoDCEL -- readIntoDCEL not implemented"
+    const MeshParser::FileType fileType = MeshParser::getFileType(a_fileName);
 
-    return nullptr;
+    EBGEOMETRY_ALWAYS_EXPECT((fileType != MeshParser::FileType::Unsupported));
+
+    // Build the mesh.
+    EBGeometry::DCEL::Mesh<MetaData>* mesh = nullptr;
+
+    switch (fileType) {
+    case MeshParser::FileType::STL: {
+      mesh = MeshParser::STL::readSingle<MetaData>(a_fileName);
+
+      break;
+    }
+    case MeshParser::FileType::PLY: {
+#if 1
+      EBGEOMETRY_ALWAYS_EXPECT(false);
+#else
+      mesh = MeshParser::PLY::readSingle<MetaData>(a_fileName);
+#endif
+    }
+    }
+
+    return mesh;
   }
 
   EBGEOMETRY_ALWAYS_INLINE MeshParser::FileType
-                           MeshParser::getFileType(const std::string a_filename) noexcept
+                           MeshParser::getFileType(const std::string a_fileName) noexcept
   {
-    const std::string ext = a_filename.substr(a_filename.find_last_of(".") + 1);
+    const std::string ext = a_fileName.substr(a_fileName.find_last_of(".") + 1);
 
     auto fileType = MeshParser::FileType::Unsupported;
 
@@ -141,11 +161,30 @@ namespace EBGeometry {
   }
 
   template <typename MetaData>
-  EBGEOMETRY_ALWAYS_INLINE EBGeometry::DCEL::Mesh<MetaData>
+  EBGEOMETRY_ALWAYS_INLINE EBGeometry::DCEL::Mesh<MetaData>*
                            MeshParser::turnPolygonSoupIntoDCEL(const std::vector<EBGeometry::Vec3>& a_vertices,
                                       const std::vector<std::vector<int>>& a_polygons) noexcept
   {
-#warning "MeshParser::turnPolygonSoupIntoDCEL -- not implemented"
+#warning "MeshParser::turnPolygonSoupIntoDCEL -- working on this function"
+    using namespace EBGeometry::DCEL;
+
+    Mesh<MetaData>* mesh = new Mesh<MetaData>();
+
+    // Figure out the number of vertices, edges, and polygons.
+    const int numVertices = a_vertices.size();
+    const int numFaces    = a_polygons.size();
+
+    int numEdges = 0;
+    for (const auto& polygon : a_polygons) {
+      numEdges += polygon.size();
+    }
+
+    // Build vertex, edge, and half edge vectors.
+    Vertex<MetaData>* vertices = new Vertex<MetaData>[numVertices];
+    Edge<MetaData>*   edges    = new Edge<MetaData>[numEdges];
+    Face<MetaData>*   faces    = new Face<MetaData>[numFaces];
+
+    return mesh;
   }
 } // namespace EBGeometry
 

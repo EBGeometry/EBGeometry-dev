@@ -42,7 +42,7 @@ namespace EBGeometry {
       algorithms for this, and by default this class uses a crossing number
       algorithm.
     */
-    template <class Meta>
+    template <class MetaData>
     class Face
     {
     public:
@@ -111,7 +111,7 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE void
-      setVertexList(const Vertex<Meta>* const a_vertexList) noexcept;
+      setVertexList(const Vertex<MetaData>* const a_vertexList) noexcept;
 
       /*!
 	@brief Set the edge list.
@@ -119,7 +119,7 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE void
-      setEdgeList(const Edge<Meta>* const a_edgeList) noexcept;
+      setEdgeList(const Edge<MetaData>* const a_edgeList) noexcept;
 
       /*!
 	@brief Set the face list.
@@ -127,7 +127,7 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE void
-      setFaceList(const Face<Meta>* const a_faceList) noexcept;
+      setFaceList(const Face<MetaData>* const a_faceList) noexcept;
 
       /*!
 	@brief Set the inside/outside algorithm when determining if a point projects
@@ -201,7 +201,7 @@ namespace EBGeometry {
 	@return m_metaData
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Meta&
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE MetaData&
       getMetaData() noexcept;
 
       /*!
@@ -209,7 +209,7 @@ namespace EBGeometry {
 	@return m_metaData
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Meta&
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const MetaData&
       getMetaData() const noexcept;
 
       /*!
@@ -254,17 +254,17 @@ namespace EBGeometry {
       /*!
 	@brief List of vertices.
       */
-      const Vertex<Meta>* m_vertexList;
+      const Vertex<MetaData>* m_vertexList;
 
       /*!
 	@brief List of half-edges.
       */
-      const Edge<Meta>* m_edgeList;
+      const Edge<MetaData>* m_edgeList;
 
       /*!
 	@brief List of faces
       */
-      const Face<Meta>* m_faceList;
+      const Face<MetaData>* m_faceList;
 
       /*!
 	@brief This polygon's half-edge. 
@@ -282,9 +282,9 @@ namespace EBGeometry {
       Vec3 m_centroid;
 
       /*!
-	@brief Meta-data attached to this face
+	@brief MetaData-data attached to this face
       */
-      Meta m_metaData;
+      MetaData m_metaData;
 
       /*!
 	@brief 2D embedding of this polygon. This is the 2D view of the current

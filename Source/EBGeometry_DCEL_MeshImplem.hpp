@@ -23,9 +23,9 @@
 namespace EBGeometry {
   namespace DCEL {
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE
-    Mesh<Meta>::Mesh() noexcept
+    Mesh<MetaData>::Mesh() noexcept
     {
       m_numFaces    = -1;
       m_numEdges    = -1;
@@ -38,31 +38,31 @@ namespace EBGeometry {
       m_algorithm = SearchAlgorithm::Direct;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE
-    Mesh<Meta>::Mesh(const int     a_numVertices,
-                     const int     a_numEdges,
-                     const int     a_numFaces,
-                     Vertex<Meta>* a_vertices,
-                     Edge<Meta>*   a_edges,
-                     Face<Meta>*   a_faces) noexcept
-      : Mesh<Meta>()
+    Mesh<MetaData>::Mesh(const int         a_numVertices,
+                         const int         a_numEdges,
+                         const int         a_numFaces,
+                         Vertex<MetaData>* a_vertices,
+                         Edge<MetaData>*   a_edges,
+                         Face<MetaData>*   a_faces) noexcept
+      : Mesh<MetaData>()
     {
       this->define(a_numVertices, a_numEdges, a_numFaces, a_vertices, a_edges, a_faces);
     }
 
-    template <class Meta>
-    EBGEOMETRY_ALWAYS_INLINE Mesh<Meta>::~Mesh() noexcept
+    template <class MetaData>
+    EBGEOMETRY_ALWAYS_INLINE Mesh<MetaData>::~Mesh() noexcept
     {}
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE void
-    Mesh<Meta>::define(const int     a_numVertices,
-                       const int     a_numEdges,
-                       const int     a_numFaces,
-                       Vertex<Meta>* a_vertices,
-                       Edge<Meta>*   a_edges,
-                       Face<Meta>*   a_faces) noexcept
+    Mesh<MetaData>::define(const int         a_numVertices,
+                           const int         a_numEdges,
+                           const int         a_numFaces,
+                           Vertex<MetaData>* a_vertices,
+                           Edge<MetaData>*   a_edges,
+                           Face<MetaData>*   a_faces) noexcept
     {
       EBGEOMETRY_ALWAYS_EXPECT(a_numVertices >= 3);
       EBGEOMETRY_ALWAYS_EXPECT(a_numEdges >= 3);
@@ -81,9 +81,9 @@ namespace EBGeometry {
       m_faces    = a_faces;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE void
-    Mesh<Meta>::sanityCheck() const noexcept
+    Mesh<MetaData>::sanityCheck() const noexcept
     {
       const std::string vertexHasNoEdge            = "no referenced edge for vertex (unreferenced vertex)";
       const std::string vertexPositionIsDegenerate = "vertex position is degenerate (shares coordinate)";
@@ -130,12 +130,12 @@ namespace EBGeometry {
       std::vector<Vec3> vertexCoordinates;
 
       for (int i = 0; i < m_numVertices; i++) {
-        const Vertex<Meta>& curVertex = m_vertices[i];
+        const Vertex<MetaData>& curVertex = m_vertices[i];
 
-        const int           edge       = curVertex.getEdge();
-        const Vertex<Meta>* vertexList = curVertex.getVertexList();
-        const Edge<Meta>*   edgeList   = curVertex.getEdgeList();
-        const Face<Meta>*   faceList   = curVertex.getFaceList();
+        const int               edge       = curVertex.getEdge();
+        const Vertex<MetaData>* vertexList = curVertex.getVertexList();
+        const Edge<MetaData>*   edgeList   = curVertex.getEdgeList();
+        const Face<MetaData>*   faceList   = curVertex.getFaceList();
 
         if (edge < 0) {
           this->incrementWarning(warnings, vertexHasNoEdge);
@@ -169,7 +169,7 @@ namespace EBGeometry {
       EBGEOMETRY_ALWAYS_EXPECT(m_edges != nullptr);
 
       for (int i = 0; i < m_numEdges; i++) {
-        const Edge<Meta>& curEdge = m_edges[i];
+        const Edge<MetaData>& curEdge = m_edges[i];
 
         const int startVertex  = curEdge.getVertex();
         const int endVertex    = curEdge.getOtherVertex();
@@ -178,9 +178,9 @@ namespace EBGeometry {
         const int nextEdge     = curEdge.getNextEdge();
         const int face         = curEdge.getFace();
 
-        const Vertex<Meta>* vertexList = curEdge.getVertexList();
-        const Edge<Meta>*   edgeList   = curEdge.getEdgeList();
-        const Face<Meta>*   faceList   = curEdge.getFaceList();
+        const Vertex<MetaData>* vertexList = curEdge.getVertexList();
+        const Edge<MetaData>*   edgeList   = curEdge.getEdgeList();
+        const Face<MetaData>*   faceList   = curEdge.getFaceList();
 
         if (startVertex < 0) {
           this->incrementWarning(warnings, edgeHasNoStartVertex);
@@ -231,13 +231,13 @@ namespace EBGeometry {
       EBGEOMETRY_ALWAYS_EXPECT(m_faces != nullptr);
 
       for (int i = 0; i < m_numFaces; i++) {
-        const Face<Meta>& curFace = m_faces[i];
+        const Face<MetaData>& curFace = m_faces[i];
 
         const int edge = curFace.getEdge();
 
-        const Vertex<Meta>* vertexList = curFace.getVertexList();
-        const Edge<Meta>*   edgeList   = curFace.getEdgeList();
-        const Face<Meta>*   faceList   = curFace.getFaceList();
+        const Vertex<MetaData>* vertexList = curFace.getVertexList();
+        const Edge<MetaData>*   edgeList   = curFace.getEdgeList();
+        const Face<MetaData>*   faceList   = curFace.getFaceList();
 
         if (edge < 0) {
           this->incrementWarning(warnings, faceHasNoEdge);
@@ -257,16 +257,16 @@ namespace EBGeometry {
       this->printWarnings(warnings);
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE void
-    Mesh<Meta>::setSearchAlgorithm(const SearchAlgorithm a_algorithm) noexcept
+    Mesh<MetaData>::setSearchAlgorithm(const SearchAlgorithm a_algorithm) noexcept
     {
       m_algorithm = a_algorithm;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE void
-    Mesh<Meta>::setInsideOutsideAlgorithm(const Polygon2D::InsideOutsideAlgorithm a_algorithm) noexcept
+    Mesh<MetaData>::setInsideOutsideAlgorithm(const Polygon2D::InsideOutsideAlgorithm a_algorithm) noexcept
     {
       EBGEOMETRY_EXPECT(m_numFaces > 0);
       EBGEOMETRY_EXPECT(m_faces != nullptr);
@@ -276,67 +276,67 @@ namespace EBGeometry {
       }
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE void
-    Mesh<Meta>::reconcile(const DCEL::VertexNormalWeight a_weight) noexcept
+    Mesh<MetaData>::reconcile(const DCEL::VertexNormalWeight a_weight) noexcept
     {
       this->reconcileFaces();
       this->reconcileEdges();
       this->reconcileVertices(a_weight);
     }
 
-    template <class Meta>
-    EBGEOMETRY_ALWAYS_INLINE const Vertex<Meta>*
-                                   Mesh<Meta>::getVertices() const noexcept
+    template <class MetaData>
+    EBGEOMETRY_ALWAYS_INLINE const Vertex<MetaData>*
+                                   Mesh<MetaData>::getVertices() const noexcept
     {
-      return static_cast<const Vertex<Meta>*>(m_vertices);
+      return static_cast<const Vertex<MetaData>*>(m_vertices);
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE int
-    Mesh<Meta>::getNumberOfVertices() const noexcept
+    Mesh<MetaData>::getNumberOfVertices() const noexcept
     {
       return m_numVertices;
     }
 
-    template <class Meta>
-    EBGEOMETRY_ALWAYS_INLINE const Edge<Meta>*
-                                   Mesh<Meta>::getEdges() const noexcept
+    template <class MetaData>
+    EBGEOMETRY_ALWAYS_INLINE const Edge<MetaData>*
+                                   Mesh<MetaData>::getEdges() const noexcept
     {
-      return static_cast<const Edge<Meta>*>(m_edges);
+      return static_cast<const Edge<MetaData>*>(m_edges);
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE int
-    Mesh<Meta>::getNumberOfEdges() const noexcept
+    Mesh<MetaData>::getNumberOfEdges() const noexcept
     {
       return m_numEdges;
     }
 
-    template <class Meta>
-    EBGEOMETRY_ALWAYS_INLINE const Face<Meta>*
-                                   Mesh<Meta>::getFaces() const noexcept
+    template <class MetaData>
+    EBGEOMETRY_ALWAYS_INLINE const Face<MetaData>*
+                                   Mesh<MetaData>::getFaces() const noexcept
     {
-      return static_cast<const Face<Meta>*>(m_faces);
+      return static_cast<const Face<MetaData>*>(m_faces);
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE int
-    Mesh<Meta>::getNumberOfFaces() const noexcept
+    Mesh<MetaData>::getNumberOfFaces() const noexcept
     {
       return m_numFaces;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE Real
-    Mesh<Meta>::signedDistance(const Vec3& a_point) const noexcept
+    Mesh<MetaData>::signedDistance(const Vec3& a_point) const noexcept
     {
       return this->signedDistance(a_point, m_algorithm);
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE Real
-    Mesh<Meta>::signedDistance(const Vec3& a_point, SearchAlgorithm a_algorithm) const noexcept
+    Mesh<MetaData>::signedDistance(const Vec3& a_point, SearchAlgorithm a_algorithm) const noexcept
     {
       Real dist = EBGeometry::Limits::max();
 
@@ -356,9 +356,9 @@ namespace EBGeometry {
       return dist;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE Real
-    Mesh<Meta>::unsignedDistance2(const Vec3& a_point) const noexcept
+    Mesh<MetaData>::unsignedDistance2(const Vec3& a_point) const noexcept
     {
       EBGEOMETRY_EXPECT(m_numFaces > 0);
       EBGEOMETRY_EXPECT(m_faces != nullptr);
@@ -374,9 +374,9 @@ namespace EBGeometry {
       return dist2;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE void
-    Mesh<Meta>::reconcileFaces() noexcept
+    Mesh<MetaData>::reconcileFaces() noexcept
     {
       EBGEOMETRY_EXPECT(m_numFaces > 0);
       EBGEOMETRY_EXPECT(m_faces != nullptr);
@@ -386,9 +386,9 @@ namespace EBGeometry {
       }
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE void
-    Mesh<Meta>::reconcileEdges() noexcept
+    Mesh<MetaData>::reconcileEdges() noexcept
     {
       EBGEOMETRY_EXPECT(m_numEdges >= 3);
       EBGEOMETRY_EXPECT(m_edges != nullptr);
@@ -398,9 +398,9 @@ namespace EBGeometry {
       }
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE void
-    Mesh<Meta>::reconcileVertices(const DCEL::VertexNormalWeight a_weight) noexcept
+    Mesh<MetaData>::reconcileVertices(const DCEL::VertexNormalWeight a_weight) noexcept
     {
       EBGEOMETRY_EXPECT(m_numVertices >= 3);
       EBGEOMETRY_EXPECT(m_vertices != nullptr);
@@ -421,9 +421,9 @@ namespace EBGeometry {
       }
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE Real
-    Mesh<Meta>::DirectSignedDistance(const Vec3& a_point) const noexcept
+    Mesh<MetaData>::DirectSignedDistance(const Vec3& a_point) const noexcept
     {
       EBGEOMETRY_EXPECT(m_numFaces > 0);
       EBGEOMETRY_EXPECT(m_faces != nullptr);
@@ -444,9 +444,9 @@ namespace EBGeometry {
       return minDist;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE Real
-    Mesh<Meta>::DirectSignedDistance2(const Vec3& a_point) const noexcept
+    Mesh<MetaData>::DirectSignedDistance2(const Vec3& a_point) const noexcept
     {
       EBGEOMETRY_EXPECT(m_numFaces > 0);
       EBGEOMETRY_EXPECT(m_faces != nullptr);
@@ -469,21 +469,21 @@ namespace EBGeometry {
       return m_faces[closest].signedDistance(a_point);
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE void
-    Mesh<Meta>::incrementWarning(std::map<std::string, int>& a_warnings, const std::string& a_warn) const noexcept
+    Mesh<MetaData>::incrementWarning(std::map<std::string, int>& a_warnings, const std::string& a_warn) const noexcept
     {
       a_warnings.at(a_warn) += 1;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE void
-    Mesh<Meta>::printWarnings(const std::map<std::string, int>& a_warnings) const noexcept
+    Mesh<MetaData>::printWarnings(const std::map<std::string, int>& a_warnings) const noexcept
     {
       for (const auto& warn : a_warnings) {
         if (warn.second > 0) {
           std::cerr << "In file 'EBGeometry_DCEL_MeshImplem.H' function "
-                       "Mesh<Meta>::sanityCheck() - warnings about error '"
+                       "Mesh<MetaData>::sanityCheck() - warnings about error '"
                     << warn.first << "' = " << warn.second << "\n";
         }
       }

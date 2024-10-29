@@ -49,7 +49,7 @@ namespace EBGeometry {
       and builds the mesh from that. Do not try to build a Mesh object yourself,
       use file parsers!
     */
-    template <class Meta>
+    template <class MetaData>
     class Mesh
     {
     public:
@@ -86,12 +86,12 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE
-      Mesh(const int     a_numVertices,
-           const int     a_numEdges,
-           const int     a_numFaces,
-           Vertex<Meta>* a_vertices,
-           Edge<Meta>*   a_edges,
-           Face<Meta>*   a_faces) noexcept;
+      Mesh(const int         a_numVertices,
+           const int         a_numEdges,
+           const int         a_numFaces,
+           Vertex<MetaData>* a_vertices,
+           Edge<MetaData>*   a_edges,
+           Face<MetaData>*   a_faces) noexcept;
 
       /*!
 	@brief Destructor (does nothing)
@@ -112,16 +112,16 @@ namespace EBGeometry {
 	file format and creates the DCEL mesh structure. Note that this only
 	involves associating pointer structures through the mesh. Internal
 	parameters for the faces, edges, and vertices are computed through the
-	reconcile function (which is called by Mesh<Meta>::define).
+	reconcile function (which is called by Mesh<MetaData>::define).
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE void
-      define(const int     a_numVertices,
-             const int     a_numEdges,
-             const int     a_numFaces,
-             Vertex<Meta>* a_vertices,
-             Edge<Meta>*   a_edges,
-             Face<Meta>*   a_faces) noexcept;
+      define(const int         a_numVertices,
+             const int         a_numEdges,
+             const int         a_numFaces,
+             Vertex<MetaData>* a_vertices,
+             Edge<MetaData>*   a_edges,
+             Face<MetaData>*   a_faces) noexcept;
 
       /*!
 	@brief Perform a rough sanity check.
@@ -178,7 +178,7 @@ namespace EBGeometry {
 	@return m_vertices
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Vertex<Meta>*
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Vertex<MetaData>*
                                                    getVertices() const noexcept;
 
       /*!
@@ -194,7 +194,7 @@ namespace EBGeometry {
 	@return m_edges
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Edge<Meta>*
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Edge<MetaData>*
                                                    getEdges() const noexcept;
 
       /*!
@@ -210,7 +210,7 @@ namespace EBGeometry {
 	@return m_faces
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Face<Meta>*
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Face<MetaData>*
                                                    getFaces() const noexcept;
 
       /*!
@@ -226,7 +226,7 @@ namespace EBGeometry {
 	@param[in] a_point 3D point in space.
 	@details This function will iterate through ALL faces in the mesh and return
 	the value with the smallest magnitude. This is horrendously slow, which is
-	why this function is almost never called. Rather, Mesh<Meta> can be embedded
+	why this function is almost never called. Rather, Mesh<MetaData> can be embedded
 	in a bounding volume hierarchy for faster access.
 	@note This will call the other version with the object's search algorithm.
       */
@@ -238,7 +238,7 @@ namespace EBGeometry {
 	@brief Compute the signed distance from a point to this mesh
 	@details This function will iterate through ALL faces in the mesh and return
 	the value with the smallest magnitude. This is horrendously slow, which is
-	why this function is almost never called. Rather, Mesh<Meta> can be embedded
+	why this function is almost never called. Rather, Mesh<MetaData> can be embedded
 	in a bounding volume hierarchy for faster access.	
 	@param[in] a_point 3D point in space.
 	@param[in] a_algorithm Search algorithm
@@ -253,7 +253,7 @@ namespace EBGeometry {
 	@param[in] a_point 3D point in space.
 	@details This function will iterate through ALL faces in the mesh and return
 	the value with the smallest magnitude. This is horrendously slow, which is
-	why this function is almost never called. Rather, Mesh<Meta> can be embedded
+	why this function is almost never called. Rather, Mesh<MetaData> can be embedded
 	in a bounding volume hierarchy for faster access.
 	@note This will call the other version with the object's search algorithm.
       */
@@ -270,17 +270,17 @@ namespace EBGeometry {
       /*!
 	@brief Vertex list
       */
-      Vertex<Meta>* m_vertices;
+      Vertex<MetaData>* m_vertices;
 
       /*!
 	@brief Edge list
       */
-      Edge<Meta>* m_edges;
+      Edge<MetaData>* m_edges;
 
       /*!
 	@brief Face list
       */
-      Face<Meta>* m_faces;
+      Face<MetaData>* m_faces;
 
       /*!
 	@brief Number of vertices
@@ -299,7 +299,7 @@ namespace EBGeometry {
 
       /*!
 	@brief Function which computes internal things for the polygon faces.
-	@note This calls DCEL::Face<Meta>::reconcile()
+	@note This calls DCEL::Face<MetaData>::reconcile()
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE void
@@ -307,7 +307,7 @@ namespace EBGeometry {
 
       /*!
 	@brief Function which computes internal things for the half-edges
-	@note This calls DCEL::Edge<Meta>::reconcile()
+	@note This calls DCEL::Edge<MetaData>::reconcile()
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE void
@@ -316,8 +316,8 @@ namespace EBGeometry {
       /*!
 	@brief Function which computes internal things for the vertices
 	@param[in] a_weight Vertex angle weighting
-	@note This calls DCEL::Vertex<Meta>::computeVertexNormalAverage() or
-	DCEL::Vertex<Meta>::computeVertexNormalAngleWeighted()
+	@note This calls DCEL::Vertex<MetaData>::computeVertexNormalAverage() or
+	DCEL::Vertex<MetaData>::computeVertexNormalAngleWeighted()
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE void

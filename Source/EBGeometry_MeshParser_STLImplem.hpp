@@ -199,24 +199,19 @@ namespace EBGeometry {
           objectFacets.emplace_back(curFacet);
         }
 
-#warning "EBGeometry_MeshParser_STLImplem.hpp - working on readBinary function"
-
         // Turn the triangle soup into a mesh.
         int curID = 0;
         for (auto& soup : verticesAndTriangles) {
-          auto& vertices = soup.second.first;
-          auto& facets   = soup.second.second;
+          auto& vertices  = soup.second.first;
+          auto& triangles = soup.second.second;
 
-          auto mesh = new EBGeometry::DCEL::Mesh<MetaData>();
+          // Remove degenerate vertices and then make the triangle soup into a DCEL mesh.
+          EBGEOMETRY_ALWAYS_EXPECT(!(MeshParser::containsDegeneratePolygons(vertices, triangles)));
 
-          if (MeshParser::containsDegeneratePolygons(vertices, facets)) {
-            std::cerr << "Parser::STL::readBinary - input STL has degenerate faces\n";
-          }
+          MeshParser::removeDegenerateVerticesFromSoup(vertices, triangles);
 
-          MeshParser::removeDegenerateVerticesFromSoup(vertices, facets);
-          //          MeshParser::soupToDCEL(*mesh, vertices, facets);
-
-          const std::string strID = std::to_string(curID);
+          const auto mesh  = MeshParser::turnPolygonSoupIntoDCEL<MetaData>(vertices, triangles);
+          const auto strID = std::to_string(curID);
 
           meshes.emplace_back(mesh, strID);
 

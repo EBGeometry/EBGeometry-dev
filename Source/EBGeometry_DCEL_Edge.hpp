@@ -43,7 +43,7 @@ namespace EBGeometry {
       @note This class is GPU-copyable, with the exception of the vertex list which must
       be set to point to the correct place on the GPU.
     */
-    template <class Meta>
+    template <class MetaData>
     class Edge
     {
     public:
@@ -154,7 +154,7 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE void
-      setVertexList(const Vertex<Meta>* const a_vertexList) noexcept;
+      setVertexList(const Vertex<MetaData>* const a_vertexList) noexcept;
 
       /*!
 	@brief Set the edge list.
@@ -162,7 +162,7 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE void
-      setEdgeList(const Edge<Meta>* const a_edgeList) noexcept;
+      setEdgeList(const Edge<MetaData>* const a_edgeList) noexcept;
 
       /*!
 	@brief Set the face list.
@@ -170,7 +170,7 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE void
-      setFaceList(const Face<Meta>* const a_faceList) noexcept;
+      setFaceList(const Face<MetaData>* const a_faceList) noexcept;
 
       /*!
 	@brief Set the normal vector
@@ -248,7 +248,7 @@ namespace EBGeometry {
 	@return m_metaData
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE Meta&
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE MetaData&
       getMetaData() noexcept;
 
       /*!
@@ -256,7 +256,7 @@ namespace EBGeometry {
 	@return m_metaData
       */
       EBGEOMETRY_GPU_HOST_DEVICE
-      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const Meta&
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE const MetaData&
       getMetaData() const noexcept;
 
       /*!
@@ -286,17 +286,17 @@ namespace EBGeometry {
       /*!
 	@brief Vertex list
       */
-      const Vertex<Meta>* m_vertexList;
+      const Vertex<MetaData>* m_vertexList;
 
       /*!
 	@brief Edge list
       */
-      const Edge<Meta>* m_edgeList;
+      const Edge<MetaData>* m_edgeList;
 
       /*!
 	@brief Face list
       */
-      const Face<Meta>* m_faceList;
+      const Face<MetaData>* m_faceList;
 
       /*!
 	@brief Starting vertex.
@@ -329,9 +329,9 @@ namespace EBGeometry {
       Vec3 m_normal;
 
       /*!
-	@brief Meta-data attached to this edge
+	@brief MetaData-data attached to this edge
       */
-      Meta m_metaData;
+      MetaData m_metaData;
 
       /*!
 	@brief Return the vector pointing along this edge.

@@ -99,7 +99,7 @@ namespace EBGeometry {
       is no longer required. 
     */
     template <typename MetaData>
-    EBGEOMETRY_GPU_HOST [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static EBGeometry::DCEL::Mesh<MetaData>
+    EBGEOMETRY_GPU_HOST [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE static EBGeometry::DCEL::Mesh<MetaData>*
     turnPolygonSoupIntoDCEL(const std::vector<EBGeometry::Vec3>& a_vertices,
                             const std::vector<std::vector<int>>& a_polygons) noexcept;
 

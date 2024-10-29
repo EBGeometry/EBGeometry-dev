@@ -19,9 +19,9 @@
 namespace EBGeometry {
   namespace DCEL {
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE
-    Face<Meta>::Face() noexcept
+    Face<MetaData>::Face() noexcept
     {
       m_edge           = -1;
       m_normal         = Vec3::zero();
@@ -30,17 +30,17 @@ namespace EBGeometry {
       m_poly2Algorithm = Polygon2D::InsideOutsideAlgorithm::CrossingNumber;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE
-    Face<Meta>::Face(const int a_edge) noexcept
+    Face<MetaData>::Face(const int a_edge) noexcept
       : Face()
     {
       m_edge = a_edge;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE
-    Face<Meta>::Face(const Face& a_otherFace) noexcept
+    Face<MetaData>::Face(const Face& a_otherFace) noexcept
       : Face()
     {
       m_vertexList     = a_otherFace.m_vertexList;
@@ -54,21 +54,21 @@ namespace EBGeometry {
       m_poly2Algorithm = a_otherFace.m_poly2Algorithm;
     }
 
-    template <class Meta>
-    EBGEOMETRY_ALWAYS_INLINE Face<Meta>::~Face() noexcept
+    template <class MetaData>
+    EBGEOMETRY_ALWAYS_INLINE Face<MetaData>::~Face() noexcept
     {}
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE void
-    Face<Meta>::define(const Vec3& a_normal, const int a_edge) noexcept
+    Face<MetaData>::define(const Vec3& a_normal, const int a_edge) noexcept
     {
       m_normal = a_normal;
       m_edge   = a_edge;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE void
-    Face<Meta>::reconcile() noexcept
+    Face<MetaData>::reconcile() noexcept
     {
       this->computeNormalVector();
       this->normalizeNormalVector();
@@ -76,44 +76,44 @@ namespace EBGeometry {
       this->computePolygon2D();
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE void
-    Face<Meta>::setHalfEdge(const int a_halfEdge) noexcept
+    Face<MetaData>::setHalfEdge(const int a_halfEdge) noexcept
     {
       m_edge = a_halfEdge;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE void
-    Face<Meta>::setVertexList(const Vertex<Meta>* const a_vertexList) noexcept
+    Face<MetaData>::setVertexList(const Vertex<MetaData>* const a_vertexList) noexcept
     {
       m_vertexList = a_vertexList;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE void
-    Face<Meta>::setEdgeList(const Edge<Meta>* const a_edgeList) noexcept
+    Face<MetaData>::setEdgeList(const Edge<MetaData>* const a_edgeList) noexcept
     {
       m_edgeList = a_edgeList;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE void
-    Face<Meta>::setFaceList(const Face<Meta>* const a_faceList) noexcept
+    Face<MetaData>::setFaceList(const Face<MetaData>* const a_faceList) noexcept
     {
       m_faceList = a_faceList;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE void
-    Face<Meta>::setInsideOutsideAlgorithm(const Polygon2D::InsideOutsideAlgorithm& a_algorithm) noexcept
+    Face<MetaData>::setInsideOutsideAlgorithm(const Polygon2D::InsideOutsideAlgorithm& a_algorithm) noexcept
     {
       m_poly2Algorithm = a_algorithm;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE int
-    Face<Meta>::getNumEdges() const noexcept
+    Face<MetaData>::getNumEdges() const noexcept
     {
       EBGEOMETRY_EXPECT(m_edge >= 0);
       EBGEOMETRY_EXPECT(m_vertexList != nullptr);
@@ -138,30 +138,30 @@ namespace EBGeometry {
       return numEdges;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE int
-    Face<Meta>::getEdge() const noexcept
+    Face<MetaData>::getEdge() const noexcept
     {
       return m_edge;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE Vec3&
-    Face<Meta>::getCentroid() noexcept
+    Face<MetaData>::getCentroid() noexcept
     {
       return (m_centroid);
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE const Vec3&
-    Face<Meta>::getCentroid() const noexcept
+    Face<MetaData>::getCentroid() const noexcept
     {
       return (m_centroid);
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE Real&
-    Face<Meta>::getCentroid(const int a_dir) noexcept
+    Face<MetaData>::getCentroid(const int a_dir) noexcept
     {
       EBGEOMETRY_EXPECT(a_dir >= 0);
       EBGEOMETRY_EXPECT(a_dir < 3);
@@ -169,9 +169,9 @@ namespace EBGeometry {
       return (m_centroid[a_dir]);
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE const Real&
-    Face<Meta>::getCentroid(const int a_dir) const noexcept
+    Face<MetaData>::getCentroid(const int a_dir) const noexcept
     {
       EBGEOMETRY_EXPECT(a_dir >= 0);
       EBGEOMETRY_EXPECT(a_dir < 3);
@@ -179,37 +179,37 @@ namespace EBGeometry {
       return (m_centroid[a_dir]);
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE Vec3&
-    Face<Meta>::getNormal() noexcept
+    Face<MetaData>::getNormal() noexcept
     {
       return (m_normal);
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE const Vec3&
-    Face<Meta>::getNormal() const noexcept
+    Face<MetaData>::getNormal() const noexcept
     {
       return (m_normal);
     }
 
-    template <class Meta>
-    EBGEOMETRY_ALWAYS_INLINE Meta&
-    Face<Meta>::getMetaData() noexcept
+    template <class MetaData>
+    EBGEOMETRY_ALWAYS_INLINE MetaData&
+    Face<MetaData>::getMetaData() noexcept
     {
       return (m_metaData);
     }
 
-    template <class Meta>
-    EBGEOMETRY_ALWAYS_INLINE const Meta&
-    Face<Meta>::getMetaData() const noexcept
+    template <class MetaData>
+    EBGEOMETRY_ALWAYS_INLINE const MetaData&
+    Face<MetaData>::getMetaData() const noexcept
     {
       return (m_metaData);
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE Real
-    Face<Meta>::signedDistance(const Vec3& a_x0) const noexcept
+    Face<MetaData>::signedDistance(const Vec3& a_x0) const noexcept
     {
       EBGEOMETRY_EXPECT(m_edge >= 0);
       EBGEOMETRY_EXPECT(m_vertexList != nullptr);
@@ -243,9 +243,9 @@ namespace EBGeometry {
       return minDist;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE Real
-    Face<Meta>::unsignedDistance2(const Vec3& a_x0) const noexcept
+    Face<MetaData>::unsignedDistance2(const Vec3& a_x0) const noexcept
     {
       EBGEOMETRY_EXPECT(m_edge >= 0);
       EBGEOMETRY_EXPECT(m_vertexList != nullptr);
@@ -281,9 +281,9 @@ namespace EBGeometry {
       return minDist2;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE Vec3
-    Face<Meta>::getSmallestCoordinate() const noexcept
+    Face<MetaData>::getSmallestCoordinate() const noexcept
     {
       EBGEOMETRY_EXPECT(m_edge >= 0);
       EBGEOMETRY_EXPECT(m_vertexList != nullptr);
@@ -313,9 +313,9 @@ namespace EBGeometry {
       return smallestCoordinate;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE Vec3
-    Face<Meta>::getHighestCoordinate() const noexcept
+    Face<MetaData>::getHighestCoordinate() const noexcept
     {
       EBGEOMETRY_EXPECT(m_edge >= 0);
       EBGEOMETRY_EXPECT(m_vertexList != nullptr);
@@ -345,9 +345,9 @@ namespace EBGeometry {
       return highestCoordinate;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE void
-    Face<Meta>::computeCentroid() noexcept
+    Face<MetaData>::computeCentroid() noexcept
     {
       EBGEOMETRY_EXPECT(m_edge >= 0);
       EBGEOMETRY_EXPECT(m_vertexList != nullptr);
@@ -381,9 +381,9 @@ namespace EBGeometry {
       m_centroid = m_centroid / numVertices;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE void
-    Face<Meta>::computeNormal() noexcept
+    Face<MetaData>::computeNormal() noexcept
     {
       EBGEOMETRY_EXPECT(m_edge >= 0);
       EBGEOMETRY_EXPECT(m_vertexList != nullptr);
@@ -440,9 +440,9 @@ namespace EBGeometry {
       this->normalizeNormalVector();
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE void
-    Face<Meta>::computePolygon2D() noexcept
+    Face<MetaData>::computePolygon2D() noexcept
     {
       EBGEOMETRY_EXPECT(m_edge >= 0);
       EBGEOMETRY_EXPECT(m_vertexList != nullptr);
@@ -481,18 +481,18 @@ namespace EBGeometry {
       delete[] vertexCoordinates;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE void
-    Face<Meta>::normalizeNormalVector() noexcept
+    Face<MetaData>::normalizeNormalVector() noexcept
     {
       EBGEOMETRY_EXPECT(m_normal.length() > Real(0.0));
 
       m_normal = m_normal / m_normal.length();
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE Real
-    Face<Meta>::computeArea() noexcept
+    Face<MetaData>::computeArea() noexcept
     {
       EBGEOMETRY_EXPECT(m_edge >= 0);
       EBGEOMETRY_EXPECT(m_vertexList != nullptr);
@@ -534,16 +534,16 @@ namespace EBGeometry {
       return area;
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE Vec3
-    Face<Meta>::projectPointIntoFacePlane(const Vec3& a_p) const noexcept
+    Face<MetaData>::projectPointIntoFacePlane(const Vec3& a_p) const noexcept
     {
       return a_p - m_normal * (m_normal.dot(a_p - m_centroid));
     }
 
-    template <class Meta>
+    template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE bool
-    Face<Meta>::isPointInsideFace(const Vec3& a_p) const noexcept
+    Face<MetaData>::isPointInsideFace(const Vec3& a_p) const noexcept
     {
       const Vec3 p = this->projectPointIntoFacePlane(a_p);
 
