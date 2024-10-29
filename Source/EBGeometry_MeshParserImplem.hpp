@@ -256,7 +256,7 @@ namespace EBGeometry {
         edges[firstEdge].setPreviousEdge(lastEdge);
         edges[lastEdge].setNextEdge(firstEdge);
 
-        for (int i = firstEdge; i < lastEdge; i++) {
+        for (int i = firstEdge; i <= lastEdge; i++) {
           if (i > firstEdge) {
             edges[i].setPreviousEdge(i - 1);
           }
@@ -266,7 +266,7 @@ namespace EBGeometry {
         }
       }
 
-      EBGEOMETRY_EXPECT(edgeIndex == (numEdges - 1));
+      EBGEOMETRY_EXPECT(edgeIndex == numEdges);
 
       // Associate pair edges - we've built a map of all the outgoing edges from each vertex, so
       // we iterate through that map and look for the other edges in the neighboring polygons that
@@ -324,7 +324,11 @@ namespace EBGeometry {
       // Do a sanity check and then reconcile the mesh, which will compute internal parameters like normal
       // vectors for the vertices, edges, and faces.
       mesh->sanityCheck();
+#if 1
+#warning "EBGeometry_MashParserImplem -- reconcile function turned off for now"
+#else
       mesh->reconcile();
+#endif
 
       return mesh;
     }
@@ -368,6 +372,11 @@ namespace EBGeometry {
         break;
       }
       }
+
+#if 1
+#warning "debug hook enabled in EBGeometry_MeshParserImplem.hpp"
+      meshes = EBGeometry::MeshParser::STL::readBinary<MetaData>(a_fileName);
+#endif
 
       return meshes;
     }
