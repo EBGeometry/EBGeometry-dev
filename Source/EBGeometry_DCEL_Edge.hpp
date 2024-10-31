@@ -207,7 +207,7 @@ namespace EBGeometry {
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE
       const Face<MetaData>*
-      getFaceList() const noexcept;      
+      getFaceList() const noexcept;
 
       /*!
 	@brief Set the normal vector
@@ -224,7 +224,7 @@ namespace EBGeometry {
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE
       void
-      normalizeNormalVector() noexcept;      
+      normalizeNormalVector() noexcept;
 
       /*!
 	@brief Compute the normal vector

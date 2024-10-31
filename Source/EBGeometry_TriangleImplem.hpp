@@ -22,7 +22,7 @@ namespace EBGeometry {
   EBGEOMETRY_ALWAYS_INLINE
   Triangle<MetaData>::Triangle() noexcept
   {
-    this->m_normal = Vec3::max();
+    this->m_triangleNormal = Vec3::max();
 
     for (int i = 0; i < 3; i++) {
       this->m_vertexPositions[i] = Vec3::max();
@@ -35,7 +35,7 @@ namespace EBGeometry {
   EBGEOMETRY_ALWAYS_INLINE
   Triangle<MetaData>::Triangle(const Triangle& a_otherTriangle) noexcept
   {
-    this->m_normal = a_otherTriangle.m_normal;
+    this->m_triangleNormal = a_otherTriangle.m_triangleNormal;
 
     for (int i = 0; i < 3; i++) {
       this->m_vertexPositions[i] = a_otherTriangle.m_vertexPositions[i];
@@ -57,7 +57,7 @@ namespace EBGeometry {
   void
   Triangle<MetaData>::setNormal(const Vec3& a_normal) noexcept
   {
-    this->m_normal = a_normal;
+    this->m_triangleNormal = a_normal;
   }
 
   template <typename MetaData>
@@ -71,7 +71,7 @@ namespace EBGeometry {
 
     this->computeNormal();
 
-    m_triangle2D.define(m_normal, m_vertexPositions);
+    m_triangle2D.define(m_triangleNormal, m_vertexPositions);
   }
 
   template <typename MetaData>
@@ -113,11 +113,11 @@ namespace EBGeometry {
     EBGEOMETRY_EXPECT(x1x0.length() > EBGeometry::Limits::eps());
     EBGEOMETRY_EXPECT(x2x1.length() > EBGeometry::Limits::eps());
 
-    m_normal = x1x0.cross(x2x1);
+    m_triangleNormal = x1x0.cross(x2x1);
 
-    EBGEOMETRY_EXPECT(m_normal.length() > EBGeometry::Limits::min());
+    EBGEOMETRY_EXPECT(m_triangleNormal.length() > EBGeometry::Limits::min());
 
-    m_normal = m_normal / m_normal.length();
+    m_triangleNormal = m_triangleNormal / m_triangleNormal.length();
   }
 
   template <typename MetaData>
@@ -125,7 +125,7 @@ namespace EBGeometry {
   Vec3&
   Triangle<MetaData>::getNormal() noexcept
   {
-    return (this->m_normal);
+    return (this->m_triangleNormal);
   }
 
   template <typename MetaData>
@@ -133,7 +133,7 @@ namespace EBGeometry {
   const Vec3&
   Triangle<MetaData>::getNormal() const noexcept
   {
-    return (this->m_normal);
+    return (this->m_triangleNormal);
   }
 
   template <typename MetaData>
@@ -207,7 +207,7 @@ namespace EBGeometry {
     // Perform extra checks in debug mode -- if any of these fail then something is uninitialized.
 #ifdef EBGEOMETRY_DEBUG
     for (int i = 0; i < 3; i++) {
-      EBGEOMETRY_ALWAYS_EXPECT(std::abs(m_normal[i]) < EBGeometry::Limits::max());
+      EBGEOMETRY_ALWAYS_EXPECT(std::abs(m_triangleNormal[i]) < EBGeometry::Limits::max());
       EBGEOMETRY_ALWAYS_EXPECT(std::abs(m_vertexPositions[i]) < EBGeometry::Limits::max());
       EBGEOMETRY_ALWAYS_EXPECT(std::abs(m_vertexNormals[i]) < EBGeometry::Limits::max());
       EBGEOMETRY_ALWAYS_EXPECT(std::abs(m_edgeNormals[i]) < EBGeometry::Limits::max());
@@ -229,12 +229,10 @@ namespace EBGeometry {
     Real ret = EBGeometry::Limits::max();
 
     if (isPointInside) [[likely]] {
-      ret = m_normal.dot(a_point - m_vertexPositions[0]);
+      ret = m_triangleNormal.dot(a_point - m_vertexPositions[0]);
 
-#ifdef EBGEOMETRY_DEBUG
-      EBGEOMETRY_EXPECT(ret == m_normal.dot(a_point - m_vertexPositions[1]));
-      EBGEOMETRY_EXPECT(ret == m_normal.dot(a_point - m_vertexPositions[2]));
-#endif
+      EBGEOMETRY_EXPECT(ret == m_triangleNormal.dot(a_point - m_vertexPositions[1]));
+      EBGEOMETRY_EXPECT(ret == m_triangleNormal.dot(a_point - m_vertexPositions[2]));
     }
     else {
       // If this triggers then

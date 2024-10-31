@@ -126,7 +126,7 @@ namespace EBGeometry {
 
     /*!
       @brief Get the triangle normal vector.
-      @return m_normal
+      @return m_triangleNormal
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -135,7 +135,7 @@ namespace EBGeometry {
 
     /*!
       @brief Get the triangle normal vector.
-      @return m_normal
+      @return m_triangleNormal
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -227,7 +227,7 @@ namespace EBGeometry {
     /*!
       @brief Triangle face normal
     */
-    Vec3 m_normal;
+    Vec3 m_triangleNormal;
 
     /*!
       @brief Triangle vertex positions

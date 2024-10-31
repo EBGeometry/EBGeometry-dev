@@ -161,7 +161,7 @@ namespace EBGeometry {
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE
       const Face<MetaData>*
-      getFaceList() const noexcept;      
+      getFaceList() const noexcept;
 
       /*!
 	@brief Set the inside/outside algorithm when determining if a point projects
