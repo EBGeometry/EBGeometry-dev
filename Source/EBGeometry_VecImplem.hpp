@@ -542,8 +542,23 @@ namespace EBGeometry {
   bool
   Vec3::lessLX(const Vec3& u) const noexcept
   {
-    return (m_X[0] < u.m_X[0]) || (m_X[0] == u.m_X[0] && m_X[1] < u.m_X[1]) ||
-           (m_X[1] == u.m_X[1] && m_X[2] < u.m_X[2]);
+    bool ret = false;
+
+    if (this->m_X[0] < u.m_X[0]) {
+      ret = true;
+    }
+    else if (this->m_X[0] == u.m_X[0]) {
+      if (this->m_X[1] < u.m_X[1]) {
+        ret = true;
+      }
+      else if (this->m_X[1] == u.m_X[1]) {
+        if (this->m_X[2] < u.m_X[2]) {
+          ret = true;
+        }
+      }
+    }
+
+    return ret;
   }
 
   EBGEOMETRY_ALWAYS_INLINE
