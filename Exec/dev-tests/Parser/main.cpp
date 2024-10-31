@@ -19,7 +19,7 @@ main()
   DCEL::Vertex<short> vert(point, normal, 0);
   DCEL::Edge<short>   edge;
 
-  auto mesh = MeshParser::STL::readSingle<int>("../../Resources/horse.stl");
+  auto mesh = MeshParser::STL::readSingle<int>("../../Resources/armadillo.stl");
 
   return 0;
 }

@@ -223,6 +223,16 @@ namespace EBGeometry {
     Real
     signedDistance(const Vec3& a_x) noexcept;
 
+    /*!
+      @brief Check if a line passes through the triangle.
+      @param[in] a_x0 One endpoint of the line
+      @param[in] a_x1 Other endpoint of the line
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    bool
+    intersects(const Vec3& a_x0, const Vec3& a_x1) const noexcept;
+
   protected:
     /*!
       @brief Triangle face normal
