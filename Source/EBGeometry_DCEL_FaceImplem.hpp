@@ -131,7 +131,7 @@ namespace EBGeometry {
     Face<MetaData>::getFaceList() const noexcept
     {
       return (m_faceList);
-    }       
+    }
 
     template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE
@@ -456,6 +456,10 @@ namespace EBGeometry {
 
         EBGEOMETRY_EXPECT(nextNextEdge >= 0);
 
+        EBGEOMETRY_EXPECT(curEdge != nextEdge);
+        EBGEOMETRY_EXPECT(nextEdge != nextNextEdge);
+        EBGEOMETRY_EXPECT(nextNextEdge != curEdge);
+
         const int v0 = m_edgeList[curEdge].getVertex();
         const int v1 = m_edgeList[nextEdge].getVertex();
         const int v2 = m_edgeList[nextNextEdge].getVertex();
@@ -463,6 +467,10 @@ namespace EBGeometry {
         EBGEOMETRY_EXPECT(v0 >= 0);
         EBGEOMETRY_EXPECT(v1 >= 0);
         EBGEOMETRY_EXPECT(v2 >= 0);
+
+        EBGEOMETRY_EXPECT(v0 != v1);
+        EBGEOMETRY_EXPECT(v1 != v2);
+        EBGEOMETRY_EXPECT(v2 != v0);
 
         const Vec3& x0 = m_vertexList[v0].getPosition();
         const Vec3& x1 = m_vertexList[v1].getPosition();

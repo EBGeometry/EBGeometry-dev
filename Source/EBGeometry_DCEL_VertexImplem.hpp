@@ -161,7 +161,7 @@ namespace EBGeometry {
     void
     Vertex<MetaData>::normalizeNormalVector() noexcept
     {
-      EBGEOMETRY_EXPECT(m_normal.length() > EBGeometry::Limits::min());
+      EBGEOMETRY_EXPECT(m_normal.length() > 0.0);
 
       m_normal = m_normal / m_normal.length();
     }
@@ -226,23 +226,28 @@ namespace EBGeometry {
 
       int outgoingEdge = -1;
       int incomingEdge = -1;
+      int faceIndex    = -1;
 
       while (outgoingEdge != m_outgoingEdge) {
 
         // Get the incoming and outgoing edges out of the origin vertex.
         outgoingEdge = (outgoingEdge < 0) ? m_outgoingEdge : outgoingEdge;
         incomingEdge = m_edgeList[outgoingEdge].getPreviousEdge();
+        faceIndex    = m_edgeList[outgoingEdge].getFace();
 
         EBGEOMETRY_EXPECT(outgoingEdge >= 0);
         EBGEOMETRY_EXPECT(incomingEdge >= 0);
+        EBGEOMETRY_EXPECT(outgoingEdge != incomingEdge);
+        EBGEOMETRY_EXPECT(faceIndex >= 0);
 
         // Vertices are named v0,v1,v2:
         // v0 = Origin vertex of incoming edge
         // v1 = this vertex
         // v2 = End vertex of outgoing edge.
-        const int v0 = m_edgeList[outgoingEdge].getVertex();
+        const int v0 = m_edgeList[incomingEdge].getVertex();
         const int v2 = m_edgeList[outgoingEdge].getOtherVertex();
 
+        EBGEOMETRY_EXPECT(v0 != v2);
         EBGEOMETRY_EXPECT(v0 >= 0);
         EBGEOMETRY_EXPECT(v2 >= 0);
 
@@ -260,8 +265,10 @@ namespace EBGeometry {
         a = a / a.length();
         b = b / b.length();
 
-        const Vec3& faceNormal = m_faceList[outgoingEdge].getNormal();
+        const Vec3& faceNormal = m_faceList[faceIndex].getNormal();
         const Real  alpha      = acos(dot(a, b));
+
+        EBGEOMETRY_EXPECT(faceNormal.length() > 0.0);
 
         m_normal += alpha * faceNormal;
 
