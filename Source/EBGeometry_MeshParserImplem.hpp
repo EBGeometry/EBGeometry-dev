@@ -113,8 +113,8 @@ namespace EBGeometry {
         const auto& curVert  = vertexMap[i].first;
         const auto& prevVert = vertexMap[i - 1].first;
 
-        // Insert the unique vertex.
-        if (curVert != prevVert) {
+        // Insert vertex if it is not degenerate.
+        if ((curVert - prevVert).length() > EBGeometry::Limits::min()) {
           a_vertices.emplace_back(curVert);
         }
 
@@ -155,6 +155,7 @@ namespace EBGeometry {
       }
       case FileType::PLY: {
 #if 1
+#warning "EBGeometry_MeshParserImplem.hpp::readIntoDCEL - PLY code not implemented"
         EBGEOMETRY_ALWAYS_EXPECT(false);
 #else
         mesh = MeshParser::PLY::readSingle<MetaData>(a_fileName);
@@ -191,6 +192,7 @@ namespace EBGeometry {
       Face<MetaData>*   faces    = new Face<MetaData>[numFaces];
 
       for (int v = 0; v < numVertices; v++) {
+        vertices[v].setPosition(a_vertices[v]);
         vertices[v].setVertexList(vertices);
         vertices[v].setEdgeList(edges);
         vertices[v].setFaceList(faces);
@@ -214,7 +216,7 @@ namespace EBGeometry {
 
       std::map<int, std::vector<int>> outgoingEdgesMap;
 
-      for (int faceIndex = 0; faceIndex < a_faces.size(); faceIndex++) {
+      for (int faceIndex = 0; faceIndex < numFaces; faceIndex++) {
         EBGEOMETRY_ALWAYS_EXPECT(a_faces[faceIndex].size() >= 3);
 
         const auto& faceVertices    = a_faces[faceIndex];
@@ -298,6 +300,7 @@ namespace EBGeometry {
             if (otherOutgoingEdgeIndex != curOutgoingEdgeIndex) {
               const int incomingEdgeIndex = edges[otherOutgoingEdgeIndex].getPreviousEdge();
 
+              EBGEOMETRY_EXPECT(curOutgoingEdgeIndex != otherOutgoingEdgeIndex);
               EBGEOMETRY_EXPECT(incomingEdgeIndex >= 0);
               EBGEOMETRY_EXPECT(incomingEdgeIndex < numEdges);
 
@@ -320,16 +323,12 @@ namespace EBGeometry {
         }
       }
 
-      // Allocate a mesh. THen do a sanity check and then reconcile the mesh, which will compute
+      // Allocate a mesh. Then do a sanity check and reconcile the mesh, which will compute
       // internal parameters like normal vectors for the vertices, edges, and faces.
       Mesh<MetaData>* mesh = new Mesh<MetaData>(numVertices, numEdges, numFaces, vertices, edges, faces);
 
       mesh->sanityCheck();
-#if 1
-#warning "EBGeometry_MashParserImplem -- reconcile function turned off for now"
-#else
       mesh->reconcile();
-#endif
 
       return mesh;
     }
@@ -373,11 +372,6 @@ namespace EBGeometry {
         break;
       }
       }
-
-#if 1
-#warning "debug hook enabled in EBGeometry_MeshParserImplem.hpp"
-      meshes = EBGeometry::MeshParser::STL::readBinary<MetaData>(a_fileName);
-#endif
 
       return meshes;
     }
