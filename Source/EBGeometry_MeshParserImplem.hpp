@@ -23,6 +23,10 @@
 #include "EBGeometry_Macros.hpp"
 #include "EBGeometry_MeshParser.hpp"
 
+// clang-format off
+#warning "EBGeometry_MeshParserImplem.hpp STL code should be refactored to only read soups, and then use the soup-to-dcel functionality in outside cells"
+// clang-format on
+
 namespace EBGeometry {
   namespace MeshParser {
 
@@ -149,7 +153,7 @@ namespace EBGeometry {
 
       switch (fileType) {
       case FileType::STL: {
-        mesh = MeshParser::STL::readSingle<MetaData>(a_fileName);
+        mesh = MeshParser::STL::readSingleIntoDCEL<MetaData>(a_fileName);
 
         break;
       }
@@ -158,7 +162,7 @@ namespace EBGeometry {
 #warning "EBGeometry_MeshParserImplem.hpp::readIntoDCEL - PLY code not implemented"
         EBGEOMETRY_ALWAYS_EXPECT(false);
 #else
-        mesh = MeshParser::PLY::readSingle<MetaData>(a_fileName);
+        mesh = MeshParser::PLY::readSingleIntoDCEL<MetaData>(a_fileName);
 #endif
       }
       case FileType::Unsupported: {
@@ -341,15 +345,15 @@ namespace EBGeometry {
     template <typename MetaData>
     EBGEOMETRY_INLINE
     EBGeometry::DCEL::Mesh<MetaData>*
-    STL::readSingle(const std::string a_fileName) noexcept
+    STL::readSingleIntoDCEL(const std::string a_fileName) noexcept
     {
-      return ((STL::readMulti<MetaData>(a_fileName)).front()).first;
+      return ((STL::readMultiIntoDCEL<MetaData>(a_fileName)).front()).first;
     }
 
     template <typename MetaData>
     EBGEOMETRY_INLINE
     std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
-    STL::readMulti(const std::string a_fileName) noexcept
+    STL::readMultiIntoDCEL(const std::string a_fileName) noexcept
     {
       const auto fileEncoding = MeshParser::STL::getEncoding(a_fileName);
 
@@ -371,7 +375,7 @@ namespace EBGeometry {
         break;
       }
       case MeshParser::FileEncoding::Unknown: {
-        std::cerr << "In file EBGeometry_MeshParserImplem.hpp::STL::readMulti - unknown file encoding encountered\n";
+        std::cerr << "EBGeometry_MeshParserImplem.hpp::STL::readMultiIntoDCEL - unknown file encoding encountered\n";
 
         break;
       }

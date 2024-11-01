@@ -127,7 +127,7 @@ namespace EBGeometry {
       EBGEOMETRY_GPU_HOST
       [[nodiscard]] EBGEOMETRY_INLINE
       static EBGeometry::DCEL::Mesh<MetaData>*
-      readSingle(const std::string a_fileName) noexcept;
+      readSingleIntoDCEL(const std::string a_fileName) noexcept;
 
       /*!
 	@brief Read a single STL object from the input file. The file can be binary or ASCII.
@@ -139,7 +139,7 @@ namespace EBGeometry {
       EBGEOMETRY_GPU_HOST
       [[nodiscard]] EBGEOMETRY_INLINE
       static std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
-      readMulti(const std::string a_fileName) noexcept;
+      readMultiIntoDCEL(const std::string a_fileName) noexcept;
 
     protected:
       /*!
@@ -190,6 +190,15 @@ namespace EBGeometry {
                        const std::vector<std::string>& a_fileContents,
                        const int                       a_firstLine,
                        const int                       a_lastLine) noexcept;
+    };
+
+    /*!
+      @brief MeshParser class for reading PLY files
+    */
+    class PLY {
+    public:
+
+    protected:
     };
 
   } // namespace MeshParser
