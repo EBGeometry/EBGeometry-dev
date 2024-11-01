@@ -34,7 +34,7 @@ TEST_CASE("CLEAN_STL_ASCII")
   }
 }
 
-TEST_CASE("CLEAN_STL_Binary")
+TEST_CASE("CLEAN_STL_BINARY")
 {
   const char* tmp = std::getenv("EBGEOMETRY_HOME");
 
