@@ -1,10 +1,10 @@
-cmake_minimum_required(VERSION 3.17 FATAL_ERROR)
-project(EBGeometry LANGUAGES CUDA CXX)
+cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
+#project(EBGeometry LANGUAGES CUDA CXX)
 project(EBGeometry LANGUAGES CXX)
-enable_language(CUDA)
+#enable_language(CUDA)
 set (CMAKE_CXX_STANDARD 20)
 
-add_compile_definitions(EBGEOMETRY_ENABLE_CUDA)
+#add_compile_definitions(EBGEOMETRY_ENABLE_CUDA)
 add_compile_definitions(EBGEOMETRY_ENABLE_DEBUG)
 
 set(EBGEOMETRY_HOME "/home/robertm/Projects/EBGeometry-dev")
@@ -19,6 +19,6 @@ include_directories(${EBGEOMETRY_HOME})
 
 # Build executable
 add_executable(main.out main.cpp)
-set_source_files_properties(main.cpp PROPERTIES LANGUAGE CUDA)
-set_target_properties(main.out PROPERTIES CUDA_ARCHITECTURES "native")
-set_target_properties(main.out PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+#set_source_files_properties(main.cpp PROPERTIES LANGUAGE CUDA)
+#set_target_properties(main.out PROPERTIES CUDA_ARCHITECTURES "native")
+#set_target_properties(main.out PROPERTIES CUDA_SEPARABLE_COMPILATION ON)

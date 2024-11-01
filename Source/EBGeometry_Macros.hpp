@@ -15,8 +15,11 @@
 #include <cassert>
 #include <iostream>
 
+static unsigned long long int EBGEOMETRY_ASSERTION_FAILURES = 0;
+
 #define EBGEOMETRY_ALWAYS_EXPECT(cond)                                                     \
   if (!(cond)) {                                                                           \
+    EBGEOMETRY_ASSERTION_FAILURES += 1;                                                    \
     printf("Expectation '%s' failed on line %i in file %s!\n", #cond, __LINE__, __FILE__); \
   }
 

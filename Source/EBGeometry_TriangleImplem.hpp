@@ -228,7 +228,7 @@ namespace EBGeometry {
 
     Real ret = EBGeometry::Limits::max();
 
-    if (isPointInside) [[likely]] {
+    if (isPointInside) {
       ret = m_triangleNormal.dot(a_point - m_vertexPositions[0]);
 
       EBGEOMETRY_EXPECT(ret == m_triangleNormal.dot(a_point - m_vertexPositions[1]));

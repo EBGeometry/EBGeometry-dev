@@ -1,9 +1,9 @@
 // Std includes
 #include <stdio.h>
 #include <iostream>
-#include <cuda.h>
-#include <cuda_runtime.h>
-#include <device_launch_parameters.h>
+// #include <cuda.h>
+// #include <cuda_runtime.h>
+// #include <device_launch_parameters.h>
 
 // Our includes
 #include "EBGeometry.hpp"
@@ -21,5 +21,5 @@ main()
 
   auto mesh = MeshParser::STL::readSingle<int>("../../Resources/armadillo.stl");
 
-  return 0;
+  return EBGEOMETRY_ASSERTION_FAILURES;
 }
