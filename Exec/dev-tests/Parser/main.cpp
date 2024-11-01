@@ -19,7 +19,7 @@ main()
   DCEL::Vertex<short> vert(point, normal, 0);
   DCEL::Edge<short>   edge;
 
-  auto mesh = MeshParser::STL::readSingle<int>("../../../Meshes/STL/Binary/armadillo.stl");
+  auto mesh = MeshParser::STL::readSingle<int>("../../../Meshes/Clean/STL/Binary/armadillo.stl");
 
   return EBGEOMETRY_ASSERTION_FAILURES;
 }

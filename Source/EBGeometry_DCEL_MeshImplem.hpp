@@ -85,9 +85,11 @@ namespace EBGeometry {
 
     template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE
-    void
-    Mesh<MetaData>::sanityCheck() const noexcept
+    bool
+    Mesh<MetaData>::isManifold() const noexcept
     {
+      bool manifold = true;
+
       const std::string vertexHasNoEdge            = "no referenced edge for vertex (unreferenced vertex)";
       const std::string vertexPositionIsDegenerate = "vertex position is degenerate (shares coordinate)";
       const std::string vertexHasNoVertexList      = "vertex has no vertex list";
@@ -257,7 +259,15 @@ namespace EBGeometry {
         }
       }
 
+      for (const auto& warning : warnings) {
+        if (warning.second > 0) {
+          manifold = false;
+        }
+      }
+
       this->printWarnings(warnings);
+
+      return manifold;
     }
 
     template <class MetaData>
@@ -518,9 +528,8 @@ namespace EBGeometry {
     {
       for (const auto& warn : a_warnings) {
         if (warn.second > 0) {
-          std::cerr << "In file 'EBGeometry_DCEL_MeshImplem.H' function "
-                       "Mesh<MetaData>::sanityCheck() - warnings about error '"
-                    << warn.first << "' = " << warn.second << "\n";
+          std::cerr << "EBGeometry_DCEL_MeshImplem.hpp'::Mesh::isManifold - warnings about error' " << warn.first
+                    << "' = " << warn.second << "\n";
         }
       }
     }

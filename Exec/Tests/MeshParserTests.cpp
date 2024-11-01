@@ -25,6 +25,7 @@ TEST_CASE("CLEAN_STL_ASCII")
 
     auto mesh = MeshParser::readIntoDCEL<short>(entry.path());
 
+    CHECK(mesh->isManifold() == true);
     CHECK(EBGEOMETRY_ASSERTION_FAILURES == 0);
 
     mesh->freeMem();
@@ -49,6 +50,7 @@ TEST_CASE("CLEAN_STL_Binary")
 
     auto mesh = MeshParser::readIntoDCEL<short>(entry.path());
 
+    CHECK(mesh->isManifold() == true);
     CHECK(EBGEOMETRY_ASSERTION_FAILURES == 0);
 
     mesh->freeMem();

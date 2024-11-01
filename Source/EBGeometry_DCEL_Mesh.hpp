@@ -135,13 +135,16 @@ namespace EBGeometry {
 	This routine does not check for self-intersections, since efficiently testing
 	for that requires a BVH structure. Please see the file parsers to check how to
 	perform those tests.
+
+	@return Returns true if the mesh was watertight with coherently oriented faces and no dangling edges
+	and false otherwise. 
 	
 	@note Only callable on host. 
       */
       EBGEOMETRY_GPU_HOST
       EBGEOMETRY_ALWAYS_INLINE
-      void
-      sanityCheck() const noexcept;
+      bool
+      isManifold() const noexcept;
 
       /*!
 	@brief Search algorithm for direct signed distance computations
@@ -373,7 +376,7 @@ namespace EBGeometry {
       DirectSignedDistance2(const Vec3& a_point) const noexcept;
 
       /*!
-	@brief Increment a warning. This is used in sanityCheck() for locating holes
+	@brief Increment a warning. This is used in isManifold() for locating holes
 	or bad inputs in the mesh.
 	@param[in] a_warnings Map of all registered warnings
 	@param[in] a_warn Current warning to increment by

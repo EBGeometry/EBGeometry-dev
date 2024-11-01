@@ -327,8 +327,13 @@ namespace EBGeometry {
       // internal parameters like normal vectors for the vertices, edges, and faces.
       Mesh<MetaData>* mesh = new Mesh<MetaData>(numVertices, numEdges, numFaces, vertices, edges, faces);
 
-      mesh->sanityCheck();
-      mesh->reconcile();
+      if (mesh->isManifold()) {
+        mesh->reconcile();
+      }
+      else {
+        std::cerr
+          << "EBGeometry_MeshParserImplem.hpp::turnPolygonSoupIntoDCEL - mesh is not manifold and will not be reconciled!\n";
+      }
 
       return mesh;
     }
@@ -366,8 +371,7 @@ namespace EBGeometry {
         break;
       }
       case MeshParser::FileEncoding::Unknown: {
-        std::cerr
-          << "In file EBGeometry_MeshParser_STLImplem.hpp function STL::readMulti - unknown file encoding encountered\n";
+        std::cerr << "In file EBGeometry_MeshParserImplem.hpp::STL::readMulti - unknown file encoding encountered\n";
 
         break;
       }
@@ -403,8 +407,7 @@ namespace EBGeometry {
         // clang-format on
       }
       else {
-        std::cerr << "EBGeometry_MeshParserImplem.hpp::MeshParser::STL::getEncoding -- could not open file '" +
-                       a_fileName + "'\n";
+        std::cerr << "EBGeometry_MeshParserImplem.hpp::STL::getEncoding -- could not open file '" + a_fileName + "'\n";
       }
 
       return fileEncoding;
@@ -450,8 +453,7 @@ namespace EBGeometry {
         }
       }
       else {
-        std::cerr << "EBGeometry_MeshParserImplem.hpp::MeshParser::STL::readASCII -- could not open file '" +
-                       a_fileName + "'\n";
+        std::cerr << "EBGeometry_MeshParserImplem.hpp::STL::readASCII -- could not open file '" + a_fileName + "'\n";
       }
 
       // Read STL objects into triangle soups and then turn the soup into DCEL meshes.
