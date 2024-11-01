@@ -403,7 +403,8 @@ namespace EBGeometry {
         // clang-format on
       }
       else {
-        std::cerr << "MeshParser::STL::getEncoding -- could not open file '" + a_fileName + "'\n";
+        std::cerr << "EBGeometry_MeshParserImplem.hpp::MeshParser::STL::getEncoding -- could not open file '" +
+                       a_fileName + "'\n";
       }
 
       return fileEncoding;
@@ -416,7 +417,63 @@ namespace EBGeometry {
     {
       std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>> meshes;
 
-#warning "EBGeometry_MeshParser_STLImplem.hpp - working on readASCII function"
+      // Storage for full ASCII file and line numbers indicating where STL objects start/end
+      std::vector<std::string>         fileContents;
+      std::vector<std::pair<int, int>> firstLast;
+
+      // Read the entire file and figure out where objects begin and end.
+      std::ifstream filestream(a_fileName);
+      if (filestream.is_open()) {
+        std::string line;
+
+        int curLine = 0;
+        int first;
+        int last;
+
+        while (std::getline(filestream, line)) {
+          fileContents.emplace_back(line);
+
+          std::string       str;
+          std::stringstream sstream(line);
+          sstream >> str;
+
+          if (str == "solid") {
+            first = curLine;
+          }
+          else if (str == "endsolid") {
+            last = curLine;
+
+            firstLast.emplace_back(first, last);
+          }
+
+          curLine++;
+        }
+      }
+      else {
+        std::cerr << "EBGeometry_MeshParserImplem.hpp::MeshParser::STL::readASCII -- could not open file '" +
+                       a_fileName + "'\n";
+      }
+
+      // Read STL objects into triangle soups and then turn the soup into DCEL meshes.
+      for (const auto& fl : firstLast) {
+        const int firstLine = fl.first;
+        const int lastLine  = fl.second;
+
+        // Read triangle soup and compress it.
+        std::vector<Vec3>             vertices;
+        std::vector<std::vector<int>> triangles;
+        std::string                   objectName;
+
+        MeshParser::STL::readSTLSoupASCII(vertices, triangles, objectName, fileContents, firstLine, lastLine);
+
+        EBGEOMETRY_ALWAYS_EXPECT(!(MeshParser::containsDegeneratePolygons(vertices, triangles)));
+
+        MeshParser::removeDegenerateVerticesFromSoup(vertices, triangles);
+
+        const auto mesh = MeshParser::turnPolygonSoupIntoDCEL<MetaData>(vertices, triangles);
+
+        meshes.emplace_back(mesh, objectName);
+      }
 
       return meshes;
     }
@@ -546,13 +603,55 @@ namespace EBGeometry {
     EBGEOMETRY_INLINE
     void
     STL::readSTLSoupASCII(std::vector<Vec3>&              a_vertices,
-                          std::vector<std::vector<int>>&  a_facets,
+                          std::vector<std::vector<int>>&  a_triangles,
                           std::string&                    a_objectName,
                           const std::vector<std::string>& a_fileContents,
                           const int                       a_firstLine,
                           const int                       a_lastLine) noexcept
     {
-#warning "EBGeometry_MeshParser_STLImplem.hpp - working on readSTLSoupASCII function"
+      // First line just holds the object name.
+      std::stringstream ss(a_fileContents[a_firstLine]);
+
+      std::string str;
+      std::string str1;
+      std::string str2;
+
+      ss >> str1 >> str2;
+
+      a_objectName = str2;
+
+      std::vector<int>* curTriangle = nullptr;
+
+      // Read facets and vertices.
+      for (int line = a_firstLine + 1; line < a_lastLine; line++) {
+        ss = std::stringstream(a_fileContents[line]);
+
+        ss >> str;
+
+        if (str == "facet") {
+          a_triangles.emplace_back(std::vector<int>());
+
+          curTriangle = &a_triangles.back();
+        }
+        else if (str == "vertex") {
+          Real x;
+          Real y;
+          Real z;
+
+          ss >> x >> y >> z;
+
+          a_vertices.emplace_back(Vec3(x, y, z));
+          curTriangle->emplace_back(a_vertices.size() - 1);
+
+          // Throw an error if we end up creating more than 100 vertices -- in this case the 'endloop'
+          // or 'endfacet' are missing
+          if (curTriangle->size() > 100) {
+            std::cerr << "EBGeometry_MeshParserImplem.hpp::MeshParser::STL::readSTLSoupASCII -- logic bust\n";
+
+            break;
+          }
+        }
+      }
     }
   } // namespace MeshParser
 } // namespace EBGeometry

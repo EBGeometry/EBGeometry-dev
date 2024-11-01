@@ -44,11 +44,11 @@ TEST_CASE("Vertex_BasisVectors")
   auto edges    = new EBGeometry::DCEL::Edge<>[numEdges];
   auto faces    = new EBGeometry::DCEL::Face<>[numFaces];
 
-  vertices[0].define(x0, Vec3::zero(), &edges[0]);
-  vertices[1].define(x1, Vec3::zero(), &edges[1]);
-  vertices[2].define(x2, Vec3::zero(), &edges[2]);
-  vertices[3].define(x3, Vec3::zero(), &edges[3]);
-  vertices[4].define(x4, Vec3::zero(), &edges[0]);
+  vertices[0].define(x0, Vec3::zero(), 0);
+  vertices[1].define(x1, Vec3::zero(), 1);
+  vertices[2].define(x2, Vec3::zero(), 2);
+  vertices[3].define(x3, Vec3::zero(), 3);
+  vertices[4].define(x4, Vec3::zero(), 4);
 
   delete[] vertices;
   delete[] edges;
