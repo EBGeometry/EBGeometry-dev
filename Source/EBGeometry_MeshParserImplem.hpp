@@ -53,11 +53,16 @@ namespace EBGeometry {
     bool
     containsDegeneratePolygons(const PolygonSoup<MetaData>& a_soup) noexcept
     {
+      // TLDR: This routine runs through all the faces in the polygon soup, and checks if the vertex
+      // coordinates are degenerate. Note that we check the POSITION of the vertex indices in the soup
+      // since although the indices might be degenerate (e.g., a triangle with vertex indicies 0,1,2),
+      // the vertex coordinates themselves could be degenerate (e.g., vertex indices 0 and 1 might refer
+      // to the same physical position).
+
       bool hasDegenerateFaces = false;
 
       const auto& vertices = std::get<0>(a_soup);
       const auto& faces    = std::get<1>(a_soup);
-      const auto& nameID   = std::get<2>(a_soup);
 
       EBGEOMETRY_ALWAYS_EXPECT(vertices.size() >= 3);
       EBGEOMETRY_ALWAYS_EXPECT(faces.size() >= 1);
