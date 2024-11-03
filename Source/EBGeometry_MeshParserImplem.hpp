@@ -53,37 +53,38 @@ namespace EBGeometry {
     bool
     containsDegeneratePolygons(const PolygonSoup<MetaData>& a_soup) noexcept
     {
-#if 1
-#warning "containsDegeneratePolygons must be reimplemented"
-#else
-      const int numVertices = std::get<0>(a_soup).size();
-      const int numFaces    = std::get<1>(a_soup).first.size();
+      bool hasDegenerateFaces = false;
 
-      EBGEOMETRY_ALWAYS_EXPECT(std::get<0>(a_soup).size
-      EBGEOMETRY_ALWAYS_EXPECT(a_vertices.size() >= 3);
-      EBGEOMETRY_ALWAYS_EXPECT(a_polygons.size() >= 1);
+      const auto& vertices = std::get<0>(a_soup);
+      const auto& faces    = std::get<1>(a_soup);
+      const auto& nameID   = std::get<2>(a_soup);
 
-      for (const auto& polygon : a_polygons) {
-        std::vector<Vec3> polyVertices;
+      EBGEOMETRY_ALWAYS_EXPECT(vertices.size() >= 3);
+      EBGEOMETRY_ALWAYS_EXPECT(faces.size() >= 1);
 
-        for (const auto& i : polygon) {
-          polyVertices.emplace_back(a_vertices[i]);
+      for (const auto& face : faces) {
+        const auto& faceVertices = face.first;
+
+        std::vector<Vec3> vertexCoords;
+
+        for (const auto& faceVertex : face.first) {
+          vertexCoords.emplace_back(vertices[faceVertex]);
         }
 
-        std::sort(polyVertices.begin(), polyVertices.end(), [](const Vec3& a, const Vec3& b) { return a.lessLX(b); });
+        std::sort(vertexCoords.begin(), vertexCoords.end(), [](const Vec3& a, const Vec3& b) { return a.lessLX(b); });
 
-        for (int i = 1; i < polyVertices.size(); i++) {
-          const Vec3& curVertex  = polyVertices[i];
-          const Vec3& prevVertex = polyVertices[i - 1];
+        const int numVertexCoords = vertexCoords.size();
 
-          if (curVertex == prevVertex) {
-            return true;
+        EBGEOMETRY_ALWAYS_EXPECT(numVertexCoords >= 3);
+
+        for (int i = 0; i < numVertexCoords; i++) {
+          if (vertexCoords[i] == vertexCoords[(i + 1) % numVertexCoords]) {
+            hasDegenerateFaces = true;
           }
         }
       }
-#endif
 
-      return false;
+      return hasDegenerateFaces;
     }
 
     template <typename MetaData>
@@ -158,7 +159,7 @@ namespace EBGeometry {
 
       switch (MeshParser::getFileType(a_fileName)) {
       case FileType::STL: {
-	//        soup = MeshParser::STL::readSingleIntoPolygonSoup<MetaData>(a_fileName);
+        //        soup = MeshParser::STL::readSingleIntoPolygonSoup<MetaData>(a_fileName);
 
         break;
       }

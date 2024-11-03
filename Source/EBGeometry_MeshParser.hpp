@@ -58,7 +58,7 @@ namespace EBGeometry {
       faces (second entry in the tuple). Each face contains a list of vertex indices. 
     */
     template <typename MetaData>
-    using PolygonSoup = std::tuple<std::vector<Vec3>, std::pair<std::vector<std::vector<int>>, MetaData>, std::string>;
+    using PolygonSoup = std::tuple<std::vector<Vec3>, std::vector<std::pair<std::vector<int>, MetaData>>, std::string>;
 
     /*!
       @brief Read file into a polygon soup. 
