@@ -15,6 +15,7 @@
 // Std includes
 #include <vector>
 #include <map>
+#include <tuple>
 
 // Our includes
 #include "EBGeometry_DCEL_Mesh.hpp"
@@ -52,35 +53,56 @@ namespace EBGeometry {
     };
 
     /*!
+      @brief Alias for a polygon soup with attached meta data
+      @details The soup consists of a list of vertex coordinates (first entry in pair) and a list of
+      faces (second entry in the tuple). Each face references a number of vertices
+      and the associated MetaData on the polygon. The soup can also be given a string identifier, given
+      by the last entry in the tuple.
+
+      Polygon soups can be turned into DCEL meshes (if they satisfy manifold-ness) or dirty meshes. 
+    */
+    using PolygonSoup = std::tuple<std::vector<Vec3>, std::vector<std::pair<std::vector<int>, MetaData>>, std::string>
+
+    /*!
+      @brief Read file into a polygon soup. 
+      @param[in] a_fileName File name. 
+    */
+    template <typename MetaData>
+    EBGEOMETRY_GPU_HOST
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    static PolygonSoup<MetaData>
+    readIntoPolygonSoup(const std::string a_fileName) noexcept;
+
+    /*!
       @brief Read a file containing a single watertight object and return it as a DCEL mesh. This version
       supports multiple file formats. 
-      @param[in] a_filename File name
+      @param[in] a_fileName File name
     */
     template <typename MetaData>
     EBGEOMETRY_GPU_HOST
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     static EBGeometry::DCEL::Mesh<MetaData>*
-    readIntoDCEL(const std::string a_filename) noexcept;
+    readIntoDCEL(const std::string a_fileName) noexcept;
 
     /*!
       @brief Get file type
-      @param[in] a_filenames 
+      @param[in] a_fileNames 
     */
     EBGEOMETRY_GPU_HOST
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     static MeshParser::FileType
-    getFileType(const std::string a_filename) noexcept;
+    getFileType(const std::string a_fileName) noexcept;
 
     /*!
       @brief Check if polygons in a polygon soup contain degenerate vertices
       @param[out] a_vertices Vertices
       @param[out] a_polygons Polygons
     */
+    template <typename MetaData>
     EBGEOMETRY_GPU_HOST
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     static bool
-    containsDegeneratePolygons(const std::vector<EBGeometry::Vec3>& a_vertices,
-                               const std::vector<std::vector<int>>& a_polygons) noexcept;
+    containsDegeneratePolygons(const PolygonSoup<MetaData>& a_soup) noexcept;
 
     /*!
       @brief Compress polygon soup. This removes degenerate polygons (e.g., triangles).
@@ -88,11 +110,11 @@ namespace EBGeometry {
       @param[in, out] a_vertices Vertices
       @param[in, out] a_polygons Planar polygons.
     */
+    template <typename MetaData>
     EBGEOMETRY_GPU_HOST
     EBGEOMETRY_ALWAYS_INLINE
     static void
-    removeDegenerateVerticesFromSoup(std::vector<EBGeometry::Vec3>& a_vertices,
-                                     std::vector<std::vector<int>>& a_polygons) noexcept;
+    removeDegenerateVerticesFromSoup(PolygonSoup<MetaData>& a_soup) noexcept;
 
     /*!
       @brief Turn raw vertices into a DCEL mesh.
@@ -144,33 +166,33 @@ namespace EBGeometry {
     protected:
       /*!
 	@brief Check if the input STL file is an ASCII file or a binary
-	@param[in] a_filename File name
+	@param[in] a_fileName File name
 	@return Returns FileEncoding::ASCII or FileEncoding::Binary,
       */
       EBGEOMETRY_GPU_HOST
       [[nodiscard]] EBGEOMETRY_INLINE
       static MeshParser::FileEncoding
-      getEncoding(const std::string a_filename) noexcept;
+      getEncoding(const std::string a_fileName) noexcept;
 
       /*!
 	@brief ASCII reader STL files, possibly containing multiple objects. Each object becomes a DCEL mesh
-	@param[in] a_filename Input filename
+	@param[in] a_fileName Input filename
       */
       template <typename MetaData>
       EBGEOMETRY_GPU_HOST
       [[nodiscard]] EBGEOMETRY_INLINE
       static std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
-      readASCII(const std::string a_filename) noexcept;
+      readASCII(const std::string a_fileName) noexcept;
 
       /*!
 	@brief Binary reader for STL files, possibly containing multiple objects. Each object becomes a DCEL mesh
-	@param[in] a_filename Input filename
+	@param[in] a_fileName Input filename
       */
       template <typename MetaData>
       EBGEOMETRY_GPU_HOST
       [[nodiscard]] EBGEOMETRY_INLINE
       static std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
-      readBinary(const std::string a_filename) noexcept;
+      readBinary(const std::string a_fileName) noexcept;
 
       /*!
 	@brief Read an STL object as a triangle soup into a raw vertices and facets
@@ -178,8 +200,8 @@ namespace EBGeometry {
 	@param[out] a_facets     STL facets
 	@param[out] a_objectName Object name
 	@param[out] a_fileContents File contents
-	@param[out] a_firstLine  Line number in a_filename containing the 'solid' identifier. 
-	@param[out] a_lastLine   Line number in a_filename containing the 'endsolid' identifier. 
+	@param[out] a_firstLine  Line number in a_fileName containing the 'solid' identifier. 
+	@param[out] a_lastLine   Line number in a_fileName containing the 'endsolid' identifier. 
       */
       EBGEOMETRY_GPU_HOST
       EBGEOMETRY_INLINE
