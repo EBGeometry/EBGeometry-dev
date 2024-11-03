@@ -48,6 +48,7 @@ namespace EBGeometry {
       return fileType;
     }
 
+    template <typename MetaData>
     EBGEOMETRY_ALWAYS_INLINE
     bool
     containsDegeneratePolygons(const PolygonSoup<MetaData>& a_soup) noexcept
@@ -90,6 +91,7 @@ namespace EBGeometry {
     void
     removeDegenerateVerticesFromSoup(PolygonSoup<MetaData>& a_soup) noexcept
     {
+#if 0
       // Polygon soups might contain degenerate vertices. For example, STL files define individual facets rather
       // than links between vertices, and in this case many vertices will be degenerate. Here, we create a map of
       // the original vertices, and delete vertices that are degenerate. The polygons are rearranged so that they
@@ -144,28 +146,29 @@ namespace EBGeometry {
           polygon[v] = indexMap.at(polygon[v]);
         }
       }
+#endif
     }
 
     template <typename MetaData>
     EBGEOMETRY_ALWAYS_INLINE
     PolygonSoup<MetaData>
-    readIntoPolygonSoup(const std::string a_fileName) noexcept
+    readIntoSoup(const std::string a_fileName) noexcept
     {
       PolygonSoup<MetaData> soup;
 
       switch (MeshParser::getFileType(a_fileName)) {
       case FileType::STL: {
-        soup = MeshParser::STL::readSingleIntoPolygonSoup<MetaData>(a_fileName);
+	//        soup = MeshParser::STL::readSingleIntoPolygonSoup<MetaData>(a_fileName);
 
         break;
       }
       case FileType::PLY: {
-#warning "EBGeometry_MeshParserImplem.hpp::readIntoPolygonSoup - PLY code not implemented"
+#warning "EBGeometry_MeshParserImplem.hpp::readIntoSoup - PLY code not implemented"
 
         break;
       }
       case FileType::Unsupported: {
-        std::cerr << "In file EBGeometry_MeshParserImplem.hpp::readIntoPolygonSoup - unsupported file type\n";
+        std::cerr << "In file EBGeometry_MeshParserImplem.hpp::readIntoSoup - unsupported file type\n";
 
         break;
       }
@@ -179,6 +182,7 @@ namespace EBGeometry {
     EBGeometry::DCEL::Mesh<MetaData>*
     readIntoDCEL(const std::string a_fileName) noexcept
     {
+#if 0
       const MeshParser::FileType fileType = MeshParser::getFileType(a_fileName);
 
       EBGEOMETRY_ALWAYS_EXPECT((fileType != MeshParser::FileType::Unsupported));
@@ -203,6 +207,9 @@ namespace EBGeometry {
       }
 
       return mesh;
+#else
+      return nullptr;
+#endif
     }
 
     template <typename MetaData>
@@ -211,6 +218,7 @@ namespace EBGeometry {
     turnPolygonSoupIntoDCEL(const std::vector<EBGeometry::Vec3>& a_vertices,
                             const std::vector<std::vector<int>>& a_faces) noexcept
     {
+#if 0
       using namespace EBGeometry::DCEL;
 
       // Figure out the number of vertices, edges, and polygons.
@@ -372,8 +380,13 @@ namespace EBGeometry {
       }
 
       return mesh;
+#else
+
+      return nullptr;
+#endif
     }
 
+#if 0
     template <typename MetaData>
     EBGEOMETRY_INLINE
     EBGeometry::DCEL::Mesh<MetaData>*
@@ -693,6 +706,7 @@ namespace EBGeometry {
         }
       }
     }
+#endif
   } // namespace MeshParser
 } // namespace EBGeometry
 

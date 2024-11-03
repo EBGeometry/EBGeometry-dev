@@ -19,6 +19,7 @@ main()
   DCEL::Vertex<short> vert(point, normal, 0);
   DCEL::Edge<short>   edge;
 
+  auto soup = MeshParser::readIntoSoup<int>("../../../Meshes/Clean/STL/ASCII/armadillo.stl");
   auto mesh = MeshParser::readIntoDCEL<int>("../../../Meshes/Clean/STL/ASCII/armadillo.stl");
 
   EBGEOMETRY_ALWAYS_EXPECT(EBGEOMETRY_ASSERTION_FAILURES == 0);

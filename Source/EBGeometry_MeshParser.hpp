@@ -55,13 +55,10 @@ namespace EBGeometry {
     /*!
       @brief Alias for a polygon soup with attached meta data
       @details The soup consists of a list of vertex coordinates (first entry in pair) and a list of
-      faces (second entry in the tuple). Each face references a number of vertices
-      and the associated MetaData on the polygon. The soup can also be given a string identifier, given
-      by the last entry in the tuple.
-
-      Polygon soups can be turned into DCEL meshes (if they satisfy manifold-ness) or dirty meshes. 
+      faces (second entry in the tuple). Each face contains a list of vertex indices. 
     */
-    using PolygonSoup = std::tuple<std::vector<Vec3>, std::vector<std::pair<std::vector<int>, MetaData>>, std::string>
+    template <typename MetaData>
+    using PolygonSoup = std::tuple<std::vector<Vec3>, std::pair<std::vector<std::vector<int>>, MetaData>, std::string>;
 
     /*!
       @brief Read file into a polygon soup. 
@@ -71,7 +68,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     static PolygonSoup<MetaData>
-    readIntoPolygonSoup(const std::string a_fileName) noexcept;
+    readIntoSoup(const std::string a_fileName) noexcept;
 
     /*!
       @brief Read a file containing a single watertight object and return it as a DCEL mesh. This version
@@ -130,9 +127,9 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     static EBGeometry::DCEL::Mesh<MetaData>*
-    turnPolygonSoupIntoDCEL(const std::vector<EBGeometry::Vec3>& a_vertices,
-                            const std::vector<std::vector<int>>& a_polygons) noexcept;
+    turnPolygonSoupIntoDCEL(PolygonSoup<MetaData>& a_soup) noexcept;
 
+#if 0
     /*!
       @brief MeshParser class for reading STL files into DCEL mesh files. 
     */
@@ -222,6 +219,7 @@ namespace EBGeometry {
 
     protected:
     };
+#endif
 
   } // namespace MeshParser
 } // namespace EBGeometry
