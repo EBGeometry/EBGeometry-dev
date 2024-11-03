@@ -97,21 +97,26 @@ namespace EBGeometry {
     void
     removeDegenerateVerticesFromSoup(PolygonSoup<MetaData>& a_soup) noexcept
     {
-#if 0
-      // Polygon soups might contain degenerate vertices. For example, STL files define individual facets rather
-      // than links between vertices, and in this case many vertices will be degenerate. Here, we create a map of
-      // the original vertices, and delete vertices that are degenerate. The polygons are rearranged so that they
-      // reference unique vertices.
-      EBGEOMETRY_ALWAYS_EXPECT(a_vertices.size() >= 3);
-      EBGEOMETRY_ALWAYS_EXPECT(a_polygons.size() >= 1);
+      // TLDR: Polygon soups might contain degenerate vertices. For example, STL files define individual facets
+      // rather than links between vertices, and in this case many vertices will be degenerate. Here, we create
+      // a map of the original vertices, and delete vertices that are degenerate. The polygons are rearranged
+      // so that they reference unique vertices.
 
-      // indexMap contains a map of the old-to-new indexing.
+      std::vector<Vec3>&                                  vertices = std::get<0>(a_soup);
+      std::vector<std::pair<std::vector<int>, MetaData>>& faces    = std::get<1>(a_soup);
+
+      EBGEOMETRY_ALWAYS_EXPECT(vertices.size() >= 3);
+      EBGEOMETRY_ALWAYS_EXPECT(faces.size() >= 1);
+
+      // vertexMap contains the original vertices together with their original index.
+      // indexMap contains a map of the old-to-new indexing, and is built as we traverse
+      // the vertex list.
       std::vector<std::pair<Vec3, int>> vertexMap;
       std::map<int, int>                indexMap;
 
       // Create a map of the original vertices and sort it using a lexical comparison operator.
-      for (int i = 0; i < a_vertices.size(); i++) {
-        vertexMap.emplace_back(a_vertices[i], i);
+      for (int i = 0; i < vertices.size(); i++) {
+        vertexMap.emplace_back(vertices[i], i);
       }
 
       std::sort(vertexMap.begin(), vertexMap.end(), [](const std::pair<Vec3, int>& A, const std::pair<Vec3, int>& B) {
@@ -121,38 +126,41 @@ namespace EBGeometry {
         return a.lessLX(b);
       });
 
-      // Compress the vertex vector, and rebuild the index map
-      a_vertices.resize(0);
+      // Toss the original vertex coordinates and begin anew.
+      vertices.resize(0);
 
-      a_vertices.emplace_back(vertexMap.front().first);
-      indexMap.emplace(vertexMap.front().second, 0);
+      for (int i = 0; i < vertexMap.size(); i++) {
+        const Vec3 originalCoord = vertexMap[i].first;
+        const int  originalIndex = vertexMap[i].second;
 
-      for (int i = 1; i < vertexMap.size(); i++) {
-        const auto& oldIndex = vertexMap[i].second;
-        const auto& curVert  = vertexMap[i].first;
-        const auto& prevVert = vertexMap[i - 1].first;
-
-        // Insert vertex if it is not degenerate.
-        if ((curVert - prevVert).length() > EBGeometry::Limits::min()) {
-          a_vertices.emplace_back(curVert);
+        // Only insert a vertex in the vertex vector if it's position is different from
+        // the previous entry in the vertex map. The original index will then be mapped
+        // to a new index in the new vertex vector.
+        if (i == 0) {
+          vertices.emplace_back(originalCoord);
+        }
+        else {
+          const Vec3 previousCoord = vertexMap[i - 1].first;
+          if ((originalCoord - previousCoord).length() > EBGeometry::Limits::min()) {
+            vertices.emplace_back(originalCoord);
+          }
         }
 
-        indexMap.emplace(oldIndex, a_vertices.size() - 1);
+        indexMap.emplace(originalIndex, vertices.size() - 1);
       }
 
-      // Update polygon indexing.
-      for (int i = 0; i < a_polygons.size(); i++) {
-        std::vector<int>& polygon = a_polygons[i];
+      // Fix up the polygon indexing which should reference the non-degenerate vertices.
+      for (int i = 0; i < faces.size(); i++) {
+        std::vector<int>& faceIndices = faces[i].first;
 
-        EBGEOMETRY_EXPECT(polygon.size() >= 3);
+        EBGEOMETRY_EXPECT(faceIndices.size() >= 3);
 
-        for (int v = 0; v < polygon.size(); v++) {
-          EBGEOMETRY_EXPECT(polygon[v] >= 0);
+        for (int v = 0; v < faceIndices.size(); v++) {
+          EBGEOMETRY_EXPECT(faceIndices[v] >= 0);
 
-          polygon[v] = indexMap.at(polygon[v]);
+          faceIndices[v] = indexMap.at(faceIndices[v]);
         }
       }
-#endif
     }
 
     template <typename MetaData>
