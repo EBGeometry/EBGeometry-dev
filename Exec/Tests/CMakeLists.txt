@@ -2,11 +2,12 @@ cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 project(EBGeometry LANGUAGES CXX)
 set (CMAKE_CXX_STANDARD 20)
 
-# Build settings. 
-set(EBGEOMETRY_DEBUG TRUE)
-set(EBGEOMETRY_CUDA TRUE)
+# Build settings.
 set(EBGEOMETRY_HOME "/home/robertm/Projects/EBGeometry-dev")
 set(CMAKE_CXX_FLAGS "-O3 -march=native")
+set(EBGEOMETRY_DEBUG TRUE)
+set(EBGEOMETRY_CUDA TRUE
+set(EBGEOMETRY_HIP FALSE)
 
 # Pass options to compiler.
 if(DEFINED EBGEOMETRY_DEBUG)
@@ -23,6 +24,10 @@ if(EBGEOMETRY_CUDA)
     set(CMAKE_CUDA_STANDARD 20)
     set(CMAKE_CUDA_STANDARD_REQUIRED ON)
   endif()
+endif()
+
+if(EBGEOMETRY_HIP)
+  add_compile_definitions(EBGEOMETRY_ENABLE_HIP)
 endif()
 
 # Use Catch2 for testing
