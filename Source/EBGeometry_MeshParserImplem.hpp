@@ -23,10 +23,6 @@
 #include "EBGeometry_Macros.hpp"
 #include "EBGeometry_MeshParser.hpp"
 
-// clang-format off
-#warning "EBGeometry_MeshParserImplem.hpp STL code should be refactored to only read soups, and then use the soup-to-dcel functionality in outside cells"
-// clang-format on
-
 namespace EBGeometry {
   namespace MeshParser {
 
@@ -211,12 +207,16 @@ namespace EBGeometry {
 
         EBGEOMETRY_ALWAYS_EXPECT(soups.size() == 1);
 
-        soup = MeshParser::STL::readIntoPolygonSoup<MetaData>(a_fileName)[0];
+        soup = soups[0];
 
         break;
       }
       case FileType::PLY: {
-#warning "EBGeometry_MeshParserImplem.hpp::readIntoSoup - PLY code not implemented"
+        const auto soups = MeshParser::PLY::readIntoPolygonSoup<MetaData>(a_fileName);
+
+        EBGEOMETRY_ALWAYS_EXPECT(soups.size() == 1);
+
+        soup = soups[0];
 
         break;
       }
@@ -714,7 +714,124 @@ namespace EBGeometry {
 
       return soups;
     }
-  } // namespace MeshParser
-} // namespace EBGeometry
+
+    template <typename MetaData>
+    EBGEOMETRY_INLINE
+    std::vector<PolygonSoup<MetaData>>
+    PLY::readIntoPolygonSoup(const std::string a_fileName) noexcept
+    {
+      const auto fileEncoding = MeshParser::PLY::getEncoding(a_fileName);
+
+      EBGEOMETRY_ALWAYS_EXPECT(MeshParser::getFileType(a_fileName) == MeshParser::FileType::PLY);
+      EBGEOMETRY_ALWAYS_EXPECT(fileEncoding == MeshParser::FileEncoding::ASCII ||
+                               fileEncoding == MeshParser::FileEncoding::Binary);
+
+      std::vector<PolygonSoup<MetaData>> soups;
+
+      switch (fileEncoding) {
+      case MeshParser::FileEncoding::ASCII: {
+        soups = EBGeometry::MeshParser::PLY::readASCII<MetaData>(a_fileName);
+
+        break;
+      }
+      case MeshParser::FileEncoding::Binary: {
+        soups = EBGeometry::MeshParser::PLY::readBinary<MetaData>(a_fileName);
+
+        break;
+      }
+      case MeshParser::FileEncoding::Unknown: {
+        std::cerr << "EBGeometry_MeshParserImplem.hpp::PLY::readIntoPolygonSoup - unknown file encoding encountered\n";
+
+        break;
+      }
+      }
+
+      return soups;
+    }
+
+    EBGEOMETRY_INLINE
+    MeshParser::FileEncoding
+    PLY::getEncoding(const std::string a_fileName) noexcept
+    {
+      MeshParser::FileEncoding fileEncoding = MeshParser::FileEncoding::Unknown;
+
+      std::ifstream is(a_fileName, std::istringstream::in | std::ios::binary);
+      if (is.good()) {
+
+        std::string line;
+        std::string str1;
+        std::string str2;
+
+        // Ignore first line.
+        std::getline(is, line);
+        std::getline(is, line);
+
+        std::stringstream ss(line);
+
+        ss >> str1 >> str2;
+
+        if (str2 == "ascii") {
+          fileEncoding = MeshParser::FileEncoding::ASCII;
+        }
+        else if (str2 == "binary_little_endian") {
+          fileEncoding = MeshParser::FileEncoding::Binary;
+        }
+        else if (str2 == "binary_big_endian") {
+          fileEncoding = MeshParser::FileEncoding::Binary;
+        }
+      }
+      else {
+        std::cerr << "MeshParser::PLY::getEncoding -- could not open file '" + a_fileName + "'\n";
+      }
+
+      return fileEncoding;
+    }
+
+    template <typename MetaData>
+    EBGEOMETRY_INLINE
+    std::vector<PolygonSoup<MetaData>>
+    PLY::readASCII(const std::string a_fileName) noexcept
+    {
+      EBGEOMETRY_ALWAYS_EXPECT(MeshParser::getFileType(a_fileName) == MeshParser::FileType::PLY);
+      EBGEOMETRY_ALWAYS_EXPECT(MeshParser::PLY::getEncoding(a_fileName) == MeshParser::FileEncoding::ASCII);
+
+      std::vector<PolygonSoup<MetaData>> soups;
+
+      std::ifstream filestream(a_fileName);
+      if (filestream.is_open()) {
+
+        Real x;
+        Real y;
+        Real z;
+
+        int numVertices;
+        int numFaces;
+        int numProcessed;
+        int numVerticesInPolygon;
+
+        std::string str1;
+        std::string str2;
+        std::string line;
+      }
+      else {
+        std::cerr << "EBGeometry_MeshParserImplem.hpp::PLY::readASCII - could not open file '" + a_fileName + "'\n";
+      }
+
+      return soups;
+    }
+
+    template <typename MetaData>
+    EBGEOMETRY_INLINE
+    std::vector<PolygonSoup<MetaData>>
+    PLY::readBinary(const std::string a_fileName) noexcept
+    {
+      std::vector<PolygonSoup<MetaData>> soups;
+
+#warning "EBGeometry_MeshParserImplem.hpp::PLY::readBinary - not implemented"
+
+      return soups;
+    }
+  }   // namespace MeshParser
+  }   // namespace MeshParser
 
 #endif

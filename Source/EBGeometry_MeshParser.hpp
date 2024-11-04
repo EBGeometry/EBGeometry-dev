@@ -139,17 +139,16 @@ namespace EBGeometry {
     turnPolygonSoupIntoDCEL(PolygonSoup<MetaData>& a_soup) noexcept;
 
     /*!
-      @brief MeshParser class for reading STL files into DCEL mesh files. 
+      @brief MeshParser class for reading STL files into polygon soups. 
     */
     class STL
     {
     public:
       /*!
-	@brief Read a single STL object from the input file. The file can be binary or ASCII. 
-	If the STL file contains multiple solids, this routine returns the first one. 
-	@param[in] a_fileName STL file name.
-	@return Returns a DCEL mesh
-      */
+	@brief Read a file and turn it into a polygon soup. The file can be binary or ASCII. 
+	@param[in] a_fileName Input file name. 
+	@return Returns a polygon soup. 
+      */      
       template <typename MetaData>
       EBGEOMETRY_GPU_HOST
       [[nodiscard]] EBGEOMETRY_INLINE
@@ -158,7 +157,7 @@ namespace EBGeometry {
 
     protected:
       /*!
-	@brief Check if the input STL file is an ASCII file or a binary
+	@brief Check if the input file is an ASCII file or a binary file. 
 	@param[in] a_fileName File name
 	@return Returns FileEncoding::ASCII or FileEncoding::Binary,
       */
@@ -168,7 +167,7 @@ namespace EBGeometry {
       getEncoding(const std::string a_fileName) noexcept;
 
       /*!
-	@brief ASCII reader STL files, possibly containing multiple objects. Each object becomes a DCEL mesh
+	@brief Reader for ASCII files, possibly containing multiple objects. 
 	@param[in] a_fileName Input filename
       */
       template <typename MetaData>
@@ -178,7 +177,7 @@ namespace EBGeometry {
       readASCII(const std::string a_fileName) noexcept;
 
       /*!
-	@brief Binary reader for STL files, possibly containing multiple objects. Each object becomes a DCEL mesh
+	@brief Reader for binary files, possibly containing multiple objects. 
 	@param[in] a_fileName Input filename
       */
       template <typename MetaData>
@@ -189,12 +188,52 @@ namespace EBGeometry {
     };
 
     /*!
-      @brief MeshParser class for reading PLY files
+      @brief MeshParser class for reading PLY files into polygon soups. 
     */
     class PLY
     {
     public:
+      /*!
+	@brief Read a file and turn it into a polygon soup. The file can be binary or ASCII. 
+	@param[in] a_fileName Input file name. 
+	@return Returns a polygon soup. 
+      */
+      template <typename MetaData>
+      EBGEOMETRY_GPU_HOST
+      [[nodiscard]] EBGEOMETRY_INLINE
+      static std::vector<PolygonSoup<MetaData>>
+      readIntoPolygonSoup(const std::string a_fileName) noexcept;
+
     protected:
+      /*!
+	@brief Check if the input file is an ASCII file or a binary file. 
+	@param[in] a_fileName File name
+	@return Returns FileEncoding::ASCII or FileEncoding::Binary,
+      */
+      EBGEOMETRY_GPU_HOST
+      [[nodiscard]] EBGEOMETRY_INLINE
+      static MeshParser::FileEncoding
+      getEncoding(const std::string a_fileName) noexcept;
+
+      /*!
+	@brief Reader for ASCII files, possibly containing multiple objects. 
+	@param[in] a_fileName Input filename
+      */
+      template <typename MetaData>
+      EBGEOMETRY_GPU_HOST
+      [[nodiscard]] EBGEOMETRY_INLINE
+      static std::vector<PolygonSoup<MetaData>>
+      readASCII(const std::string a_fileName) noexcept;
+
+      /*!
+	@brief Reader for binary files, possibly containing multiple objects. 
+	@param[in] a_fileName Input filename
+      */
+      template <typename MetaData>
+      EBGEOMETRY_GPU_HOST
+      [[nodiscard]] EBGEOMETRY_INLINE
+      static std::vector<PolygonSoup<MetaData>>
+      readBinary(const std::string a_fileName) noexcept;
     };
 
   } // namespace MeshParser
