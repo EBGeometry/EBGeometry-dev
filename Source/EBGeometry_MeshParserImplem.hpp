@@ -212,11 +212,7 @@ namespace EBGeometry {
         break;
       }
       case FileType::PLY: {
-        const auto soups = MeshParser::PLY::readIntoPolygonSoup<MetaData>(a_fileName);
-
-        EBGEOMETRY_ALWAYS_EXPECT(soups.size() == 1);
-
-        soup = soups[0];
+        soup = MeshParser::PLY::readIntoPolygonSoup<MetaData>(a_fileName);
 
         break;
       }
@@ -717,7 +713,7 @@ namespace EBGeometry {
 
     template <typename MetaData>
     EBGEOMETRY_INLINE
-    std::vector<PolygonSoup<MetaData>>
+    PolygonSoup<MetaData>
     PLY::readIntoPolygonSoup(const std::string a_fileName) noexcept
     {
       const auto fileEncoding = MeshParser::PLY::getEncoding(a_fileName);
@@ -726,16 +722,16 @@ namespace EBGeometry {
       EBGEOMETRY_ALWAYS_EXPECT(fileEncoding == MeshParser::FileEncoding::ASCII ||
                                fileEncoding == MeshParser::FileEncoding::Binary);
 
-      std::vector<PolygonSoup<MetaData>> soups;
+      PolygonSoup<MetaData> soup;
 
       switch (fileEncoding) {
       case MeshParser::FileEncoding::ASCII: {
-        soups = EBGeometry::MeshParser::PLY::readASCII<MetaData>(a_fileName);
+        soup = EBGeometry::MeshParser::PLY::readASCII<MetaData>(a_fileName);
 
         break;
       }
       case MeshParser::FileEncoding::Binary: {
-        soups = EBGeometry::MeshParser::PLY::readBinary<MetaData>(a_fileName);
+        soup = EBGeometry::MeshParser::PLY::readBinary<MetaData>(a_fileName);
 
         break;
       }
@@ -746,7 +742,7 @@ namespace EBGeometry {
       }
       }
 
-      return soups;
+      return soup;
     }
 
     EBGEOMETRY_INLINE
@@ -789,17 +785,20 @@ namespace EBGeometry {
 
     template <typename MetaData>
     EBGEOMETRY_INLINE
-    std::vector<PolygonSoup<MetaData>>
+    PolygonSoup<MetaData>
     PLY::readASCII(const std::string a_fileName) noexcept
     {
       EBGEOMETRY_ALWAYS_EXPECT(MeshParser::getFileType(a_fileName) == MeshParser::FileType::PLY);
       EBGEOMETRY_ALWAYS_EXPECT(MeshParser::PLY::getEncoding(a_fileName) == MeshParser::FileEncoding::ASCII);
 
-      std::vector<PolygonSoup<MetaData>> soups;
+      PolygonSoup<MetaData> soup;
+
+      auto& vertices = std::get<0>(soup);
+      auto& faces    = std::get<1>(soup);
+      auto& soupID   = std::get<2>(soup);
 
       std::ifstream filestream(a_fileName);
       if (filestream.is_open()) {
-
         Real x;
         Real y;
         Real z;
@@ -812,26 +811,94 @@ namespace EBGeometry {
         std::string str1;
         std::string str2;
         std::string line;
+
+        std::vector<int> faceVertices;
+
+        // Get the number of vertices
+        filestream.clear();
+        filestream.seekg(0);
+
+        while (std::getline(filestream, line)) {
+          std::stringstream sstream(line);
+          sstream >> str1 >> str2 >> numVertices;
+          if (str1 == "element" && str2 == "vertex") {
+            EBGEOMETRY_EXPECT(numVertices >= 3);
+
+            break;
+          }
+        }
+
+        // Get the number of faces
+        filestream.clear();
+        filestream.seekg(0);
+
+        while (std::getline(filestream, line)) {
+          std::stringstream sstream(line);
+          sstream >> str1 >> str2 >> numFaces;
+          if (str1 == "element" && str2 == "face") {
+            EBGEOMETRY_EXPECT(numFaces >= 1);
+
+            break;
+          }
+        }
+
+        // Find the line number containing "end_header" and halt the input stream there
+        filestream.clear();
+        filestream.seekg(0);
+
+        while (std::getline(filestream, line)) {
+          std::stringstream sstream(line);
+          sstream >> str1;
+          if (str1 == "end_header") {
+            break;
+          }
+        }
+
+        // Read the vertices and faces.
+        numProcessed = 0;
+        while (std::getline(filestream, line)) {
+          std::stringstream sstream(line);
+
+          if (numProcessed < numVertices) {
+            sstream >> x >> y >> z;
+
+            vertices.emplace_back(Vec3(x, y, z));
+
+            numProcessed++;
+          }
+          else {
+            sstream >> numVerticesInPolygon;
+
+            EBGEOMETRY_ALWAYS_EXPECT(numVerticesInPolygon >= 3);
+
+            faceVertices.resize(numVerticesInPolygon);
+            for (int i = 0; i < numVerticesInPolygon; i++) {
+              sstream >> faceVertices[i];
+            }
+
+            faces.emplace_back(std::make_pair(faceVertices, MetaData()));
+          }
+        }
       }
       else {
         std::cerr << "EBGeometry_MeshParserImplem.hpp::PLY::readASCII - could not open file '" + a_fileName + "'\n";
       }
 
-      return soups;
+      return soup;
     }
 
     template <typename MetaData>
     EBGEOMETRY_INLINE
-    std::vector<PolygonSoup<MetaData>>
+    PolygonSoup<MetaData>
     PLY::readBinary(const std::string a_fileName) noexcept
     {
-      std::vector<PolygonSoup<MetaData>> soups;
+      PolygonSoup<MetaData> soup;
 
 #warning "EBGeometry_MeshParserImplem.hpp::PLY::readBinary - not implemented"
 
-      return soups;
+      return soup;
     }
-  }   // namespace MeshParser
-  }   // namespace MeshParser
+  } // namespace MeshParser
+} // namespace EBGeometry
 
 #endif

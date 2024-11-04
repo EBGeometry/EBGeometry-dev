@@ -2,19 +2,27 @@ cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 project(EBGeometry LANGUAGES CXX)
 set (CMAKE_CXX_STANDARD 20)
 
-add_compile_definitions(EBGEOMETRY_ENABLE_DEBUG)
-#add_compile_definitions(EBGEOMETRY_ENABLE_CUDA)
-
+# Build settings. 
+set(EBGEOMETRY_DEBUG TRUE)
+set(EBGEOMETRY_CUDA TRUE)
 set(EBGEOMETRY_HOME "/home/robertm/Projects/EBGeometry-dev")
+set(CMAKE_CXX_FLAGS "-O3 -march=native")
 
-if(DEFINED EBGEOMETRY_ENABLE_CUDA)
-  enable_language(CUDA)
-  project(EBGeometry LANGUAGES CUDA CXX)
+# Pass options to compiler.
+if(DEFINED EBGEOMETRY_DEBUG)
+  add_compile_definitions(EBGEOMETRY_ENABLE_DEBUG)
 endif()
 
-if(NOT DEFINED CMAKE_CUDA_STANDARD)
-  set(CMAKE_CUDA_STANDARD 20)
-  set(CMAKE_CUDA_STANDARD_REQUIRED ON)
+if(EBGEOMETRY_CUDA)
+  add_compile_definitions(EBGEOMETRY_ENABLE_CUDA)
+  
+  enable_language(CUDA)
+  project(EBGeometry LANGUAGES CUDA CXX)
+
+  if(NOT DEFINED CMAKE_CUDA_STANDARD)
+    set(CMAKE_CUDA_STANDARD 20)
+    set(CMAKE_CUDA_STANDARD_REQUIRED ON)
+  endif()
 endif()
 
 # Use Catch2 for testing
@@ -23,28 +31,28 @@ find_package(Catch2 3 REQUIRED)
 # Source directories
 include_directories(${EBGEOMETRY_HOME})
 
-## VecTests
+# VecTests
 add_executable(VecTests.out VecTests.cpp)
 target_link_libraries(VecTests.out PUBLIC Catch2::Catch2WithMain)
-if(DEFINED EBGEOMETRY_ENABLE_CUDA)
+if(EBGEOMETRY_CUDA)
   set_source_files_properties(VecTests.cpp PROPERTIES LANGUAGE CUDA)
   set_target_properties(VecTests.out PROPERTIES CUDA_ARCHITECTURES "native")
   set_target_properties(VecTests.out PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 endif()
 
-## VertexTests
+# VertexTests
 add_executable(VertexTests.out VertexTests.cpp)
 target_link_libraries(VertexTests.out PUBLIC Catch2::Catch2WithMain)
-if(DEFINED EBGEOMETRY_ENABLE_CUDA)
+if(EBGEOMETRY_CUDA)
   set_source_files_properties(VertexTests.cpp PROPERTIES LANGUAGE CUDA)
   set_target_properties(VertexTests.out PROPERTIES CUDA_ARCHITECTURES "native")
   set_target_properties(VertexTests.out PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 endif()
 
-## MeshParserTests
+# MeshParserTests
 add_executable(MeshParserTests.out MeshParserTests.cpp)
 target_link_libraries(MeshParserTests.out PUBLIC Catch2::Catch2WithMain)
-if(DEFINED EBGEOMETRY_ENABLE_CUDA)
+if(EBGEOMETRY_CUDA)
   set_source_files_properties(MeshParserTests.cpp PROPERTIES LANGUAGE CUDA)
   set_target_properties(MeshParserTests.out PROPERTIES CUDA_ARCHITECTURES "native")
   set_target_properties(MeshParserTests.out PROPERTIES CUDA_SEPARABLE_COMPILATION ON)

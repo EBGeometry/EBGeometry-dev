@@ -32,7 +32,7 @@ static unsigned long long int EBGEOMETRY_ASSERTION_FAILURES = 0;
 // End debugging macros
 
 // Inline macros
-#if defined(__CUDA_ARCH__) && defined(EBGEOMETRY_USE_CUDA)
+#if defined(__CUDA_ARCH__) && defined(EBGEOMETRY_ENABLE_CUDA)
 #define EBGEOMETRY_ALWAYS_INLINE __forceinline__
 
 #elif defined(__GNUC__)

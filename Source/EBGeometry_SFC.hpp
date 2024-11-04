@@ -88,16 +88,9 @@ namespace EBGeometry {
       @brief Encodable SFC concept -- class must have a static function static uint64_t encode(const Index&). This is the main interface for SFCs
     */
     template <typename S>
-    concept Encodable = requires(const SFC::Index& point, const SFC::Code code)
-    {
-      {
-        S::encode(point)
-      }
-      ->std::same_as<SFC::Code>;
-      {
-        S::decode(code)
-      }
-      ->std::same_as<SFC::Index>;
+    concept Encodable = requires(const SFC::Index& point, const SFC::Code code) {
+      { S::encode(point) } -> std::same_as<SFC::Code>;
+      { S::decode(code) } -> std::same_as<SFC::Index>;
     };
 #endif
 

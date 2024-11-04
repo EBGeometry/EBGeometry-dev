@@ -148,7 +148,7 @@ namespace EBGeometry {
 	@brief Read a file and turn it into a polygon soup. The file can be binary or ASCII. 
 	@param[in] a_fileName Input file name. 
 	@return Returns a polygon soup. 
-      */      
+      */
       template <typename MetaData>
       EBGEOMETRY_GPU_HOST
       [[nodiscard]] EBGEOMETRY_INLINE
@@ -201,7 +201,7 @@ namespace EBGeometry {
       template <typename MetaData>
       EBGEOMETRY_GPU_HOST
       [[nodiscard]] EBGEOMETRY_INLINE
-      static std::vector<PolygonSoup<MetaData>>
+      static PolygonSoup<MetaData>
       readIntoPolygonSoup(const std::string a_fileName) noexcept;
 
     protected:
@@ -222,7 +222,7 @@ namespace EBGeometry {
       template <typename MetaData>
       EBGEOMETRY_GPU_HOST
       [[nodiscard]] EBGEOMETRY_INLINE
-      static std::vector<PolygonSoup<MetaData>>
+      static PolygonSoup<MetaData>
       readASCII(const std::string a_fileName) noexcept;
 
       /*!
@@ -232,10 +232,9 @@ namespace EBGeometry {
       template <typename MetaData>
       EBGEOMETRY_GPU_HOST
       [[nodiscard]] EBGEOMETRY_INLINE
-      static std::vector<PolygonSoup<MetaData>>
+      static PolygonSoup<MetaData>
       readBinary(const std::string a_fileName) noexcept;
     };
-
   } // namespace MeshParser
 } // namespace EBGeometry
 
