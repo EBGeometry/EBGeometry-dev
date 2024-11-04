@@ -136,6 +136,15 @@ namespace EBGeometry {
       setEdge(const int a_edge) noexcept;
 
       /*!
+	@brief Set the metadata
+	@param[in] a_metaData
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE
+      void
+      setMetaData(const MetaData& a_metaData) noexcept;                  
+
+      /*!
 	@brief Set the vertex list.
 	@param[in] a_vertexList List (malloc'ed array) of vertices
       */

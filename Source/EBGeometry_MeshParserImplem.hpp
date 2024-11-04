@@ -94,6 +94,36 @@ namespace EBGeometry {
 
     template <typename MetaData>
     EBGEOMETRY_ALWAYS_INLINE
+    bool
+    containsDegenerateVertices(const PolygonSoup<MetaData>& a_soup) noexcept
+    {
+      // TLDR: Polygon soups might contain degenerate vertices. For example, STL files define individual facets
+      // rather than links between vertices, and in this case many vertices will be degenerate. This routine
+      // checks if the vertex list in a soup contains such vertices.
+      bool hasDegenerateVertices = false;
+
+      const std::vector<Vec3>& vertices = std::get<0>(a_soup);
+
+      EBGEOMETRY_ALWAYS_EXPECT(vertices.size() >= 3);
+
+      std::vector<Vec3> sortedVertices;
+      for (const auto& v : vertices) {
+        sortedVertices.emplace_back(v);
+      }
+
+      std::sort(sortedVertices.begin(), sortedVertices.end());
+
+      for (int i = 1; i < sortedVertices.size(); i++) {
+        if (sortedVertices[i] == sortedVertices[i - 1]) {
+          hasDegenerateVertices = true;
+        }
+      }
+
+      return hasDegenerateVertices;
+    }
+
+    template <typename MetaData>
+    EBGEOMETRY_ALWAYS_INLINE
     void
     removeDegenerateVerticesFromSoup(PolygonSoup<MetaData>& a_soup) noexcept
     {
@@ -172,7 +202,16 @@ namespace EBGeometry {
 
       switch (MeshParser::getFileType(a_fileName)) {
       case FileType::STL: {
-        //        soup = MeshParser::STL::readSingleIntoPolygonSoup<MetaData>(a_fileName);
+
+        // The extra assertions are here because while I normally expect that STL files contain a single object,
+        // there is nothing in the STL standard that requires it. Eventually, someone might require us to read
+        // multiple STL files in one go, so I'm letting all the parsers read whatever is in the file, and then
+        // we (for now) only use the first object.
+        const auto soups = MeshParser::STL::readIntoPolygonSoup<MetaData>(a_fileName);
+
+        EBGEOMETRY_ALWAYS_EXPECT(soups.size() == 1);
+
+        soup = MeshParser::STL::readIntoPolygonSoup<MetaData>(a_fileName)[0];
 
         break;
       }
@@ -196,77 +235,47 @@ namespace EBGeometry {
     EBGeometry::DCEL::Mesh<MetaData>*
     readIntoDCEL(const std::string a_fileName) noexcept
     {
-#if 0
-      const MeshParser::FileType fileType = MeshParser::getFileType(a_fileName);
+      // Read file into a polygon soup and remove degenerate vertices.
+      PolygonSoup<MetaData> soup = MeshParser::readIntoSoup<MetaData>(a_fileName);
 
-      EBGEOMETRY_ALWAYS_EXPECT((fileType != MeshParser::FileType::Unsupported));
+      MeshParser::removeDegenerateVerticesFromSoup(soup);
 
-      // Read file into a polygon soup.
-      const PolygonSoup<MetaData> polygonSoup = MeshParser::readIntoPolygonSoup<MetaData>(a_fileName);
+      EBGEOMETRY_EXPECT(!(MeshParser::containsDegeneratePolygons(soup)));
+      EBGEOMETRY_EXPECT(!(MeshParser::containsDegenerateVertices(soup)));
 
-      // Build the mesh.
-      EBGeometry::DCEL::Mesh<MetaData>* mesh = nullptr;
-
-      switch (fileType) {
-      case FileType::STL: {
-        mesh = MeshParser::STL::readSingleIntoDCEL<MetaData>(a_fileName);
-
-        break;
-      }
-      case FileType::PLY: {
-      }
-      case FileType::Unsupported: {
-        std::cerr << "In file EBGeometry_MeshParserImplem.hpp: MeshParser::readIntoDCEL - unsupported file type\n";
-      }
-      }
+      const auto mesh = MeshParser::turnPolygonSoupIntoDCEL<MetaData>(soup);
 
       return mesh;
-#else
-      return nullptr;
-#endif
     }
 
     template <typename MetaData>
     EBGEOMETRY_ALWAYS_INLINE
     EBGeometry::DCEL::Mesh<MetaData>*
-    turnPolygonSoupIntoDCEL(const std::vector<EBGeometry::Vec3>& a_vertices,
-                            const std::vector<std::vector<int>>& a_faces) noexcept
+    turnPolygonSoupIntoDCEL(PolygonSoup<MetaData>& a_soup) noexcept
     {
-#if 0
       using namespace EBGeometry::DCEL;
 
-      // Figure out the number of vertices, edges, and polygons.
-      const int numVertices = a_vertices.size();
-      const int numFaces    = a_faces.size();
+      EBGEOMETRY_EXPECT(!(MeshParser::containsDegeneratePolygons(a_soup)));
+      EBGEOMETRY_EXPECT(!(MeshParser::containsDegenerateVertices(a_soup)));
+
+      std::vector<Vec3>&                                  soupVertices = std::get<0>(a_soup);
+      std::vector<std::pair<std::vector<int>, MetaData>>& soupFaces    = std::get<1>(a_soup);
+
+      EBGEOMETRY_ALWAYS_EXPECT(soupVertices.size() >= 3);
+      EBGEOMETRY_ALWAYS_EXPECT(soupFaces.size() >= 1);
+
+      const int numVertices = soupVertices.size();
+      const int numFaces    = soupFaces.size();
 
       int numEdges = 0;
-      for (const auto& polygon : a_faces) {
-        numEdges += polygon.size();
+      for (const auto& f : soupFaces) {
+        numEdges += (f.first).size();
       }
 
       // Allocate vertex, edge, and half edge lists.
       Vertex<MetaData>* vertices = new Vertex<MetaData>[numVertices];
       Edge<MetaData>*   edges    = new Edge<MetaData>[numEdges];
       Face<MetaData>*   faces    = new Face<MetaData>[numFaces];
-
-      for (int v = 0; v < numVertices; v++) {
-        vertices[v].setPosition(a_vertices[v]);
-        vertices[v].setVertexList(vertices);
-        vertices[v].setEdgeList(edges);
-        vertices[v].setFaceList(faces);
-      }
-
-      for (int e = 0; e < numEdges; e++) {
-        edges[e].setVertexList(vertices);
-        edges[e].setEdgeList(edges);
-        edges[e].setFaceList(faces);
-      }
-
-      for (int f = 0; f < numFaces; f++) {
-        faces[f].setVertexList(vertices);
-        faces[f].setEdgeList(edges);
-        faces[f].setFaceList(faces);
-      }
 
       // Build DCEL faces, edges, and vertices. In order to build the DCEL edge pairs we keep track of
       // all outgoing edges from each vertex.
@@ -275,14 +284,16 @@ namespace EBGeometry {
       std::map<int, std::vector<int>> outgoingEdgesMap;
 
       for (int faceIndex = 0; faceIndex < numFaces; faceIndex++) {
-        EBGEOMETRY_ALWAYS_EXPECT(a_faces[faceIndex].size() >= 3);
-
-        const auto& faceVertices    = a_faces[faceIndex];
+        const auto& faceVertices    = soupFaces[faceIndex].first;
+        const auto& faceMetaData    = soupFaces[faceIndex].second;
         const auto  numFaceVertices = faceVertices.size();
+
+        EBGEOMETRY_ALWAYS_EXPECT(faceVertices.size() >= 3);
 
         // Build the face -- it already has associated vertex, edge, and face lists so we only need
         // to associate the half edge.
         faces[faceIndex].setEdge(edgeIndex);
+        faces[faceIndex].setMetaData(faceMetaData);
 
         // Now build the actual edges -- each edge must reference the origin vertex.
         const int firstEdge = edgeIndex;
@@ -385,19 +396,59 @@ namespace EBGeometry {
       // internal parameters like normal vectors for the vertices, edges, and faces.
       Mesh<MetaData>* mesh = new Mesh<MetaData>(numVertices, numEdges, numFaces, vertices, edges, faces);
 
-      if (mesh->isManifold()) {
+      const bool isManifold = mesh->isManifold();
+
+      if (isManifold) {
         mesh->reconcile();
       }
       else {
+        EBGEOMETRY_ALWAYS_EXPECT(isManifold);
+
+        mesh->freeMem();
+
+        delete mesh;
+
+        mesh = nullptr;
+
         std::cerr
-          << "EBGeometry_MeshParserImplem.hpp::turnPolygonSoupIntoDCEL - mesh is not manifold and will not be reconciled!\n";
+          << "EBGeometry_MeshParserImplem.hpp::turnPolygonSoupIntoDCEL - mesh is not manifold and will not be turned into a DCEL mesh!\n";
       }
 
       return mesh;
-#else
+    }
 
-      return nullptr;
-#endif
+    template <typename MetaData>
+    EBGEOMETRY_INLINE
+    std::vector<PolygonSoup<MetaData>>
+    STL::readIntoPolygonSoup(const std::string a_fileName) noexcept
+    {
+      const auto fileEncoding = MeshParser::STL::getEncoding(a_fileName);
+
+      EBGEOMETRY_ALWAYS_EXPECT(MeshParser::getFileType(a_fileName) == MeshParser::FileType::STL);
+      EBGEOMETRY_ALWAYS_EXPECT(fileEncoding == MeshParser::FileEncoding::ASCII ||
+                               fileEncoding == MeshParser::FileEncoding::Binary);
+
+      std::vector<PolygonSoup<MetaData>> soups;
+
+      switch (fileEncoding) {
+      case MeshParser::FileEncoding::ASCII: {
+        //        soups = EBGeometry::MeshParser::STL::readASCII<MetaData>(a_fileName);
+
+        break;
+      }
+      case MeshParser::FileEncoding::Binary: {
+        soups = EBGeometry::MeshParser::STL::readBinary<MetaData>(a_fileName);
+
+        break;
+      }
+      case MeshParser::FileEncoding::Unknown: {
+        std::cerr << "EBGeometry_MeshParserImplem.hpp::STL::readIntoPolygonSoup - unknown file encoding encountered\n";
+
+        break;
+      }
+      }
+
+      return soups;
     }
 
 #if 0
@@ -444,6 +495,7 @@ namespace EBGeometry {
 
       return meshes;
     }
+#endif
 
     EBGEOMETRY_INLINE
     MeshParser::FileEncoding
@@ -478,6 +530,120 @@ namespace EBGeometry {
       return fileEncoding;
     }
 
+    template <typename MetaData>
+    EBGEOMETRY_INLINE
+    std::vector<PolygonSoup<MetaData>>
+    STL::readBinary(const std::string a_fileName) noexcept
+    {
+      EBGEOMETRY_ALWAYS_EXPECT(MeshParser::getFileType(a_fileName) == MeshParser::FileType::STL);
+      EBGEOMETRY_ALWAYS_EXPECT(MeshParser::STL::getEncoding(a_fileName) == MeshParser::FileEncoding::Binary);
+
+      std::vector<PolygonSoup<MetaData>> soups;
+
+      using VertexList   = std::vector<Vec3>;
+      using TriangleList = std::vector<std::pair<std::vector<int>, MetaData>>;
+
+      // Read the file.
+      std::ifstream is(a_fileName);
+      if (is.is_open()) {
+
+        // Read the header and discard that info.
+        char header[80];
+        is.read(header, 80);
+
+        // Read number of triangles
+        char tmp[4];
+        is.read(tmp, 4);
+        uint32_t numTriangles;
+        memcpy(&numTriangles, &tmp, 4);
+
+        std::map<uint16_t, std::pair<VertexList, TriangleList>> verticesAndTriangles;
+
+        // Read triangles into raw vertices and triangles
+        char normal[12];
+        char v1[12];
+        char v2[12];
+        char v3[12];
+        char att[2];
+
+        float x;
+        float y;
+        float z;
+
+        uint16_t id;
+
+        for (int i = 0; i < numTriangles; i++) {
+          is.read(normal, 12);
+          is.read(v1, 12);
+          is.read(v2, 12);
+          is.read(v3, 12);
+          is.read(att, 2);
+
+          char* ptr = nullptr;
+
+          Vec3 v[3];
+
+          ptr = v1;
+          memcpy(&x, ptr, 4);
+          ptr += 4;
+          memcpy(&y, ptr, 4);
+          ptr += 4;
+          memcpy(&z, ptr, 4);
+          v[0] = Vec3(x, y, z);
+
+          ptr = v2;
+          memcpy(&x, ptr, 4);
+          ptr += 4;
+          memcpy(&y, ptr, 4);
+          ptr += 4;
+          memcpy(&z, ptr, 4);
+          v[1] = Vec3(x, y, z);
+
+          ptr = v3;
+          memcpy(&x, ptr, 4);
+          ptr += 4;
+          memcpy(&y, ptr, 4);
+          ptr += 4;
+          memcpy(&z, ptr, 4);
+          v[2] = Vec3(x, y, z);
+
+          memcpy(&id, &att, 2);
+
+          if (verticesAndTriangles.find(id) == verticesAndTriangles.end()) {
+            verticesAndTriangles.emplace(id, std::make_pair(VertexList(), TriangleList()));
+          }
+
+          auto& objectVertices = verticesAndTriangles.at(id).first;
+          auto& objectFacets   = verticesAndTriangles.at(id).second;
+
+          // Insert a new triangle.
+          std::vector<int> curFacet;
+          for (int j = 0; j < 3; j++) {
+            objectVertices.emplace_back(v[j]);
+            curFacet.emplace_back(objectVertices.size() - 1);
+          }
+
+          objectFacets.emplace_back(std::make_pair(curFacet, MetaData()));
+        }
+
+        // Turn the triangle soup into a mesh.
+        for (const auto& soup : verticesAndTriangles) {
+          const auto& id        = soup.first;
+          const auto& vertices  = soup.second.first;
+          const auto& triangles = soup.second.second;
+          const auto  stringID  = a_fileName + "_" + std::to_string(id);
+
+          soups.emplace_back(std::make_tuple(vertices, triangles, stringID));
+        }
+      }
+      else {
+        std::cerr << "EBGeometry::MeshParser::STL::readBinary -- could not open file '" + a_fileName + "'\n";
+      }
+
+      return soups;
+    }
+
+#if 0
     template <typename MetaData>
     EBGEOMETRY_INLINE
     std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>

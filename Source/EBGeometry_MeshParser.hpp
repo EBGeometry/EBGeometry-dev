@@ -91,15 +91,24 @@ namespace EBGeometry {
     getFileType(const std::string a_fileName) noexcept;
 
     /*!
-      @brief Check if polygons in a polygon soup contain degenerate vertices
-      @param[out] a_vertices Vertices
-      @param[out] a_polygons Polygons
+      @brief Check if polygons in a polygon soup contain degenerate polygons (i.e., polygons with degenerate vertices)
+      @param[in] a_soup Polygon soup
     */
     template <typename MetaData>
     EBGEOMETRY_GPU_HOST
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     static bool
     containsDegeneratePolygons(const PolygonSoup<MetaData>& a_soup) noexcept;
+
+    /*!
+      @brief Check if the vertex list in a polygon soup contains degenerate vertices (i.e., two or more vertices with the shared positions)
+      @param[in] a_soup Polygon soup
+    */
+    template <typename MetaData>
+    EBGEOMETRY_GPU_HOST
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    static bool
+    containsDegenerateVertices(const PolygonSoup<MetaData>& a_soup) noexcept;    
 
     /*!
       @brief Compress polygon soup. This removes degenerate polygons (e.g., triangles).
@@ -129,7 +138,6 @@ namespace EBGeometry {
     static EBGeometry::DCEL::Mesh<MetaData>*
     turnPolygonSoupIntoDCEL(PolygonSoup<MetaData>& a_soup) noexcept;
 
-#if 0
     /*!
       @brief MeshParser class for reading STL files into DCEL mesh files. 
     */
@@ -145,20 +153,8 @@ namespace EBGeometry {
       template <typename MetaData>
       EBGEOMETRY_GPU_HOST
       [[nodiscard]] EBGEOMETRY_INLINE
-      static EBGeometry::DCEL::Mesh<MetaData>*
-      readSingleIntoDCEL(const std::string a_fileName) noexcept;
-
-      /*!
-	@brief Read a single STL object from the input file. The file can be binary or ASCII.
-	@param[in] a_fileName STL file name.
-	@return Returns DCEL meshes for each object in the input file. The returned strings are identifiers
-	for the STL objects.
-      */
-      template <typename MetaData>
-      EBGEOMETRY_GPU_HOST
-      [[nodiscard]] EBGEOMETRY_INLINE
-      static std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
-      readMultiIntoDCEL(const std::string a_fileName) noexcept;
+      static std::vector<PolygonSoup<MetaData>>
+      readIntoPolygonSoup(const std::string a_fileName) noexcept;
 
     protected:
       /*!
@@ -178,7 +174,7 @@ namespace EBGeometry {
       template <typename MetaData>
       EBGEOMETRY_GPU_HOST
       [[nodiscard]] EBGEOMETRY_INLINE
-      static std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
+      static std::vector<PolygonSoup<MetaData>>
       readASCII(const std::string a_fileName) noexcept;
 
       /*!
@@ -188,27 +184,8 @@ namespace EBGeometry {
       template <typename MetaData>
       EBGEOMETRY_GPU_HOST
       [[nodiscard]] EBGEOMETRY_INLINE
-      static std::vector<std::pair<EBGeometry::DCEL::Mesh<MetaData>*, std::string>>
+      static std::vector<PolygonSoup<MetaData>>
       readBinary(const std::string a_fileName) noexcept;
-
-      /*!
-	@brief Read an STL object as a triangle soup into a raw vertices and facets
-	@param[out] a_vertices   Vertices
-	@param[out] a_facets     STL facets
-	@param[out] a_objectName Object name
-	@param[out] a_fileContents File contents
-	@param[out] a_firstLine  Line number in a_fileName containing the 'solid' identifier. 
-	@param[out] a_lastLine   Line number in a_fileName containing the 'endsolid' identifier. 
-      */
-      EBGEOMETRY_GPU_HOST
-      EBGEOMETRY_INLINE
-      static void
-      readSTLSoupASCII(std::vector<Vec3>&              a_vertices,
-                       std::vector<std::vector<int>>&  a_facets,
-                       std::string&                    a_objectName,
-                       const std::vector<std::string>& a_fileContents,
-                       const int                       a_firstLine,
-                       const int                       a_lastLine) noexcept;
     };
 
     /*!
@@ -219,7 +196,6 @@ namespace EBGeometry {
 
     protected:
     };
-#endif
 
   } // namespace MeshParser
 } // namespace EBGeometry

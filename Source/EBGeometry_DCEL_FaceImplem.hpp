@@ -88,6 +88,14 @@ namespace EBGeometry {
     template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE
     void
+    Face<MetaData>::setMetaData(const MetaData& a_metaData) noexcept
+    {
+      m_metaData = a_metaData;
+    }
+
+    template <class MetaData>
+    EBGEOMETRY_ALWAYS_INLINE
+    void
     Face<MetaData>::setVertexList(const Vertex<MetaData>* const a_vertexList) noexcept
     {
       m_vertexList = a_vertexList;
