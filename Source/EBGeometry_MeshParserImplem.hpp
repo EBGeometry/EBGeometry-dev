@@ -277,6 +277,25 @@ namespace EBGeometry {
       Edge<MetaData>*   edges    = new Edge<MetaData>[numEdges];
       Face<MetaData>*   faces    = new Face<MetaData>[numFaces];
 
+      for (int v = 0; v < numVertices; v++) {
+        vertices[v].setPosition(soupVertices[v]);
+        vertices[v].setVertexList(vertices);
+        vertices[v].setEdgeList(edges);
+        vertices[v].setFaceList(faces);
+      }
+
+      for (int e = 0; e < numEdges; e++) {
+        edges[e].setVertexList(vertices);
+        edges[e].setEdgeList(edges);
+        edges[e].setFaceList(faces);
+      }
+
+      for (int f = 0; f < numFaces; f++) {
+        faces[f].setVertexList(vertices);
+        faces[f].setEdgeList(edges);
+        faces[f].setFaceList(faces);
+      }      
+
       // Build DCEL faces, edges, and vertices. In order to build the DCEL edge pairs we keep track of
       // all outgoing edges from each vertex.
       int edgeIndex = 0;
