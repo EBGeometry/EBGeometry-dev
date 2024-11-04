@@ -108,7 +108,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     static bool
-    containsDegenerateVertices(const PolygonSoup<MetaData>& a_soup) noexcept;    
+    containsDegenerateVertices(const PolygonSoup<MetaData>& a_soup) noexcept;
 
     /*!
       @brief Compress polygon soup. This removes degenerate polygons (e.g., triangles).
@@ -191,9 +191,9 @@ namespace EBGeometry {
     /*!
       @brief MeshParser class for reading PLY files
     */
-    class PLY {
+    class PLY
+    {
     public:
-
     protected:
     };
 

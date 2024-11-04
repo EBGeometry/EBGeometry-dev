@@ -142,7 +142,7 @@ namespace EBGeometry {
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE
       void
-      setMetaData(const MetaData& a_metaData) noexcept;                  
+      setMetaData(const MetaData& a_metaData) noexcept;
 
       /*!
 	@brief Set the vertex list.

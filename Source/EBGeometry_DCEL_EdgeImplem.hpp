@@ -133,7 +133,7 @@ namespace EBGeometry {
     Edge<MetaData>::setMetaData(const MetaData& a_metaData) noexcept
     {
       m_metaData = a_metaData;
-    }    
+    }
 
     template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE
