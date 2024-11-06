@@ -9,6 +9,7 @@ docs/**
 **CMakeCache.txt**
 **Makefile**
 ***.cmake**
+Testing/*
 
 # Doc files
 Docs/*
