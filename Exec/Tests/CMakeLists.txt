@@ -1,13 +1,13 @@
-cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
-project(EBGeometry LANGUAGES CXX)
-set (CMAKE_CXX_STANDARD 20)
+#cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
+#project(EBGeometry LANGUAGES CXX)
+#set (CMAKE_CXX_STANDARD 20)
 
 # Build settings.
-set(EBGEOMETRY_HOME "/home/robertm/Projects/EBGeometry-dev")
-set(CMAKE_CXX_FLAGS "-O3 -march=native")
-set(EBGEOMETRY_DEBUG TRUE)
-set(EBGEOMETRY_CUDA FALSE)
-set(EBGEOMETRY_HIP FALSE)
+#set(EBGEOMETRY_HOME "/home/robertm/Projects/EBGeometry-dev")
+#set(CMAKE_CXX_FLAGS "-O3 -march=native")
+#set(EBGEOMETRY_DEBUG TRUE)
+#set(EBGEOMETRY_CUDA FALSE)
+#set(EBGEOMETRY_HIP FALSE)
 
 # Pass options to compiler.
 if(DEFINED EBGEOMETRY_DEBUG)
