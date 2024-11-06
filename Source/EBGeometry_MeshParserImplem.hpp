@@ -51,7 +51,7 @@ namespace EBGeometry {
     {
       // TLDR: This routine runs through all the faces in the polygon soup, and checks if the vertex
       // coordinates are degenerate. Note that we check the POSITION of the vertex indices in the soup
-      // since although the indices might be degenerate (e.g., a triangle with vertex indicies 0,1,2),
+      // since although the indices might be degenerate (e.g., a triangle with vertex indices 0,1,2),
       // the vertex coordinates themselves could be degenerate (e.g., vertex indices 0 and 1 might refer
       // to the same physical position).
 
