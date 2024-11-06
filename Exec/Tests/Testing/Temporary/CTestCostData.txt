@@ -1,4 +1,0 @@
-VecTests.out 2 0.000759249
-VertexTests.out 2 0.000886948
-MeshParserTests.out 2 6.0125
----
