@@ -1,0 +1,97 @@
+Start testing: Nov 06 14:18 CET
+----------------------------------------------------------
+1/3 Testing: VecTests.out
+1/3 Test: VecTests.out
+Command: "/home/robertm/Projects/EBGeometry-dev/Exec/Tests/VecTests.out"
+Directory: /home/robertm/Projects/EBGeometry-dev/Exec/Tests
+"VecTests.out" start time: Nov 06 14:18 CET
+Output:
+----------------------------------------------------------
+Randomness seeded to: 2354254551
+===============================================================================
+All tests passed (26 assertions in 3 test cases)
+
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"VecTests.out" end time: Nov 06 14:18 CET
+"VecTests.out" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/3 Testing: VertexTests.out
+2/3 Test: VertexTests.out
+Command: "/home/robertm/Projects/EBGeometry-dev/Exec/Tests/VertexTests.out"
+Directory: /home/robertm/Projects/EBGeometry-dev/Exec/Tests
+"VertexTests.out" start time: Nov 06 14:18 CET
+Output:
+----------------------------------------------------------
+Randomness seeded to: 2795450921
+===============================================================================
+test cases: 1 | 1 passed
+assertions: - none -
+
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"VertexTests.out" end time: Nov 06 14:18 CET
+"VertexTests.out" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/3 Testing: MeshParserTests.out
+3/3 Test: MeshParserTests.out
+Command: "/home/robertm/Projects/EBGeometry-dev/Exec/Tests/MeshParserTests.out"
+Directory: /home/robertm/Projects/EBGeometry-dev/Exec/Tests
+"MeshParserTests.out" start time: Nov 06 14:18 CET
+Output:
+----------------------------------------------------------
+Randomness seeded to: 415025502
+Parsing ASCII file into polygon soup: "../../Meshes/Clean/STL/ASCII/porsche.stl"
+Parsing ASCII file into polygon soup: "../../Meshes/Clean/STL/ASCII/sphere.stl"
+Parsing ASCII file into polygon soup: "../../Meshes/Clean/STL/ASCII/horse.stl"
+Parsing ASCII file into polygon soup: "../../Meshes/Clean/STL/ASCII/dodecahedron.stl"
+Parsing ASCII file into polygon soup: "../../Meshes/Clean/STL/ASCII/airfoil.stl"
+Parsing ASCII file into polygon soup: "../../Meshes/Clean/STL/ASCII/armadillo.stl"
+Parsing binary file into polygon soup: "../../Meshes/Clean/STL/Binary/porsche.stl"
+Parsing binary file into polygon soup: "../../Meshes/Clean/STL/Binary/sphere.stl"
+Parsing binary file into polygon soup: "../../Meshes/Clean/STL/Binary/horse.stl"
+Parsing binary file into polygon soup: "../../Meshes/Clean/STL/Binary/dodecahedron.stl"
+Parsing binary file into polygon soup: "../../Meshes/Clean/STL/Binary/airfoil.stl"
+Parsing binary file into polygon soup: "../../Meshes/Clean/STL/Binary/armadillo.stl"
+Parsing ASCII file into DCEL mesh: "../../Meshes/Clean/STL/ASCII/porsche.stl"
+Parsing ASCII file into DCEL mesh: "../../Meshes/Clean/STL/ASCII/sphere.stl"
+Parsing ASCII file into DCEL mesh: "../../Meshes/Clean/STL/ASCII/horse.stl"
+Parsing ASCII file into DCEL mesh: "../../Meshes/Clean/STL/ASCII/dodecahedron.stl"
+Parsing ASCII file into DCEL mesh: "../../Meshes/Clean/STL/ASCII/airfoil.stl"
+Parsing ASCII file into DCEL mesh: "../../Meshes/Clean/STL/ASCII/armadillo.stl"
+Parsing binary file into DCEL mesh: "../../Meshes/Clean/STL/Binary/porsche.stl"
+Parsing binary file into DCEL mesh: "../../Meshes/Clean/STL/Binary/sphere.stl"
+Parsing binary file into DCEL mesh: "../../Meshes/Clean/STL/Binary/horse.stl"
+Parsing binary file into DCEL mesh: "../../Meshes/Clean/STL/Binary/dodecahedron.stl"
+Parsing binary file into DCEL mesh: "../../Meshes/Clean/STL/Binary/airfoil.stl"
+Parsing binary file into DCEL mesh: "../../Meshes/Clean/STL/Binary/armadillo.stl"
+Parsing ASCII file into polygon soup: "../../Meshes/Clean/PLY/ASCII/airfoil.ply"
+Parsing ASCII file into polygon soup: "../../Meshes/Clean/PLY/ASCII/sphere.ply"
+Parsing ASCII file into polygon soup: "../../Meshes/Clean/PLY/ASCII/horse.ply"
+Parsing ASCII file into polygon soup: "../../Meshes/Clean/PLY/ASCII/armadillo.ply"
+Parsing ASCII file into polygon soup: "../../Meshes/Clean/PLY/ASCII/porsche.ply"
+Parsing ASCII file into polygon soup: "../../Meshes/Clean/PLY/ASCII/dodecahedron.ply"
+Parsing ASCII file into DCEL mesh: "../../Meshes/Clean/PLY/ASCII/airfoil.ply"
+Parsing ASCII file into DCEL mesh: "../../Meshes/Clean/PLY/ASCII/sphere.ply"
+Parsing ASCII file into DCEL mesh: "../../Meshes/Clean/PLY/ASCII/horse.ply"
+Parsing ASCII file into DCEL mesh: "../../Meshes/Clean/PLY/ASCII/armadillo.ply"
+Parsing ASCII file into DCEL mesh: "../../Meshes/Clean/PLY/ASCII/porsche.ply"
+Parsing ASCII file into DCEL mesh: "../../Meshes/Clean/PLY/ASCII/dodecahedron.ply"
+===============================================================================
+All tests passed (54 assertions in 6 test cases)
+
+<end of output>
+Test time =  12.02 sec
+----------------------------------------------------------
+Test Passed.
+"MeshParserTests.out" end time: Nov 06 14:18 CET
+"MeshParserTests.out" time elapsed: 00:00:12
+----------------------------------------------------------
+
+End testing: Nov 06 14:18 CET

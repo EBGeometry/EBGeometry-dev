@@ -9,12 +9,10 @@
 
 using namespace EBGeometry;
 
-const char*       tmp            = std::getenv("EBGEOMETRY_HOME");
-const std::string EBGeometryHome = (tmp == nullptr) ? "invalid" : std::string(tmp);
-const std::string cleanSTLASCII  = EBGeometryHome + "/Meshes/Clean/STL/ASCII";
-const std::string cleanSTLBinary = EBGeometryHome + "/Meshes/Clean/STL/Binary";
-const std::string cleanPLYASCII  = EBGeometryHome + "/Meshes/Clean/PLY/ASCII";
-const std::string cleanPLYBinary = EBGeometryHome + "/Meshes/Clean/PLY/Binary";
+const std::string cleanSTLASCII  = "../../Meshes/Clean/STL/ASCII";
+const std::string cleanSTLBinary = "../../Meshes/Clean/STL/Binary";
+const std::string cleanPLYASCII  = "../../Meshes/Clean/PLY/ASCII";
+const std::string cleanPLYBinary = "../../Meshes/Clean/PLY/Binary";
 
 TEST_CASE("CLEAN_STL_ASCII_SOUP")
 {
