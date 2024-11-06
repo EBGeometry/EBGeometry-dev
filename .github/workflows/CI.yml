@@ -65,15 +65,14 @@ jobs:
       - name: Run codespell
         run: codespell          
 
-  Linux-GNU:
+  Linux-CPU:
     needs: [Lint-clang-tidy, Lint-clang-format, Lint-codespell]        
-    name: Linux-GNU
+    name: Linux-CPU
     runs-on: ubuntu-latest
     timeout-minutes: 15
     strategy:
       matrix:
         comp: [g++-9, g++-10, g++-11, g++-12]
-        directory: [Examples/EBGeometry_DCEL, Examples/EBGeometry_F18, Examples/EBGeometry_OctreeBoundingVolume, Examples/EBGeometry_PackedSpheres, Examples/EBGeometry_RandomCity, Examples/EBGeometry_Shapes]
 
     steps:
       - uses: actions/checkout@v4
@@ -82,59 +81,19 @@ jobs:
           sudo apt-get update
           sudo apt-get install ${{ matrix.comp }}
 
-      - name: Compile examples
+      - name: Configure
         working-directory: ${{ matrix.directory }}
         run: |
-          ${{ matrix.comp }} -std=c++17 \
-          -pedantic -Wall -Wextra  -Wcast-align  -Wcast-qual -Wctor-dtor-privacy -Wdisabled-optimization -Wformat=2 \
-          -Winit-self -Wlogical-op -Wmissing-declarations -Wmissing-include-dirs -Wnoexcept -Wold-style-cast \
-          -Woverloaded-virtual -Wredundant-decls -Wshadow -Wsign-conversion -Wsign-promo -Wstrict-null-sentinel \
-          -Wstrict-overflow=5 -Wswitch-default -Wundef -Wno-unused \
-          main.cpp
+          cmake .
+          make
 
-      - name: Run examples
-        working-directory: ${{ matrix.directory }}
+      - name: Run tests
+        working-directory: Exec/Tests
         run: |
-          ./a.out
-          if [[ $? == 0 ]]; then exit 0; else exit 1; fi          
-
-  Linux-Intel:
-    needs: [Lint-clang-tidy, Lint-clang-format, Lint-codespell]    
-    name: Linux-Intel
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    strategy:
-      matrix:
-        directory: [Examples/EBGeometry_DCEL, Examples/EBGeometry_PackedSpheres, Examples/EBGeometry_RandomCity, Examples/EBGeometry_Shapes]    
-
-    steps:
-      - uses: actions/checkout@v4      
-      - name: Install Intel oneAPI
-        working-directory: /tmp        
-        run: |
-          wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
-          sudo apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
-          sudo add-apt-repository "deb https://apt.repos.intel.com/oneapi all main"
-          sudo apt-get -y install intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
-
-      - name: Compile examples
-        working-directory: ${{ matrix.directory }}
-        run: |
-          source /opt/intel/oneapi/setvars.sh
-          icpc -std=c++17 -O0 \
-          -Wall -Warray-bounds -Wchar-subscripts -Wcomment -Wenum-compare -Wformat -Wuninitialized -Wmaybe-uninitialized -Wmain -Wnarrowing -Wnonnull \
-          -Wparentheses -Wpointer-sign -Wreorder -Wreturn-type -Wsign-compare -Wsequence-point -Wtrigraphs -Wunused-function -Wunused-but-set-variable \
-          -Wunused-variable -Wwrite-strings -Werror \
-          main.cpp -lstdc++fs
-
-      - name: Run examples
-        working-directory: ${{ matrix.directory }}
-        run: |
-          ./a.out
-          if [[ $? == 0 ]]; then exit 0; else exit 1; fi
+          ctest --verbose
 
   Build-documentation:
-    needs: [Linux-GNU, Linux-Intel]
+    needs: [Linux-GNU]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4      
@@ -177,7 +136,7 @@ jobs:
           rm -rf Sphinx/build
 
   CI-passed:
-    needs: [Linux-GNU, Linux-Intel, Build-documentation]
+    needs: [Linux-GNU, Build-documentation]
     runs-on: ubuntu-latest
     steps:
       - name: Do nothing
