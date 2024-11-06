@@ -100,7 +100,7 @@ jobs:
       - name: Run tests
         working-directory: Exec/Tests
         run: |
-          ctest --verbose
+          ctest
 
   Build-documentation:
     needs: [Linux-CPU]
