@@ -93,7 +93,7 @@ jobs:
           ctest --verbose
 
   Build-documentation:
-    needs: [Linux-GNU]
+    needs: [Linux-CPU]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4      
