@@ -8,6 +8,7 @@ set(CMAKE_CXX_FLAGS "-O3 -march=native")
 set(ENABLE_DEBUG TRUE)
 set(ENABLE_CUDA FALSE)
 set(ENABLE_HIP FALSE)
+
 set(ENABLE_TESTS TRUE)
 
 # Source directories
