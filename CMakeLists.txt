@@ -10,6 +10,9 @@ set(ENABLE_CUDA FALSE)
 set(ENABLE_HIP FALSE)
 set(ENABLE_TESTS TRUE)
 
+# Source directories
+include_directories(${EBGEOMETRY_HOME})
+
 if(ENABLE_DEBUG)
   add_compile_definitions(EBGEOMETRY_ENABLE_DEBUG)
 endif()

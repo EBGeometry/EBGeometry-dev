@@ -3,8 +3,7 @@ include (CTest)
 # Use Catch2 for testing
 find_package(Catch2 3 REQUIRED)
 
-# Source directories
-include_directories(${EBGEOMETRY_HOME})
+
 
 # VecTests
 add_executable(VecTests.out VecTests.cpp)
@@ -53,7 +52,7 @@ add_test(
 
 # Run ctest after building -- the target can be any of the tests. 
 add_custom_command(
-  TARGET VecTests.out
+  TARGET VertexTests.out
   POST_BUILD
   COMMAND ctest
   )

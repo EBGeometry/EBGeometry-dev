@@ -9,7 +9,7 @@ docs/**
 **CMakeCache.txt**
 **Makefile**
 ***.cmake**
-**Testing/Temporary**
+Exec/Tests/Testing/**
 DartConfiguration.tcl
 
 # Doc files
