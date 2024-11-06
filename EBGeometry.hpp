@@ -10,6 +10,7 @@
 #include "Source/EBGeometry_GPUTypes.hpp"
 #include "Source/EBGeometry_ImplicitFunction.hpp"
 #include "Source/EBGeometry_Macros.hpp"
+#include "Source/EBGeometry_MeshDistanceFunctions.hpp"
 #include "Source/EBGeometry_MeshParser.hpp"
 #include "Source/EBGeometry_SFC.hpp"
 #include "Source/EBGeometry_Triangle.hpp"
