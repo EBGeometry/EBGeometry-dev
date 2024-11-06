@@ -32,6 +32,8 @@ if(ENABLE_CUDA)
   set_target_properties(MeshParserTests.out PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 endif()
 
+
+
 # Add tests
 enable_testing()
 
@@ -50,9 +52,9 @@ add_test(
   COMMAND $<TARGET_FILE:MeshParserTests.out>
 )
 
-# Run ctest after building -- the target can be any of the tests. 
+# Run ctest after building -- the target should always be the last defined test
 add_custom_command(
-  TARGET VertexTests.out
+  TARGET MeshParserTests.out
   POST_BUILD
   COMMAND ctest
   )
