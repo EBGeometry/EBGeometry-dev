@@ -33,5 +33,13 @@ endif()
 # Well, here we are. This file should be able to build and run the test suite and, if that passes,
 # build and run a few example programs.
 if(ENABLE_TESTS)
+  add_custom_target(tests)
   add_subdirectory(${EBGEOMETRY_HOME}/Exec/Tests)
 endif()
+
+add_custom_command(
+  TARGET tests
+  POST_BUILD
+  COMMAND ctest
+  WORKING DIRECTORY(${EBGEOMETRY_HOME}/Exec/Tests)
+  )
