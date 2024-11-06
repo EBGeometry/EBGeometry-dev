@@ -50,3 +50,10 @@ add_test(
   NAME MeshParserTests.out
   COMMAND $<TARGET_FILE:MeshParserTests.out>
 )
+
+# add_custom_command(
+#   TARGET tests
+#   POST_BUILD
+#   COMMAND make
+#   WORKING DIRECTORY(${EBGEOMETRY_HOME}/Exec/Tests)
+#   )
