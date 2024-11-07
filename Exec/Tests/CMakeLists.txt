@@ -3,7 +3,14 @@ include (CTest)
 # Use Catch2 for testing
 find_package(Catch2 3 REQUIRED)
 
-
+# Virtual functions on CPU and GPU
+add_executable(VirtualFunctionTests.out VirtualFunctionTests.cpp)
+target_link_libraries(VirtualFunctionTests.out PUBLIC Catch2::Catch2WithMain)
+if(ENABLE_CUDA)
+  set_source_files_properties(VirtualFunctionTests.cpp PROPERTIES LANGUAGE CUDA)
+  set_target_properties(VirtualFunctionTests.out PROPERTIES CUDA_ARCHITECTURES "native")
+  set_target_properties(VirtualFunctionTests.out PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+endif()
 
 # VecTests
 add_executable(VecTests.out VecTests.cpp)
@@ -34,6 +41,11 @@ endif()
 
 # Add tests
 enable_testing()
+
+add_test(
+  NAME VirtualFunctionTests.out
+  COMMAND $<TARGET_FILE:VirtualFunctionTests.out>
+)
 
 add_test(
   NAME VecTests.out
