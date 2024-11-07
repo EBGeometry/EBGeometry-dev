@@ -85,10 +85,10 @@ namespace EBGeometry {
     };
 
     EBGEOMETRY_GPU_HOST
-    [[nodiscard]] virtual std::shared_ptr<UnionIF>
+    [[nodiscard]] virtual UnionIF*
     buildOnHost() const noexcept override
     {
-      return std::make_shared<UnionIF>(*m_f1, *m_f2);
+      return new UnionIF(*m_f1, *m_f2);
     }
 
 #ifdef EBGEOMETRY_ENABLE_GPU

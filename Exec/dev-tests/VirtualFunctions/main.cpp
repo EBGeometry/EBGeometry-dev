@@ -35,16 +35,16 @@ main()
   SphereSDFFactory sphereFactory(point_device, value_device);
   BoxSDFFactory    boxFactory(point_device, point_device);
 
-  std::shared_ptr<ImplicitFunction> plane_host  = planeFactory.buildOnHost();
-  std::shared_ptr<ImplicitFunction> sphere_host = sphereFactory.buildOnHost();
-  std::shared_ptr<ImplicitFunction> box_host    = boxFactory.buildOnHost();
+  HostIF<ImplicitFunction> plane_host  = planeFactory.buildOnHost();
+  HostIF<ImplicitFunction> sphere_host = sphereFactory.buildOnHost();
+  HostIF<ImplicitFunction> box_host    = boxFactory.buildOnHost();
 
-  ImplicitFunction** plane_device  = (ImplicitFunction**)planeFactory.buildOnDevice();
-  ImplicitFunction** sphere_device = (ImplicitFunction**)sphereFactory.buildOnDevice();
-  ImplicitFunction** box_device    = (ImplicitFunction**)boxFactory.buildOnDevice();
+  DeviceIF<ImplicitFunction> plane_device  = (DeviceIF<ImplicitFunction>)planeFactory.buildOnDevice();
+  DeviceIF<ImplicitFunction> sphere_device = (DeviceIF<ImplicitFunction>)sphereFactory.buildOnDevice();
+  DeviceIF<ImplicitFunction> box_device    = (DeviceIF<ImplicitFunction>)boxFactory.buildOnDevice();
 
   UnionIFFactory     factory(sphere_device, box_device);
-  ImplicitFunction** union_device = (ImplicitFunction**)factory.buildOnDevice();
+  DeviceIF<ImplicitFunction> union_device = (DeviceIF<ImplicitFunction>)factory.buildOnDevice();
 
   cudaDeviceSynchronize();
 

@@ -95,10 +95,10 @@ namespace EBGeometry {
       @brief Build plane on host. 
     */
     EBGEOMETRY_GPU_HOST
-    [[nodiscard]] virtual std::shared_ptr<PlaneSDF>
+    [[nodiscard]] virtual HostIF<PlaneSDF>
     buildOnHost() const noexcept override
     {
-      return std::make_shared<PlaneSDF>(*m_point, *m_normal);
+      return new PlaneSDF(*m_point, *m_normal);
     }
 
 #ifdef EBGEOMETRY_ENABLE_GPU
@@ -106,7 +106,7 @@ namespace EBGeometry {
       @brief Build plane on the device.
     */
     EBGEOMETRY_GPU_HOST
-    [[nodiscard]] virtual PlaneSDF**
+    [[nodiscard]] virtual DeviceIF<PlaneSDF>
     buildOnDevice() const noexcept override
     {
       PlaneSDF** plane = allocateImplicitFunctionOnDevice<PlaneSDF>();
@@ -203,10 +203,10 @@ namespace EBGeometry {
       @brief Build sphere on host. 
     */
     EBGEOMETRY_GPU_HOST
-    [[nodiscard]] virtual std::shared_ptr<SphereSDF>
+    [[nodiscard]] virtual HostIF<SphereSDF>
     buildOnHost() const noexcept override
     {
-      return std::make_shared<SphereSDF>(*m_center, *m_radius);
+      return new SphereSDF(*m_center, *m_radius);
     }
 
 #ifdef EBGEOMETRY_ENABLE_GPU
@@ -214,7 +214,7 @@ namespace EBGeometry {
       @brief Build sphere on the device.
     */
     EBGEOMETRY_GPU_HOST
-    [[nodiscard]] virtual SphereSDF**
+    [[nodiscard]] virtual DeviceIF<SphereSDF>
     buildOnDevice() const noexcept override
     {
       SphereSDF** sphere = allocateImplicitFunctionOnDevice<SphereSDF>();
@@ -327,10 +327,10 @@ namespace EBGeometry {
       @brief Build BoxSDF on host. 
     */
     EBGEOMETRY_GPU_HOST
-    [[nodiscard]] virtual std::shared_ptr<BoxSDF>
+    [[nodiscard]] virtual HostIF<BoxSDF>
     buildOnHost() const noexcept override
     {
-      return std::make_shared<BoxSDF>(*m_loCorner, *m_hiCorner);
+      return new BoxSDF(*m_loCorner, *m_hiCorner);
     }
 
 #ifdef EBGEOMETRY_ENABLE_GPU
@@ -338,7 +338,7 @@ namespace EBGeometry {
       @brief Build BoxSDF on the device.
     */
     EBGEOMETRY_GPU_HOST
-    [[nodiscard]] virtual BoxSDF**
+    [[nodiscard]] virtual DeviceIF<BoxSDF>
     buildOnDevice() const noexcept override
     {
       BoxSDF** box = allocateImplicitFunctionOnDevice<BoxSDF>();
