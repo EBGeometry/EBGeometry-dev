@@ -70,49 +70,6 @@ namespace EBGeometry {
     */
     const ImplicitFunction* m_f2;
   };
-
-  /*!
-    @brief Factory method for building UnionIF objects on the host or device.
-  */
-  class UnionIFFactory : public ImplicitFunctionFactory<UnionIF>
-  {
-  public:
-    EBGEOMETRY_GPU_HOST
-    UnionIFFactory(ImplicitFunction** a_f1, ImplicitFunction** a_f2) noexcept
-    {
-      m_f1 = a_f1;
-      m_f2 = a_f2;
-    };
-
-    EBGEOMETRY_GPU_HOST
-    [[nodiscard]] virtual UnionIF*
-    buildOnHost() const noexcept override
-    {
-      return new UnionIF(*m_f1, *m_f2);
-    }
-
-#ifdef EBGEOMETRY_ENABLE_GPU
-    /*!
-      @brief Build implicit function on the device
-    */
-    EBGEOMETRY_GPU_HOST
-    [[nodiscard]] virtual UnionIF**
-    buildOnDevice() const noexcept override
-    {
-      UnionIF** csgUnion = allocateImplicitFunctionOnDevice<UnionIF>();
-
-      createImplicitFunctionOnDevice<<<1, 1>>>(csgUnion, m_f1, m_f2);
-
-      return csgUnion;
-    };
-#endif
-
-  protected:
-    ImplicitFunction** m_f1;
-
-    ImplicitFunction** m_f2;
-  };
-
 } // namespace EBGeometry
 
 #endif
