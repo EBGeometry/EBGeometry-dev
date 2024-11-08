@@ -24,44 +24,19 @@
 
 namespace EBGeometry {
 
-  /*!
-    @brief Shortcut for storage of a device-sided implicit function. Note that this is mostly used so that users
-    know from the typename which pointers are intended to be pointers to data allocated
-    on the device.
-  */
-  template <typename ImpFunc>
-  using HostIF = ImpFunc*;  
-
-#ifdef EBGEOMETRY_ENABLE_GPU
-  /*!
-    @brief Shortcut for storage of a device-sided implicit function. Note that this is mostly used so that users
-    know from the typename which pointers are intended to be pointers to data allocated
-    on the device.
-  */
-  template <typename ImpFunc>
-  using DeviceIF = ImpFunc**;
-#endif
-
 #ifdef EBGEOMETRY_ENABLE_GPU
   /*!
     @brief Allocate pointer for implicit function on the GPU
     @param[in, out] implicitFunction Implicit function pointer to be allocated. 
   */
-  template <typename T>
+  template <typename ImpFunc>
   EBGEOMETRY_GPU_HOST
   EBGEOMETRY_ALWAYS_INLINE
-  DeviceIF<T>
-  allocateImplicitFunctionOnDevice() noexcept
+  allocateImplicitFunctionOnDevice(ImpFunc* a_implicitFunction) noexcept
   {
-    DeviceIF<T> func;
-
-    cudaMalloc((void**)&func, sizeof(DeviceIF<T>));
-
-    return func;
+    cudaMalloc((void**)&a_implicitFunction, sizeof(Impfunc));
   }
-#endif
 
-#ifdef EBGEOMETRY_ENABLE_GPU
   /*!
     @brief Function for building an arbitrary implicit function. Used when constructing
     implicit functions on the GPU. The user inputs the implicit function type (T) and the
@@ -69,26 +44,26 @@ namespace EBGeometry {
     @param[in] a_implicitFunction Implicit function to be created on device
     @param[in] args Constructor arguments.
   */
-  template <typename T, typename... Args>
+  template <typename ImpFunc>
   EBGEOMETRY_GPU_GLOBAL void
-  createImplicitFunctionOnDevice(DeviceIF<T> a_implicitFunction, Args... args) 
+  freeImplicitFunctionOnDevice(ImpFunc* a_implicitFunction)
   {
-    (*a_implicitFunction) = new T(*args...);
+    cudaFree(a_implicitFunction);
   };
 
   /*!
-    @brief Function for building an arbitrary implicit function. Used when constructing
-    implicit functions on the GPU. The user inputs the implicit function type (T) and the
-    constructor arguments required for constructing the function.
+    @brief Function for constructing an arbitrary implicit function on the device. 
+    The user inputs the implicit function type and the constructor arguments required
+    for constructing the function. 
     @param[in] a_implicitFunction Implicit function to be created on device
     @param[in] args Constructor arguments.
   */
-  template <typename T>
+  template <typename ImpFunc, typename... Args>
   EBGEOMETRY_GPU_GLOBAL void
-  deleteImplicitFunctionOnDevice(DeviceIF<T> a_implicitFunction) 
+  createImplicitFunctionOnDevice(ImpFunc* a_implicitFunction, Args... args)
   {
-    delete *a_implicitFunction;
-  };  
+    new (a_implicitFunction) ImpFunc(args);
+  };
 #endif
 
   /*!
@@ -124,32 +99,6 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] virtual Real
     value(const Vec3& a_point) const noexcept = 0;
-  };
-
-  /*!
-    @brief Parent class for building implicit functions
-  */
-  template <typename T>
-  class ImplicitFunctionFactory
-  {
-  public:
-    static_assert(std::is_base_of<ImplicitFunction, T>::value, "T is not a base of ImplicitFunction");
-
-    /*!
-      @brief Build implicit function on host
-    */
-    EBGEOMETRY_GPU_HOST
-    virtual HostIF<T>
-    buildOnHost() const noexcept = 0;
-
-#ifdef EBGEOMETRY_ENABLE_GPU
-    /*!
-      @brief Build implicit function on the device
-    */
-    EBGEOMETRY_GPU_HOST
-    virtual DeviceIF<T>
-    buildOnDevice() const noexcept = 0;
-#endif
   };
 } // namespace EBGeometry
 
