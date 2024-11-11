@@ -42,7 +42,7 @@ namespace EBGeometry {
     {
       EBGEOMETRY_EXPECT(a_mesh != nullptr);
       EBGEOMETRY_EXPECT(a_mesh->isManifold());
-      
+
       this->m_mesh = a_mesh;
     }
 

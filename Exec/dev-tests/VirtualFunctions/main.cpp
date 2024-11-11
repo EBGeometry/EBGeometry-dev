@@ -12,7 +12,7 @@ using namespace EBGeometry;
 
 EBGEOMETRY_GPU_GLOBAL
 void
-evalImplicitFunction(Real* value,  ImplicitFunction*  func,  Vec3*  point)
+evalImplicitFunction(Real* value, ImplicitFunction* func, Vec3* point)
 {
   *value = func->value(*point);
 }
@@ -40,29 +40,24 @@ main()
   cudaMemcpy(value_device, &value_host, sizeof(Real), cudaMemcpyHostToDevice);
   cudaMemcpy(normal_device, &normal_host, sizeof(Vec3), cudaMemcpyHostToDevice);
 
-  // PlaneSDF* plane_host   = nullptr;
-  // PlaneSDF* plane_device = nullptr;
-
-  auto plane_host   = (ImplicitFunction*)allocateImplicitFunctionOnHost<PlaneSDF>(*origin_device, *normal_device);
-  auto plane_device = (ImplicitFunction*)allocateImplicitFunctionOnDevice<PlaneSDF>(*origin_device, *normal_device);
-
-  //  allocateImplicitFunctionOnHost<PlaneSDF>(plane_host, *origin_device, *normal_device);
-  //  allocateImplicitFunctionOnDevice<PlaneSDF>(plane_device, *origin_device, *normal_device);
+  auto plane_host   = createImpFunc<PlaneSDF, MemoryLocation::Host>(*origin_device, *normal_device);
+  auto plane_device = createImpFunc<PlaneSDF, MemoryLocation::Unified>(*origin_device, *normal_device);
 
   evalImplicitFunction<<<1, 1>>>(value_device, plane_device, point_device);
   cudaMemcpy(&value_host, value_device, sizeof(Real), cudaMemcpyDeviceToHost);
 
+  std::cout << value_host << std::endl;
+  std::cout << plane_host->value(point_host) << std::endl;
+
   cudaDeviceSynchronize();
 
-  freeImplicitFunctionOnDevice(plane_device);
-  freeImplicitFunctionOnHost(plane_host);
+  freeImpFunc(plane_device);
+  freeImpFunc(plane_host);
 
   cudaFree(origin_device);
   cudaFree(point_device);
   cudaFree(value_device);
   cudaFree(normal_device);
-
-  std::cout << value_host << std::endl;
 
   return 0;
 }

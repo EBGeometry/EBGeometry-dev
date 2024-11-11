@@ -60,127 +60,80 @@ namespace EBGeometry {
   };
 
   /*!
-    @brief One-liner for building an implicit function on the host. User must supply
-    the constructor arguments.
-    @param[in] a_implicitFunction to be allocated. Must be initialized to nullptr
-  */
-  template <typename ImpFunc, typename... Args>
-  EBGEOMETRY_GPU_HOST
-  EBGEOMETRY_ALWAYS_INLINE
-  void
-  allocateImplicitFunctionOnHost(ImpFunc*& a_implicitFunction, const Args... args) noexcept
-  {
-    EBGEOMETRY_ALWAYS_EXPECT(a_implicitFunction == nullptr);
+    @brief Factory method for building an implicit function on the host or device
+    @details The user specifies the placement through the MemoryLocation template
+    argument. The user must also supply the constructor arguments.
 
-    a_implicitFunction = new ImpFunc(args...);
-  }
+    For example:
 
-  /*!
-    @brief One-liner for building an implicit function on the host. User must supply
-    the constructor arguments.
+    PlaneSDF* plane = createImpFunc<PlaneSDF, MemoryLocation::Unified>(Vec3, Vec3)
+    
     @param[in] a_implicitFunction to be allocated. Must be initialized to nullptr
+    @returns Returns a pointer to the implicit function.
   */
-  template <typename ImpFunc, typename... Args>
+  template <typename ImpFunc, MemoryLocation MemLoc, typename... Args>
   EBGEOMETRY_GPU_HOST
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
   ImpFunc*
-  allocateImplicitFunctionOnHost(const Args... args) noexcept
+  createImpFunc(const Args... args) noexcept
   {
     ImpFunc* implicitFunction = nullptr;
 
-    allocateImplicitFunctionOnHost<ImpFunc>(implicitFunction, args...);
+    switch (MemLoc) {
+    case MemoryLocation::Host: {
+      implicitFunction = new ImpFunc(args...);
+
+      break;
+    }
+#ifdef EBGEOMETRY_ENABLE_CUDA
+    case MemoryLocation::Global: {
+      cudaMalloc((void**)&implicitFunction, sizeof(ImpFunc));
+
+      constructImplicitFunctionOnDevice<ImpFunc><<<1, 1>>>(implicitFunction, args...);
+
+      break;
+    }
+    case MemoryLocation::Unified: {
+      cudaMallocManaged((void**)&implicitFunction, sizeof(ImpFunc));
+
+      constructImplicitFunctionOnDevice<ImpFunc><<<1, 1>>>(implicitFunction, args...);
+
+      break;
+    }
+#endif
+    }
+
+#warning "EBGeometry_ImplicitFunction.hpp - GPU placement is only partially supported"
 
     return implicitFunction;
   }
 
   /*!
-    @brief A one-liner for building an implicit function on the device.
-    @details The User must declare the implicit function before calling this function. E.g.
-
-    PlaneSDF plane = nullptr;
-    allocateImplicitFunctionOnDevice(plane, ...)
-
-    @param[in] a_implicitFunction Implicit function to be constructed.
-    @param[in] args Constructor arguments.
+    @brief Free up an implicit function. This works on both host and device.
+    @param[in] a_implicitFunction Implicit function to be freed.
   */
-  template <typename ImpFunc, typename... Args>
+  template <typename ImpFunc>
   EBGEOMETRY_GPU_HOST
   EBGEOMETRY_ALWAYS_INLINE
   void
-  allocateImplicitFunctionOnDevice(ImpFunc*& a_implicitFunction, const Args... args) noexcept
+  freeImpFunc(ImpFunc*& a_implicitFunction)
   {
-    EBGEOMETRY_ALWAYS_EXPECT(a_implicitFunction == nullptr);
+    EBGEOMETRY_ALWAYS_EXPECT(a_implicitFunction != nullptr);
 
 #ifdef EBGEOMETRY_ENABLE_CUDA
-    cudaMalloc((void**)&a_implicitFunction, sizeof(ImpFunc));
+    cudaPointerAttributes attr;
 
-    constructImplicitFunctionOnDevice<ImpFunc><<<1, 1>>>(a_implicitFunction, args...);
+    cudaPointerGetAttributes(&attr, a_implicitFunction);
+
+    if ((attr.type == cudaMemoryTypeHost) || (attr.type == cudaMemoryTypeUnregistered)) {
+      delete a_implicitFunction;
+    }
+    else if ((attr.type == cudaMemoryTypeDevice) || (attr.type == cudaMemoryTypeManaged)) {
+      cudaFree(a_implicitFunction);
+    }
 #else
-#error "EBGeometry_ImplicitFunction::buildImplicitFunctionOnDevice - unknown GPU support requested"
-    a_implicitFunction = nullptr;
-#endif
-  }
-
-  /*!
-    @brief A one-liner for building an implicit function on the device.
-    @details This function is just like allocateImplicitFunctionOnDevice except that it declares its
-    own object and returns it.
-    @param[in] args Constructor arguments. This will be different for each implicit function.
-  */
-  template <typename ImpFunc, typename... Args>
-  EBGEOMETRY_GPU_HOST
-  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-  ImpFunc*
-  allocateImplicitFunctionOnDevice(const Args... args) noexcept
-  {
-    ImpFunc* implicitFunction = nullptr;
-
-    allocateImplicitFunctionOnDevice(implicitFunction, args...);
-
-    return implicitFunction;
-  }
-
-  /*!
-    @brief Function for building an arbitrary implicit function. Used when constructing
-    implicit functions on the GPU. The user inputs the implicit function type (T) and the
-    constructor arguments required for constructing the function.
-    @param[in] a_implicitFunction Implicit function to be created on device
-    @param[in] args Constructor arguments.
-  */
-  template <typename ImpFunc>
-  EBGEOMETRY_GPU_HOST
-  EBGEOMETRY_ALWAYS_INLINE
-  void
-  freeImplicitFunctionOnDevice(ImpFunc*& a_implicitFunction)
-  {
-#ifdef EBGEOMETRY_ENABLE_GPU
-    EBGEOMETRY_ALWAYS_EXPECT(a_implicitFunction != nullptr);
-#endif
-
-#ifdef EBGEOMETRY_ENABLE_CUDA
-    cudaFree(a_implicitFunction);
-#elif EBGEOMETRY_ENABLE_HIP
-#endif
-
-    a_implicitFunction = nullptr;
-  };
-
-  /*!
-    @brief Function for building an arbitrary implicit function. Used when constructing
-    implicit functions on the GPU. The user inputs the implicit function type (T) and the
-    constructor arguments required for constructing the function.
-    @param[in] a_implicitFunction Implicit function to be created on device
-    @param[in] args Constructor arguments.
-  */
-  template <typename ImpFunc>
-  EBGEOMETRY_GPU_HOST
-  EBGEOMETRY_ALWAYS_INLINE
-  void
-  freeImplicitFunctionOnHost(ImpFunc*& a_implicitFunction)
-  {
-    EBGEOMETRY_ALWAYS_EXPECT(a_implicitFunction != nullptr);
-
     delete a_implicitFunction;
+#endif
   };
 
   /*!

@@ -42,4 +42,13 @@
 
 #endif // <--- End CUDA definition
 
+enum class MemoryLocation
+{
+  Invalid,
+  Host,
+  Pinned,
+  Unified,
+  Global
+};
+
 #endif
