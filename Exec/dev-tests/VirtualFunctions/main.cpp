@@ -40,11 +40,14 @@ main()
   cudaMemcpy(value_device, &value_host, sizeof(Real), cudaMemcpyHostToDevice);
   cudaMemcpy(normal_device, &normal_host, sizeof(Vec3), cudaMemcpyHostToDevice);
 
-  PlaneSDF* plane_host   = nullptr;
-  PlaneSDF* plane_device = nullptr;
+  // PlaneSDF* plane_host   = nullptr;
+  // PlaneSDF* plane_device = nullptr;
 
-  allocateImplicitFunctionOnHost(plane_host, *origin_device, *normal_device);
-  allocateImplicitFunctionOnDevice(plane_device, *origin_device, *normal_device);
+  auto plane_host   = (ImplicitFunction*)allocateImplicitFunctionOnHost<PlaneSDF>(*origin_device, *normal_device);
+  auto plane_device = (ImplicitFunction*)allocateImplicitFunctionOnDevice<PlaneSDF>(*origin_device, *normal_device);
+
+  //  allocateImplicitFunctionOnHost<PlaneSDF>(plane_host, *origin_device, *normal_device);
+  //  allocateImplicitFunctionOnDevice<PlaneSDF>(plane_device, *origin_device, *normal_device);
 
   evalImplicitFunction<<<1, 1>>>(value_device, plane_device, point_device);
   cudaMemcpy(&value_host, value_device, sizeof(Real), cudaMemcpyDeviceToHost);
@@ -63,50 +66,3 @@ main()
 
   return 0;
 }
-
-  //  delete plane_host;
-  //  PlaneSDF* plane_device;  
-
-  // PlaneSDFFactory  planeFactory(point_device, point_device);
-  // SphereSDFFactory sphereFactory(point_device, value_device);
-  // BoxSDFFactory    boxFactory(point_device, point_device);
-
-  // HostIF<ImplicitFunction> plane_host  = planeFactory.buildOnHost();
-  // HostIF<ImplicitFunction> sphere_host = sphereFactory.buildOnHost();
-  // HostIF<ImplicitFunction> box_host    = boxFactory.buildOnHost();
-
-  // DeviceIF<ImplicitFunction> plane_device  = (DeviceIF<ImplicitFunction>)planeFactory.buildOnDevice();
-  // DeviceIF<ImplicitFunction> sphere_device = (DeviceIF<ImplicitFunction>)sphereFactory.buildOnDevice();
-  // DeviceIF<ImplicitFunction> box_device    = (DeviceIF<ImplicitFunction>)boxFactory.buildOnDevice();
-
-  // UnionIFFactory     factory(sphere_device, box_device);
-  // DeviceIF<ImplicitFunction> union_device = (DeviceIF<ImplicitFunction>)factory.buildOnDevice();
-
-  // cudaDeviceSynchronize();
-
-  // // Print plane value
-  // evalImplicitFunction<<<1, 1>>>(value_device, plane_device, point_device);
-  // cudaMemcpy(&value_host, value_device, sizeof(Real), cudaMemcpyDeviceToHost);
-  // cudaDeviceSynchronize();
-  // std::cout << "plane value = " << value_host << "\n";
-
-  // // Print sphere value
-  // evalImplicitFunction<<<1, 1>>>(value_device, sphere_device, point_device);
-  // cudaMemcpy(&value_host, value_device, sizeof(Real), cudaMemcpyDeviceToHost);
-  // cudaDeviceSynchronize();
-  // std::cout << "sphere value = " << value_host << "\n";
-
-  // // Print box value
-  // evalImplicitFunction<<<1, 1>>>(value_device, box_device, point_device);
-  // cudaMemcpy(&value_host, value_device, sizeof(Real), cudaMemcpyDeviceToHost);
-  // cudaDeviceSynchronize();
-  // std::cout << "box value = " << value_host << "\n";
-
-  // // Print union value
-  // evalImplicitFunction<<<1, 1>>>(value_device, union_device, point_device);
-  // cudaMemcpy(&value_host, value_device, sizeof(Real), cudaMemcpyDeviceToHost);
-  // cudaDeviceSynchronize();
-  // std::cout << "union value = " << value_host << "\n";
-
-  // cudaFree(point_device);
-  // cudaFree(value_device);

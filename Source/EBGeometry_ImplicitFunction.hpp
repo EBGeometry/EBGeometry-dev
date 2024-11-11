@@ -76,14 +76,38 @@ namespace EBGeometry {
   }
 
   /*!
-    @brief A one-liner for building an implicit function on the device. User must
-    supply the constructor arguments
+    @brief One-liner for building an implicit function on the host. User must supply
+    the constructor arguments.
+    @param[in] a_implicitFunction to be allocated. Must be initialized to nullptr
+  */
+  template <typename ImpFunc, typename... Args>
+  EBGEOMETRY_GPU_HOST
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+  ImpFunc*
+  allocateImplicitFunctionOnHost(const Args... args) noexcept
+  {
+    ImpFunc* implicitFunction = nullptr;
+
+    allocateImplicitFunctionOnHost<ImpFunc>(implicitFunction, args...);
+
+    return implicitFunction;
+  }
+
+  /*!
+    @brief A one-liner for building an implicit function on the device.
+    @details The User must declare the implicit function before calling this function. E.g.
+
+    PlaneSDF plane = nullptr;
+    allocateImplicitFunctionOnDevice(plane, ...)
+
+    @param[in] a_implicitFunction Implicit function to be constructed.
+    @param[in] args Constructor arguments.
   */
   template <typename ImpFunc, typename... Args>
   EBGEOMETRY_GPU_HOST
   EBGEOMETRY_ALWAYS_INLINE
   void
-  allocateImplicitFunctionOnDevice(ImpFunc*& a_implicitFunction, Args... args) noexcept
+  allocateImplicitFunctionOnDevice(ImpFunc*& a_implicitFunction, const Args... args) noexcept
   {
     EBGEOMETRY_ALWAYS_EXPECT(a_implicitFunction == nullptr);
 
@@ -95,6 +119,25 @@ namespace EBGeometry {
 #error "EBGeometry_ImplicitFunction::buildImplicitFunctionOnDevice - unknown GPU support requested"
     a_implicitFunction = nullptr;
 #endif
+  }
+
+  /*!
+    @brief A one-liner for building an implicit function on the device.
+    @details This function is just like allocateImplicitFunctionOnDevice except that it declares its
+    own object and returns it.
+    @param[in] args Constructor arguments. This will be different for each implicit function.
+  */
+  template <typename ImpFunc, typename... Args>
+  EBGEOMETRY_GPU_HOST
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+  ImpFunc*
+  allocateImplicitFunctionOnDevice(const Args... args) noexcept
+  {
+    ImpFunc* implicitFunction = nullptr;
+
+    allocateImplicitFunctionOnDevice(implicitFunction, args...);
+
+    return implicitFunction;
   }
 
   /*!
@@ -149,7 +192,7 @@ namespace EBGeometry {
   */
   template <typename ImpFunc, typename... Args>
   EBGEOMETRY_GPU_GLOBAL void
-  constructImplicitFunctionOnDevice(ImpFunc* a_implicitFunction, Args... args)
+  constructImplicitFunctionOnDevice(ImpFunc* a_implicitFunction, const Args... args)
   {
     EBGEOMETRY_ALWAYS_EXPECT(a_implicitFunction != nullptr);
 
