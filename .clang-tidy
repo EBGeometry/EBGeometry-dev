@@ -53,4 +53,4 @@ Checks: >
 HeaderFilterRegex: '([^n].....|[^o]....|[^l]...|[^i]..|[^n].|[^t])\.H$'
 
 # Only available in clang-tidy >= 17
-HeaderFileExtensions: ['', "hpp"]
+#HeaderFileExtensions: ['', "hpp"]
