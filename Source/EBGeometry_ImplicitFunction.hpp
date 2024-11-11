@@ -62,13 +62,16 @@ namespace EBGeometry {
   /*!
     @brief One-liner for building an implicit function on the host. User must supply
     the constructor arguments.
+    @param[in] a_implicitFunction to be allocated. Must be initialized to nullptr
   */
   template <typename ImpFunc, typename... Args>
   EBGEOMETRY_GPU_HOST
   EBGEOMETRY_ALWAYS_INLINE
   void
-  allocateImplicitFunctionOnHost(ImpFunc** a_implicitFunction, const Args... args) noexcept
-  {}
+  allocateImplicitFunctionOnHost(ImpFunc*& a_implicitFunction, const Args... args) noexcept
+  {
+    EBGEOMETRY_ALWAYS_EXPECT(a_implicitFunction == nullptr);
+  }
 
   /*!
     @brief A one-liner for building an implicit function on the device. User must
@@ -78,15 +81,14 @@ namespace EBGeometry {
   EBGEOMETRY_GPU_HOST
   EBGEOMETRY_ALWAYS_INLINE
   void
-  allocateImplicitFunctionOnDevice(ImpFunc** a_implicitFunction, const Args... args) noexcept
+  allocateImplicitFunctionOnDevice(ImpFunc*& a_implicitFunction, Args... args) noexcept
   {
-    EBGEOMETRY_EXPECT(a_implicitFunction != nullptr);
-    EBGEOMETRY_EXPECT(*a_implicitFunction != nullptr);
+    EBGEOMETRY_ALWAYS_EXPECT(a_implicitFunction == nullptr);
 
 #ifdef EBGEOMETRY_ENABLE_CUDA
-    cudaMalloc((void**)a_implicitFunction, sizeof(ImpFunc));
+    cudaMalloc((void**)&a_implicitFunction, sizeof(ImpFunc));
 
-    constructImplicitFunctionOnDevice<ImpFunc><<<1, 1>>>(*a_implicitFunction, args...);
+    constructImplicitFunctionOnDevice<ImpFunc><<<1, 1>>>(a_implicitFunction, args...);
 #else
 #error "EBGeometry_ImplicitFunction::buildImplicitFunctionOnDevice - unknown GPU support requested"
     a_implicitFunction = nullptr;
@@ -101,13 +103,21 @@ namespace EBGeometry {
     @param[in] args Constructor arguments.
   */
   template <typename ImpFunc>
-  EBGEOMETRY_GPU_GLOBAL void
-  freeImplicitFunctionOnDevice(ImpFunc* a_implicitFunction)
+  EBGEOMETRY_GPU_HOST
+  EBGEOMETRY_ALWAYS_INLINE
+  void
+  freeImplicitFunctionOnDevice(ImpFunc*& a_implicitFunction)
   {
-#ifdef EBGEOMETRY_ENABLE_cUDA
+#ifdef EBGEOMETRY_ENABLE_GPU
+    EBGEOMETRY_ALWAYS_EXPECT(a_implicitFunction != nullptr);
+#endif
+
+#ifdef EBGEOMETRY_ENABLE_CUDA
     cudaFree(a_implicitFunction);
 #elif EBGEOMETRY_ENABLE_HIP
 #endif
+
+    a_implicitFunction = nullptr;
   };
 
   /*!
@@ -121,7 +131,7 @@ namespace EBGeometry {
   EBGEOMETRY_GPU_GLOBAL void
   constructImplicitFunctionOnDevice(ImpFunc* a_implicitFunction, Args... args)
   {
-    EBGEOMETRY_EXPECT(a_implicitFunction != nullptr);
+    EBGEOMETRY_ALWAYS_EXPECT(a_implicitFunction != nullptr);
 
     new (a_implicitFunction) ImpFunc(args...);
   };
