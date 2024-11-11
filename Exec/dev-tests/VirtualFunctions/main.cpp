@@ -42,7 +42,7 @@ main()
 
   //  PlaneSDF* plane_host = nullptr;
   PlaneSDF* plane_device;// = nullptr;
-  buildImplicitFunctionOnDevice<PlaneSDF>(&plane_device, *origin_device, *normal_device);
+  allocateImplicitFunctionOnDevice<PlaneSDF>(&plane_device, *origin_device, *normal_device);
 
   evalImplicitFunction<<<1,1>>>(value_device, plane_device, point_device);
   cudaMemcpy(&value_host, value_device, sizeof(Real), cudaMemcpyDeviceToHost);
