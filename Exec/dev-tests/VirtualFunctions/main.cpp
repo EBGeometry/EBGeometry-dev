@@ -43,19 +43,23 @@ main()
   PlaneSDF* plane_host   = nullptr;
   PlaneSDF* plane_device = nullptr;
 
+  allocateImplicitFunctionOnHost(plane_host, *origin_device, *normal_device);
   allocateImplicitFunctionOnDevice(plane_device, *origin_device, *normal_device);
 
   evalImplicitFunction<<<1, 1>>>(value_device, plane_device, point_device);
   cudaMemcpy(&value_host, value_device, sizeof(Real), cudaMemcpyDeviceToHost);
 
   cudaDeviceSynchronize();
-  std::cout << value_host << std::endl;
+
   freeImplicitFunctionOnDevice(plane_device);
+  freeImplicitFunctionOnHost(plane_host);
 
   cudaFree(origin_device);
   cudaFree(point_device);
   cudaFree(value_device);
   cudaFree(normal_device);
+
+  std::cout << value_host << std::endl;
 
   return 0;
 }

@@ -71,6 +71,8 @@ namespace EBGeometry {
   allocateImplicitFunctionOnHost(ImpFunc*& a_implicitFunction, const Args... args) noexcept
   {
     EBGEOMETRY_ALWAYS_EXPECT(a_implicitFunction == nullptr);
+
+    a_implicitFunction = new ImpFunc(args...);
   }
 
   /*!
@@ -118,6 +120,24 @@ namespace EBGeometry {
 #endif
 
     a_implicitFunction = nullptr;
+  };
+
+  /*!
+    @brief Function for building an arbitrary implicit function. Used when constructing
+    implicit functions on the GPU. The user inputs the implicit function type (T) and the
+    constructor arguments required for constructing the function.
+    @param[in] a_implicitFunction Implicit function to be created on device
+    @param[in] args Constructor arguments.
+  */
+  template <typename ImpFunc>
+  EBGEOMETRY_GPU_HOST
+  EBGEOMETRY_ALWAYS_INLINE
+  void
+  freeImplicitFunctionOnHost(ImpFunc*& a_implicitFunction)
+  {
+    EBGEOMETRY_ALWAYS_EXPECT(a_implicitFunction != nullptr);
+
+    delete a_implicitFunction;
   };
 
   /*!
