@@ -33,6 +33,19 @@ namespace EBGeometry {
   }
 
   /*!
+    @brief Minimum operation of two numbers.
+    @param[in] x Number to compare.
+    @param[in] y Number to compare.     
+  */
+  EBGEOMETRY_GPU_HOST_DEVICE
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+  int
+  min(const int& x, const int& y) noexcept
+  {
+    return x <= y ? x : y;
+  }
+
+  /*!
     @brief Maximum operation of two numbers.
     @param[in] x Number to compare.
     @param[in] y Number to compare.     
@@ -41,6 +54,19 @@ namespace EBGeometry {
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
   Real
   max(const Real& x, const Real& y) noexcept
+  {
+    return x >= y ? x : y;
+  }
+
+  /*!
+    @brief Maximum operation of two numbers.
+    @param[in] x Number to compare.
+    @param[in] y Number to compare.     
+  */
+  EBGEOMETRY_GPU_HOST_DEVICE
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+  int
+  max(const int& x, const int& y) noexcept
   {
     return x >= y ? x : y;
   }
