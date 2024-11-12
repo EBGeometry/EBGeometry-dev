@@ -62,6 +62,15 @@ namespace EBGeometry {
     Vec2(const Vec2& u) noexcept;
 
     /*!
+      @brief Move constructor
+      @param[in, out] u Other vector
+      @details Sets *this = u
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    Vec2(Vec2&& u) noexcept;    
+
+    /*!
       @brief Full constructor
       @param[in] a_x First vector component
       @param[in] a_y Second vector component
@@ -149,6 +158,15 @@ namespace EBGeometry {
     EBGEOMETRY_ALWAYS_INLINE
     Vec2&
     operator=(const Vec2& a_other) noexcept;
+
+    /*!
+      @brief Move operator. Sets this.x = a_other.x and this.y = a_other.y
+      @param[in, out] a_other Other vector
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    Vec2&
+    operator=(Vec2&& a_other) noexcept;    
 
     /*!
       @brief Addition operator.
@@ -324,6 +342,15 @@ namespace EBGeometry {
     Vec3(const Vec3& a_u) noexcept;
 
     /*!
+      @brief Move constructor
+      @param[in, out] a_u Other vector
+      @details Sets *this = u
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    Vec3(Vec3&& a_u) noexcept;    
+
+    /*!
       @brief Full constructor
       @param[in] a_x First vector component
       @param[in] a_y Second vector component
@@ -364,7 +391,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     static Vec3
-    unit(const size_t a_dir) noexcept;
+    unit(size_t a_dir) noexcept;
 
     /*!
       @brief Return a vector with minimum representable components.
@@ -488,6 +515,16 @@ namespace EBGeometry {
     EBGEOMETRY_ALWAYS_INLINE
     Vec3&
     operator=(const Vec3& u) noexcept;
+
+    /*!
+      @brief Move assignment operator. Sets components equal to the argument vector's
+      components
+      @param[in, out] u Other vector
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    Vec3&
+    operator=(Vec3&& u) noexcept;    
 
     /*!
       @brief Addition operator. Returns a new vector with added components
@@ -657,7 +694,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     size_t
-    minDir(const bool a_doAbs) const noexcept;
+    minDir(bool a_doAbs) const noexcept;
 
     /*!
       @brief Return the direction which has the largest component (can be
@@ -669,7 +706,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     size_t
-    maxDir(const bool a_doAbs) const noexcept;
+    maxDir(bool a_doAbs) const noexcept;
 
     /*!
       @brief Compute vector length
@@ -832,3 +869,6 @@ namespace EBGeometry {
 #include "EBGeometry_VecImplem.hpp"
 
 #endif
+
+
+

@@ -18,7 +18,6 @@
 // Our includes
 #include "EBGeometry_GPUTypes.hpp"
 #include "EBGeometry_Macros.hpp"
-#include "EBGeometry_Vec.hpp"
 
 namespace EBGeometry {
 
@@ -34,6 +33,13 @@ namespace EBGeometry {
     this->m_x = u.m_x;
     this->m_y = u.m_y;
   }
+
+  EBGEOMETRY_ALWAYS_INLINE
+  Vec2::Vec2(Vec2&& u) noexcept
+  {
+    this->m_x = u.m_x;
+    this->m_y = u.m_y;
+  }  
 
   EBGEOMETRY_ALWAYS_INLINE
   Vec2::~Vec2() noexcept
@@ -111,6 +117,16 @@ namespace EBGeometry {
 
     return (*this);
   }
+
+  EBGEOMETRY_ALWAYS_INLINE
+  Vec2&
+  Vec2::operator=(Vec2&& u) noexcept
+  {
+    this->m_x = u.m_x;
+    this->m_y = u.m_y;
+
+    return (*this);
+  }  
 
   EBGEOMETRY_ALWAYS_INLINE
   Vec2
@@ -241,6 +257,14 @@ namespace EBGeometry {
   }
 
   EBGEOMETRY_ALWAYS_INLINE
+  Vec3::Vec3(Vec3&& u) noexcept
+  {
+    m_X[0] = u[0];
+    m_X[1] = u[1];
+    m_X[2] = u[2];
+  }  
+
+  EBGEOMETRY_ALWAYS_INLINE
   Vec3::Vec3(const Real& a_x, const Real& a_y, const Real& a_z) noexcept
   {
     m_X[0] = a_x;
@@ -308,6 +332,17 @@ namespace EBGeometry {
 
     return (*this);
   }
+
+  EBGEOMETRY_ALWAYS_INLINE
+  Vec3&
+  Vec3::operator=(Vec3&& u) noexcept
+  {
+    m_X[0] = u[0];
+    m_X[1] = u[1];
+    m_X[2] = u[2];
+
+    return (*this);
+  }  
 
   EBGEOMETRY_ALWAYS_INLINE
   Vec3
