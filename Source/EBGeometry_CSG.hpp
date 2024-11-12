@@ -53,7 +53,7 @@ namespace EBGeometry {
 
     /*!
       @brief Move constructor. 
-      @param[inout] a_unionIF Other union
+      @param[in, out] a_unionIF Other union
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
@@ -76,7 +76,7 @@ namespace EBGeometry {
 
     /*!
       @brief Move assignment
-      @param[inout] a_unionIF Other object
+      @param[in, out] a_unionIF Other object
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE

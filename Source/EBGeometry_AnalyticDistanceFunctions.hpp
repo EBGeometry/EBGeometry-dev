@@ -52,7 +52,7 @@ namespace EBGeometry {
 
     /*!
       @brief Move constructor. 
-      @param[inout] a_plane Other plane
+      @param[in, out] a_plane Other plane
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
@@ -75,7 +75,7 @@ namespace EBGeometry {
 
     /*!
       @brief Move assignment. 
-      @param[inout] a_plane Other plane
+      @param[in, out] a_plane Other plane
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
@@ -135,7 +135,7 @@ namespace EBGeometry {
 
     /*!
       @brief Move constructor.
-      @param[inout] a_sphere Other sphere
+      @param[in, out] a_sphere Other sphere
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
@@ -158,7 +158,7 @@ namespace EBGeometry {
 
     /*!
       @brief Move assignment.
-      @param[inout] a_sphere Other sphere. 
+      @param[in, out] a_sphere Other sphere. 
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
@@ -220,7 +220,7 @@ namespace EBGeometry {
 
     /*!
       @brief Move constructor. 
-      @param[inout] a_box Other box
+      @param[in, out] a_box Other box
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
@@ -243,7 +243,7 @@ namespace EBGeometry {
 
     /*!
       @brief Move assignment operator
-      @param[inout] a_box Other box
+      @param[in, out] a_box Other box
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
