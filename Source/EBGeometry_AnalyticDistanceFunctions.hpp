@@ -23,7 +23,7 @@ namespace EBGeometry {
 
   /*!
     @brief Signed distance function for a plane.
-    @details User species a point on the plane and the outward normal vector.
+    @details User species a point on the plane and the outward normal vector. 
   */
   class PlaneSDF : public ImplicitFunction
   {
@@ -35,18 +35,52 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    PlaneSDF(const Vec3& a_point, const Vec3& a_normal) noexcept
+    PlaneSDF(const Vec3& a_point, const Vec3& a_normal) noexcept : m_point(a_point), m_normal(a_normal)
     {
-      m_point  = a_point;
-      m_normal = a_normal / a_normal.length();
+      EBGEOMETRY_EXPECT(m_normal.length() > EBGeometry::Limits::min());
+
+      m_normal = m_normal / m_normal.length();
     }
+
+    /*!
+      @brief Copy constructor. 
+      @param[in] a_plane Other plane
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    PlaneSDF(const PlaneSDF& a_plane) noexcept = default;
+
+    /*!
+      @brief Move constructor. 
+      @param[inout] a_plane Other plane
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    PlaneSDF(PlaneSDF&& a_plane) noexcept = default;
 
     /*!
       @brief Destructor
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    virtual ~PlaneSDF() noexcept
-    {}
+    ~PlaneSDF() noexcept override = default;
+
+    /*!
+      @brief Copy assignemnt. 
+      @param[in] a_plane Other plane
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    PlaneSDF&
+    operator=(const PlaneSDF& a_plane) noexcept = default;
+
+    /*!
+      @brief Move assignment. 
+      @param[inout] a_plane Other plane
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    PlaneSDF&
+    operator=(PlaneSDF&& a_plane) noexcept = default;
 
     /*!
       @brief Signed distance function for sphere.
@@ -86,18 +120,49 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    SphereSDF(const Vec3& a_center, const Real& a_radius) noexcept
+    SphereSDF(const Vec3& a_center, const Real& a_radius) noexcept : m_center(a_center), m_radius(a_radius)
     {
-      this->m_center = a_center;
-      this->m_radius = a_radius;
+      EBGEOMETRY_EXPECT(m_radius > 0.0);
     }
 
     /*!
-      @brief Destructor
+      @brief Copy constructor.
+      @param[in] a_sphere Other sphere
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    virtual ~SphereSDF() noexcept
-    {}
+    EBGEOMETRY_ALWAYS_INLINE
+    SphereSDF(const SphereSDF& a_sphere) noexcept = default;
+
+    /*!
+      @brief Move constructor.
+      @param[inout] a_sphere Other sphere
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    SphereSDF(SphereSDF&& a_sphere) noexcept = default;    
+
+    /*!
+      @brief Destructor.
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    ~SphereSDF() noexcept override = default;
+
+    /*!
+      @brief Copy assignment.
+      @param[in] a_sphere Other sphere. 
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    SphereSDF& operator=(const SphereSDF& a_sphere) noexcept = default;
+
+    /*!
+      @brief Move assignment.
+      @param[in] a_sphere Other sphere. 
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    SphereSDF& operator=(SphereSDF&& a_sphere) noexcept = default;    
 
     /*!
       @brief Signed distance function for sphere.
@@ -131,25 +196,58 @@ namespace EBGeometry {
   {
   public:
     /*!
-      @brief Full constructor. Sets the low and high corner
+      @brief Full constructor. Sets the low and high corner. 
+      @details One must always have m_loCorner < m_hiCorner for all coordinate directions.
       @param[in] a_loCorner   Lower left corner
       @param[in] a_hiCorner   Upper right corner
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    BoxSDF(const Vec3& a_loCorner, const Vec3& a_hiCorner) noexcept
+    BoxSDF(const Vec3& a_loCorner, const Vec3& a_hiCorner) noexcept : m_loCorner(a_loCorner), m_hiCorner(a_hiCorner)
     {
-      this->m_loCorner = a_loCorner;
-      this->m_hiCorner = a_hiCorner;
+      EBGEOMETRY_EXPECT(m_loCorner[0] < m_hiCorner[0]);
+      EBGEOMETRY_EXPECT(m_loCorner[1] < m_hiCorner[1]);
+      EBGEOMETRY_EXPECT(m_loCorner[2] < m_hiCorner[2]);      
     }
+
+    /*!
+      @brief Copy constructor. 
+      @param[in] a_box Other box
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    BoxSDF(const BoxSDF& a_box) noexcept = default;
+
+    /*!
+      @brief Move constructor. 
+      @param[in] a_box Other box
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    BoxSDF(BoxSDF&& a_box) noexcept = default;
 
     /*!
       @brief Destructor
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    ~BoxSDF() noexcept
-    {}
+    ~BoxSDF() noexcept override = default;
+
+    /*!
+      @brief Copy assignment operator
+      @param[in] a_box Other box
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    BoxSDF& operator=(const BoxSDF& a_box) noexcept = default;
+
+    /*!
+      @brief Move assignment operator
+      @param[in] a_box Other box
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    BoxSDF& operator=(BoxSDF&& a_box) noexcept = default;        
 
     /*!
       @brief Signed distance function for sphere.
