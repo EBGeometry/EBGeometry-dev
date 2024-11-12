@@ -158,7 +158,7 @@ namespace EBGeometry {
 
     /*!
       @brief Move assignment.
-      @param[in] a_sphere Other sphere. 
+      @param[inout] a_sphere Other sphere. 
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
@@ -220,7 +220,7 @@ namespace EBGeometry {
 
     /*!
       @brief Move constructor. 
-      @param[in] a_box Other box
+      @param[inout] a_box Other box
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
@@ -243,7 +243,7 @@ namespace EBGeometry {
 
     /*!
       @brief Move assignment operator
-      @param[in] a_box Other box
+      @param[inout] a_box Other box
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE

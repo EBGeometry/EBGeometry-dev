@@ -30,25 +30,60 @@ namespace EBGeometry {
   public:
     /*!
       @brief Full constructor. Computes the CSG union
-      @param[in] a_implicitFunctions List of primitives
+      @param[in] a_f1 First implicit function
+      @param[in] a_f2 Second implicit function
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    UnionIF(const ImplicitFunction* const a_f1, const ImplicitFunction* const a_f2) noexcept
+    UnionIF(const ImplicitFunction* const a_f1, const ImplicitFunction* const a_f2) noexcept : m_f1(a_f1), m_f2(a_f2)
     {
-      m_f1 = a_f1;
-      m_f2 = a_f2;
+      EBGEOMETRY_EXPECT(m_f1 != nullptr);
+      EBGEOMETRY_EXPECT(m_f2 != nullptr);
+      EBGEOMETRY_EXPECT(m_f1 != a_f2);            
     }
+
+    /*!
+      @brief Copy constructor. 
+      @param[in] a_unionIF Other union
+      @param[in] a_f2 Second implicit function
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    UnionIF(const UnionIF& a_unionIF) noexcept = default;
+
+    /*!
+      @brief Move constructor. 
+      @param[inout] a_unionIF Other union
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    UnionIF(UnionIF&& a_unionIF) noexcept = default;    
 
     /*!
       @brief Destructor
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    virtual ~UnionIF() noexcept
-    {}
+    EBGEOMETRY_ALWAYS_INLINE    
+    ~UnionIF() noexcept override = default;
 
     /*!
-      @brief Implicit function for a union.
+      @brief Copy assignment
+      @param[in] a_unionIF Other object
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    UnionIF& operator=(const UnionIF& a_unionIF) noexcept = default;
+
+    /*!
+      @brief Move assignment
+      @param[inout] a_unionIF Other object
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    UnionIF&operator=(UnionIF&& a_unionIF) noexcept = default;    
+
+    /*!
+      @brief Implicit function for the CSG union. Returns min of all implicit functions. 
       @param[in] a_point Position.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
@@ -56,6 +91,9 @@ namespace EBGeometry {
     Real
     value(const Vec3& a_point) const noexcept override
     {
+      EBGEOMETRY_EXPECT(m_f1 != nullptr);
+      EBGEOMETRY_EXPECT(m_f2 != nullptr);      
+      
       return EBGeometry::min(m_f1->value(a_point), m_f2->value(a_point));
     }
 
