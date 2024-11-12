@@ -863,7 +863,6 @@ namespace EBGeometry {
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
   Real
   length(const Vec3& v) noexcept;
-
 } // namespace EBGeometry
 
 #include "EBGeometry_VecImplem.hpp"
