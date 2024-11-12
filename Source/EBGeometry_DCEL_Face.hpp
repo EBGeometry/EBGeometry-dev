@@ -21,8 +21,7 @@
 #include "EBGeometry_Macros.hpp"
 #include "EBGeometry_Vec.hpp"
 
-namespace EBGeometry {
-  namespace DCEL {
+namespace EBGeometry::DCEL {
 
     /*!
       @brief Class which represents a polygon face in a double-edge connected list
@@ -61,23 +60,48 @@ namespace EBGeometry {
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE
-      Face(const int a_edge) noexcept;
+      Face(int a_edge) noexcept;
 
       /*!
-	@brief Partial constructor.
-	@details Calls default constructor but sets the normal vector and half-edge
-	equal to the other face's (rest is undefined)
+	@brief Copy constructor.
+	@param[in] a_otherFace Other face
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE
-      Face(const Face& a_otherFace) noexcept;
+      Face(const Face& a_otherFace) noexcept = default;
+
+      /*!
+	@brief Move constructor.
+	@param[in, out] a_otherFace Other face
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE
+      Face(Face&& a_otherFace) noexcept = default;
 
       /*!
 	@brief Destructor (does nothing)
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE
-      ~Face() noexcept;
+      ~Face() noexcept = default;
+
+      /*!
+	@brief Copy assignment
+	@param[in] a_face Other face
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE
+      Face&
+      operator=(const Face& a_face) noexcept = default;
+
+      /*!
+	@brief Move assignment
+	@param[in] a_face Other face
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE
+      Face&
+      operator=(Face&& a_face) noexcept = default;
 
       /*!
 	@brief Define function which sets the normal vector and half-edge
@@ -87,7 +111,7 @@ namespace EBGeometry {
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE
       void
-      define(const Vec3& a_normal, const int a_edge) noexcept;
+      define(const Vec3& a_normal, int a_edge) noexcept;
 
       /*!
 	@brief Reconcile face. This will compute the normal vector, area, centroid,
@@ -107,7 +131,7 @@ namespace EBGeometry {
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE
       void
-      setEdge(const int a_edge) noexcept;
+      setEdge(int a_edge) noexcept;
 
       /*!
 	@brief Set the metadata
@@ -125,7 +149,7 @@ namespace EBGeometry {
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE
       void
-      setVertexList(const Vertex<MetaData>* const a_vertexList) noexcept;
+      setVertexList(const Vertex<MetaData>* a_vertexList) noexcept;
 
       /*!
 	@brief Set the edge list.
@@ -134,7 +158,7 @@ namespace EBGeometry {
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE
       void
-      setEdgeList(const Edge<MetaData>* const a_edgeList) noexcept;
+      setEdgeList(const Edge<MetaData>* a_edgeList) noexcept;
 
       /*!
 	@brief Set the face list.
@@ -143,7 +167,7 @@ namespace EBGeometry {
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE
       void
-      setFaceList(const Face<MetaData>* const a_faceList) noexcept;
+      setFaceList(const Face<MetaData>* a_faceList) noexcept;
 
       /*!
 	@brief Get the vertex list
@@ -221,7 +245,7 @@ namespace EBGeometry {
       EBGEOMETRY_GPU_HOST_DEVICE
       [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
       Real&
-      getCentroid(const int a_dir) noexcept;
+      getCentroid(int a_dir) noexcept;
 
       /*!
 	@brief Get immutable centroid position in specified coordinate direction
@@ -230,7 +254,7 @@ namespace EBGeometry {
       EBGEOMETRY_GPU_HOST_DEVICE
       [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
       const Real&
-      getCentroid(const int a_dir) const noexcept;
+      getCentroid(int a_dir) const noexcept;
 
       /*!
 	@brief Get modifiable normal vector
@@ -425,9 +449,8 @@ namespace EBGeometry {
       bool
       isPointInsideFace(const Vec3& a_p) const noexcept;
     };
-  } // namespace DCEL
-} // namespace EBGeometry
+} // namespace EBGeometry::DCEL
 
-#include "EBGeometry_DCEL_FaceImplem.hpp"
+#include "EBGeometry_DCEL_FaceImplem.hpp" // NOLINT
 
 #endif

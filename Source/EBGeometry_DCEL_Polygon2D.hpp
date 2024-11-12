@@ -53,7 +53,7 @@ namespace EBGeometry {
       };
 
       /*!
-	@brief Disallowed constructor, use the one with the normal vector and points
+	@brief Default constructor. 
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE
@@ -200,6 +200,6 @@ namespace EBGeometry {
   } // namespace DCEL
 } // namespace EBGeometry
 
-#include "EBGeometry_DCEL_Polygon2DImplem.hpp"
+#include "EBGeometry_DCEL_Polygon2DImplem.hpp" // NOLINT
 
 #endif

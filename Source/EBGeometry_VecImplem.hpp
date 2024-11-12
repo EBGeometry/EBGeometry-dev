@@ -18,7 +18,7 @@
 // Our includes
 #include "EBGeometry_GPUTypes.hpp"
 #include "EBGeometry_Macros.hpp"
-#include "EBGeometry_Vec.hpp" // NOLINT
+#include "EBGeometry_Vec.hpp"
 
 namespace EBGeometry {
 
