@@ -20,7 +20,8 @@ class OneIF : public ImplicitFunction
 {
 public:
   EBGEOMETRY_GPU_HOST_DEVICE
-  [[nodiscard]] Real
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE  
+  Real
   value(const Vec3& a_point) const noexcept override final
   {
     return one;
@@ -31,7 +32,8 @@ class TwoIF : public ImplicitFunction
 {
 public:
   EBGEOMETRY_GPU_HOST_DEVICE
-  [[nodiscard]] Real
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE  
+  Real
   value(const Vec3& a_point) const noexcept override final
   {
     return two;
@@ -42,14 +44,16 @@ class SumIF : public ImplicitFunction
 {
 public:
   EBGEOMETRY_GPU_HOST_DEVICE
-  SumIF(const ImplicitFunction* const A, const ImplicitFunction* const B)
+  EBGEOMETRY_ALWAYS_INLINE
+  SumIF(const ImplicitFunction* const A, const ImplicitFunction* const B) noexcept : m_A(A), m_B(B)
   {
-    m_A = A;
-    m_B = B;
+    EBGEOMETRY_ALWAYS_EXPECT(m_A != nullptr);
+    EBGEOMETRY_ALWAYS_EXPECT(m_B != nullptr);
   }
 
   EBGEOMETRY_GPU_HOST_DEVICE
-  [[nodiscard]] Real
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE  
+  Real
   value(const Vec3& a_point) const noexcept override final
   {
     return m_A->value(a_point) + m_B->value(a_point);
