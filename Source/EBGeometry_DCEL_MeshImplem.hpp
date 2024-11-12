@@ -45,8 +45,8 @@ namespace EBGeometry {
                          const int         a_numFaces,
                          Vertex<MetaData>* a_vertices,
                          Edge<MetaData>*   a_edges,
-                         Face<MetaData>*   a_faces) noexcept
-      : Mesh<MetaData>()
+                         Face<MetaData>*   a_faces) noexcept :
+      Mesh<MetaData>()
     {
       this->define(a_numVertices, a_numEdges, a_numFaces, a_vertices, a_edges, a_faces);
     }

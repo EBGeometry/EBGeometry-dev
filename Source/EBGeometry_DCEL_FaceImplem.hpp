@@ -32,14 +32,16 @@ namespace EBGeometry {
 
     template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE
-    Face<MetaData>::Face(const int a_edge) noexcept : Face()
+    Face<MetaData>::Face(const int a_edge) noexcept :
+      Face()
     {
       m_edge = a_edge;
     }
 
     template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE
-    Face<MetaData>::Face(const Face& a_otherFace) noexcept : Face()
+    Face<MetaData>::Face(const Face& a_otherFace) noexcept :
+      Face()
     {
       m_vertexList     = a_otherFace.m_vertexList;
       m_edgeList       = a_otherFace.m_edgeList;

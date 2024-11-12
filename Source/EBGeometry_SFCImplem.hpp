@@ -23,7 +23,8 @@ namespace EBGeometry {
   namespace SFC {
 
     EBGEOMETRY_ALWAYS_INLINE
-    Index::Index() noexcept : Index(0, 0, 0)
+    Index::Index() noexcept :
+      Index(0, 0, 0)
     {}
 
     EBGEOMETRY_ALWAYS_INLINE

@@ -18,6 +18,7 @@
 // Our includes
 #include "EBGeometry_GPUTypes.hpp"
 #include "EBGeometry_Macros.hpp"
+#include "EBGeometry_Vec.hpp"
 
 namespace EBGeometry {
 
@@ -28,29 +29,10 @@ namespace EBGeometry {
   }
 
   EBGEOMETRY_ALWAYS_INLINE
-  Vec2::Vec2(const Vec2& u) noexcept
-  {
-    this->m_x = u.m_x;
-    this->m_y = u.m_y;
-  }
-
-  EBGEOMETRY_ALWAYS_INLINE
-  Vec2::Vec2(Vec2&& u) noexcept
-  {
-    this->m_x = u.m_x;
-    this->m_y = u.m_y;
-  }  
-
-  EBGEOMETRY_ALWAYS_INLINE
-  Vec2::~Vec2() noexcept
+  Vec2::Vec2(const Real& a_x, const Real& a_y) noexcept :
+    m_x(a_x),
+    m_y(a_y)
   {}
-
-  EBGEOMETRY_ALWAYS_INLINE
-  Vec2::Vec2(const Real& a_x, const Real& a_y) noexcept
-  {
-    this->m_x = a_x;
-    this->m_y = a_y;
-  }
 
   EBGEOMETRY_ALWAYS_INLINE
   Real&
@@ -109,26 +91,6 @@ namespace EBGeometry {
   }
 
   EBGEOMETRY_ALWAYS_INLINE
-  Vec2&
-  Vec2::operator=(const Vec2& u) noexcept
-  {
-    this->m_x = u.m_x;
-    this->m_y = u.m_y;
-
-    return (*this);
-  }
-
-  EBGEOMETRY_ALWAYS_INLINE
-  Vec2&
-  Vec2::operator=(Vec2&& u) noexcept
-  {
-    this->m_x = u.m_x;
-    this->m_y = u.m_y;
-
-    return (*this);
-  }  
-
-  EBGEOMETRY_ALWAYS_INLINE
   Vec2
   Vec2::operator+(const Vec2& u) const noexcept
   {
@@ -160,7 +122,7 @@ namespace EBGeometry {
   Vec2
   Vec2::operator/(const Real& s) const noexcept
   {
-    const Real is = 1. / s;
+    const Real is = Real(1.0) / s;
 
     return Vec2(m_x * is, m_y * is);
   }
@@ -199,7 +161,7 @@ namespace EBGeometry {
   Vec2&
   Vec2::operator/=(const Real& s) noexcept
   {
-    const Real is = 1. / s;
+    const Real is = Real(1.0) / s;
 
     m_x *= is;
     m_y *= is;
@@ -218,7 +180,7 @@ namespace EBGeometry {
   Real
   Vec2::length() const noexcept
   {
-    return sqrt(m_x * m_x + m_y * m_y);
+    return static_cast<Real>(sqrt(m_x * m_x + m_y * m_y));
   }
 
   EBGEOMETRY_ALWAYS_INLINE
@@ -249,32 +211,12 @@ namespace EBGeometry {
   }
 
   EBGEOMETRY_ALWAYS_INLINE
-  Vec3::Vec3(const Vec3& u) noexcept
-  {
-    m_X[0] = u[0];
-    m_X[1] = u[1];
-    m_X[2] = u[2];
-  }
-
-  EBGEOMETRY_ALWAYS_INLINE
-  Vec3::Vec3(Vec3&& u) noexcept
-  {
-    m_X[0] = u[0];
-    m_X[1] = u[1];
-    m_X[2] = u[2];
-  }  
-
-  EBGEOMETRY_ALWAYS_INLINE
   Vec3::Vec3(const Real& a_x, const Real& a_y, const Real& a_z) noexcept
   {
-    m_X[0] = a_x;
-    m_X[1] = a_y;
-    m_X[2] = a_z;
+    this->m_X[0] = a_x;
+    this->m_X[1] = a_y;
+    this->m_X[2] = a_z;
   }
-
-  EBGEOMETRY_ALWAYS_INLINE
-  Vec3::~Vec3() noexcept
-  {}
 
   EBGEOMETRY_ALWAYS_INLINE
   Vec3
@@ -323,28 +265,6 @@ namespace EBGeometry {
   }
 
   EBGEOMETRY_ALWAYS_INLINE
-  Vec3&
-  Vec3::operator=(const Vec3& u) noexcept
-  {
-    m_X[0] = u[0];
-    m_X[1] = u[1];
-    m_X[2] = u[2];
-
-    return (*this);
-  }
-
-  EBGEOMETRY_ALWAYS_INLINE
-  Vec3&
-  Vec3::operator=(Vec3&& u) noexcept
-  {
-    m_X[0] = u[0];
-    m_X[1] = u[1];
-    m_X[2] = u[2];
-
-    return (*this);
-  }  
-
-  EBGEOMETRY_ALWAYS_INLINE
   Vec3
   Vec3::operator+(const Vec3& u) const noexcept
   {
@@ -383,7 +303,7 @@ namespace EBGeometry {
   Vec3
   Vec3::operator/(const Real& s) const noexcept
   {
-    const Real is = 1. / s;
+    const Real is = Real(1.0) / s;
     return Vec3(is * m_X[0], is * m_X[1], is * m_X[2]);
   }
 
@@ -431,7 +351,7 @@ namespace EBGeometry {
   Vec3&
   Vec3::operator/=(const Real& s) noexcept
   {
-    const Real is = 1. / s;
+    const Real is = Real(1.0) / s;
 
     m_X[0] *= is;
     m_X[1] *= is;
@@ -595,7 +515,7 @@ namespace EBGeometry {
   Real
   Vec3::length() const noexcept
   {
-    return sqrt(m_X[0] * m_X[0] + m_X[1] * m_X[1] + m_X[2] * m_X[2]);
+    return static_cast<Real>(sqrt(m_X[0] * m_X[0] + m_X[1] * m_X[1] + m_X[2] * m_X[2]));
   }
 
   EBGEOMETRY_ALWAYS_INLINE

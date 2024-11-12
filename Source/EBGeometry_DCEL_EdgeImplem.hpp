@@ -48,7 +48,8 @@ namespace EBGeometry {
 
     template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE
-    Edge<MetaData>::Edge(const int a_vertex) noexcept : Edge()
+    Edge<MetaData>::Edge(const int a_vertex) noexcept :
+      Edge()
     {
       m_vertex = a_vertex;
     }
@@ -59,8 +60,8 @@ namespace EBGeometry {
                          const int a_previousEdge,
                          const int a_pairEdge,
                          const int a_nextEdge,
-                         const int a_face) noexcept
-      : Edge()
+                         const int a_face) noexcept :
+      Edge()
     {
       this->define(a_vertex, a_previousEdge, a_pairEdge, a_nextEdge, a_face);
     }

@@ -26,8 +26,9 @@ class Derived1 : public Base
 
 public:
   __device__
-  Derived1(double x, double y)
-    : firstvalue(x), secondvalue(y)
+  Derived1(double x, double y) :
+    firstvalue(x),
+    secondvalue(y)
   {}
   __device__ virtual void
   doThing() override
@@ -46,8 +47,9 @@ class Derived2 : public Base
 
 public:
   __device__
-  Derived2(char x, char y)
-    : firstchar(x), secondchar(y)
+  Derived2(char x, char y) :
+    firstchar(x),
+    secondchar(y)
   {}
   __device__ virtual void
   doThing() override

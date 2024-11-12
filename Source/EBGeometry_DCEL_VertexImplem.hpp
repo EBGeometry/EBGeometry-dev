@@ -36,14 +36,16 @@ namespace EBGeometry {
 
     template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE
-    Vertex<MetaData>::Vertex(const Vec3& a_position) noexcept : Vertex<MetaData>()
+    Vertex<MetaData>::Vertex(const Vec3& a_position) noexcept :
+      Vertex<MetaData>()
     {
       m_position = a_position;
     }
 
     template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE
-    Vertex<MetaData>::Vertex(const Vec3& a_position, const Vec3& a_normal) noexcept : Vertex<MetaData>()
+    Vertex<MetaData>::Vertex(const Vec3& a_position, const Vec3& a_normal) noexcept :
+      Vertex<MetaData>()
     {
       m_position = a_position;
       m_normal   = a_normal;
@@ -51,8 +53,8 @@ namespace EBGeometry {
 
     template <class MetaData>
     EBGEOMETRY_ALWAYS_INLINE
-    Vertex<MetaData>::Vertex(const Vec3& a_position, const Vec3& a_normal, const int a_edge) noexcept
-      : Vertex<MetaData>()
+    Vertex<MetaData>::Vertex(const Vec3& a_position, const Vec3& a_normal, const int a_edge) noexcept :
+      Vertex<MetaData>()
     {
       this->define(a_position, a_normal, a_edge);
     }

@@ -59,7 +59,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Vec2(const Vec2& u) noexcept;
+    Vec2(const Vec2& u) noexcept = default;
 
     /*!
       @brief Move constructor
@@ -68,7 +68,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Vec2(Vec2&& u) noexcept;    
+    Vec2(Vec2&& u) noexcept = default;
 
     /*!
       @brief Full constructor
@@ -85,7 +85,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    ~Vec2() noexcept;
+    ~Vec2() noexcept = default;
 
     /*!
       @brief Get x-component
@@ -157,7 +157,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     Vec2&
-    operator=(const Vec2& a_other) noexcept;
+    operator=(const Vec2& a_other) noexcept = default;
 
     /*!
       @brief Move operator. Sets this.x = a_other.x and this.y = a_other.y
@@ -166,7 +166,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     Vec2&
-    operator=(Vec2&& a_other) noexcept;    
+    operator=(Vec2&& a_other) noexcept = default;
 
     /*!
       @brief Addition operator.
@@ -339,7 +339,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Vec3(const Vec3& a_u) noexcept;
+    Vec3(const Vec3& a_u) noexcept = default;
 
     /*!
       @brief Move constructor
@@ -348,7 +348,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Vec3(Vec3&& a_u) noexcept;    
+    Vec3(Vec3&& a_u) noexcept = default;
 
     /*!
       @brief Full constructor
@@ -366,7 +366,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    ~Vec3() noexcept;
+    ~Vec3() noexcept = default;
 
     /*!
       @brief Return av vector with x = y = z = 0
@@ -514,7 +514,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     Vec3&
-    operator=(const Vec3& u) noexcept;
+    operator=(const Vec3& u) noexcept = default;
 
     /*!
       @brief Move assignment operator. Sets components equal to the argument vector's
@@ -524,7 +524,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     Vec3&
-    operator=(Vec3&& u) noexcept;    
+    operator=(Vec3&& u) noexcept = default;
 
     /*!
       @brief Addition operator. Returns a new vector with added components
@@ -869,6 +869,3 @@ namespace EBGeometry {
 #include "EBGeometry_VecImplem.hpp"
 
 #endif
-
-
-

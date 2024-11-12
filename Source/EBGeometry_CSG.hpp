@@ -35,11 +35,13 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    UnionIF(const ImplicitFunction* const a_f1, const ImplicitFunction* const a_f2) noexcept : m_f1(a_f1), m_f2(a_f2)
+    UnionIF(const ImplicitFunction* const a_f1, const ImplicitFunction* const a_f2) noexcept :
+      m_f1(a_f1),
+      m_f2(a_f2)
     {
       EBGEOMETRY_EXPECT(m_f1 != nullptr);
       EBGEOMETRY_EXPECT(m_f2 != nullptr);
-      EBGEOMETRY_EXPECT(m_f1 != a_f2);            
+      EBGEOMETRY_EXPECT(m_f1 != a_f2);
     }
 
     /*!
@@ -57,13 +59,13 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    UnionIF(UnionIF&& a_unionIF) noexcept = default;    
+    UnionIF(UnionIF&& a_unionIF) noexcept = default;
 
     /*!
       @brief Destructor
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE    
+    EBGEOMETRY_ALWAYS_INLINE
     ~UnionIF() noexcept override = default;
 
     /*!
@@ -72,7 +74,8 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    UnionIF& operator=(const UnionIF& a_unionIF) noexcept = default;
+    UnionIF&
+    operator=(const UnionIF& a_unionIF) noexcept = default;
 
     /*!
       @brief Move assignment
@@ -80,7 +83,8 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    UnionIF&operator=(UnionIF&& a_unionIF) noexcept = default;    
+    UnionIF&
+    operator=(UnionIF&& a_unionIF) noexcept = default;
 
     /*!
       @brief Implicit function for the CSG union. Returns min of all implicit functions. 
@@ -92,8 +96,8 @@ namespace EBGeometry {
     value(const Vec3& a_point) const noexcept override
     {
       EBGEOMETRY_EXPECT(m_f1 != nullptr);
-      EBGEOMETRY_EXPECT(m_f2 != nullptr);      
-      
+      EBGEOMETRY_EXPECT(m_f2 != nullptr);
+
       return EBGeometry::min(m_f1->value(a_point), m_f2->value(a_point));
     }
 

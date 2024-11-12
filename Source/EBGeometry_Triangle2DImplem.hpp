@@ -31,7 +31,8 @@ namespace EBGeometry {
   }
 
   EBGEOMETRY_ALWAYS_INLINE
-  Triangle2D::Triangle2D(const Vec3& a_normal, const Vec3 a_vertices[3]) noexcept : Triangle2D()
+  Triangle2D::Triangle2D(const Vec3& a_normal, const Vec3 a_vertices[3]) noexcept :
+    Triangle2D()
   {
     this->define(a_normal, a_vertices);
   }
