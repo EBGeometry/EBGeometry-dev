@@ -13,7 +13,7 @@
 #define EBGeometry_DCEL_EdgeImplem
 
 // Our includes
-#include "EBGeometry_DCEL_Edge.hpp"
+#include "EBGeometry_DCEL_Edge.hpp" // NOLINT
 #include "EBGeometry_Macros.hpp"
 
 namespace EBGeometry::DCEL {

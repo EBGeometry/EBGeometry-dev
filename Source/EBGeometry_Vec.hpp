@@ -865,6 +865,6 @@ namespace EBGeometry {
   length(const Vec3& v) noexcept;
 } // namespace EBGeometry
 
-#include "EBGeometry_VecImplem.hpp"
+#include "EBGeometry_VecImplem.hpp" // NOLINT
 
 #endif

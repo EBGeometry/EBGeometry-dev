@@ -10,6 +10,7 @@
   @author Robert Marskar
 */
 
+#pragma once
 #ifndef EBGeometry_DCEL_Edge
 #define EBGeometry_DCEL_Edge
 
@@ -20,6 +21,7 @@
 #include "EBGeometry_GPUTypes.hpp"
 #include "EBGeometry_Macros.hpp"
 #include "EBGeometry_Vec.hpp"
+#include "EBGeometry_Types.hpp"
 
 namespace EBGeometry::DCEL {
 
@@ -439,6 +441,6 @@ namespace EBGeometry::DCEL {
   };
 } // namespace EBGeometry::DCEL
 
-#include "EBGeometry_DCEL_EdgeImplem.hpp"
+#include "EBGeometry_DCEL_EdgeImplem.hpp" // NOLINT
 
 #endif

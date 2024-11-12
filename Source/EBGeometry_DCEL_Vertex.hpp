@@ -356,6 +356,6 @@ namespace EBGeometry {
   } // namespace DCEL
 } // namespace EBGeometry
 
-#include "EBGeometry_DCEL_VertexImplem.hpp"
+#include "EBGeometry_DCEL_VertexImplem.hpp" // NOLINT
 
 #endif

@@ -8,7 +8,7 @@
   @brief  Implementation of EBGeometry_Vec.hpp
   @author Robert Marskar
 */
-
+#pragma once
 #ifndef EBGeometry_VecImplem
 #define EBGeometry_VecImplem
 
@@ -18,7 +18,7 @@
 // Our includes
 #include "EBGeometry_GPUTypes.hpp"
 #include "EBGeometry_Macros.hpp"
-#include "EBGeometry_Vec.hpp"
+#include "EBGeometry_Vec.hpp" // NOLINT
 
 namespace EBGeometry {
 
