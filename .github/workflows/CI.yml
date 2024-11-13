@@ -43,7 +43,7 @@ jobs:
           sudo apt-get install clang-tidy
       - name: Run clang-tidy
         run: |
-          clang-tidy -extra-arg=-std=c++17 Source/*.hpp
+          clang-tidy --extra-arg=-std=c++17 Source/*.hpp
 
   Lint-codespell:
     name: codespell
