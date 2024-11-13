@@ -67,7 +67,7 @@ namespace EBGeometry {
     ~PlaneSDF() noexcept override = default;
 
     /*!
-      @brief Copy assignemnt. 
+      @brief Copy assignmnt. 
       @param[in] a_plane Other plane
     */
     EBGEOMETRY_GPU_HOST_DEVICE

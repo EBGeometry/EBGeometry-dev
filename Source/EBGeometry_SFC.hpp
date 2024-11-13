@@ -84,7 +84,7 @@ namespace EBGeometry::SFC {
       ~Index() noexcept =default;
 
       /*!
-	@brief Copy assignement.
+	@brief Copy assignment.
 	@param[in] a_index Other index
       */
       EBGEOMETRY_GPU_HOST_DEVICE
@@ -92,7 +92,7 @@ namespace EBGeometry::SFC {
       Index& operator=(const Index& a_index) noexcept = default;
 
       /*!
-	@brief Move assignement.
+	@brief Move assignment.
 	@param[in] a_index Other index
       */
       EBGEOMETRY_GPU_HOST_DEVICE
