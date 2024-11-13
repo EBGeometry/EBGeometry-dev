@@ -65,7 +65,7 @@ namespace EBGeometry {
 
     /*!
       @brief Move constructor. 
-      @param[in] a_otherTriangle Other triangle.
+      @param[in, out] a_otherTriangle Other triangle.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
@@ -79,7 +79,7 @@ namespace EBGeometry {
     ~Triangle() noexcept = default;
 
     /*!
-      @brief Copy assignement. 
+      @brief Copy assignment. 
       @param[in] a_otherTriangle Other triangle.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
@@ -88,8 +88,8 @@ namespace EBGeometry {
     operator=(const Triangle& a_otherTriangle) noexcept = default;
 
     /*!
-      @brief Copy assignement. 
-      @param[in] a_otherTriangle Other triangle.
+      @brief Move assignment. 
+      @param[in, out] a_otherTriangle Other triangle.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
