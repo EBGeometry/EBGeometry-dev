@@ -19,8 +19,7 @@
 #include "EBGeometry_SFC.hpp"
 #include "EBGeometry_Macros.hpp"
 
-namespace EBGeometry {
-  namespace SFC {
+namespace EBGeometry::SFC {
 
     EBGEOMETRY_ALWAYS_INLINE
     Index::Index() noexcept :
@@ -34,10 +33,6 @@ namespace EBGeometry {
       m_indices[1] = y;
       m_indices[2] = z;
     }
-
-    EBGEOMETRY_ALWAYS_INLINE
-    Index::~Index() noexcept
-    {}
 
     EBGEOMETRY_ALWAYS_INLINE
     unsigned int
@@ -55,9 +50,9 @@ namespace EBGeometry {
     {
       uint64_t code = 0;
 
-      const uint_fast32_t x = static_cast<uint_fast32_t>(a_point[0]);
-      const uint_fast32_t y = static_cast<uint_fast32_t>(a_point[1]);
-      const uint_fast32_t z = static_cast<uint_fast32_t>(a_point[2]);
+      const auto x = static_cast<uint_fast32_t>(a_point[0]);
+      const auto y = static_cast<uint_fast32_t>(a_point[1]);
+      const auto z = static_cast<uint_fast32_t>(a_point[2]);
 
       auto PartBy3 = [](const uint_fast32_t a) -> uint64_t {
         uint64_t b = a & Mask_64[0];
@@ -92,9 +87,9 @@ namespace EBGeometry {
         return x;
       };
 
-      const unsigned int x = static_cast<unsigned int>(getEveryThirdBit(a_code));
-      const unsigned int y = static_cast<unsigned int>(getEveryThirdBit(a_code >> 1));
-      const unsigned int z = static_cast<unsigned int>(getEveryThirdBit(a_code >> 2));
+      const auto x = static_cast<unsigned int>(getEveryThirdBit(a_code));
+      const auto y = static_cast<unsigned int>(getEveryThirdBit(a_code >> 1));
+      const auto z = static_cast<unsigned int>(getEveryThirdBit(a_code >> 2));
 
       return Index(x, y, z);
     }
@@ -124,7 +119,6 @@ namespace EBGeometry {
 
       return Index(x, y, z);
     }
-  } // namespace SFC
-} // namespace EBGeometry
+} // namespace EBGeometry::SFC
 
 #endif

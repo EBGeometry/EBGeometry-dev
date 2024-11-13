@@ -20,8 +20,7 @@
 #include "EBGeometry_Macros.hpp"
 
 // Our includes
-namespace EBGeometry {
-  namespace SFC {
+namespace EBGeometry::SFC {
 
     /*!
       @brief Alias for SFC code
@@ -45,28 +44,60 @@ namespace EBGeometry {
     {
     public:
       /*!
-	@brief Disallowed weak construction
+	@brief Weak construction. Sets the zero index. 
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE
       Index() noexcept;
 
       /*!
-	@brief Constructor. Create a cell index.
+	@brief Full constructor. Create a cell index.
 	@param[in] x Index in x-direction
 	@param[in] y Index in y-direction
 	@param[in] z Index in z-direction	
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE
-      Index(const unsigned int x, const unsigned int y, const unsigned int z) noexcept;
+      Index( unsigned int x,  unsigned int y,  unsigned int z) noexcept;
+
+      /*!
+	@brief Copy constructor.
+	@param[in] a_index Other index
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE
+      Index(const Index& a_index) noexcept = default;
+
+      /*!
+	@brief Move constructor.
+	@param[in] a_index Other index
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE
+      Index(Index&& a_index) noexcept = default;      
 
       /*!
 	@brief Destructor.
       */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE
-      ~Index() noexcept;
+      ~Index() noexcept =default;
+
+      /*!
+	@brief Copy assignement.
+	@param[in] a_index Other index
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE
+      Index& operator=(const Index& a_index) noexcept = default;
+
+      /*!
+	@brief Move assignement.
+	@param[in] a_index Other index
+      */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE
+      Index& operator=(Index&& a_index) noexcept = default;      
 
       /*!
 	@brief Get the index
@@ -74,7 +105,7 @@ namespace EBGeometry {
       EBGEOMETRY_GPU_HOST_DEVICE
       [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
       unsigned int
-      operator[](const int a_dir) const noexcept;
+      operator[]( int a_dir) const noexcept;
 
     protected:
       /*!
@@ -149,14 +180,13 @@ namespace EBGeometry {
       static Index
       decode(const uint64_t& a_code) noexcept;
     };
-  } // namespace SFC
-} // namespace EBGeometry
+} // namespace EBGeometry::SFC
 
 #if __cplusplus >= 202002L
 static_assert(EBGeometry::SFC::Encodable<EBGeometry::SFC::Morton>);
 static_assert(EBGeometry::SFC::Encodable<EBGeometry::SFC::Nested>);
 #endif
 
-#include "EBGeometry_SFCImplem.hpp"
+#include "EBGeometry_SFCImplem.hpp" // NOLINT
 
 #endif
