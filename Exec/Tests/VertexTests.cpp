@@ -7,7 +7,7 @@ using namespace EBGeometry;
 
 TEST_CASE("Vertex_BasisVectors")
 {
-  
+
   const auto x0 = Vec3(-1, -1, 0.);
   const auto x1 = Vec3(+1, -1, 0);
   const auto x2 = Vec3(+1, +1, 0);
@@ -26,7 +26,7 @@ TEST_CASE("Vertex_BasisVectors")
   vertices[0] = DCEL::Vertex<>(x1, Vec3::zero(), 1);
   vertices[0] = DCEL::Vertex<>(x2, Vec3::zero(), 2);
   vertices[0] = DCEL::Vertex<>(x3, Vec3::zero(), 3);
-  vertices[0] = DCEL::Vertex<>(x4, Vec3::zero(), 4);  
+  vertices[0] = DCEL::Vertex<>(x4, Vec3::zero(), 4);
 
   delete[] vertices;
   delete[] edges;

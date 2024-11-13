@@ -251,7 +251,7 @@ namespace EBGeometry::DCEL {
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE
   void
-  Mesh<MetaData>::setSearchAlgorithm( SearchAlgorithm a_algorithm) noexcept
+  Mesh<MetaData>::setSearchAlgorithm(SearchAlgorithm a_algorithm) noexcept
   {
     m_algorithm = a_algorithm;
   }

@@ -28,14 +28,13 @@ namespace EBGeometry {
   class PlaneSDF : public ImplicitFunction
   {
   public:
-
     /*!
       @brief Default constructor.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     PlaneSDF() noexcept = default;
-    
+
     /*!
       @brief Full constructor
       @param[in] a_point      Point on the plane
@@ -121,14 +120,13 @@ namespace EBGeometry {
   class SphereSDF : public ImplicitFunction
   {
   public:
-
     /*!
       @brief Default constructor. Sets the unit sphere. 
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     SphereSDF() noexcept = default;
-    
+
     /*!
       @brief Full constructor.
       @param[in] a_center Sphere center
@@ -219,7 +217,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     BoxSDF() noexcept = default;
-								      
+
     /*!
       @brief Full constructor. Sets the low and high corner. 
       @details One must always have m_loCorner < m_hiCorner for all coordinate directions.
@@ -307,7 +305,7 @@ namespace EBGeometry {
     /*!
       @brief Low box corner
     */
-    Vec3 m_loCorner = -0.5*Vec3::one();
+    Vec3 m_loCorner = -0.5 * Vec3::one();
 
     /*!
       @brief High box corner

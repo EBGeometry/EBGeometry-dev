@@ -77,7 +77,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Triangle2D(Triangle2D&& a_triangle) noexcept = default;        
+    Triangle2D(Triangle2D&& a_triangle) noexcept = default;
 
     /*!
       @brief Destructor (does nothing)
