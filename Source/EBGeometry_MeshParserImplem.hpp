@@ -66,6 +66,7 @@ namespace EBGeometry::MeshParser {
       const auto& faceVertices = face.first;
 
       std::vector<Vec3> vertexCoords;
+      vertexCoords.reserve(face.first.size());
 
       for (const auto& faceVertex : face.first) {
         vertexCoords.emplace_back(vertices[faceVertex]);
@@ -102,6 +103,8 @@ namespace EBGeometry::MeshParser {
     EBGEOMETRY_ALWAYS_EXPECT(vertices.size() >= 3);
 
     std::vector<Vec3> sortedVertices;
+    sortedVertices.reserve(vertices.size());
+
     for (const auto& v : vertices) {
       sortedVertices.emplace_back(v);
     }
@@ -140,6 +143,7 @@ namespace EBGeometry::MeshParser {
     std::map<int, int>                indexMap;
 
     // Create a map of the original vertices and sort it using a lexical comparison operator.
+    vertexMap.reserve(vertices.size());
     for (int i = 0; i < vertices.size(); i++) {
       vertexMap.emplace_back(vertices[i], i);
     }
@@ -180,10 +184,10 @@ namespace EBGeometry::MeshParser {
 
       EBGEOMETRY_EXPECT(faceIndices.size() >= 3);
 
-      for (int v = 0; v < faceIndices.size(); v++) {
-        EBGEOMETRY_EXPECT(faceIndices[v] >= 0);
+      for (auto& fv : faceIndices) {
+        EBGEOMETRY_EXPECT(fv >= 0);
 
-        faceIndices[v] = indexMap.at(faceIndices[v]);
+        fv = indexMap.at(fv);
       }
     }
   }
@@ -549,7 +553,7 @@ namespace EBGeometry::MeshParser {
 
         char* ptr = nullptr;
 
-        Vec3 v[3];
+        Vec3 vertices[3];
 
         ptr = v1;
         memcpy(&x, ptr, 4);
@@ -557,7 +561,7 @@ namespace EBGeometry::MeshParser {
         memcpy(&y, ptr, 4);
         ptr += 4;
         memcpy(&z, ptr, 4);
-        v[0] = Vec3(x, y, z);
+        vertices[0] = Vec3(x, y, z);
 
         ptr = v2;
         memcpy(&x, ptr, 4);
@@ -565,7 +569,7 @@ namespace EBGeometry::MeshParser {
         memcpy(&y, ptr, 4);
         ptr += 4;
         memcpy(&z, ptr, 4);
-        v[1] = Vec3(x, y, z);
+        vertices[1] = Vec3(x, y, z);
 
         ptr = v3;
         memcpy(&x, ptr, 4);
@@ -573,7 +577,7 @@ namespace EBGeometry::MeshParser {
         memcpy(&y, ptr, 4);
         ptr += 4;
         memcpy(&z, ptr, 4);
-        v[2] = Vec3(x, y, z);
+        vertices[2] = Vec3(x, y, z);
 
         memcpy(&id, &att, 2);
 
@@ -586,8 +590,8 @@ namespace EBGeometry::MeshParser {
 
         // Insert a new triangle.
         std::vector<int> curFacet;
-        for (int j = 0; j < 3; j++) {
-          objectVertices.emplace_back(v[j]);
+        for (auto& vertex : vertices) {
+          objectVertices.emplace_back(vertex);
           curFacet.emplace_back(objectVertices.size() - 1);
         }
 
