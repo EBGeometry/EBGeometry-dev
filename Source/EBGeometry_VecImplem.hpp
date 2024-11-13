@@ -178,7 +178,7 @@ namespace EBGeometry {
   Real
   Vec2::length() const noexcept
   {
-    return static_cast<Real>(sqrt(m_x * m_x + m_y * m_y));
+    return static_cast<Real>(sqrt(m_x * m_x + m_y * m_y)); // NOLINT
   }
 
   EBGEOMETRY_ALWAYS_INLINE
@@ -513,7 +513,7 @@ namespace EBGeometry {
   Real
   Vec3::length() const noexcept
   {
-    return static_cast<Real>(sqrt(m_X[0] * m_X[0] + m_X[1] * m_X[1] + m_X[2] * m_X[2]));
+    return static_cast<Real>(sqrt(m_X[0] * m_X[0] + m_X[1] * m_X[1] + m_X[2] * m_X[2])); // NOLINT
   }
 
   EBGEOMETRY_ALWAYS_INLINE

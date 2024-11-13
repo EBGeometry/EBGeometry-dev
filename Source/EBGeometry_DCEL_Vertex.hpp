@@ -362,7 +362,7 @@ namespace EBGeometry::DCEL {
     /*!
       @brief MetaData-data for this vertex
     */
-    MetaData m_metaData;
+    MetaData m_metaData = MetaData();
   };
 } // namespace EBGeometry::DCEL
 

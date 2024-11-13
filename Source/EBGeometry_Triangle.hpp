@@ -53,22 +53,48 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Triangle() noexcept;
+    Triangle() noexcept = default;
 
     /*!
-      @brief Copy constructor. Copies all data members from the other triangle.
+      @brief Copy constructor. 
       @param[in] a_otherTriangle Other triangle.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Triangle(const Triangle& a_otherTriangle) noexcept;
+    Triangle(const Triangle& a_otherTriangle) noexcept = default;
+
+    /*!
+      @brief Move constructor. 
+      @param[in] a_otherTriangle Other triangle.
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    Triangle(Triangle&& a_otherTriangle) noexcept = default;
 
     /*!
       @brief Destructor (does nothing).
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    ~Triangle() noexcept;
+    ~Triangle() noexcept = default;
+
+    /*!
+      @brief Copy assignement. 
+      @param[in] a_otherTriangle Other triangle.
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    Triangle&
+    operator=(const Triangle& a_otherTriangle) noexcept = default;
+
+    /*!
+      @brief Copy assignement. 
+      @param[in] a_otherTriangle Other triangle.
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    Triangle&
+    operator=(Triangle&& a_otherTriangle) noexcept = default;
 
     /*!
       @brief Set the triangle normal vector.
@@ -237,31 +263,31 @@ namespace EBGeometry {
     /*!
       @brief Triangle face normal
     */
-    Vec3 m_triangleNormal;
+    Vec3 m_triangleNormal = Vec3::max();
 
     /*!
       @brief Triangle vertex positions
     */
-    Vec3 m_vertexPositions[3];
+    Vec3 m_vertexPositions[3]{Vec3::max(), Vec3::max(), Vec3::max()};
 
     /*!
       @brief Triangle vertex normals
     */
-    Vec3 m_vertexNormals[3];
+    Vec3 m_vertexNormals[3]{Vec3::max(), Vec3::max(), Vec3::max()};
     /*!
       @brief Triangle edge normals
     */
-    Vec3 m_edgeNormals[3];
+    Vec3 m_edgeNormals[3]{Vec3::max(), Vec3::max(), Vec3::max()};
 
     /*!
       @brief 2D projection of the triangle to one of the Cartesian coordinate directions
     */
-    Triangle2D m_triangle2D;
+    Triangle2D m_triangle2D = Triangle2D();
 
     /*!
       @brief Triangle meta-data normals
     */
-    MetaData m_metaData;
+    MetaData m_metaData = MetaData();
 
     /*!
       @brief Returns the "projection" of a point to an edge.
@@ -279,6 +305,6 @@ namespace EBGeometry {
   };
 } // namespace EBGeometry
 
-#include "EBGeometry_TriangleImplem.hpp"
+#include "EBGeometry_TriangleImplem.hpp" // NOLINT
 
 #endif

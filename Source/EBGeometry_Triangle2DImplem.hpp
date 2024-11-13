@@ -19,26 +19,12 @@
 #include "EBGeometry_Triangle2D.hpp"
 
 namespace EBGeometry {
-  EBGEOMETRY_ALWAYS_INLINE
-  Triangle2D::Triangle2D() noexcept
-  {
-    m_xDir = -1;
-    m_yDir = -1;
-
-    for (int i = 0; i < 3; i++) {
-      m_vertices[i] = Vec2::max();
-    }
-  }
 
   EBGEOMETRY_ALWAYS_INLINE
-  Triangle2D::Triangle2D(const Vec3& a_normal, const Vec3 a_vertices[3]) noexcept : Triangle2D()
+  Triangle2D::Triangle2D(const Vec3& a_normal, const Vec3 a_vertices[3]) noexcept
   {
     this->define(a_normal, a_vertices);
   }
-
-  EBGEOMETRY_ALWAYS_INLINE
-  Triangle2D::~Triangle2D() noexcept
-  {}
 
   EBGEOMETRY_ALWAYS_INLINE
   void

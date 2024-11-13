@@ -52,7 +52,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Triangle2D() noexcept;
+    Triangle2D() noexcept = default;
 
     /*!
       @brief Full constructor
@@ -64,11 +64,45 @@ namespace EBGeometry {
     Triangle2D(const Vec3& a_normal, const Vec3 a_vertices[3]) noexcept;
 
     /*!
+      @brief Copy constructor.
+      @param[in] a_triangle2D Other triangle
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    Triangle2D(const Triangle2D& a_triangle) noexcept = default;
+
+    /*!
+      @brief Move constructor.
+      @param[in, out] a_triangle2D Other triangle
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    Triangle2D(Triangle2D&& a_triangle) noexcept = default;        
+
+    /*!
       @brief Destructor (does nothing)
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    ~Triangle2D() noexcept;
+    ~Triangle2D() noexcept = default;
+
+    /*!
+      @brief Copy assignment.
+      @param[in] a_triangle2D Other triangle
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    Triangle2D&
+    operator=(const Triangle2D& a_triangle) noexcept = default;
+
+    /*!
+      @brief Move assignment.
+      @param[in, out] a_triangle2D Other triangle
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    Triangle2D&
+    operator=(Triangle2D&& a_triangle) noexcept = default;
 
     /*!
       @brief Define function. Puts object in usable state. 
@@ -89,7 +123,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     bool
-    isPointInside(const Vec3& a_point, const InsideOutsideAlgorithm a_algorithm) const noexcept;
+    isPointInside(const Vec3& a_point, InsideOutsideAlgorithm a_algorithm) const noexcept;
 
     /*!
       @brief Check if a point is inside a 2D polygon, using the winding number
@@ -130,18 +164,18 @@ namespace EBGeometry {
     /*!
       @brief The corresponding 2D x-direction (one direction is ignored)
     */
-    int m_xDir;
+    int m_xDir = -1;
 
     /*!
       @brief The corresponding 2D y-direction (one direction is ignored)
     */
-    int m_yDir;
+    int m_yDir = -1;
 
     /*!
       @brief List of points in 2D.
       @details This is the position of the vertices, projected into a 2D plane.
     */
-    Vec2 m_vertices[3];
+    Vec2 m_vertices[3]{Vec2::max(), Vec2::max()};
 
     /*!
       @brief Project a 3D point onto the 2D polygon plane (this ignores one of the

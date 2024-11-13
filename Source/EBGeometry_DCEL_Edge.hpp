@@ -404,7 +404,7 @@ namespace EBGeometry::DCEL {
     /*!
       @brief MetaData-data attached to this edge
     */
-    MetaData m_metaData;
+    MetaData m_metaData = MetaData();
 
     /*!
       @brief Return the vector pointing along this edge.

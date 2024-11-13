@@ -20,40 +20,6 @@ namespace EBGeometry {
 
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
-  Triangle<MetaData>::Triangle() noexcept
-  {
-    this->m_triangleNormal = Vec3::max();
-
-    for (int i = 0; i < 3; i++) {
-      this->m_vertexPositions[i] = Vec3::max();
-      this->m_vertexNormals[i]   = Vec3::max();
-      this->m_edgeNormals[i]     = Vec3::max();
-    }
-  }
-
-  template <typename MetaData>
-  EBGEOMETRY_ALWAYS_INLINE
-  Triangle<MetaData>::Triangle(const Triangle& a_otherTriangle) noexcept
-  {
-    this->m_triangleNormal = a_otherTriangle.m_triangleNormal;
-
-    for (int i = 0; i < 3; i++) {
-      this->m_vertexPositions[i] = a_otherTriangle.m_vertexPositions[i];
-      this->m_vertexNormals[i]   = a_otherTriangle.m_vertexNormals[i];
-      this->m_edgeNormals[i]     = a_otherTriangle.m_edgeNormals[i];
-    }
-
-    this->m_metaData   = a_otherTriangle.m_metaData;
-    this->m_triangle2D = a_otherTriangle.m_triangle2D;
-  }
-
-  template <typename MetaData>
-  EBGEOMETRY_ALWAYS_INLINE
-  Triangle<MetaData>::~Triangle() noexcept
-  {}
-
-  template <typename MetaData>
-  EBGEOMETRY_ALWAYS_INLINE
   void
   Triangle<MetaData>::setNormal(const Vec3& a_normal) noexcept
   {
