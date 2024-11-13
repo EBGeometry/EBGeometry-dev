@@ -20,7 +20,8 @@ namespace EBGeometry::DCEL {
 
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE
-  Face<MetaData>::Face(int a_edge) noexcept : m_edge(a_edge)
+  Face<MetaData>::Face(int a_edge) noexcept :
+    m_edge(a_edge)
   {}
 
   template <class MetaData>

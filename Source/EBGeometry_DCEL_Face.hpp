@@ -362,7 +362,7 @@ namespace EBGeometry::DCEL {
       @brief 2D embedding of this polygon. This is the 2D view of the current
       object projected along its normal vector cardinal.
     */
-    Polygon2D m_polygon2D = Polygon2D();
+    Polygon2D m_polygon2D;
 
     /*!
       @brief Algorithm for inside/outside tests

@@ -87,7 +87,6 @@ namespace EBGeometry::DCEL {
     const std::string edgeHasNoEdgeList     = "edge has no edge list";
     const std::string edgeHasNoFaceList     = "edge has no face list";
 
-    const std::string faceIsNullptr       = "nullptr face";
     const std::string faceHasNoEdge       = "face has no edge";
     const std::string faceHasNoVertexList = "face has no vertex list";
     const std::string faceHasNoEdgeList   = "face has no edge list";
@@ -227,13 +226,13 @@ namespace EBGeometry::DCEL {
       }
 
       if (vertexList == nullptr) {
-        this->incrementWarning(warnings, edgeHasNoVertexList);
+        this->incrementWarning(warnings, faceHasNoVertexList);
       }
       if (edgeList == nullptr) {
-        this->incrementWarning(warnings, edgeHasNoEdgeList);
+        this->incrementWarning(warnings, faceHasNoEdgeList);
       }
       if (faceList == nullptr) {
-        this->incrementWarning(warnings, edgeHasNoFaceList);
+        this->incrementWarning(warnings, faceHasNoFaceList);
       }
     }
 

@@ -242,15 +242,17 @@ namespace EBGeometry {
     return a.dot(b) / (b.dot(b));
   }
 
+#if 0
   template <typename MetaData>
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
   bool
   Triangle<MetaData>::intersects(const Vec3& a_x0, const Vec3& a_x1) const noexcept
   {
-#warning "EBGeometry_TriangleImplem.hpp::Triangle<MetaData>::intersects is not implemented"
-
     return false;
   }
+#else
+#warning "EBGeometry_TriangleImplem.hpp::Triangle<MetaData>::intersects is not implemented" // NOLINT
+#endif
 } // namespace EBGeometry
 
 #endif

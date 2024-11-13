@@ -57,7 +57,7 @@ namespace EBGeometry::DCEL {
       @details Direct means compute the signed distance for all primitives,
       Direct2 means compute the squared signed distance for all primitives.
     */
-    enum class SearchAlgorithm
+    enum class SearchAlgorithm // NOLINT
     {
       Direct,
       Direct2,

@@ -130,7 +130,7 @@ namespace EBGeometry {
 
     Real sumTheta = this->computeSubtendedAngle(projectedPoint);
 
-    sumTheta = std::abs(sumTheta) / (2. * M_PI);
+    sumTheta = std::abs(sumTheta) / (Real(2.0) * M_PI); // NOLINT
 
     return (round(sumTheta) == 1);
   }
@@ -218,8 +218,8 @@ namespace EBGeometry {
       const Vec2 p1 = m_vertices[i] - a_point;
       const Vec2 p2 = m_vertices[(i + 1) % 3] - a_point;
 
-      const Real theta1 = atan2(p1.y(), p1.x());
-      const Real theta2 = atan2(p2.y(), p2.x());
+      const Real theta1 = static_cast<Real>(atan2(p1.y(), p1.x()));
+      const Real theta2 = static_cast<Real>(atan2(p2.y(), p2.x()));
 
       Real dTheta = theta2 - theta1;
 

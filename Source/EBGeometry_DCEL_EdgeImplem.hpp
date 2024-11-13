@@ -20,13 +20,18 @@ namespace EBGeometry::DCEL {
 
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE
-  Edge<MetaData>::Edge(int a_vertex) noexcept : m_vertex(a_vertex)
+  Edge<MetaData>::Edge(int a_vertex) noexcept :
+    m_vertex(a_vertex)
   {}
 
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE
   Edge<MetaData>::Edge(int a_vertex, int a_previousEdge, int a_pairEdge, int a_nextEdge, int a_face) noexcept :
-    m_vertex(a_vertex), m_previousEdge(a_previousEdge), m_pairEdge(a_pairEdge), m_nextEdge(a_nextEdge), m_face(a_face)
+    m_vertex(a_vertex),
+    m_previousEdge(a_previousEdge),
+    m_pairEdge(a_pairEdge),
+    m_nextEdge(a_nextEdge),
+    m_face(a_face)
   {}
 
   template <class MetaData>

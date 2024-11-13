@@ -136,8 +136,7 @@ namespace EBGeometry {
 #endif
     }
 
-#warning \
-  "EBGeometry_ImplicitFunction.hpp - GPU placement is only partially supported. CUDA needs expansion and HIP is unsupported"
+#warning "EBGeometry_ImplicitFunction.hpp - GPU placement only partially supported." // NOLINT
 
     return implicitFunction;
   }

@@ -28,7 +28,9 @@ namespace EBGeometry::DCEL {
 
   EBGEOMETRY_ALWAYS_INLINE
   Polygon2D::Polygon2D(const Polygon2D& a_polygon2D) noexcept :
-    m_xDir(a_polygon2D.m_xDir), m_yDir(a_polygon2D.m_yDir), m_numPoints(a_polygon2D.m_numPoints)
+    m_xDir(a_polygon2D.m_xDir),
+    m_yDir(a_polygon2D.m_yDir),
+    m_numPoints(a_polygon2D.m_numPoints)
   {
     EBGEOMETRY_EXPECT(m_numPoints >= 3);
 
@@ -41,7 +43,9 @@ namespace EBGeometry::DCEL {
 
   EBGEOMETRY_ALWAYS_INLINE
   Polygon2D::Polygon2D(Polygon2D&& a_polygon2D) noexcept :
-    m_xDir(a_polygon2D.m_xDir), m_yDir(a_polygon2D.m_yDir), m_numPoints(a_polygon2D.m_numPoints)
+    m_xDir(a_polygon2D.m_xDir),
+    m_yDir(a_polygon2D.m_yDir),
+    m_numPoints(a_polygon2D.m_numPoints)
   {
     EBGEOMETRY_EXPECT(m_numPoints >= 3);
 

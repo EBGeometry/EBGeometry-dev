@@ -29,7 +29,7 @@ namespace EBGeometry::MeshParser {
   /*!
     @brief Enum for separating ASCII and binary files
   */
-  enum class FileEncoding
+  enum class FileEncoding // NOLINT
   {
     ASCII,
     Binary,
@@ -39,7 +39,7 @@ namespace EBGeometry::MeshParser {
   /*!
     @brief Supported supported file types
   */
-  enum class FileType
+  enum class FileType // NOLINT
   {
     STL,
     PLY,

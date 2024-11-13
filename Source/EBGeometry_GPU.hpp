@@ -44,7 +44,7 @@
 
 #endif // <--- End CUDA definition
 
-enum class MemoryLocation
+enum class MemoryLocation // NOLINT
 {
   Invalid,
   Host,

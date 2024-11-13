@@ -40,7 +40,7 @@ namespace EBGeometry {
       @brief Supported algorithms for performing inside/outside tests when
       checking if a point projects to the inside or outside of a polygon face.
     */
-    enum class InsideOutsideAlgorithm
+    enum class InsideOutsideAlgorithm // NOLINT
     {
       SubtendedAngle,
       CrossingNumber,
@@ -220,6 +220,6 @@ namespace EBGeometry {
   };
 } // namespace EBGeometry
 
-#include "EBGeometry_Triangle2DImplem.hpp"
+#include "EBGeometry_Triangle2DImplem.hpp" // NOLINT
 
 #endif

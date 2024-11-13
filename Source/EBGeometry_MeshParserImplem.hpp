@@ -60,7 +60,7 @@ namespace EBGeometry::MeshParser {
     const auto& faces    = std::get<1>(a_soup);
 
     EBGEOMETRY_ALWAYS_EXPECT(vertices.size() >= 3);
-    EBGEOMETRY_ALWAYS_EXPECT(faces.size() >= 1);
+    EBGEOMETRY_ALWAYS_EXPECT(!(faces.empty()));
 
     for (const auto& face : faces) {
       const auto& faceVertices = face.first;
@@ -74,7 +74,7 @@ namespace EBGeometry::MeshParser {
 
       std::sort(vertexCoords.begin(), vertexCoords.end(), [](const Vec3& a, const Vec3& b) { return a.lessLX(b); });
 
-      const int numVertexCoords = vertexCoords.size();
+      const size_t numVertexCoords = vertexCoords.size();
 
       EBGEOMETRY_ALWAYS_EXPECT(numVertexCoords >= 3);
 
@@ -134,7 +134,7 @@ namespace EBGeometry::MeshParser {
     std::vector<std::pair<std::vector<int>, MetaData>>& faces    = std::get<1>(a_soup);
 
     EBGEOMETRY_ALWAYS_EXPECT(vertices.size() >= 3);
-    EBGEOMETRY_ALWAYS_EXPECT(faces.size() >= 1);
+    EBGEOMETRY_ALWAYS_EXPECT(!(faces.empty()));
 
     // vertexMap contains the original vertices together with their original index.
     // indexMap contains a map of the old-to-new indexing, and is built as we traverse
@@ -261,7 +261,7 @@ namespace EBGeometry::MeshParser {
     std::vector<std::pair<std::vector<int>, MetaData>>& soupFaces    = std::get<1>(a_soup);
 
     EBGEOMETRY_ALWAYS_EXPECT(soupVertices.size() >= 3);
-    EBGEOMETRY_ALWAYS_EXPECT(soupFaces.size() >= 1);
+    EBGEOMETRY_ALWAYS_EXPECT(!(soupFaces.empty()));
 
     const int numVertices = soupVertices.size();
     const int numFaces    = soupFaces.size();
@@ -892,6 +892,7 @@ namespace EBGeometry::MeshParser {
     return soup;
   }
 
+#if 0
   template <typename MetaData>
   EBGEOMETRY_INLINE
   PolygonSoup<MetaData>
@@ -899,10 +900,13 @@ namespace EBGeometry::MeshParser {
   {
     PolygonSoup<MetaData> soup;
 
-#warning "EBGeometry_MeshParserImplem.hpp::PLY::readBinary - not implemented"
+
 
     return soup;
   }
+#else
+#warning "EBGeometry_MeshParserImplem.hpp::PLY::readBinary - not implemented" // NOLINT
+#endif
 } // namespace EBGeometry::MeshParser
 
 #endif

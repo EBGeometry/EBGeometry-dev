@@ -42,7 +42,9 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    PlaneSDF(const Vec3& a_point, const Vec3& a_normal) noexcept : m_point(a_point), m_normal(a_normal)
+    PlaneSDF(const Vec3& a_point, const Vec3& a_normal) noexcept :
+      m_point(a_point),
+      m_normal(a_normal)
     {
       EBGEOMETRY_EXPECT(m_normal.length() > EBGeometry::Limits::min());
 
@@ -134,7 +136,9 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    SphereSDF(const Vec3& a_center, const Real& a_radius) noexcept : m_center(a_center), m_radius(a_radius)
+    SphereSDF(const Vec3& a_center, const Real& a_radius) noexcept :
+      m_center(a_center),
+      m_radius(a_radius)
     {
       EBGEOMETRY_EXPECT(m_radius > 0.0);
     }
@@ -226,7 +230,9 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    BoxSDF(const Vec3& a_loCorner, const Vec3& a_hiCorner) noexcept : m_loCorner(a_loCorner), m_hiCorner(a_hiCorner)
+    BoxSDF(const Vec3& a_loCorner, const Vec3& a_hiCorner) noexcept :
+      m_loCorner(a_loCorner),
+      m_hiCorner(a_hiCorner)
     {
       EBGEOMETRY_EXPECT(m_loCorner[0] < m_hiCorner[0]);
       EBGEOMETRY_EXPECT(m_loCorner[1] < m_hiCorner[1]);

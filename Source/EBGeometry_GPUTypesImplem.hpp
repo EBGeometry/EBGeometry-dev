@@ -15,7 +15,6 @@
 // Our includes
 #include "EBGeometry_GPUTypes.hpp"
 
-namespace EBGeometry {
-}
+namespace EBGeometry {}
 
 #endif

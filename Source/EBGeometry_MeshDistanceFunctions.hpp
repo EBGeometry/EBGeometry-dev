@@ -19,8 +19,6 @@
 #include "EBGeometry_Macros.hpp"
 #include "EBGeometry_Vec.hpp"
 
-namespace EBGeometry {
-
-} // namespace EBGeometry
+namespace EBGeometry {} // namespace EBGeometry
 
 #endif

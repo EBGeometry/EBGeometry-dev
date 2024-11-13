@@ -29,7 +29,9 @@ namespace EBGeometry {
   }
 
   EBGEOMETRY_ALWAYS_INLINE
-  Vec2::Vec2(const Real& a_x, const Real& a_y) noexcept : m_x(a_x), m_y(a_y)
+  Vec2::Vec2(const Real& a_x, const Real& a_y) noexcept :
+    m_x(a_x),
+    m_y(a_y)
   {}
 
   EBGEOMETRY_ALWAYS_INLINE

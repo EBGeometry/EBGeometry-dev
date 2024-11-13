@@ -282,12 +282,12 @@ namespace EBGeometry {
     /*!
       @brief 2D projection of the triangle to one of the Cartesian coordinate directions
     */
-    Triangle2D m_triangle2D = Triangle2D();
+    Triangle2D m_triangle2D;
 
     /*!
       @brief Triangle meta-data normals
     */
-    MetaData m_metaData = MetaData();
+    MetaData m_metaData;
 
     /*!
       @brief Returns the "projection" of a point to an edge.

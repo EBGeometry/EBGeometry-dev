@@ -23,19 +23,23 @@ namespace EBGeometry::DCEL {
 
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE
-  Vertex<MetaData>::Vertex(const Vec3& a_position) noexcept : m_position(a_position)
+  Vertex<MetaData>::Vertex(const Vec3& a_position) noexcept :
+    m_position(a_position)
   {}
 
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE
   Vertex<MetaData>::Vertex(const Vec3& a_position, const Vec3& a_normal) noexcept :
-    m_position(a_position), m_normal(a_normal)
+    m_position(a_position),
+    m_normal(a_normal)
   {}
 
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE
   Vertex<MetaData>::Vertex(const Vec3& a_position, const Vec3& a_normal, int a_edge) noexcept :
-    m_position(a_position), m_normal(a_normal), m_outgoingEdge(a_edge)
+    m_position(a_position),
+    m_normal(a_normal),
+    m_outgoingEdge(a_edge)
   {}
 
   template <class MetaData>
