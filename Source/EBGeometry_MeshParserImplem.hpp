@@ -892,21 +892,17 @@ namespace EBGeometry::MeshParser {
     return soup;
   }
 
-#if 0
   template <typename MetaData>
   EBGEOMETRY_INLINE
   PolygonSoup<MetaData>
-  PLY::readBinary(const std::string& a_fileName) noexcept
+  PLY::readBinary(const std::string& a_fileName) noexcept // NOLINT
   {
     PolygonSoup<MetaData> soup;
 
-
+#warning "EBGeometry_MeshParserImplem.hpp::PLY::readBinary - not implemented" // NOLINT
 
     return soup;
   }
-#else
-#warning "EBGeometry_MeshParserImplem.hpp::PLY::readBinary - not implemented" // NOLINT
-#endif
 } // namespace EBGeometry::MeshParser
 
 #endif
