@@ -103,12 +103,12 @@ namespace EBGeometry {
     /*!
       @brief First implicit function
     */
-    const ImplicitFunction* m_f1;
+    const ImplicitFunction* m_f1 = nullptr;
 
     /*!
       @brief Second implicit function
     */
-    const ImplicitFunction* m_f2;
+    const ImplicitFunction* m_f2 = nullptr;
   };
 } // namespace EBGeometry
 

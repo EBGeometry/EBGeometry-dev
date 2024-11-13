@@ -57,7 +57,7 @@ namespace EBGeometry::DCEL {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Polygon2D() noexcept;
+    Polygon2D() noexcept = default;
 
     /*!
       @brief Full constructor
@@ -172,23 +172,23 @@ namespace EBGeometry::DCEL {
     /*!
       @brief The corresponding 2D x-direction (one direction is ignored)
     */
-    int m_xDir;
+    int m_xDir = -1;
 
     /*!
       @brief The corresponding 2D y-direction (one direction is ignored)
     */
-    int m_yDir;
+    int m_yDir = -1;
 
     /*!
       @brief Number of vertex points.
     */
-    int m_numPoints;
+    int m_numPoints = -1;
 
     /*!
       @brief List of points in 2D.
       @details This is the position of the vertices, projected into 2D
     */
-    Vec2* m_points;
+    Vec2* m_points = nullptr;
 
     /*!
       @brief Project a 3D point onto the 2D polygon plane (this ignores one of the

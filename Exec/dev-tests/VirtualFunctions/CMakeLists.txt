@@ -5,7 +5,7 @@ set (CMAKE_CXX_STANDARD 20)
 # Build settings.
 set(CMAKE_CXX_FLAGS "-O3 -march=native")
 set(ENABLE_DEBUG TRUE)
-set(ENABLE_CUDA TRUE)
+set(ENABLE_CUDA FALSE)
 set(ENABLE_HIP FALSE)
 set(ENABLE_TESTS TRUE)
 
@@ -39,6 +39,9 @@ include_directories(${EBGEOMETRY_HOME})
 
 # Build executable
 add_executable(main.out main.cpp)
-set_source_files_properties(main.cpp PROPERTIES LANGUAGE CUDA)
-set_target_properties(main.out PROPERTIES CUDA_ARCHITECTURES "native")
-set_target_properties(main.out PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+
+if(ENABLE_CUDA)
+  set_source_files_properties(main.cpp PROPERTIES LANGUAGE CUDA)
+  set_target_properties(main.out PROPERTIES CUDA_ARCHITECTURES "native")
+  set_target_properties(main.out PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+endif()

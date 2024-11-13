@@ -23,35 +23,15 @@ namespace EBGeometry::DCEL {
 
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE
-  Vertex<MetaData>::Vertex() noexcept :
-    m_position(Vec3::zero()),
-    m_normal(Vec3::zero()),
-    m_outgoingEdge(-1),
-    m_vertexList(nullptr),
-    m_edgeList(nullptr),
-    m_faceList(nullptr)
-  {}
-
-  template <class MetaData>
-  EBGEOMETRY_ALWAYS_INLINE
   Vertex<MetaData>::Vertex(const Vec3& a_position) noexcept :
-    m_position(a_position),
-    m_normal(Vec3::zero()),
-    m_outgoingEdge(-1),
-    m_vertexList(nullptr),
-    m_edgeList(nullptr),
-    m_faceList(nullptr)
+    m_position(a_position)
   {}
 
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE
   Vertex<MetaData>::Vertex(const Vec3& a_position, const Vec3& a_normal) noexcept :
     m_position(a_position),
-    m_normal(a_normal),
-    m_outgoingEdge(-1),
-    m_vertexList(nullptr),
-    m_edgeList(nullptr),
-    m_faceList(nullptr)
+    m_normal(a_normal)
   {}
 
   template <class MetaData>
@@ -59,21 +39,8 @@ namespace EBGeometry::DCEL {
   Vertex<MetaData>::Vertex(const Vec3& a_position, const Vec3& a_normal, int a_edge) noexcept :
     m_position(a_position),
     m_normal(a_normal),
-    m_outgoingEdge(a_edge),
-    m_vertexList(nullptr),
-    m_edgeList(nullptr),
-    m_faceList(nullptr)
+    m_outgoingEdge(a_edge)
   {}
-
-  template <class MetaData>
-  EBGEOMETRY_ALWAYS_INLINE
-  void
-  Vertex<MetaData>::define(const Vec3& a_position, const Vec3& a_normal, int a_edge) noexcept
-  {
-    m_position     = a_position;
-    m_normal       = a_normal;
-    m_outgoingEdge = a_edge;
-  }
 
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE

@@ -34,19 +34,52 @@ namespace EBGeometry {
   {
   public:
     /*!
-      @brief Base constructor.
+      @brief Default constructor.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    ImplicitFunction() noexcept
-    {}
+    ImplicitFunction() noexcept = default;
+
+    /*!
+      @brief Copy constructor.
+      @param[in] a_implicitFunction Other implicit function
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    ImplicitFunction(const ImplicitFunction& a_implicitFunction) noexcept = default;
+
+    /*!
+      @brief Move constructor.
+      @param[in] a_implicitFunction Other implicit function
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    ImplicitFunction(ImplicitFunction&& a_implicitFunction) noexcept = default;
 
     /*!
       @brief Destructor
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    virtual ~ImplicitFunction() noexcept
-    {}
+    EBGEOMETRY_ALWAYS_INLINE
+    virtual ~ImplicitFunction() noexcept = default;
+
+    /*!
+      @brief Copy assignment.
+      @param[in] a_implicitFunction Other implicit function
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    ImplicitFunction&
+    operator=(const ImplicitFunction& a_implicitFunction) noexcept = default;
+
+    /*!
+      @brief Move assignment.
+      @param[in] a_implicitFunction Other implicit function
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    ImplicitFunction&
+    operator=(ImplicitFunction&& a_implicitFunction) noexcept = default;
 
     /*!
       @brief Value function.
@@ -103,7 +136,8 @@ namespace EBGeometry {
 #endif
     }
 
-#warning "EBGeometry_ImplicitFunction.hpp - GPU placement is only partially supported"
+#warning \
+  "EBGeometry_ImplicitFunction.hpp - GPU placement is only partially supported. CUDA needs expansion and HIP is unsupported"
 
     return implicitFunction;
   }

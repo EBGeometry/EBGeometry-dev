@@ -53,7 +53,7 @@ namespace EBGeometry::DCEL {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Edge() noexcept;
+    Edge() noexcept = default;
 
     /*!
       @brief Copy constructor. 
@@ -115,19 +115,6 @@ namespace EBGeometry::DCEL {
     EBGEOMETRY_ALWAYS_INLINE
     Edge&
     operator=(Edge&& a_edge) noexcept = default;
-
-    /*!
-      @brief Define function. Sets everything except the normal vector.
-      @param[in] a_vertex Starting vertex index
-      @param[in] a_previousEdge Previous edge index.
-      @param[in] a_pairEdge Pair edge index.
-      @param[in] a_nextEdge Next edge index.
-      @param[in] a_face Polygon face index.
-    */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE
-    void
-    define(int a_vertex, int a_previousEdge, int a_pairEdge, int a_nextEdge, int a_face) noexcept;
 
     /*!
       @brief Set the starting vertex
@@ -372,47 +359,47 @@ namespace EBGeometry::DCEL {
     /*!
       @brief Vertex list
     */
-    const Vertex<MetaData>* m_vertexList;
+    const Vertex<MetaData>* m_vertexList = nullptr;
 
     /*!
       @brief Edge list
     */
-    const Edge<MetaData>* m_edgeList;
+    const Edge<MetaData>* m_edgeList = nullptr;
 
     /*!
       @brief Face list
     */
-    const Face<MetaData>* m_faceList;
+    const Face<MetaData>* m_faceList = nullptr;
 
     /*!
       @brief Starting vertex.
     */
-    int m_vertex;
+    int m_vertex = -1;
 
     /*!
       @brief Previous edge
     */
-    int m_previousEdge;
+    int m_previousEdge = -1;
 
     /*!
       @brief Pair edge.
     */
-    int m_pairEdge;
+    int m_pairEdge = -1;
 
     /*!
       @brief Next edge around the polygon.
     */
-    int m_nextEdge;
+    int m_nextEdge = -1;
 
     /*!
       @brief Polygon face connected to this half-edge.
     */
-    int m_face;
+    int m_face = -1;
 
     /*!
       @brief Edge normal vector
     */
-    Vec3 m_normal;
+    Vec3 m_normal = Vec3::zero();
 
     /*!
       @brief MetaData-data attached to this edge

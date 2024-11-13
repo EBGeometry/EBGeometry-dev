@@ -1,9 +1,6 @@
 // Std includes
 #include <stdio.h>
 #include <iostream>
-#include <cuda.h>
-#include <cuda_runtime.h>
-#include <device_launch_parameters.h>
 
 // Our includes
 #include "EBGeometry.hpp"

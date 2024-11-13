@@ -45,7 +45,7 @@ namespace EBGeometry::DCEL {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Vertex() noexcept;
+    Vertex() noexcept = default;
 
     /*!
       @brief Partial constructor.
@@ -118,18 +118,6 @@ namespace EBGeometry::DCEL {
     EBGEOMETRY_ALWAYS_INLINE
     Vertex&
     operator=(Vertex&& a_vertex) noexcept = default;
-
-    /*!
-      @brief Define function
-      @param[in] a_position Vertex position
-      @param[in] a_normal   Vertex normal vector
-      @param[in] a_edge     Outgoing half-edge index
-      @details This sets the position, normal vector, and half-edge index
-    */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE
-    void
-    define(const Vec3& a_position, const Vec3& a_normal, int a_edge) noexcept;
 
     /*!
       @brief Set the vertex position
@@ -344,32 +332,32 @@ namespace EBGeometry::DCEL {
     /*!
       @brief List of vertices.
     */
-    const Vertex<MetaData>* m_vertexList;
+    const Vertex<MetaData>* m_vertexList = nullptr;
 
     /*!
       @brief List of half-edges.
     */
-    const Edge<MetaData>* m_edgeList;
+    const Edge<MetaData>* m_edgeList = nullptr;
 
     /*!
       @brief List of faces
     */
-    const Face<MetaData>* m_faceList;
+    const Face<MetaData>* m_faceList = nullptr;
 
     /*!
       @brief Outgoing edge.
     */
-    int m_outgoingEdge;
+    int m_outgoingEdge = -1;
 
     /*!
       @brief Vertex position
     */
-    Vec3 m_position;
+    Vec3 m_position = Vec3::zero();
 
     /*!
       @brief Vertex normal vector
     */
-    Vec3 m_normal;
+    Vec3 m_normal = Vec3::zero();
 
     /*!
       @brief MetaData-data for this vertex

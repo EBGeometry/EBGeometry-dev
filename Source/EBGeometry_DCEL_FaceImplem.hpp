@@ -20,30 +20,9 @@ namespace EBGeometry::DCEL {
 
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE
-  Face<MetaData>::Face() noexcept :
-    m_edge(-1),
-    m_normal(Vec3::zero()),
-    m_centroid(Vec3::zero()),
-    m_poly2Algorithm(Polygon2D::InsideOutsideAlgorithm::CrossingNumber)
-  {}
-
-  template <class MetaData>
-  EBGEOMETRY_ALWAYS_INLINE
   Face<MetaData>::Face(int a_edge) noexcept :
-    m_edge(a_edge),
-    m_normal(Vec3::zero()),
-    m_centroid(Vec3::zero()),
-    m_poly2Algorithm(Polygon2D::InsideOutsideAlgorithm::CrossingNumber)
+    m_edge(a_edge)
   {}
-
-  template <class MetaData>
-  EBGEOMETRY_ALWAYS_INLINE
-  void
-  Face<MetaData>::define(const Vec3& a_normal, int a_edge) noexcept
-  {
-    m_normal = a_normal;
-    m_edge   = a_edge;
-  }
 
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE

@@ -20,38 +20,14 @@ namespace EBGeometry::DCEL {
 
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE
-  Edge<MetaData>::Edge() noexcept : m_vertexList(nullptr), m_edgeList(nullptr), m_faceList(nullptr)
-  {
-    this->define(-1, -1, -1, -1, -1);
-  }
-
-  template <class MetaData>
-  EBGEOMETRY_ALWAYS_INLINE
-  Edge<MetaData>::Edge(int a_vertex) noexcept : m_vertexList(nullptr), m_edgeList(nullptr), m_faceList(nullptr)
-  {
-    this->define(a_vertex, -1, -1, -1, -1);
-  }
+  Edge<MetaData>::Edge(int a_vertex) noexcept : m_vertex(a_vertex)
+  {}
 
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE
   Edge<MetaData>::Edge(int a_vertex, int a_previousEdge, int a_pairEdge, int a_nextEdge, int a_face) noexcept :
-    m_vertexList(nullptr), m_edgeList(nullptr), m_faceList(nullptr)
-  {
-    this->define(a_vertex, a_previousEdge, a_pairEdge, a_nextEdge, a_face);
-  }
-
-  template <class MetaData>
-  EBGEOMETRY_ALWAYS_INLINE
-  void
-  Edge<MetaData>::define(int a_vertex, int a_previousEdge, int a_pairEdge, int a_nextEdge, int a_face) noexcept
-  {
-    this->setVertex(a_vertex);
-    this->setPreviousEdge(a_previousEdge);
-    this->setPairEdge(a_pairEdge);
-    this->setNextEdge(a_nextEdge);
-    this->setFace(a_face);
-    this->setNormal(Vec3::zero());
-  }
+    m_vertex(a_vertex), m_previousEdge(a_previousEdge), m_pairEdge(a_pairEdge), m_nextEdge(a_nextEdge), m_face(a_face)
+  {}
 
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE

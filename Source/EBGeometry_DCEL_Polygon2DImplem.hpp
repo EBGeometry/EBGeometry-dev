@@ -21,10 +21,6 @@
 namespace EBGeometry::DCEL {
 
   EBGEOMETRY_ALWAYS_INLINE
-  Polygon2D::Polygon2D() noexcept : m_xDir(-1), m_yDir(-1), m_numPoints(0), m_points(nullptr)
-  {}
-
-  EBGEOMETRY_ALWAYS_INLINE
   Polygon2D::Polygon2D(const Vec3& a_normal, int a_numPoints, const Vec3* a_points) noexcept
   {
     this->define(a_normal, a_numPoints, a_points);

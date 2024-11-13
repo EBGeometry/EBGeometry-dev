@@ -20,6 +20,8 @@
 // Include GPU library headers
 #if defined(EBGEOMETRY_ENABLE_CUDA)
 #include <cuda.h>
+#include <cuda_runtime.h>
+#include <device_launch_parameters.h>
 #elif defined(EBGEOMETRY_ENABLE_HIP)
 #endif
 
