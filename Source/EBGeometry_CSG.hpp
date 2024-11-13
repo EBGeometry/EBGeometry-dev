@@ -35,9 +35,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    UnionIF(const ImplicitFunction* const a_f1, const ImplicitFunction* const a_f2) noexcept :
-      m_f1(a_f1),
-      m_f2(a_f2)
+    UnionIF(const ImplicitFunction* const a_f1, const ImplicitFunction* const a_f2) noexcept : m_f1(a_f1), m_f2(a_f2)
     {
       EBGEOMETRY_EXPECT(m_f1 != nullptr);
       EBGEOMETRY_EXPECT(m_f2 != nullptr);

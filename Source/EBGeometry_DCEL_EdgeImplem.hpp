@@ -20,20 +20,14 @@ namespace EBGeometry::DCEL {
 
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE
-  Edge<MetaData>::Edge() noexcept :
-    m_vertexList(nullptr),
-    m_edgeList(nullptr),
-    m_faceList(nullptr)
+  Edge<MetaData>::Edge() noexcept : m_vertexList(nullptr), m_edgeList(nullptr), m_faceList(nullptr)
   {
     this->define(-1, -1, -1, -1, -1);
   }
 
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE
-  Edge<MetaData>::Edge(int a_vertex) noexcept :
-    m_vertexList(nullptr),
-    m_edgeList(nullptr),
-    m_faceList(nullptr)
+  Edge<MetaData>::Edge(int a_vertex) noexcept : m_vertexList(nullptr), m_edgeList(nullptr), m_faceList(nullptr)
   {
     this->define(a_vertex, -1, -1, -1, -1);
   }
@@ -41,9 +35,7 @@ namespace EBGeometry::DCEL {
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE
   Edge<MetaData>::Edge(int a_vertex, int a_previousEdge, int a_pairEdge, int a_nextEdge, int a_face) noexcept :
-    m_vertexList(nullptr),
-    m_edgeList(nullptr),
-    m_faceList(nullptr)
+    m_vertexList(nullptr), m_edgeList(nullptr), m_faceList(nullptr)
   {
     this->define(a_vertex, a_previousEdge, a_pairEdge, a_nextEdge, a_face);
   }

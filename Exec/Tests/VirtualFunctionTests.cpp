@@ -45,9 +45,7 @@ class SumIF : public ImplicitFunction
 public:
   EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
-  SumIF(const ImplicitFunction* const A, const ImplicitFunction* const B) noexcept :
-    m_A(A),
-    m_B(B)
+  SumIF(const ImplicitFunction* const A, const ImplicitFunction* const B) noexcept : m_A(A), m_B(B)
   {
     EBGEOMETRY_ALWAYS_EXPECT(m_A != nullptr);
     EBGEOMETRY_ALWAYS_EXPECT(m_B != nullptr);
