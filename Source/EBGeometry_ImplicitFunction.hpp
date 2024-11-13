@@ -101,7 +101,7 @@ namespace EBGeometry {
 
     PlaneSDF* plane = createImpFunc<PlaneSDF, MemoryLocation::Unified>(Vec3, Vec3)
     
-    @param[in] a_implicitFunction to be allocated. Must be initialized to nullptr
+    @param[in] a_args Constructor arguments for implicit function.
     @returns Returns a pointer to the implicit function.
   */
   template <typename ImpFunc, MemoryLocation MemLoc, typename... Args>
