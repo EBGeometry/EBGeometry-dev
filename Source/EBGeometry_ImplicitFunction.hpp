@@ -93,6 +93,22 @@ namespace EBGeometry {
   };
 
   /*!
+    @brief Function for constructing an arbitrary implicit function on the device. 
+    The user inputs the implicit function type and the constructor arguments required
+    for constructing the function. 
+    @param[in] a_implicitFunction Implicit function to be created on device
+    @param[in] args Constructor arguments.
+  */
+  template <typename ImpFunc, typename... Args>
+  EBGEOMETRY_GPU_GLOBAL void
+  constructImplicitFunctionOnDevice(ImpFunc* a_implicitFunction, const Args... args)
+  {
+    EBGEOMETRY_ALWAYS_EXPECT(a_implicitFunction != nullptr);
+
+    new (a_implicitFunction) ImpFunc(args...);
+  };  
+
+  /*!
     @brief Factory method for building an implicit function on the host or device
     @details The user specifies the placement through the MemoryLocation template
     argument. The user must also supply the constructor arguments.
@@ -163,21 +179,7 @@ namespace EBGeometry {
     }
   };
 
-  /*!
-    @brief Function for constructing an arbitrary implicit function on the device. 
-    The user inputs the implicit function type and the constructor arguments required
-    for constructing the function. 
-    @param[in] a_implicitFunction Implicit function to be created on device
-    @param[in] args Constructor arguments.
-  */
-  template <typename ImpFunc, typename... Args>
-  EBGEOMETRY_GPU_GLOBAL void
-  constructImplicitFunctionOnDevice(ImpFunc* a_implicitFunction, const Args... args)
-  {
-    EBGEOMETRY_ALWAYS_EXPECT(a_implicitFunction != nullptr);
 
-    new (a_implicitFunction) ImpFunc(args...);
-  };
 } // namespace EBGeometry
 
 #endif

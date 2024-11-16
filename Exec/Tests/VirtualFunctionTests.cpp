@@ -22,19 +22,19 @@ public:
   EBGEOMETRY_GPU_HOST_DEVICE
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
   Real
-  value(const Vec3& a_point) const noexcept override final
+  value(const Vec3& a_point) const noexcept override
   {
     return one;
   }
 };
 
-class TwoIF : public ImplicitFunction
+class TwoIF : public OneIF
 {
 public:
   EBGEOMETRY_GPU_HOST_DEVICE
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
   Real
-  value(const Vec3& a_point) const noexcept override final
+  value(const Vec3& a_point) const noexcept override
   {
     return two;
   }

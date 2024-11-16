@@ -83,7 +83,6 @@ namespace GPU {
 
     return livesOnDevice;
   }
-
 } // namespace GPU
 
 #endif
