@@ -106,7 +106,7 @@ namespace EBGeometry {
     EBGEOMETRY_ALWAYS_EXPECT(a_implicitFunction != nullptr);
 
     new (a_implicitFunction) ImpFunc(args...);
-  };  
+  };
 
   /*!
     @brief Factory method for building an implicit function on the host or device
@@ -178,7 +178,6 @@ namespace EBGeometry {
       delete a_implicitFunction;
     }
   };
-
 
 } // namespace EBGeometry
 
