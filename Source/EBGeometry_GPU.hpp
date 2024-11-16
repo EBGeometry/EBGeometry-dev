@@ -12,6 +12,9 @@
 #ifndef EBGeometry_GPU
 #define EBGeometry_GPU
 
+// Our includes
+#include "EBGeometry_Macros.hpp"
+
 // Can only define one GPU backend
 #if defined(EBGEOMETRY_ENABLE_CUDA) && defined(EBGEOMETRY_ENABLE_HIP)
 #error "Can not define both EBGEOMETRY_ENABLE_CUDA and EBGEOMETRY_ENABLE_HIP"
@@ -52,5 +55,35 @@ enum class MemoryLocation // NOLINT
   Unified,
   Global
 };
+
+namespace GPU {
+  /*!
+    @brief Check if an object is allocated on the device or on the host. Pointer should not be null.
+    @return True if the object lives on the device and false otherwise.
+  */
+  template <typename T>
+  EBGEOMETRY_GPU_HOST
+  EBGEOMETRY_ALWAYS_INLINE
+  bool
+  isDevicePointer(const T* a_ptr) noexcept
+  {
+    EBGEOMETRY_ALWAYS_EXPECT(a_ptr != nullptr);
+
+    bool livesOnDevice = false;
+
+#if EBGEOMETRY_ENABLE_CUDA
+    cudaPointerAttributes attr;
+
+    cudaPointerGetAttributes(&attr, a_ptr);
+
+    if ((attr.type == cudaMemoryTypeDevice) || (attr.type == cudaMemoryTypeManaged)) {
+      livesOnDevice = true;
+    }
+#endif
+
+    return livesOnDevice;
+  }
+
+} // namespace GPU
 
 #endif

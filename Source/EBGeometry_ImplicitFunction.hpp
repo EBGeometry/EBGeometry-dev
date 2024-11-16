@@ -153,20 +153,14 @@ namespace EBGeometry {
   {
     EBGEOMETRY_ALWAYS_EXPECT(a_implicitFunction != nullptr);
 
-#ifdef EBGEOMETRY_ENABLE_CUDA
-    cudaPointerAttributes attr;
-
-    cudaPointerGetAttributes(&attr, a_implicitFunction);
-
-    if ((attr.type == cudaMemoryTypeHost) || (attr.type == cudaMemoryTypeUnregistered)) {
+    if (GPU::isDevicePointer(a_implicitFunction)) {
+#if EBGEOMETRY_ENABLE_CUDA
+      cudaFree(a_implicitFunction);
+#endif
+    }
+    else {
       delete a_implicitFunction;
     }
-    else if ((attr.type == cudaMemoryTypeDevice) || (attr.type == cudaMemoryTypeManaged)) {
-      cudaFree(a_implicitFunction);
-    }
-#else
-    delete a_implicitFunction;
-#endif
   };
 
   /*!
