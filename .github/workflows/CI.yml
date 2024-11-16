@@ -126,12 +126,12 @@ jobs:
           mkdir build && cd build
           cmake .. -DBUILD_TESTING=Off
           make -j $(nproc)
-          sudo make install        
+          sudo make install
 
       - name: Configure
         working-directory: ${{ matrix.directory }}
         run: |
-          cmake .
+          cmake -DENABLE_CUDA=TRUE .
           make
 
       - name: Run tests
@@ -140,10 +140,15 @@ jobs:
           ctest          
 
   Build-documentation:
-    needs: [Linux-CPU]
+    needs: [Linux-CUDA]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4      
+      - uses: actions/checkout@v4
+      - uses: Jimver/cuda-toolkit@v0.2.19
+        id: cuda-toolkit
+        with:
+          cuda: '12.5.0'
+          
       - name: Install dependencies
         run: |
           sudo apt-get update
