@@ -52,7 +52,7 @@ Tree traversal
 The input functions to ``traverse`` are as follows:
 
 #. ``Updater`` executes a user-specified update rule when visiting a leaf node.
-#. ``Visiter`` determines if the node should be visited during the traversal or not.
+#. ``Visitor`` determines if the node should be visited during the traversal or not.
 #. ``Sorter`` permits the user to sort the nodes in the current subtrees and visit them in a specified pattern.
    By default, no sorting is done and the nodes are visited in lexicographical order.
 

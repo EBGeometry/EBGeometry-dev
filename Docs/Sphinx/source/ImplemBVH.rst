@@ -196,7 +196,7 @@ For both BVH representations, tree traversal is done using a routine
     template <class Meta>
     inline void
     traverse(const BVH::Updater<P>&                    a_updater,
-             const BVH::Visiter<LinearNode, Meta>&     a_visiter,
+             const BVH::Visitor<LinearNode, Meta>&     a_visitor,
              const BVH::Sorter<LinearNode, Meta, K>&   a_sorter,
              const BVH::MetaUpdater<LinearNode, Meta>& a_metaUpdater) const noexcept;
 
@@ -205,13 +205,13 @@ The BVH trees use a stack-based traversal pattern based on visit-sort rules supp
 Node visit
 __________
 
-Here, ``a_visiter`` is a lambda function for determining if the node/subtree should be investigated or pruned from the traversal.
+Here, ``a_visitor`` is a lambda function for determining if the node/subtree should be investigated or pruned from the traversal.
 This function has a signature
 
 .. code-block:: c++
 
   template <class NodeType, class Meta>
-  using Visiter = std::function<bool(const NodeType& a_node, const Meta a_meta)>;
+  using Visitor = std::function<bool(const NodeType& a_node, const Meta a_meta)>;
 
 where ``NodeType`` is the type of node (which is different for full/flat BVHs), and the ``Meta`` template parameter is discussed below.
 If this function returns true, the node will be visisted and if the function returns false then the node will be pruned from the tree traversal. Typically, the ``Meta`` parameter will contain the necessary information that determines whether or not to visit the subtree.
