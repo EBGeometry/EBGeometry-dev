@@ -76,7 +76,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Install dependencies
+      - name: Install compilers
         run: |
           sudo apt-get update
           sudo apt-get install ${{ matrix.comp }}
@@ -105,18 +105,26 @@ jobs:
   Linux-CUDA:
 #    needs: [Linux-CPU]
     name: Linux-CUDA
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     strategy:
       matrix:
-        comp: [g++-9, g++-10, g++-11, g++-12]
-
+        cuda_ver: [11.4]
+        include:
+          - cuda_ver: "11.4"
+            cuda_pkg: 11-4    
+ 
     steps:
       - uses: actions/checkout@v4
-      - name: Install dependencies
+      - name: Install compilers
         run: |
+          wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-ubuntu2404.pin
+          sudo mv cuda-ubuntu2404.pin /etc/apt/preferences.d/cuda-repository-pin-600
+          wget https://developer.download.nvidia.com/compute/cuda/12.6.2/local_installers/cuda-repo-ubuntu2404-12-6-local_12.6.2-560.35.03-1_amd64.deb
+          sudo dpkg -i cuda-repo-ubuntu2404-12-6-local_12.6.2-560.35.03-1_amd64.deb
+          sudo cp /var/cuda-repo-ubuntu2404-12-6-local/cuda-*-keyring.gpg /usr/share/keyrings/
           sudo apt-get update
-          sudo apt-get install ${{ matrix.comp }}
+          sudo apt-get -y install cuda-toolkit-12-6
 
       - name: Install Catch2
         run: |
