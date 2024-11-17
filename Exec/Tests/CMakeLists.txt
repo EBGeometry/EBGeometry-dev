@@ -30,6 +30,15 @@ if(ENABLE_CUDA)
   set_target_properties(VertexTests.out PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 endif()
 
+# TriangleTests
+add_executable(TriangleTests.out TriangleTests.cpp)
+target_link_libraries(TriangleTests.out PUBLIC Catch2::Catch2WithMain)
+if(ENABLE_CUDA)
+  set_source_files_properties(TriangleTests.cpp PROPERTIES LANGUAGE CUDA)
+  set_target_properties(TriangleTests.out PROPERTIES CUDA_ARCHITECTURES "native")
+  set_target_properties(TriangleTests.out PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+endif()
+
 # MeshParserTests
 add_executable(MeshParserTests.out MeshParserTests.cpp)
 target_link_libraries(MeshParserTests.out PUBLIC Catch2::Catch2WithMain)
@@ -55,6 +64,11 @@ add_test(
 add_test(
   NAME VertexTests.out
   COMMAND $<TARGET_FILE:VertexTests.out>
+)
+
+add_test(
+  NAME TriangleTests.out
+  COMMAND $<TARGET_FILE:TriangleTests.out>
   )
 
 add_test(

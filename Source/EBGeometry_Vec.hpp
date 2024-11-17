@@ -856,6 +856,16 @@ namespace EBGeometry {
   dot(const Vec3& u, const Vec3& v) noexcept;
 
   /*!
+    @brief Cross product function.
+    @param[in] u Vector
+    @param[in] v Other vector
+  */
+  EBGEOMETRY_GPU_HOST_DEVICE
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+  Vec3
+  cross(const Vec3& u, const Vec3& v) noexcept;
+
+  /*!
     @brief Length function
     @param[in] v Vector.
   */

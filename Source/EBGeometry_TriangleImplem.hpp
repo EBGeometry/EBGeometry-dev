@@ -20,6 +20,13 @@ namespace EBGeometry {
 
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
+  Triangle<MetaData>::Triangle(const Vec3 a_vertexPositions[3]) noexcept
+  {
+    this->setVertexPositions(a_vertexPositions);
+  }
+
+  template <typename MetaData>
+  EBGEOMETRY_ALWAYS_INLINE
   void
   Triangle<MetaData>::setNormal(const Vec3& a_normal) noexcept
   {
@@ -242,17 +249,33 @@ namespace EBGeometry {
     return a.dot(b) / (b.dot(b));
   }
 
-#if 0
   template <typename MetaData>
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
   bool
   Triangle<MetaData>::intersects(const Vec3& a_x0, const Vec3& a_x1) const noexcept
   {
-    return false;
+    bool ret = true;
+
+    const Vec3 v1v0 = m_vertexPositions[1] - m_vertexPositions[0];
+    const Vec3 v2v0 = m_vertexPositions[2] - m_vertexPositions[0];
+    const Vec3 x0v0 = a_x0 - m_vertexPositions[0];
+
+    EBGEOMETRY_EXPECT(v1v0 != Vec3::zero());
+    EBGEOMETRY_EXPECT(v2v0 != Vec3::zero());
+
+    const Vec3 n = cross(v1v0, v2v0);
+    const Vec3 q = cross(x0v0, a_x1);
+
+    const Real d = Real(1.0) / dot(a_x1, n);
+    const Real u = d * dot(-q, v2v0);
+    const Real v = d * dot(q, v1v0);
+
+    if (u < 0.0 || v < 0.0 || (u + v) > 1.0) {
+      ret = false;
+    }
+
+    return ret;
   }
-#else
-#warning "EBGeometry_TriangleImplem.hpp::Triangle<MetaData>::intersects is not implemented" // NOLINT
-#endif
 } // namespace EBGeometry
 
 #endif

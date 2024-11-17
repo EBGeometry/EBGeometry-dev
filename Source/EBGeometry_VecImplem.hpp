@@ -589,6 +589,13 @@ namespace EBGeometry {
   }
 
   EBGEOMETRY_ALWAYS_INLINE
+  Vec3
+  cross(const Vec3& u, const Vec3& v) noexcept
+  {
+    return u.cross(v);
+  }
+
+  EBGEOMETRY_ALWAYS_INLINE
   Real
   length(const Vec3& v) noexcept
   {

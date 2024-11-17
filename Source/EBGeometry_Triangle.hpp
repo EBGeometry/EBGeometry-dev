@@ -72,6 +72,14 @@ namespace EBGeometry {
     Triangle(Triangle&& a_otherTriangle) noexcept = default;
 
     /*!
+      @brief Full constructor. 
+      @param[in] a_vertexPositions Triangle vertex positions
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    Triangle(const Vec3 a_vertexPositions[3]) noexcept;
+
+    /*!
       @brief Destructor (does nothing).
     */
     EBGEOMETRY_GPU_HOST_DEVICE
