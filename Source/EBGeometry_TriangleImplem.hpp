@@ -256,6 +256,8 @@ namespace EBGeometry {
   {
     bool ret = true;
 
+    EBGEOMETRY_EXPECT(m_triangleNormal.length() == Real(1.0));
+
     const Vec3 v1v0 = m_vertexPositions[1] - m_vertexPositions[0];
     const Vec3 v2v0 = m_vertexPositions[2] - m_vertexPositions[0];
     const Vec3 x0v0 = a_x0 - m_vertexPositions[0];
@@ -263,10 +265,11 @@ namespace EBGeometry {
     EBGEOMETRY_EXPECT(v1v0 != Vec3::zero());
     EBGEOMETRY_EXPECT(v2v0 != Vec3::zero());
 
-    const Vec3 n = cross(v1v0, v2v0);
     const Vec3 q = cross(x0v0, a_x1);
 
-    const Real d = Real(1.0) / dot(a_x1, n);
+#warning "Triangle::intersects fails -- probably a bug in here somewhere"
+
+    const Real d = Real(1.0) / dot(a_x1, m_triangleNormal);
     const Real u = d * dot(-q, v2v0);
     const Real v = d * dot(q, v1v0);
 
