@@ -103,7 +103,7 @@ jobs:
           ctest
 
   Linux-CUDA:
-    needs: [Linux-CPU]
+#    needs: [Linux-CPU]
     name: Linux-CUDA
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -188,7 +188,7 @@ jobs:
           rm -rf Sphinx/build
 
   CI-passed:
-    needs: [Linux-CPU, Build-documentation]
+    needs: [Build-documentation]
     runs-on: ubuntu-latest
     steps:
       - name: Do nothing

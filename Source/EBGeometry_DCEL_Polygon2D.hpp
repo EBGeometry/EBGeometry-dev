@@ -2,8 +2,9 @@
  * Copyright © 2024 Robert Marskar
  * Please refer to Copyright.txt and LICENSE in the EBGeometry root directory.
  */
+
 /*!
-  @file   EBGeometry_Polygon2D.hpp
+  @file   EBGeometry_DCEL_Polygon2D.hpp
   @brief  Declaration of a two-dimensional polygon class for embedding 3D
   polygon faces
   @author Robert Marskar

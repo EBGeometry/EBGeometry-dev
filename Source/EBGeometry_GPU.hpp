@@ -47,6 +47,16 @@
 
 #endif // <--- End CUDA definition
 
+/*!
+  @brief Enum for describing memory locations in host and device
+  @details
+
+  Invalid: Unknown location
+  Host: CPU (host)
+  Pinned: Device pinned memory
+  Unified: Device unified memory
+  Global: Device global memory
+*/
 enum class MemoryLocation // NOLINT
 {
   Invalid,
