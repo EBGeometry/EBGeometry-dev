@@ -5,7 +5,7 @@ set (CMAKE_CXX_STANDARD 20)
 # Build settings.
 set(CMAKE_CXX_FLAGS "-O3 -march=native")
 set(ENABLE_DEBUG TRUE CACHE BOOL "Turn on/off debugging")
-set(ENABLE_CUDA FALSE CACHE BOOL "Turn on/off CUDA")
+set(ENABLE_CUDA TRUE CACHE BOOL "Turn on/off CUDA")
 set(ENABLE_HIP FALSE CACHE BOOL "Turn on/off HIP")
 set(ENABLE_TESTS TRUE CACHE BOOL "Build tests or not")
 

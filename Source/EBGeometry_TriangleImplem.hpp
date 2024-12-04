@@ -91,6 +91,8 @@ namespace EBGeometry {
     EBGEOMETRY_EXPECT(m_triangleNormal.length() > EBGeometry::Limits::min());
 
     m_triangleNormal = m_triangleNormal / m_triangleNormal.length();
+
+    EBGEOMETRY_EXPECT(m_triangleNormal.length() == Real(1.0));
   }
 
   template <typename MetaData>
@@ -254,30 +256,27 @@ namespace EBGeometry {
   bool
   Triangle<MetaData>::intersects(const Vec3& a_x0, const Vec3& a_x1) const noexcept
   {
-    bool ret = true;
+    const Real epsilon = EBGeometry::Limits::eps();
 
-    EBGEOMETRY_EXPECT(m_triangleNormal.length() == Real(1.0));
+    const Vec3 edge1 = m_vertexPositions[1] - m_vertexPositions[0];
+    const Vec3 edge2 = m_vertexPositions[2] - m_vertexPositions[0];
+    const Vec3 ray   = a_x1 - a_x0;
 
-    const Vec3 v1v0 = m_vertexPositions[1] - m_vertexPositions[0];
-    const Vec3 v2v0 = m_vertexPositions[2] - m_vertexPositions[0];
-    const Vec3 x0v0 = a_x0 - m_vertexPositions[0];
+    EBGEOMETRY_EXPECT(edge1.length() > EBGeometry::Limits::eps());
+    EBGEOMETRY_EXPECT(edge2.length() > EBGeometry::Limits::eps());
+    EBGEOMETRY_EXPECT(ray.length() > EBGeometry::Limits::eps());
 
-    EBGEOMETRY_EXPECT(v1v0 != Vec3::zero());
-    EBGEOMETRY_EXPECT(v2v0 != Vec3::zero());
+    const Real det    = -dot(ray, m_triangleNormal);
+    const Real invDet = 1.0 / det;
 
-    const Vec3 q = cross(x0v0, a_x1);
+    const Vec3 AO  = a_x0 - m_vertexPositions[0];
+    const Vec3 DAO = cross(AO, ray);
 
-#warning "Triangle::intersects fails -- probably a bug in here somewhere"
+    const Real u = dot(edge2, DAO) * invDet;
+    const Real v = -dot(edge1, DAO) * invDet;
+    const Real t = dot(AO, m_triangleNormal) * invDet;
 
-    const Real d = Real(1.0) / dot(a_x1, m_triangleNormal);
-    const Real u = d * dot(-q, v2v0);
-    const Real v = d * dot(q, v1v0);
-
-    if (u < 0.0 || v < 0.0 || (u + v) > 1.0) {
-      ret = false;
-    }
-
-    return ret;
+    return (std::abs(det) >= epsilon && t >= 0.0 && t <= 1.0 && u >= 0.0 && v >= 0.0 && (u + v) <= 1.0);
   }
 } // namespace EBGeometry
 

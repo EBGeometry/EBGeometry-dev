@@ -55,26 +55,20 @@ TEST_CASE("Triangle::intersects")
     CHECK(!(tri.intersects(x0, x1)));
   }
 
-  // Lines pass through triangle vertex
+  // Lines pass through triangle vertices
   {
     const Vec3 x0 = Vec3::unit(2) - Vec3::unit(0);
     const Vec3 x1 = -Vec3::unit(2) - Vec3::unit(0);
-    CHECK(!(tri.intersects(x0, x1)));
+    CHECK((tri.intersects(x0, x1)));
   }
   {
     const Vec3 x0 = Vec3::unit(2) + Vec3::unit(0);
     const Vec3 x1 = -Vec3::unit(2) + Vec3::unit(0);
-    CHECK(!(tri.intersects(x0, x1)));
+    CHECK((tri.intersects(x0, x1)));
   }
   {
     const Vec3 x0 = Vec3::unit(2) + Vec3::unit(1);
     const Vec3 x1 = -Vec3::unit(2) + Vec3::unit(1);
-    CHECK(!(tri.intersects(x0, x1)));
-  }
-
-  {
-    const Vec3 x0 = Vec3::unit(2) + 0.9 * Vec3::unit(1);
-    const Vec3 x1 = -Vec3::unit(2) + 0.9 * Vec3::unit(1);
     CHECK((tri.intersects(x0, x1)));
   }
 }
