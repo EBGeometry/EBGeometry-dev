@@ -191,6 +191,14 @@ namespace EBGeometry {
     operator-(const Vec2& a_other) const noexcept;
 
     /*!
+      @brief Returns a new Vec2 with same components
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    Vec2
+    operator+() const noexcept;
+
+    /*!
       @brief Negation operator. Returns a new Vec2 with negated components
     */
     EBGEOMETRY_GPU_HOST_DEVICE
@@ -545,6 +553,14 @@ namespace EBGeometry {
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     Vec3
     operator-(const Vec3& u) const noexcept;
+
+    /*!
+      @brief Return same vector as this vector. 
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    Vec3
+    operator+() const noexcept;
 
     /*!
       @brief Negation operator. Returns a vector with negated components

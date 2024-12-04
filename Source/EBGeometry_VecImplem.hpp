@@ -106,6 +106,13 @@ namespace EBGeometry {
 
   EBGEOMETRY_ALWAYS_INLINE
   Vec2
+  Vec2::operator+() const noexcept
+  {
+    return Vec2(m_x, m_y);
+  }  
+
+  EBGEOMETRY_ALWAYS_INLINE
+  Vec2
   Vec2::operator-() const noexcept
   {
     return Vec2(-m_x, -m_y);
@@ -276,6 +283,13 @@ namespace EBGeometry {
   Vec3::operator-(const Vec3& u) const noexcept
   {
     return Vec3(m_X[0] - u[0], m_X[1] - u[1], m_X[2] - u[2]);
+  }
+
+  EBGEOMETRY_ALWAYS_INLINE
+  Vec3
+  Vec3::operator+() const noexcept
+  {
+    return Vec3(m_X[0], m_X[1], m_X[2]);
   }
 
   EBGEOMETRY_ALWAYS_INLINE

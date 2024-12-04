@@ -86,7 +86,7 @@ namespace EBGeometry {
     EBGEOMETRY_EXPECT(x1x0.length() > EBGeometry::Limits::eps());
     EBGEOMETRY_EXPECT(x2x1.length() > EBGeometry::Limits::eps());
 
-    m_triangleNormal = x1x0.cross(x2x1);
+    m_triangleNormal = cross(x1x0, x2x1);
 
     EBGEOMETRY_EXPECT(m_triangleNormal.length() > EBGeometry::Limits::min());
 
@@ -276,7 +276,12 @@ namespace EBGeometry {
     const Real v = -dot(edge1, DAO) * invDet;
     const Real t = dot(AO, m_triangleNormal) * invDet;
 
-    return (std::abs(det) >= epsilon && t >= 0.0 && t <= 1.0 && u >= 0.0 && v >= 0.0 && (u + v) <= 1.0);
+    const bool a = std::abs(det) > epsilon;
+    const bool b = (t >= 0.0) && (t <= 1.0);
+    const bool c = (u >= 0.0) && (std::abs(u - 1.0) >= 0.0);
+    const bool d = (v >= 0.0) && (std::abs(u + v - 1.0) >= 0.0);
+
+    return (a && b && c && d);
   }
 } // namespace EBGeometry
 

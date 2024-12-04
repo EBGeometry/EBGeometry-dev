@@ -259,6 +259,8 @@ namespace EBGeometry {
 
     /*!
       @brief Check if a line passes through the triangle.
+      @detail Returns true if the line segment passes through the triangle, edges of the triangle,
+      or through one of the vertices.
       @param[in] a_x0 One endpoint of the line
       @param[in] a_x1 Other endpoint of the line
     */
