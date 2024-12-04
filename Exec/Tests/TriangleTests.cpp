@@ -21,8 +21,8 @@ TEST_CASE("Triangle::intersects")
   Vec3 vertices[3];
 
   vertices[0] = -Vec3::unit(0);
-  vertices[1] = Vec3::unit(0);
-  vertices[2] = Vec3::unit(1);
+  vertices[1] = +Vec3::unit(0);
+  vertices[2] = +Vec3::unit(1);
 
   Triangle<int> tri(vertices);
 
@@ -48,13 +48,22 @@ TEST_CASE("Triangle::intersects")
     CHECK(!(tri.intersects(x1, x0)));
   }
 
-  // Lines that pass through center of triangle
+  // Line that passes through center of triangle
   {
     const Vec3 c  = (vertices[0] + vertices[1] + vertices[2]) / Real(3.0);
     const Vec3 x0 = c + Vec3::unit(2);
     const Vec3 x1 = c - Vec3::unit(2);
     CHECK(tri.intersects(x0, x1));
     CHECK(tri.intersects(x1, x0));
+  }
+
+  // Line that almost passes through center of triangle
+  {
+    const Vec3 c  = (vertices[0] + vertices[1] + vertices[2]) / Real(3.0);
+    const Vec3 x0 = c + Vec3::unit(2);
+    const Vec3 x1 = c + 1.E-6 * Vec3::unit(2);
+    CHECK(!(tri.intersects(x0, x1)));
+    CHECK(!(tri.intersects(x1, x0)));
   }
 
   // Lines that pass through triangle edges
