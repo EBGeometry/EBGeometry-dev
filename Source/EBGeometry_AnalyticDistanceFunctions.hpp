@@ -281,7 +281,7 @@ namespace EBGeometry {
     operator=(BoxSDF&& a_box) noexcept = default;
 
     /*!
-      @brief Signed distance function for sphere.
+      @brief Signed distance function for a box.
       @param[in] a_point Position.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
@@ -318,6 +318,113 @@ namespace EBGeometry {
     */
     Vec3 m_hiCorner = 0.5 * Vec3::one();
   };
+
+  /*!
+    @brief Signed distance field for a torus
+    @details User inputs the center, major radius, and minor radius. The torus always lies in the xy plane
+  */
+  class TorusSDF : public ImplicitFunction
+  {
+  public:
+    /*!
+      @brief Default constructor. Sets a torus in the origin with a major radius 1 and minor radius 0.1
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    TorusSDF() noexcept = default;
+
+    /*!
+      @brief Full constructor. Sets the center and the radii. The torus lies in the xy plane.
+      @details One must always have minor radius < major_radius
+      @param[in] a_center Torus center.
+      @param[in] a_majorRadius Torus major radius.
+      @param[in] a_minorRadius Torus minor radius.
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    TorusSDF(const Vec3& a_center, const Real& a_majorRadius, const Real& a_minorRadius) noexcept :
+      m_center(a_center),
+      m_majorRadius(a_majorRadius),
+      m_minorRadius(a_minorRadius)
+    {
+      EBGEOMETRY_EXPECT(m_minorRadius < m_majorRadius);
+    }
+
+    /*!
+      @brief Copy constructor. 
+      @param[in] a_torus Other torus
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    TorusSDF(const TorusSDF& a_torus) noexcept = default;
+
+    /*!
+      @brief Move constructor. 
+      @param[in, out] a_torus Other torus
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    TorusSDF(TorusSDF&& a_torus) noexcept = default;
+
+    /*!
+      @brief Destructor
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    ~TorusSDF() noexcept override = default;
+
+    /*!
+      @brief Copy assignment operator
+      @param[in] a_torus Other torus
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    TorusSDF&
+    operator=(const TorusSDF& a_torus) noexcept = default;
+
+    /*!
+      @brief Move assignment operator
+      @param[in, out] a_torus Other torus
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    TorusSDF&
+    operator=(TorusSDF&& a_torus) noexcept = default;
+
+    /*!
+      @brief Signed distance function for the torus.
+      @param[in] a_point Position.
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    Real
+    value(const Vec3& a_point) const noexcept override
+    {
+      const auto p   = a_point - m_center;
+      const auto rho = sqrt(p[0] * p[0] + p[1] * p[1]) - m_majorRadius;
+      const auto d   = sqrt(rho * rho + p[2] * p[2]) - m_minorRadius;
+
+      return d;
+    }
+
+  protected:
+    /*!
+      @brief Torus center.
+    */
+    Vec3 m_center = Vec3::zero();
+
+    /*!
+      @brief Torus major radius
+    */
+    Real m_majorRadius;
+
+    /*!
+      @brief Torus minor radius
+    */
+    Real m_minorRadius;
+  };
 } // namespace EBGeometry
 
 #endif
+
+

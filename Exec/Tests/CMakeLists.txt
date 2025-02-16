@@ -3,6 +3,15 @@ include (CTest)
 # Use Catch2 for testing
 find_package(Catch2 3 REQUIRED)
 
+# AnalyticDistanceFunctions test
+add_executable(AnalyticDistanceFunctionsTests.out AnalyticDistanceFunctionsTests.cpp)
+target_link_libraries(AnalyticDistanceFunctionsTests.out PUBLIC Catch2::Catch2WithMain)
+if(ENABLE_CUDA)
+  set_source_files_properties(AnalyticDistanceFunctionsTests.cpp PROPERTIES LANGUAGE CUDA)
+  set_target_properties(AnalyticDistanceFunctionsTests.out PROPERTIES CUDA_ARCHITECTURES "native")
+  set_target_properties(AnalyticDistanceFunctionsTests.out PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+endif()
+
 # Virtual functions on CPU and GPU
 add_executable(VirtualFunctionTests.out VirtualFunctionTests.cpp)
 target_link_libraries(VirtualFunctionTests.out PUBLIC Catch2::Catch2WithMain)
