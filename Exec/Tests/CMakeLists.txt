@@ -61,6 +61,11 @@ endif()
 enable_testing()
 
 add_test(
+  NAME AnalyticDistanceFunctionsTests.out
+  COMMAND $<TARGET_FILE:AnalyticDistanceFunctionsTests.out>
+)
+
+add_test(
   NAME VirtualFunctionTests.out
   COMMAND $<TARGET_FILE:VirtualFunctionTests.out>
 )

@@ -12,7 +12,7 @@ evalImpFunc(Real* value, ImplicitFunction* func, Vec3* point)
   *value = func->value(*point);
 }
 
-TEST_CASE("SphereSDF_Test")
+TEST_CASE("SphereSDF_Construct_Free")
 {
   // Host construction.
   auto sphere_host = createImpFunc<SphereSDF, MemoryLocation::Host>();

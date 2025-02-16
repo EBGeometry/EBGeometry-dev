@@ -11,6 +11,7 @@ docs/**
 **Makefile**
 ***.cmake**
 Exec/Tests/Testing/**
+Testing
 DartConfiguration.tcl
 
 # Doc files
