@@ -47,7 +47,9 @@
 
 #endif // <--- End CUDA definition
 
-/*!
+namespace EBGeometry {
+
+  /*!
   @brief Enum for describing memory locations in host and device
   @details
 
@@ -57,42 +59,43 @@
   Unified: Device unified memory
   Global: Device global memory
 */
-enum class MemoryLocation // NOLINT
-{
-  Invalid,
-  Host,
-  Pinned,
-  Unified,
-  Global
-};
+  enum class MemoryLocation // NOLINT
+  {
+    Invalid,
+    Host,
+    Pinned,
+    Unified,
+    Global
+  };
 
-namespace GPU {
-  /*!
+  namespace GPU {
+    /*!
     @brief Check if an object is allocated on the device or on the host. Pointer should not be null.
     @return True if the object lives on the device and false otherwise.
   */
-  template <typename T>
-  EBGEOMETRY_GPU_HOST
-  EBGEOMETRY_ALWAYS_INLINE
-  bool
-  isDevicePointer(const T* a_ptr) noexcept
-  {
-    EBGEOMETRY_ALWAYS_EXPECT(a_ptr != nullptr);
+    template <typename T>
+    EBGEOMETRY_GPU_HOST
+    EBGEOMETRY_ALWAYS_INLINE
+    bool
+    isDevicePointer(const T* a_ptr) noexcept
+    {
+      EBGEOMETRY_ALWAYS_EXPECT(a_ptr != nullptr);
 
-    bool livesOnDevice = false;
+      bool livesOnDevice = false;
 
 #if EBGEOMETRY_ENABLE_CUDA
-    cudaPointerAttributes attr;
+      cudaPointerAttributes attr;
 
-    cudaPointerGetAttributes(&attr, a_ptr);
+      cudaPointerGetAttributes(&attr, a_ptr);
 
-    if ((attr.type == cudaMemoryTypeDevice) || (attr.type == cudaMemoryTypeManaged)) {
-      livesOnDevice = true;
-    }
+      if ((attr.type == cudaMemoryTypeDevice) || (attr.type == cudaMemoryTypeManaged)) {
+        livesOnDevice = true;
+      }
 #endif
 
-    return livesOnDevice;
-  }
-} // namespace GPU
+      return livesOnDevice;
+    }
+  } // namespace GPU
+} // namespace EBGeometry
 
 #endif

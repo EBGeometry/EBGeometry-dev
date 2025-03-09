@@ -21,3 +21,7 @@ Docs/*
 !Docs/doxyfile
 !Docs/README.md
 Docs/Sphinx/build/*
+
+# AMReX-based example files
+Exec/Examples/AMReX_*/plt*
+Exec/Examples/AMReX_*/tmp*
