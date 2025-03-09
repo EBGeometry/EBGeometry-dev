@@ -71,6 +71,7 @@ namespace EBGeometry {
       @brief Destructor
     */
     EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
     ~PlaneSDF() noexcept override = default;
 
     /*!
