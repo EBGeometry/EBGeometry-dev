@@ -95,7 +95,9 @@ namespace EBGeometry {
   /*!
     @brief Function for constructing an arbitrary implicit function on the device. 
     The user inputs the implicit function type and the constructor arguments required
-    for constructing the function. 
+    for constructing the function.
+    @note This routine uses placement new to assign the object, so storage for the
+    implicit function MUST be preallocated before calling this routine. 
     @param[in] a_implicitFunction Implicit function to be created on device
     @param[in] args Constructor arguments.
   */

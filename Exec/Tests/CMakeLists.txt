@@ -1,5 +1,7 @@
 include (CTest)
 
+include_directories(../../)
+
 # Use Catch2 for testing
 find_package(Catch2 3 REQUIRED)
 
