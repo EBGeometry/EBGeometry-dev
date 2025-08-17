@@ -1,6 +1,9 @@
+cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
+
 include (CTest)
 
-include_directories(../../)
+set(CMAKE_DISABLE_SOURCE_CHANGES ON)
+set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 
 # Use Catch2 for testing
 find_package(Catch2 3 REQUIRED)
