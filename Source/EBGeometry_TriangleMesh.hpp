@@ -33,20 +33,79 @@ namespace EBGeometry {
     as an implicit function. 
   */
   template <typename MetaData>
-  class TriangleMesh
+  class TriangleMesh : public ImplicitFunction
   {
   public:
-
     /*
       @brief Default constructor. Does not initialize any triangles
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMENTRY_ALWAYS_INLINE
+    EBGEOMETRY_ALWAYS_INLINE
     TriangleMesh() noexcept = default;
 
+    /*
+      @brief Full constructor. Initializes the triangle mesh.
+      @param[in] a_numTriangles Number of triangles in the mesh.
+      @param[in] a_triangles List of triangles. 
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    TriangleMesh(long long int a_numTriangles, const Triangle<MetaData>* a_triangles) noexcept;
+
+    /*!
+      @brief Copy constructor. 
+      @param[in] a_triangleMesh The triangle mesh to copy.
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    TriangleMesh(const TriangleMesh& a_mesh) noexcept = default;
+
+    /*!
+      @brief Move constructor. 
+      @param[in] a_triangleMesh The triangle mesh to move.
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    TriangleMesh(const TriangleMesh&& a_mesh) noexcept = default;
+
+    /*!
+      @brief Destructor -- does not deallocate memory. 
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    ~TriangleMesh(const TriangleMesh&& a_mesh) noexcept = default;
+
+    /*
+      @brief Define function which associates the triangles. 
+      @param[in] a_numTriangles Number of triangles in the mesh.
+      @param[in] a_triangles List of triangles. 
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    void
+    define(long long int a_numTriangles, const Triangle<MetaData>* a_triangles) noexcept;
+
+    /*!
+      @brief Value function.
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    Real
+    value(const Vec3& a_point) const noexcept override;
+
   protected:
-    
+    /*!
+      @brief List of triangles
+    */
+    Triangle<MetaData>* m_triangles = nullptr;
+
+    /*!
+      @brief Number of triangles
+    */
+    long long int m_numTriangles = -1LL;
   };
 } // namespace EBGeometry
+
+#include "EBGeometry_TriangleMeshImplem.hpp" // NOLINT
 
 #endif
