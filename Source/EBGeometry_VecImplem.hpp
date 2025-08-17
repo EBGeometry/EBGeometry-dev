@@ -109,7 +109,7 @@ namespace EBGeometry {
   Vec2::operator+() const noexcept
   {
     return Vec2(m_x, m_y);
-  }  
+  }
 
   EBGEOMETRY_ALWAYS_INLINE
   Vec2

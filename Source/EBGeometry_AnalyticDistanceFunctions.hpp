@@ -427,5 +427,3 @@ namespace EBGeometry {
 } // namespace EBGeometry
 
 #endif
-
-

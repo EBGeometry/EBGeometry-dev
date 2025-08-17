@@ -14,6 +14,13 @@ To clone EBGeometry:
 
     git clone git@github.com:rmrsk/EBGeometry.git
 	
+## Requirements
+
+* A C++ compiler which supports C++20.
+
+EBGeometry is a header-only library in C++ and has no external dependencies.
+To use it, simply make EBGeometry.hpp visible to your code and include it.	
+	
 ## Building
 
 To build EBGeometry, navigate to the top folder and perform the following
@@ -23,14 +30,27 @@ cmake -B build
 cmake --build build
 ```
 
+## Contributing
+
+Before submitting any pull request, make sure that the code is up to standard by running the following:
+
+### clang-tidy to catch common errors
+
+```
+clang-tidy --extra-arg=-std=c++20 Source/*.hpp Tests/*.hpp
+```
+
+### clang-format to catch formatting errors
+```
+find Source Exec \( -name "*.hpp" -o -name "*.cpp" \) -exec clang-format -i {} +
+```
+
+### codespell to catch grammatical errors
+```
+codespell Source Exec
+```
 
 
-## Requirements
-
-* A C++ compiler which supports C++20.
-
-EBGeometry is a header-only library in C++ and has no external dependencies.
-To use it, simply make EBGeometry.hpp visible to your code and include it.
 
 License
 -------
