@@ -1,9 +1,23 @@
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
-include (CTest)
-
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
+
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+  project(EBGEOMETRY_TESTS LANGUAGES CXX)  
+  
+  option(ENABLE_TESTS "" OFF)
+  option(ENABLE_EXAMPLES "" OFF)
+  
+  include(${CMAKE_CURRENT_SOURCE_DIR}/../../CMakeLists.txt)
+  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../..)
+endif()
+
+# if(ENABLE_CUDA)
+#   enable_language(CUDA)
+# endif()
+
+include (CTest)
 
 # Use Catch2 for testing
 find_package(Catch2 3 REQUIRED)
