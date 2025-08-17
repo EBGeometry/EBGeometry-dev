@@ -9,10 +9,12 @@ set (CMAKE_CXX_STANDARD 20)
 
 # Build settings.
 set(CMAKE_CXX_FLAGS "-O3 -march=native")
-set(ENABLE_DEBUG TRUE CACHE BOOL "Turn on/off debugging")
-set(ENABLE_CUDA TRUE CACHE BOOL "Turn on/off CUDA")
-set(ENABLE_HIP FALSE CACHE BOOL "Turn on/off HIP")
-set(ENABLE_TESTS TRUE CACHE BOOL "Build tests or not")
+
+option(ENABLE_DEBUG "ENABLE_DEBUG" ON)
+option(ENABLE_TESTS "ENABLE_TESTS" ON)
+option(ENABLE_EXAMPLES "ENABLE_EXAMPLES" ON)
+option(ENABLE_CUDA "ENABLE_CUDA" ON)
+option(ENABLE_HIP "ENABLE_HIP" OFF)
 
 # Source directories
 include_directories(./)
@@ -39,9 +41,12 @@ if(ENABLE_HIP)
   add_compile_definitions(EBGEOMETRY_ENABLE_HIP)
 endif()
 
-# Well, here we are. This file should be able to build and run the test suite and, if that passes,
-# build and run a few example programs.
+# Compile tests (but do not run them). 
 if(ENABLE_TESTS)
   add_subdirectory(./Exec/Tests)
+endif()
+
+if(ENABLE_EXAMPLES)
+  add_subdirectory(./Exec/Examples)
 endif()
 
