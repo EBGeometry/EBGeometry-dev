@@ -46,4 +46,4 @@ Checks: >
     '
 
 # Only available in clang-tidy >= 17
-#HeaderFileExtensions: ['', "hpp"]
+HeaderFileExtensions: ['', "hpp"]

@@ -405,7 +405,7 @@ namespace EBGeometry {
       const auto rho = sqrt(p[0] * p[0] + p[1] * p[1]) - m_majorRadius;
       const auto d   = sqrt(rho * rho + p[2] * p[2]) - m_minorRadius;
 
-      return d;
+      return Real(d);
     }
 
   protected:

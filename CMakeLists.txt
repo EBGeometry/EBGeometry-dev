@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
+set(CMAKE_CXX_CLANG_TIDY "clang-tidy")
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
@@ -47,7 +49,7 @@ if(ENABLE_TESTS)
   add_subdirectory(./Exec/Tests)
 endif()
 
-if(ENABLE_EXAMPLES)
-  add_subdirectory(./Exec/Examples)
-endif()
+# if(ENABLE_EXAMPLES)
+#   add_subdirectory(./Exec/Examples)
+# endif()
 
