@@ -126,13 +126,13 @@ namespace EBGeometry {
   EBGEOMETRY_GPU_HOST
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
   ImpFunc*
-  createImpFunc(const Args... args) noexcept
+  createImpFunc(const Args... a_args) noexcept
   {
     ImpFunc* implicitFunction = nullptr;
 
     switch (MemLoc) {
     case MemoryLocation::Host: {
-      implicitFunction = new ImpFunc(args...);
+      implicitFunction = new ImpFunc(a_args...);
 
       break;
     }
@@ -140,14 +140,14 @@ namespace EBGeometry {
     case MemoryLocation::Global: {
       cudaMalloc((void**)&implicitFunction, sizeof(ImpFunc));
 
-      constructImplicitFunctionOnDevice<ImpFunc><<<1, 1>>>(implicitFunction, args...);
+      constructImplicitFunctionOnDevice<ImpFunc><<<1, 1>>>(implicitFunction, a_args...);
 
       break;
     }
     case MemoryLocation::Unified: {
       cudaMallocManaged((void**)&implicitFunction, sizeof(ImpFunc));
 
-      constructImplicitFunctionOnDevice<ImpFunc><<<1, 1>>>(implicitFunction, args...);
+      constructImplicitFunctionOnDevice<ImpFunc><<<1, 1>>>(implicitFunction, a_args...);
 
       break;
     }

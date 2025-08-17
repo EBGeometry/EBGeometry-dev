@@ -249,17 +249,17 @@ namespace EBGeometry {
     getMetaData() const noexcept;
 
     /*!
-      @brief Compute the signed distance from the input point to the triangle
-      @param[in] a_point Input point
+      @brief Compute the signed distance from the input point x to the triangle
+      @param[in] a_point Point
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     Real
-    signedDistance(const Vec3& a_x) noexcept;
+    signedDistance(const Vec3& a_point) noexcept;
 
     /*!
       @brief Check if a line passes through the triangle.
-      @detail Returns true if the line segment passes through the triangle, edges of the triangle,
+      @details Returns true if the line segment passes through the triangle, edges of the triangle,
       or through one of the vertices.
       @param[in] a_x0 One endpoint of the line
       @param[in] a_x1 Other endpoint of the line

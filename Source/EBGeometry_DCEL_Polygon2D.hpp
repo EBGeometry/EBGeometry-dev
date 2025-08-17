@@ -194,7 +194,7 @@ namespace EBGeometry::DCEL {
     /*!
       @brief Project a 3D point onto the 2D polygon plane (this ignores one of the
       vector components)
-      @param[in] a_poitn 3D point
+      @param[in] a_point 3D point
       @return 2D point, ignoring one of the coordinate directions.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
@@ -204,7 +204,7 @@ namespace EBGeometry::DCEL {
 
     /*!
       @brief Compute the winding number for a point P with the 2D polygon
-      @param[in] P 2D point
+      @param[in] a_point 2D point
       @return Returns winding number.
     */
     EBGEOMETRY_GPU_HOST_DEVICE

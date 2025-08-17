@@ -47,7 +47,6 @@ namespace EBGeometry {
     /*!
       @brief Copy constructor. 
       @param[in] a_unionIF Other union
-      @param[in] a_f2 Second implicit function
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE

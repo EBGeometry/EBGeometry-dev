@@ -69,7 +69,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Triangle2D(const Triangle2D& a_triangle) noexcept = default;
+    Triangle2D(const Triangle2D& a_triangle2D) noexcept = default;
 
     /*!
       @brief Move constructor.
@@ -77,7 +77,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Triangle2D(Triangle2D&& a_triangle) noexcept = default;
+    Triangle2D(Triangle2D&& a_triangle2D) noexcept = default;
 
     /*!
       @brief Destructor (does nothing)
@@ -93,7 +93,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     Triangle2D&
-    operator=(const Triangle2D& a_triangle) noexcept = default;
+    operator=(const Triangle2D& a_triangle2D) noexcept = default;
 
     /*!
       @brief Move assignment.
@@ -102,7 +102,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     Triangle2D&
-    operator=(Triangle2D&& a_triangle) noexcept = default;
+    operator=(Triangle2D&& a_triangle2D) noexcept = default;
 
     /*!
       @brief Define function. Puts object in usable state. 

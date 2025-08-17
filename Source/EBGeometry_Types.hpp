@@ -14,6 +14,7 @@
 
 #include <cfloat>
 
+/*! \cond */
 #ifdef EBGEOMETRY_USE_DOUBLE
 namespace EBGeometry {
   using Real                 = double;
@@ -31,5 +32,6 @@ namespace EBGeometry {
   constexpr Real Epsilon     = FLT_EPSILON;
 } // namespace EBGeometry
 #endif
+/*! \endcond */
 
 #endif

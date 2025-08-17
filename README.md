@@ -50,6 +50,11 @@ find Source Exec \( -name "*.hpp" -o -name "*.cpp" \) -exec clang-format -i {} +
 codespell Source Exec
 ```
 
+### doxygen to catch errors in the documentation
+```
+codespell Source Exec
+```
+
 
 
 License

@@ -15,6 +15,8 @@
 #include <cassert>
 #include <iostream>
 
+/*! \cond */
+
 static unsigned long long int EBGEOMETRY_ASSERTION_FAILURES = 0;
 
 #define EBGEOMETRY_ALWAYS_EXPECT(cond)                                                     \
@@ -43,5 +45,7 @@ static unsigned long long int EBGEOMETRY_ASSERTION_FAILURES = 0;
 
 #define EBGEOMETRY_INLINE inline
 // End inline macros
+
+/*! \endcond */
 
 #endif
