@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
-set(CMAKE_CXX_CLANG_TIDY "clang-tidy")
+#set(CMAKE_CXX_CLANG_TIDY "clang-tidy")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
@@ -14,10 +14,14 @@ set (CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "-O3 -march=native")
 
 option(ENABLE_DEBUG "ENABLE_DEBUG" ON)
-option(ENABLE_TESTS "ENABLE_TESTS" ON)
+option(ENABLE_TESTS "ENABLE_TESTS" OFF)
 option(ENABLE_EXAMPLES "ENABLE_EXAMPLES" ON)
 option(ENABLE_CUDA "ENABLE_CUDA" ON)
 option(ENABLE_HIP "ENABLE_HIP" OFF)
+
+# Header-only library
+add_library(ebgeometry INTERFACE)
+target_include_directories(ebgeometry INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Source directories
 include_directories(./)
@@ -49,7 +53,6 @@ if(ENABLE_TESTS)
   add_subdirectory(./Exec/Tests)
 endif()
 
-# if(ENABLE_EXAMPLES)
-#   add_subdirectory(./Exec/Examples)
-# endif()
-
+if(ENABLE_EXAMPLES)
+  add_subdirectory(./Exec/Examples/EBGeometry_Shapes)
+endif()
