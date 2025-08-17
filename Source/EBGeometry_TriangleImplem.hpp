@@ -267,7 +267,7 @@ namespace EBGeometry {
     EBGEOMETRY_EXPECT(ray.length() > EBGeometry::Limits::eps());
 
     const Real det    = -dot(ray, m_triangleNormal);
-    const Real invDet = 1.0 / det;
+    const Real invDet = Real(1.0) / det;
 
     const Vec3 AO  = a_x0 - m_vertexPositions[0];
     const Vec3 DAO = cross(AO, ray);

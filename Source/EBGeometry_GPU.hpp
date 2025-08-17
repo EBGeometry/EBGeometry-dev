@@ -75,8 +75,8 @@ namespace EBGeometry {
   */
     template <typename T>
     EBGEOMETRY_GPU_HOST
-    EBGEOMETRY_ALWAYS_INLINE
-     [[nodiscard]] bool
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    bool
     isDevicePointer(const T* a_ptr) noexcept
     {
       EBGEOMETRY_ALWAYS_EXPECT(a_ptr != nullptr);

@@ -32,29 +32,14 @@ cmake --build build
 
 ## Contributing
 
-Before submitting any pull request, make sure that the code is up to standard by running the following:
-
-### clang-tidy to catch common errors
+Before submitting any pull request, make sure that the code is up to standard by running the CheckCodeQL.sh script that resides in the top folder.
 
 ```
-clang-tidy --extra-arg=-std=c++20 Source/*.hpp Tests/*.hpp
+./CheckCodeQL
 ```
 
-### clang-format to catch formatting errors
-```
-find Source Exec \( -name "*.hpp" -o -name "*.cpp" \) -exec clang-format -i {} +
-```
-
-### codespell to catch grammatical errors
-```
-codespell Source Exec
-```
-
-### doxygen to catch errors in the documentation
-```
-codespell Source Exec
-```
-
+This script will run clang-tidy, clang-format, codespell, and doxygen to ensure that the code quality is reasonably up to date.
+Note that these tests are always run as GitHub actions before approving PRs.
 
 
 License
