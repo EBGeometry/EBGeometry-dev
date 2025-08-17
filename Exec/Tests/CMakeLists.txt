@@ -3,6 +3,15 @@ cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 
+set(TEST_SOURCES
+  AnalyticDistanceFunctionsTests.cpp
+  MeshParserTests.cpp
+  TriangleTests.cpp  
+  VirtualFunctionTests.cpp
+  VecTests.cpp
+  VertexTests.cpp
+)
+
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
   project(EBGEOMETRY_TESTS LANGUAGES CXX)  
   
@@ -17,15 +26,6 @@ include (CTest)
 
 # Use Catch2 for testing
 find_package(Catch2 3 REQUIRED)
-
-set(TEST_SOURCES
-  AnalyticDistanceFunctionsTests.cpp
-  MeshParserTests.cpp
-  TriangleTests.cpp  
-  VirtualFunctionTests.cpp
-  VecTests.cpp
-  VertexTests.cpp
-)
 
 foreach(CurTestSrc ${TEST_SOURCES})
   get_filename_component(CurTestExec ${CurTestSrc} NAME_WE)
