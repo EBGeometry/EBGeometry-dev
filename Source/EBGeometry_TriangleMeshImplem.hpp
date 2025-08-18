@@ -65,7 +65,7 @@ namespace EBGeometry {
 
     Real dist = EBGeometry::Limits::max();
 
-    for (long long int i = 0; i < m_numTriangles; i++) {
+    for (long long int i = 0; i < this->m_numTriangles; i++) {
       const Real curDist = m_triangles[i].signedDistance(a_point);
 
       dist = (std::abs(curDist) < std::abs(dist)) ? curDist : dist;

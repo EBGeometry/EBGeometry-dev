@@ -231,7 +231,7 @@ namespace EBGeometry::MeshParser {
 
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
-  EBGeometry::DCEL::Mesh<MetaData>*
+  EBGeometry::DCEL::Mesh<MetaData>
   readIntoDCEL(const std::string& a_fileName) noexcept
   {
     // Read file into a polygon soup and remove degenerate vertices.
@@ -242,23 +242,23 @@ namespace EBGeometry::MeshParser {
     EBGEOMETRY_EXPECT(!(MeshParser::containsDegeneratePolygons(soup)));
     EBGEOMETRY_EXPECT(!(MeshParser::containsDegenerateVertices(soup)));
 
-    const auto mesh = MeshParser::turnPolygonSoupIntoDCEL<MetaData>(soup);
+    const auto mesh = MeshParser::createDCELMeshFromSoup<MetaData>(soup);
 
     return mesh;
   }
 
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
-  EBGeometry::DCEL::Mesh<MetaData>*
-  turnPolygonSoupIntoDCEL(PolygonSoup<MetaData>& a_soup) noexcept
+  EBGeometry::DCEL::Mesh<MetaData>
+  createDCELMeshFromSoup(const PolygonSoup<MetaData>& a_soup) noexcept
   {
     using namespace EBGeometry::DCEL;
 
     EBGEOMETRY_EXPECT(!(MeshParser::containsDegeneratePolygons(a_soup)));
     EBGEOMETRY_EXPECT(!(MeshParser::containsDegenerateVertices(a_soup)));
 
-    std::vector<Vec3>&                                  soupVertices = std::get<0>(a_soup);
-    std::vector<std::pair<std::vector<int>, MetaData>>& soupFaces    = std::get<1>(a_soup);
+    const std::vector<Vec3>&                                  soupVertices = std::get<0>(a_soup);
+    const std::vector<std::pair<std::vector<int>, MetaData>>& soupFaces    = std::get<1>(a_soup);
 
     EBGEOMETRY_ALWAYS_EXPECT(soupVertices.size() >= 3);
     EBGEOMETRY_ALWAYS_EXPECT(!(soupFaces.empty()));
@@ -412,27 +412,43 @@ namespace EBGeometry::MeshParser {
 
     // Allocate a mesh. Then do a sanity check and reconcile the mesh, which will compute
     // internal parameters like normal vectors for the vertices, edges, and faces.
-    auto mesh = new Mesh<MetaData>(numVertices, numEdges, numFaces, vertices, edges, faces);
+    //    auto mesh = new Mesh<MetaData>(numVertices, numEdges, numFaces, vertices, edges, faces);
+    Mesh<MetaData> mesh(numVertices, numEdges, numFaces, vertices, edges, faces);
 
-    const bool isManifold = mesh->isManifold();
+    const bool isManifold = mesh.isManifold();
 
     if (isManifold) {
-      mesh->reconcile();
+      mesh.reconcile();
     }
     else {
       EBGEOMETRY_ALWAYS_EXPECT(isManifold);
 
-      mesh->freeMem();
-
-      delete mesh;
-
-      mesh = nullptr;
+      mesh.freeMem();
 
       std::cerr
-        << "EBGeometry_MeshParserImplem.hpp::turnPolygonSoupIntoDCEL - mesh is not manifold and will not be turned into a DCEL mesh!\n";
+        << "EBGeometry_MeshParserImplem.hpp::createDCELMeshFromSoup - mesh is not manifold and will not be turned into a DCEL mesh!\n";
     }
 
     return mesh;
+  }
+
+  template <typename MetaData>
+  EBGEOMETRY_ALWAYS_INLINE
+  std::vector<Triangle<MetaData>>
+  createTrianglesFromDCELMesh(const EBGeometry::DCEL::Mesh<MetaData>& a_dcelMesh) noexcept
+  {
+    EBGEOMETRY_ALWAYS_EXPECT(a_dcelMesh.isManifold());
+
+    std::vector<Triangle<MetaData>> triangles;
+
+    // Plan:
+    //
+    // Iterate through the interior of each DCEL polygon; fetch the normal for every edge, vertex, and
+    // polygon face. Populate the triangles list = success!
+    
+#warning "createTrianglesFromDCELMesh -- not implemented";
+
+    return triangles;
   }
 
   template <typename MetaData>
