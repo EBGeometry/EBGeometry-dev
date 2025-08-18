@@ -115,7 +115,7 @@ namespace EBGeometry::DCEL {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    ~Mesh() noexcept = default;
+    virtual ~Mesh() noexcept = default;
 
     /*!
       @brief Copy assignment.. 
