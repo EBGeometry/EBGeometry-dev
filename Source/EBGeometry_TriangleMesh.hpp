@@ -9,8 +9,8 @@
   @author  Robert Marskar
 */
 
-#ifndef EBGeometry_MeshDistanceFunctions
-#define EBGeometry_MeshDistanceFunctions
+#ifndef EBGeometry_TriangleMesh
+#define EBGeometry_TriangleMesh
 
 #include "EBGeometry_Types.hpp"
 #include "EBGeometry_GPU.hpp"
@@ -66,14 +66,14 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    TriangleMesh(const TriangleMesh&& a_mesh) noexcept = default;
+    TriangleMesh(TriangleMesh&& a_mesh) noexcept = default;
 
     /*!
       @brief Destructor -- does not deallocate memory. 
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    ~TriangleMesh(const TriangleMesh&& a_mesh) noexcept = default;
+    ~TriangleMesh() noexcept = default;
 
     /*
       @brief Define function which associates the triangles. 
@@ -86,7 +86,26 @@ namespace EBGeometry {
     define(long long int a_numTriangles, const Triangle<MetaData>* a_triangles) noexcept;
 
     /*!
-      @brief Value function.
+      @brief Get the number of triangles in the mesh
+      @return Returns m_numTriangles
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    long long int
+    getNumberOfTriangles() const noexcept;
+
+    /*!
+      @brief Get the triangles in the mesh
+      @return Returns m_triangles
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    const Triangle<MetaData>* 
+    getTriangles() const noexcept;    
+
+    /*!
+      @brief Value function. Returns the (signed) distance to the closest triangle
+      @param[in] a_point Query point. 
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -97,7 +116,7 @@ namespace EBGeometry {
     /*!
       @brief List of triangles
     */
-    Triangle<MetaData>* m_triangles = nullptr;
+    const Triangle<MetaData>* m_triangles = nullptr;
 
     /*!
       @brief Number of triangles

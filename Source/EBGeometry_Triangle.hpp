@@ -255,7 +255,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     Real
-    signedDistance(const Vec3& a_point) noexcept;
+    signedDistance(const Vec3& a_point) const noexcept;
 
     /*!
       @brief Check if a line passes through the triangle.

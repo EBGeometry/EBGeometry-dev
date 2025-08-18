@@ -15,6 +15,7 @@
 #include "Source/EBGeometry_SFC.hpp"
 #include "Source/EBGeometry_Triangle.hpp"
 #include "Source/EBGeometry_Triangle2D.hpp"
+#include "Source/EBGeometry_TriangleMesh.hpp"
 #include "Source/EBGeometry_Types.hpp"
 #include "Source/EBGeometry_Vec.hpp"
 

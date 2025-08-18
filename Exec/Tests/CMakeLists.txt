@@ -6,7 +6,8 @@ set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 set(TEST_SOURCES
   AnalyticDistanceFunctionsTests.cpp
   MeshParserTests.cpp
-  TriangleTests.cpp  
+  TriangleTests.cpp
+  TriangleMeshTests.cpp
   VirtualFunctionTests.cpp
   VecTests.cpp
   VertexTests.cpp

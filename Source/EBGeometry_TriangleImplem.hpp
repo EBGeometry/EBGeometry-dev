@@ -177,7 +177,7 @@ namespace EBGeometry {
   template <typename MetaData>
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
   Real
-  Triangle<MetaData>::signedDistance(const Vec3& a_point) noexcept
+  Triangle<MetaData>::signedDistance(const Vec3& a_point) const noexcept
   {
     // Perform extra checks in debug mode -- if any of these fail then something is uninitialized.
 #ifdef EBGEOMETRY_DEBUG
