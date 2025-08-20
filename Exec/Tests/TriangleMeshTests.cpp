@@ -1,7 +1,11 @@
-#include "EBGeometry.hpp"
+#include <cstdlib>
+#include <iostream>
+#include <filesystem>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
+
+#include "EBGeometry.hpp"
 
 using namespace EBGeometry;
 

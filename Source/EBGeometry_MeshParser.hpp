@@ -22,7 +22,10 @@
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_GPUTypes.hpp"
 #include "EBGeometry_Macros.hpp"
+#include "EBGeometry_TriangleMesh.hpp"
 #include "EBGeometry_Vec.hpp"
+
+#warning "Implement a function that turns a triangle mesh into a DCEL mesh"
 
 namespace EBGeometry::MeshParser {
 
@@ -72,7 +75,7 @@ namespace EBGeometry::MeshParser {
   template <typename MetaData>
   EBGEOMETRY_GPU_HOST
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-  static EBGeometry::DCEL::Mesh<MetaData>*
+  static EBGeometry::DCEL::Mesh<MetaData>
   readIntoDCEL(const std::string& a_fileName) noexcept;
 
   /*!
@@ -129,8 +132,22 @@ namespace EBGeometry::MeshParser {
   template <typename MetaData>
   EBGEOMETRY_GPU_HOST
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-  static EBGeometry::DCEL::Mesh<MetaData>*
-  turnPolygonSoupIntoDCEL(PolygonSoup<MetaData>& a_soup) noexcept;
+  static EBGeometry::DCEL::Mesh<MetaData>
+  createDCELMeshFromSoup(const PolygonSoup<MetaData>& a_soup) noexcept;
+
+  /*!
+    @brief Turn a polygon soup into a triangle mesh.
+    @details This is a converter function for turning a DCEL mesh into a triangle mesh. This function will
+    take an existing DCEL mesh and check if every polygon in the DCEL is indeed a triangle. If it is, we allocate
+    a list of triangles which are returned to the caller.
+    @param[in] a_dcelMesh Pre-existing DCEL mesh, out of which we extract triangles.
+    @return A list of triangles, with associated normal vectors on their vertex and edge normals. 
+  */
+  template <typename MetaData>
+  EBGEOMETRY_GPU_HOST
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+  static std::vector<Triangle<MetaData>>
+  createTrianglesFromDCELMesh(const EBGeometry::DCEL::Mesh<MetaData>& a_dcelMesh) noexcept;
 
   /*!
     @brief MeshParser class for reading STL files into polygon soups. 

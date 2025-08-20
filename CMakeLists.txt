@@ -18,6 +18,7 @@ option(ENABLE_TESTS "ENABLE_TESTS" ON)
 option(ENABLE_EXAMPLES "ENABLE_EXAMPLES" ON)
 option(ENABLE_CUDA "ENABLE_CUDA" OFF)
 option(ENABLE_HIP "ENABLE_HIP" OFF)
+option(ENABLE_DOUBLE "ENABLE_DOUBLE" ON)
 
 # Header-only library
 add_library(ebgeometry INTERFACE)
@@ -28,6 +29,10 @@ include_directories(./)
 
 if(ENABLE_DEBUG)
   add_compile_definitions(EBGEOMETRY_ENABLE_DEBUG)
+endif()
+
+if(ENABLE_DOUBLE)
+  add_compile_definitions(EBGEOMETRY_USE_DOUBLE)
 endif()
 
 if(ENABLE_CUDA)

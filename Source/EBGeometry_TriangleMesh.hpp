@@ -17,6 +17,7 @@
 #include "EBGeometry_GPUTypes.hpp"
 #include "EBGeometry_ImplicitFunction.hpp"
 #include "EBGeometry_Macros.hpp"
+#include "EBGeometry_Triangle.hpp"
 #include "EBGeometry_Vec.hpp"
 
 namespace EBGeometry {

@@ -43,12 +43,10 @@ TEST_CASE("CLEAN_STL_ASCII_DCEL")
 
     auto mesh = MeshParser::readIntoDCEL<short>(entry.path());
 
-    CHECK(mesh->isManifold() == true);
+    CHECK(mesh.isManifold() == true);
     CHECK(EBGEOMETRY_ASSERTION_FAILURES == 0);
 
-    mesh->freeMem();
-
-    delete mesh;
+    mesh.freeMem();
   }
 }
 
@@ -59,12 +57,10 @@ TEST_CASE("CLEAN_STL_BINARY_DCEL")
 
     auto mesh = MeshParser::readIntoDCEL<short>(entry.path());
 
-    CHECK(mesh->isManifold() == true);
+    CHECK(mesh.isManifold() == true);
     CHECK(EBGEOMETRY_ASSERTION_FAILURES == 0);
 
-    mesh->freeMem();
-
-    delete mesh;
+    mesh.freeMem();
   }
 }
 
@@ -86,11 +82,9 @@ TEST_CASE("CLEAN_PLY_ASCII_DCEL")
 
     auto mesh = MeshParser::readIntoDCEL<short>(entry.path());
 
-    CHECK(mesh->isManifold() == true);
+    CHECK(mesh.isManifold() == true);
     CHECK(EBGEOMETRY_ASSERTION_FAILURES == 0);
 
-    mesh->freeMem();
-
-    delete mesh;
+    mesh.freeMem();
   }
 }
