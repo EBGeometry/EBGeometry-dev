@@ -26,6 +26,5 @@ jobs:
             -DENABLE_CUDA=OFF
             -DENABLE_HIP=OFF
           build_dir: build
-          include: >
-            Exec/Examples/EBGeometry_Shapes/Sphere.cpp
+#          include: Exec/Examples/EBGeometry_Shapes/Sphere.cpp
       - uses: ZedThree/clang-tidy-review/upload@v0.21.0
