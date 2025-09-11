@@ -1,5 +1,5 @@
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/EBGeometry/EBGeometry-dev/main.svg)](https://results.pre-commit.ci/latest/github/EBGeometry/EBGeometry-dev/main)
-![Lines of Code](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/USERNAME/REPO/main/.github/badges/loc.json)
+![Lines of Code](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/EBGeometry/EBGeometry-dev/main/.github/badges/loc.json)
 
 ## EBGeometry
 
