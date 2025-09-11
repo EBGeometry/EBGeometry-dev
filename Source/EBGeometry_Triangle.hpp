@@ -163,7 +163,7 @@ namespace EBGeometry {
       @return m_triangleNormal
     */
     EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    EBGEOMETRY_ALWAYS_INLINE
     Vec3&
     getNormal() noexcept;
 
