@@ -20,6 +20,14 @@ repos:
     hooks:
     - id: clang-format
 
+  - repo: local
+    hooks:
+      - id: cmake-generate-compile-commands
+        name: CMake configure (make compile_commands.json)
+        language: system
+        entry: bash -c 'cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+        pass_filenames: false
+
   - repo: https://github.com/pocc/pre-commit-hooks
     rev: v1.3.5
     hooks:
