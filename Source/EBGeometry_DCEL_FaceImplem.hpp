@@ -224,7 +224,7 @@ namespace EBGeometry::DCEL {
 
     Real minDist = EBGeometry::Limits::max();
 
-    const bool inside = this->isPointInside(a_x0);
+    const bool inside = this->isPointInsideFace(a_x0);
 
     if (inside) {
       minDist = m_normal.dot(a_x0 - m_centroid);
@@ -261,7 +261,7 @@ namespace EBGeometry::DCEL {
 
     Real minDist2 = EBGeometry::Limits::max();
 
-    const bool inside = this->isPointInside(a_x0);
+    const bool inside = this->isPointInsideFace(a_x0);
 
     if (inside) {
       const Real curDist = m_normal.dot(a_x0 - m_centroid);
