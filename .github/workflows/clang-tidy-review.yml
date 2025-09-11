@@ -1,0 +1,80 @@
+name: clang-tidy-review
+
+on:
+  pull_request:
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.head_ref }}-clang-tidy
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  clang-tidy:
+    if: ${{ github.event.pull_request.draft == false }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # --- 1) Configure your real project (collect Exec/**.cpp commands)
+      - name: Configure main project (CMake)
+        run: |
+          cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+          cmake --build build -j 2 || true
+
+      # --- 2) Create a tiny stub that includes EBGeometry.hpp (for header-only changes)
+      - name: Create stub project for headers
+        run: |
+          mkdir -p tools/ctu/src
+          cat > tools/ctu/src/clang_tidy_all.cpp <<'EOF'
+          #include "EBGeometry.hpp"
+          EOF
+
+          cat > tools/ctu/CMakeLists.txt <<'EOF'
+          cmake_minimum_required(VERSION 3.15)
+          project(clang_tidy_stub CXX)
+          add_library(clang_tidy_headers OBJECT src/clang_tidy_all.cpp)
+          # Make headers resolvable given your layout:
+          # repo root and Source/ for additional headers
+          target_include_directories(clang_tidy_headers PRIVATE
+            ${CMAKE_SOURCE_DIR}/../..          # repo root (for EBGeometry.hpp)
+            ${CMAKE_SOURCE_DIR}/../../Source   # headers under Source/
+          )
+          target_compile_features(clang_tidy_headers PRIVATE cxx_std_20)
+          EOF
+
+      - name: Configure stub (CMake)
+        run: |
+          cmake -S tools/ctu -B build/ctu -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+          cmake --build build/ctu -j 2 || true
+
+      # --- 3) Merge compile_commands from main + stub so tidy sees everything
+      - name: Merge compile_commands.json
+        run: |
+          mkdir -p build/merged
+          # If jq isn't present, install it (Ubuntu runners usually have it).
+          command -v jq >/dev/null 2>&1 || sudo apt-get update && sudo apt-get install -y jq
+          jq -s '.[0] + .[1]' build/compile_commands.json build/ctu/compile_commands.json \
+            > build/merged/compile_commands.json
+          # convenience symlink so -p points at a dir with the file
+          ln -s ../merged/compile_commands.json build/merged/compile_commands.json >/dev/null 2>&1 || true
+
+      # --- 4) Run clang-tidy and post review/comments on the PR
+      - name: Clang-Tidy Review
+        id: review
+        uses: ZedThree/clang-tidy-review@4ea7f7b72e7e039588ef5e64de9a845e5a3f8db5 # v0.21.0
+        with:
+          build_dir: build/merged         # <-- merged compilation DB
+          clang_tidy_checks: ''           # use your .clang-tidy
+          lgtm_comment_body: ''
+          annotations: true
+
+      - name: Upload clang-tidy fixes
+        uses: ZedThree/clang-tidy-review/upload@4ea7f7b72e7e039588ef5e64de9a845e5a3f8db5 # v0.21.0
+
+      - name: Fail if clang-tidy found issues
+        if: ${{ steps.review.outputs.total_comments > 0 }}
+        run: exit 1
