@@ -1,5 +1,9 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
+
+ci:
+  skip: [clang-tidy]
+  
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
@@ -14,7 +18,7 @@ repos:
   - repo: https://github.com/pre-commit/mirrors-clang-format
     rev: v21.1.0
     hooks:
-    -   id: clang-format
+    - id: clang-format
 
   - repo: https://github.com/pocc/pre-commit-hooks
     rev: v1.3.5
