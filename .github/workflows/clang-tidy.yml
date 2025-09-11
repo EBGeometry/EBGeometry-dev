@@ -1,15 +1,19 @@
-name: clang-tidy (PR)
+name: clang-tidy-review
 
 on:
   pull_request:
 
+concurrency:
+  group: ${{ github.ref }}-${{ github.head_ref }}-clang-tidy
+  cancel-in-progress: treu
+
 jobs:
-  tidy:
+  clang-tidy:
     runs-on: ubuntu-latest
 
     permissions:
       contents: read
-      pull-requests: write   # needed to post review comments
+      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4
@@ -39,7 +43,7 @@ jobs:
 
           # Run clang-tidy and post a review on the PR
       - name: Clang-Tidy Review
-        uses: ZedThree/clang-tidy-review@v0.14.0
+        uses: uses: ZedThree/clang-tidy-review@4ea7f7b72e7e039588ef5e64de9a845e5a3f8db5 # v0.21.0
         with:
           build_dir: build
           clang_tidy_checks: ''      
