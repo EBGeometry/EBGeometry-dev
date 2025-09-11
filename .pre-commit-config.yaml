@@ -1,12 +1,19 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+exclude: '\.ipynb$'
 repos:
-  - repo: https://github.com/pre-commit/mirrors-clang-format
-    rev: v17.0.6 # pick the clang-format you want; match your devs
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
     hooks:
-      - id: clang-format
-        args: [--style=file]   # uses .clang-format at the repo root
-        files: |
-          (?x)^(
-            Sources/.*\.(h|hh|hpp|hxx|inl)$|
-            Exec/Tests/.*\.cpp$|
-            Exec/Examples/EBGeometry_Shapes/.*\.cpp$
-          )
+    -   id: check-yaml
+        exclude: docs/mkdocs.yml
+    -   id: check-added-large-files
+    -   id: check-case-conflict
+    -   id: check-merge-conflict
+    -   id: check-symlinks
+    -   id: mixed-line-ending
+
+-   repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v21.1.0
+    hooks:
+    -   id: clang-format
