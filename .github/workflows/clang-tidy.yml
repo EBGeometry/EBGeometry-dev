@@ -43,7 +43,7 @@ jobs:
 
           # Run clang-tidy and post a review on the PR
       - name: Clang-Tidy Review
-        uses: uses: ZedThree/clang-tidy-review@4ea7f7b72e7e039588ef5e64de9a845e5a3f8db5 # v0.21.0
+        uses: ZedThree/clang-tidy-review@4ea7f7b72e7e039588ef5e64de9a845e5a3f8db5 # v0.21.0
         with:
           build_dir: build
           clang_tidy_checks: ''      
