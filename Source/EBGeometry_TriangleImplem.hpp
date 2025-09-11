@@ -32,7 +32,6 @@ namespace EBGeometry {
     this->m_triangleNormal = a_normal;
   }
 
-  template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
   void
   Triangle<MetaData>::setVertexPositions(const Vec3 a_vertexPositions[3]) noexcept
