@@ -23,7 +23,7 @@ jobs:
       - name: Count LOC and build Shields JSON
         run: |
           mkdir -p .github/badges
-          cloc . --json --quiet \
+          cloc Source --json --quiet \
             --exclude-dir=.git,node_modules,dist,build,.next,out,coverage,vendor \
             > cloc.json
 
