@@ -36,5 +36,6 @@ repos:
     rev: v21.1.0
     hooks:
     - id: clang-format
+      files: ^(Source/|Exec/)
 
 
