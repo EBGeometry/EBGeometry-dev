@@ -2,7 +2,7 @@ name: clang-tidy-review
 
 on:
   pull_request:
-#    types: [opened, synchronize, reopened, ready_for_review]
+    # types: [opened, synchronize, reopened, ready_for_review]
 
 concurrency:
   group: ${{ github.ref }}-${{ github.head_ref }}-clang-tidy
@@ -10,11 +10,11 @@ concurrency:
 
 permissions:
   contents: read
-  pull-requests: write  
+  pull-requests: write
 
 jobs:
   clang-tidy:
-    if: ${{ !github.event.pull_request_draft }}
+    if: ${{ github.event.pull_request.draft == false }}
     runs-on: ubuntu-latest
 
     steps:
@@ -40,17 +40,19 @@ jobs:
 
       # Run clang-tidy and post a review on the PR
       - name: Clang-Tidy Review
+        id: review
         uses: ZedThree/clang-tidy-review@4ea7f7b72e7e039588ef5e64de9a845e5a3f8db5 # v0.21.0
         with:
           build_dir: build
-          clang_tidy_checks: ''      
-          lgtm_comment_body: ''      
+          clang_tidy_checks: ''     # use your .clang-tidy
+          lgtm_comment_body: ''     # optional
           annotations: true
 
+      # Upload an artifact containing clang_fixes.json (for split workflows or debugging)
+      - name: Upload clang-tidy fixes
+        uses: ZedThree/clang-tidy-review/upload@4ea7f7b72e7e039588ef5e64de9a845e5a3f8db5 # v0.21.0
 
-        # Uploads an artefact containing clang_fixes.json
-        - uses: ZedThree/clang-tidy-review/upload@4ea7f7b72e7e039588ef5e64de9a845e5a3f8db5 # v0.21.0
-
-        # If there are any comments, fail the check
-        - if: steps.review.outputs.total_comments > 0
-          run: exit 1
+      # If there are any comments, fail the check
+      - name: Fail if clang-tidy found issues
+        if: ${{ steps.review.outputs.total_comments > 0 }}
+        run: exit 1
