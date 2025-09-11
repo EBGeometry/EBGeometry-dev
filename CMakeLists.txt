@@ -14,7 +14,7 @@ set (CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "-O3 -march=native")
 
 option(ENABLE_DEBUG "ENABLE_DEBUG" ON)
-option(ENABLE_TESTS "ENABLE_TESTS" OFF)
+option(ENABLE_TESTS "ENABLE_TESTS" ON)
 option(ENABLE_EXAMPLES "ENABLE_EXAMPLES" OFF)
 option(ENABLE_CUDA "ENABLE_CUDA" OFF)
 option(ENABLE_HIP "ENABLE_HIP" OFF)
@@ -60,18 +60,4 @@ endif()
 
 if(ENABLE_EXAMPLES)
   add_subdirectory(./Exec/Examples/EBGeometry_Shapes)
-endif()
-
-# Enable a dummy translation unit so clang-tidy can analyze headers
-option(EBGEOMETRY_TIDY_DUMMY "Generate a dummy TU for clang-tidy" ON)
-
-if(EBGEOMETRY_TIDY_DUMMY)
-  # Write a tiny TU into the build tree that includes your single public header
-  set(_tidy_dummy "${CMAKE_CURRENT_BINARY_DIR}/tidy_dummy.cpp")
-  file(WRITE "${_tidy_dummy}" "#include \"${CMAKE_SOURCE_DIR}/EBGeometry.hpp\"\nint main(){return 0;}\n")
-
-  # Compile it so CMake records flags & includes in compile_commands.json
-  add_executable(ebg_tidy_dummy "${_tidy_dummy}")
-  target_link_libraries(ebg_tidy_dummy PRIVATE ebgeometry)
-  target_include_directories(ebg_tidy_dummy PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 endif()
