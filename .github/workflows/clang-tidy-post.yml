@@ -15,6 +15,6 @@ jobs:
     steps:
       - uses: ZedThree/clang-tidy-review/post@v0.21.0
         with:
-          lgtm_comment_body: 'clang-tidy review says "All clean, LGTM!"'
+          lgtm_comment_body: ''
           annotations: false
           max_comments: 10
