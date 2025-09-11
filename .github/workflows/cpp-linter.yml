@@ -1,0 +1,80 @@
+name: cpp-linter
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '**/*.c'
+      - '**/*.cc'
+      - '**/*.cxx'
+      - '**/*.cpp'
+      - '**/*.h'
+      - '**/*.hh'
+      - '**/*.hpp'
+      - '**/*.hxx'
+      - '**CMakeLists.txt'
+      - '**/*.cmake'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write   # needed for PR reviews and thread comments
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # --- Header-only trick: create a minimal CMake project with a dummy TU
+      - name: Create dummy TU and minimal CMake project
+        run: |
+          mkdir -p tools/clang-tidy-stub/src
+          cat > tools/clang-tidy-stub/src/clang_tidy_all.cpp <<'EOF'
+          #include "EBGeometry.hpp"
+          EOF
+
+          cat > tools/clang-tidy-stub/CMakeLists.txt <<'EOF'
+          cmake_minimum_required(VERSION 3.15)
+          project(clang_tidy_stub CXX)
+          add_library(clang_tidy_headers OBJECT src/clang_tidy_all.cpp)
+          # Point this include path at your headers root
+          target_include_directories(clang_tidy_headers PRIVATE
+            ${CMAKE_SOURCE_DIR}/../..
+            ${CMAKE_SOURCE_DIR}/../../include
+          )
+          # If EBGeometry.hpp needs C++20 or defines, add them here:
+          target_compile_features(clang_tidy_headers PRIVATE cxx_std_20)
+          target_compile_definitions(clang_tidy_headers PRIVATE EBGEOM_USE_FEATURE=1)
+          EOF
+
+      - name: Configure & build stub (generates compile_commands.json)
+        run: |
+          cmake -S tools/clang-tidy-stub -B build/clang-tidy-stub -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+          cmake --build build/clang-tidy-stub -j 2 || true
+
+      - name: Run cpp-linter (clang-tidy + clang-format)
+        id: linter
+        uses: cpp-linter/cpp-linter-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          # clang-format config: use your repo's .clang-format
+          style: file
+          # clang-tidy config: honor your .clang-tidy
+          tidy-checks: ''
+          # Point to the compilation database we just produced
+          database: build/clang-tidy-stub
+          # Keep noise down: analyze only changed files/lines in the PR
+          files-changed-only: true
+          lines-changed-only: true
+          # Post a single updated thread comment + PR reviews
+          thread-comments: update
+          tidy-review: true
+          format-review: true
+          passive-reviews: true
+          step-summary: true
+
+      - name: Fail if checks failed
+        if: steps.linter.outputs.checks-failed > 0
+        run: exit 1
