@@ -21,6 +21,7 @@ jobs:
         with:
           split_workflow: true
           config_file : .clang-tidy
+          lgtm_comment_body: ''          
           cmake_command: >
             cmake -S . -B build
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
