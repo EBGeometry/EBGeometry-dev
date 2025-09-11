@@ -16,6 +16,7 @@
 #include <cmath>
 
 // Our includes
+#include "EBGeometry_Vec.hpp"
 #include "EBGeometry_GPUTypes.hpp"
 #include "EBGeometry_Macros.hpp"
 

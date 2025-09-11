@@ -1,3 +1,5 @@
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/EBGeometry/EBGeometry-dev/main.svg)](https://results.pre-commit.ci/latest/github/EBGeometry/EBGeometry-dev/main)
+
 ## EBGeometry
 
 EBGeometry is a CPU/GPU code for
@@ -29,18 +31,6 @@ To build EBGeometry, navigate to the top folder and perform the following
 cmake -B build
 cmake --build build
 ```
-
-## Contributing
-
-Before submitting any pull request, make sure that the code is up to standard by running the StaticAnalyzer.sh script that resides in the top folder.
-
-```
-./StaticAnalyzer
-```
-
-This script will run clang-tidy, clang-format, codespell, and doxygen to ensure that the code quality is reasonably up to date.
-Note that these tests are always run as GitHub actions before approving PRs.
-
 
 License
 -------

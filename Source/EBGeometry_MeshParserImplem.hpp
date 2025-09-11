@@ -20,6 +20,7 @@
 #include <cstdint>
 
 // Our includes
+#include "EBGeometry_MeshParser.hpp"
 #include "EBGeometry_Macros.hpp"
 
 namespace EBGeometry::MeshParser {

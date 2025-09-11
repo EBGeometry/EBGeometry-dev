@@ -13,6 +13,7 @@
 #define EBGeometry_TriangleImplem
 
 // Our includes
+#include "EBGeometry_Triangle.hpp"
 #include "EBGeometry_Macros.hpp"
 
 namespace EBGeometry {
