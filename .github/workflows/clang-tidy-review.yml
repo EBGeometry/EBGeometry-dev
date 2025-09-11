@@ -3,7 +3,7 @@ on: [pull_request]
 
 permissions:
   contents: read
-  pull-requests: read  # read only; comments happen in the "post" workflow
+  pull-requests: read
 
 jobs:
   review:
@@ -16,13 +16,12 @@ jobs:
           cmake_command: >
             cmake -S . -B build
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-            -DENABLE_TESTS=OFF
+            -DENABLE_TESTS=ON
             -DENABLE_EXAMPLES=OFF
             -DENABLE_CUDA=OFF
             -DENABLE_HIP=OFF
-            -DEBGEOMETRY_TIDY_DUMMY=ON
           build_dir: build
           include: >
-            EBGeometry.hpp, Source/**/*.hpp
-          exclude: Exec/**
+            Exec/Tests/*.cpp,
+            Exec/EBGeometry_Shapes/*.cpp
       - uses: ZedThree/clang-tidy-review/upload@v0.21.0
