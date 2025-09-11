@@ -20,13 +20,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-        # (Header-only trick) Create a temporary TU that includes your umbrella header(s),
-        # so CMake can produce a compile_commands.json that clang-tidy can use.
       - name: Generate dummy translation unit for headers
         run: |
           mkdir -p build/tools
           cat > build/tools/clang_tidy_all.cpp <<'EOF'
-          // List your main headers here; add more includes as needed
           #include "EBGeometry.hpp"
           EOF
 
@@ -35,20 +32,25 @@ jobs:
           cmake -S . -B build \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-          # Ensure the dummy TU is part of the build (header-only projects often have no sources)
-          # Create a tiny CMakeLists fragment under build/tools and add it to the main build.
           cat >> CMakeLists.txt <<'EOF'
           add_library(clang_tidy_headers OBJECT build/tools/clang_tidy_all.cpp)
           target_include_directories(clang_tidy_headers PRIVATE ${CMAKE_SOURCE_DIR})
           EOF
-          cmake --build build -j 2 || true  # build may fail for header-only; we only need compile_commands.json
+          cmake --build build -j 2 || true
 
-          # Run clang-tidy and post a review on the PR
+        # Run clang-tidy and post a review on the PR
       - name: Clang-Tidy Review
         uses: ZedThree/clang-tidy-review@4ea7f7b72e7e039588ef5e64de9a845e5a3f8db5 # v0.21.0
         with:
           build_dir: build
           clang_tidy_checks: ''      
           lgtm_comment_body: ''      
-          fail_on_error: false       
-          annotations: true          
+          annotations: true
+
+
+        # Uploads an artefact containing clang_fixes.json
+        - uses: ZedThree/clang-tidy-review/upload@4ea7f7b72e7e039588ef5e64de9a845e5a3f8db5 # v0.21.0
+
+        # If there are any comments, fail the check
+        - if: steps.review.outputs.total_comments > 0
+          run: exit 1
