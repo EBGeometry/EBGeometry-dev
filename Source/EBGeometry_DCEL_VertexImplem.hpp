@@ -16,7 +16,6 @@
 #include <cmath>
 
 // Our includes
-#include "EBGeometry_DCEL_Vertex.hpp"
 #include "EBGeometry_Macros.hpp"
 
 namespace EBGeometry::DCEL {

@@ -12,7 +12,6 @@
 #ifndef EBGeometry_TriangleMeshImplem
 #define EBGeometry_TriangleMeshImplem
 
-#include "EBGeometry_TriangleMesh.hpp"
 #include "EBGeometry_Macros.hpp"
 
 namespace EBGeometry {
