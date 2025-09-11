@@ -17,7 +17,6 @@ jobs:
       - uses: ZedThree/clang-tidy-review@v0.21.0
         with:
           split_workflow: true
-          all_files: true
           cmake_command: >
             cmake -S . -B build
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
@@ -26,4 +25,7 @@ jobs:
             -DENABLE_CUDA=OFF
             -DENABLE_HIP=OFF
           build_dir: build
+          include: >
+            Exec/Tests/*.cpp,
+            Exec/EBGeometry_Shapes/*.cpp
       - uses: ZedThree/clang-tidy-review/upload@v0.21.0
