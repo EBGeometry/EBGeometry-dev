@@ -27,5 +27,5 @@ jobs:
           build_dir: build
           include: >
             Exec/Tests/*.cpp,
-            Exec/EBGeometry_Shapes/*.cpp
+            Exec/Examples/EBGeometry_Shapes/*.cpp
       - uses: ZedThree/clang-tidy-review/upload@v0.21.0
