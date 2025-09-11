@@ -101,8 +101,8 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    const Triangle<MetaData>* 
-    getTriangles() const noexcept;    
+    const Triangle<MetaData>*
+    getTriangles() const noexcept;
 
     /*!
       @brief Value function. Returns the (signed) distance to the closest triangle

@@ -444,7 +444,7 @@ namespace EBGeometry::MeshParser {
     //
     // Iterate through the interior of each DCEL polygon; fetch the normal for every edge, vertex, and
     // polygon face. Populate the triangles list = success!
-    
+
 #warning "createTrianglesFromDCELMesh -- not implemented";
 
     return triangles;
