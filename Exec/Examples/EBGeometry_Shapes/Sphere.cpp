@@ -18,6 +18,3 @@ main()
 
   return 0;
 }
-
-
-
