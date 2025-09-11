@@ -9,7 +9,6 @@ cmake -B build \
       -DENABLE_CUDA=OFF \
       -DENABLE_HIP=OFF
 
-cmake --build build -j6
+cmake --build build -j4
 
 clang-tidy --quiet -p build Exec/Examples/EBGeometry_Shapes/*.cpp
-      
