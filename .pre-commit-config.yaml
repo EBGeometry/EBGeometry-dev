@@ -26,3 +26,4 @@ repos:
       - id: clang-tidy
         args:
           - -p=build
+        files: ^Exec/Examples/EBGeometry_Shapes/
