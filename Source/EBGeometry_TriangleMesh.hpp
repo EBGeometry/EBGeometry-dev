@@ -74,7 +74,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    ~TriangleMesh() noexcept = default;
+    ~TriangleMesh() noexcept override = default;
 
     /*
       @brief Define function which associates the triangles. 

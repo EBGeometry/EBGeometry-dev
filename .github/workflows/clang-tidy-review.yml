@@ -1,66 +1,26 @@
 name: clang-tidy-review
-
-on:
-  pull_request:
+on: [pull_request]
 
 permissions:
   contents: read
-  pull-requests: write
-
-concurrency:
-  group: ${{ github.ref }}-${{ github.head_ref }}-clang-tidy
-  cancel-in-progress: true
+  pull-requests: read  # read only; comments happen in the "post" workflow
 
 jobs:
-  clang-tidy:
-    if: ${{ github.event.pull_request.draft == false }}
+  review:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-
-      # Create a tiny CMake project with a TU that includes your top-level header.
-      - name: Create stub project (header-only TU)
-        run: |
-          mkdir -p tools/ctu/src
-          cat > tools/ctu/src/clang_tidy_all.cpp <<'EOF'
-          #include "EBGeometry.hpp"
-          EOF
-
-          cat > tools/ctu/CMakeLists.txt <<'EOF'
-          cmake_minimum_required(VERSION 3.15)
-          project(clang_tidy_stub CXX)
-          add_library(clang_tidy_headers OBJECT src/clang_tidy_all.cpp)
-          target_include_directories(clang_tidy_headers PRIVATE
-            ${CMAKE_SOURCE_DIR}/../..          # repo root (EBGeometry.hpp)
-            ${CMAKE_SOURCE_DIR}/../../Source   # headers under Source/
-          )
-          target_compile_features(clang_tidy_headers PRIVATE cxx_std_20)
-          EOF
-
-      # Run the review action. Let it generate compile_commands.json *inside* the container.
-      - name: Clang-Tidy Review
-        id: review
-        uses: ZedThree/clang-tidy-review@v0.21.0
+      - uses: ZedThree/clang-tidy-review@v0.21.0
         with:
-          # Tell the action where the compilation DB will be created
-          build_dir: build/ctu
-
-          # Have the action run CMake inside its container so paths line up
-          cmake_command: cmake -S tools/ctu -B build/ctu -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-
-          # Use your .clang-tidy (leave empty) and show annotations
-          clang_tidy_checks: ''
-          annotations: true
-          lgtm_comment_body: ''
-
-          # *** CRUCIAL FOR HEADERS ***
-          # Limit candidates to your header paths so the action "finds" files to process
-          include: "EBGeometry.hpp,Source/**/*.h,Source/**/*.hpp,Source/**/*.hh,Source/**/*.hxx"
-
-      - name: Upload clang-tidy fixes (optional)
-        uses: ZedThree/clang-tidy-review/upload@v0.21.0
-
-      - name: Fail if clang-tidy found issues
-        if: ${{ steps.review.outputs.total_comments > 0 }}
-        run: exit 1
+          split_workflow: true
+          cmake_command: >
+            cmake -S . -B build
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+            -DENABLE_TESTS=OFF -DENABLE_EXAMPLES=OFF
+            -DENABLE_CUDA=OFF -DENABLE_HIP=OFF
+            -DEBGEOMETRY_TIDY_DUMMY=ON
+          build_dir: build
+          include: >
+            EBGeometry.hpp, Source/**/*.hpp
+          exclude: Exec/**
+      - uses: ZedThree/clang-tidy-review/upload@v0.21.0
