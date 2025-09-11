@@ -1,0 +1,30 @@
+name: Codespell
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review, edited]
+
+jobs:
+  codespell:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write # Grant write access to pull requests for commenting
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install codespell
+        run: pip install codespell
+
+      - name: Run codespell and capture output
+        id: codespell_output
+        run: codespell --check-filenames --ignore-words-list "codespell,github" || true
+        continue-on-error: true # Allow the workflow to continue even if codespell finds errors
+
+      - name: Post codespell results as a comment
+        if: steps.codespell_output.outputs.stdout != ''
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            **Codespell found potential issues:**
