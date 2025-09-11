@@ -16,8 +16,10 @@ jobs:
           cmake_command: >
             cmake -S . -B build
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-            -DENABLE_TESTS=OFF -DENABLE_EXAMPLES=OFF
-            -DENABLE_CUDA=OFF -DENABLE_HIP=OFF
+            -DENABLE_TESTS=OFF
+            -DENABLE_EXAMPLES=OFF
+            -DENABLE_CUDA=OFF
+            -DENABLE_HIP=OFF
             -DEBGEOMETRY_TIDY_DUMMY=ON
           build_dir: build
           include: >

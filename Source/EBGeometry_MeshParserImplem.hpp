@@ -21,7 +21,6 @@
 
 // Our includes
 #include "EBGeometry_Macros.hpp"
-#include "EBGeometry_MeshParser.hpp"
 
 namespace EBGeometry::MeshParser {
 

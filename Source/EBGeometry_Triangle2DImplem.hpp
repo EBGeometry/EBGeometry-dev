@@ -16,7 +16,6 @@
 
 // Our includes
 #include "EBGeometry_Macros.hpp"
-#include "EBGeometry_Triangle2D.hpp"
 
 namespace EBGeometry {
 
