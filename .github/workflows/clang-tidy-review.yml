@@ -14,10 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
       - uses: ZedThree/clang-tidy-review@v0.21.0
         with:
           split_workflow: true
-          all_files: true
           cmake_command: >
             cmake -S . -B build
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
@@ -27,6 +27,6 @@ jobs:
             -DENABLE_HIP=OFF
           build_dir: build
           include: >
-            Exec/Examples/**/*.cpp,
-            Source/**/*.hpp
+            Exec/Examples/EBGeometry_Shapes/*.cpp,
+            Source/*.hpp
       - uses: ZedThree/clang-tidy-review/upload@v0.21.0

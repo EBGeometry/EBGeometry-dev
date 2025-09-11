@@ -47,4 +47,4 @@ Checks: >
     '
 
 # Only available in clang-tidy >= 17
-HeaderFilterRegex: "Source"
+HeaderFilterRegex: ^(EBGeometry\.hpp|Source/.*)
