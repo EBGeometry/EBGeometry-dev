@@ -61,3 +61,17 @@ endif()
 if(ENABLE_EXAMPLES)
   add_subdirectory(./Exec/Examples/EBGeometry_Shapes)
 endif()
+
+# Enable a dummy translation unit so clang-tidy can analyze headers
+option(EBGEOMETRY_TIDY_DUMMY "Generate a dummy TU for clang-tidy" ON)
+
+if(EBGEOMETRY_TIDY_DUMMY)
+  # Write a tiny TU into the build tree that includes your single public header
+  set(_tidy_dummy "${CMAKE_CURRENT_BINARY_DIR}/tidy_dummy.cpp")
+  file(WRITE "${_tidy_dummy}" "#include \"${CMAKE_SOURCE_DIR}/EBGeometry.hpp\"\nint main(){return 0;}\n")
+
+  # Compile it so CMake records flags & includes in compile_commands.json
+  add_executable(ebg_tidy_dummy "${_tidy_dummy}")
+  target_link_libraries(ebg_tidy_dummy PRIVATE ebgeometry)
+  target_include_directories(ebg_tidy_dummy PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+endif()

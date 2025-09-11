@@ -30,6 +30,7 @@ Checks: >
        -modernize-macro-to-enum,
        -modernize-return-braced-init-list,
        -modernize-use-trailing-return-type,
+       -modernize-use-nodiscard
      performance-*,
      portability-*,
      readability-*,
@@ -46,4 +47,4 @@ Checks: >
     '
 
 # Only available in clang-tidy >= 17
-HeaderFileExtensions: ['', "hpp"]
+HeaderFilterRegex: "Source"

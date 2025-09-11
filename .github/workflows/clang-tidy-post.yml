@@ -1,0 +1,19 @@
+name: Post clang-tidy review comments
+on:
+  workflow_run:
+    workflows: ["clang-tidy-review"]
+    types: [completed]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ZedThree/clang-tidy-review/post@v0.21.0
+        with:
+          lgtm_comment_body: 'clang-tidy review says "All clean, LGTM!"'
+          annotations: false
+          max_comments: 25
