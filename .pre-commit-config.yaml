@@ -25,7 +25,7 @@ repos:
       - id: cmake-generate-compile-commands
         name: CMake configure (make compile_commands.json)        
         language: system
-        entry: bash -c 'cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DENABLE_DEBUG=ON -DENABLE_TESTS=OFF -DENABLE_EXAMPLES=ON -DENABLE_CUDA=OFF -DENABLE_HIP=OFF && ln -sf build/compile_commands.json .'
+        entry: bash -c 'cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DENABLE_DEBUG=ON -DENABLE_TESTS=OFF -DENABLE_EXAMPLES=ON -DENABLE_CUDA=OFF -DENABLE_HIP=OFF'
         pass_filenames: false
 
   - repo: https://github.com/pocc/pre-commit-hooks
