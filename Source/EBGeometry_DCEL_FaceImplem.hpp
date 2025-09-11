@@ -13,6 +13,7 @@
 #define EBGeometry_DCEL_FaceImplem
 
 // Our includes
+#include "EBGeometry_DCEL_Face.hpp"
 #include "EBGeometry_Macros.hpp"
 
 namespace EBGeometry::DCEL {

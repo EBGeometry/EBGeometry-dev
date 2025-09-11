@@ -16,6 +16,7 @@
 #include <climits>
 
 // Our includes
+#include "EBGeometry_SFC.hpp"
 #include "EBGeometry_Macros.hpp"
 
 namespace EBGeometry::SFC {
