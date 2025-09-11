@@ -15,6 +15,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
+
+      # clang-tidy build compile commands
       - uses: ZedThree/clang-tidy-review@v0.21.0
         with:
           split_workflow: true
@@ -26,4 +28,11 @@ jobs:
             -DENABLE_CUDA=OFF
             -DENABLE_HIP=OFF
           build_dir: build
+
+      # Upload artifact
       - uses: ZedThree/clang-tidy-review/upload@v0.21.0
+
+      - if: steps.review.outputs.total_comments > 0
+        run: exit 1
+
+
