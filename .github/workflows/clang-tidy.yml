@@ -2,18 +2,20 @@ name: clang-tidy-review
 
 on:
   pull_request:
+#    types: [opened, synchronize, reopened, ready_for_review]
 
 concurrency:
   group: ${{ github.ref }}-${{ github.head_ref }}-clang-tidy
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  pull-requests: write  
+
 jobs:
   clang-tidy:
+    if: ${{ !github.event.pull_request_draft }}
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
-      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4
