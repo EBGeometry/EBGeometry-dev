@@ -1,4 +1,4 @@
-name: Linux GNU
+name: Linux Intel
 permissions:
   contents: read
 
@@ -12,20 +12,16 @@ concurrency:
   cancel-in-progress: true    
 
 jobs:      
-  linux-gnu:
-    name: linux-gnu
+  linux-intel:
+    name: linux-intel
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    strategy:
-      matrix:
-        comp: [g++-9, g++-10, g++-11, g++-12]
 
     steps:
       - uses: actions/checkout@v4
       - name: Install compilers
         run: |
           sudo apt-get update
-          sudo apt-get install ${{ matrix.comp }}
 
       - name: Install Catch2
         run: |
@@ -35,12 +31,29 @@ jobs:
           mkdir build && cd build
           cmake .. -DBUILD_TESTING=Off
           make -j $(nproc)
-          sudo make install        
+          sudo make install                  
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get -y --no-install-recommends install csh libgetopt-complete-perl
+
+      - name: Install Intel oneAPI
+        working-directory: /tmp        
+        run: |
+          wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
+          sudo apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
+          rm GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
+          echo "deb https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
+          sudo apt-get update
+          sudo apt-get install intel-oneapi-compiler-fortran intel-oneapi-compiler-dpcpp-cpp
+          sudo apt-get install intel-oneapi-mpi intel-oneapi-mpi-devel intel-oneapi-mkl                    
 
       - name: Configure and build
         working-directory: ${{ matrix.directory }}
         run: |
           cmake -S . -B build \
+          -DCMAKE_CXX_COMPILER=icpx
           -DCMAKE_EXPORT_COMPILE_COMMANDS=OFF \
           -DENABLE_TESTS=ON \
           -DENABLE_EXAMPLES=OFF \
