@@ -8,7 +8,7 @@ on:
     types: [opened, synchronize, reopened, ready_for_review, edited]
 
 concurrency:
-  group: ${{ github.ref }}-${{ github.head_ref }}-code-format
+  group: ${{ github.ref }}-${{ github.head_ref }}-linux-gnu
   cancel-in-progress: true    
 
 jobs:      
