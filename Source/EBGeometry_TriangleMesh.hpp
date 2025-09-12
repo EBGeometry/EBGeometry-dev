@@ -44,7 +44,7 @@ namespace EBGeometry {
     EBGEOMETRY_ALWAYS_INLINE
     TriangleMesh() noexcept = default;
 
-    /*
+    /*!
       @brief Full constructor. Initializes the triangle mesh.
       @param[in] a_numTriangles Number of triangles in the mesh.
       @param[in] a_triangles List of triangles. 
@@ -55,7 +55,7 @@ namespace EBGeometry {
 
     /*!
       @brief Copy constructor. 
-      @param[in] a_triangleMesh The triangle mesh to copy.
+      @param[in] a_mesh The triangle mesh to copy.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
@@ -63,7 +63,7 @@ namespace EBGeometry {
 
     /*!
       @brief Move constructor. 
-      @param[in] a_triangleMesh The triangle mesh to move.
+      @param[in] a_mesh The triangle mesh to move.
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
@@ -76,7 +76,7 @@ namespace EBGeometry {
     EBGEOMETRY_ALWAYS_INLINE
     ~TriangleMesh() noexcept override = default;
 
-    /*
+    /*!
       @brief Define function which associates the triangles. 
       @param[in] a_numTriangles Number of triangles in the mesh.
       @param[in] a_triangles List of triangles. 

@@ -19,7 +19,7 @@ repos:
       - id: doxygen-check
         name: Check Doxygen Comments
         language: system
-        entry: bash -c 'doxygen doxyfile'
+        entry: bash -c 'doxygen Docs/doxyfile.conf'
         pass_filenames: true        
 
   - repo: https://github.com/pocc/pre-commit-hooks
