@@ -7,6 +7,10 @@ on:
     branches: [main]
     types: [opened, synchronize, reopened, ready_for_review, edited]
 
+concurrency:
+  group: ${{ github.ref }}-${{ github.head_ref }}-code-format
+  cancel-in-progress: true    
+
 jobs:      
   linux-gnu:
     name: linux-gnu
