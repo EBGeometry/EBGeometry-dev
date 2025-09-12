@@ -2,7 +2,7 @@
 # See https://pre-commit.com/hooks.html for more hooks
 
 ci:
-  skip: [cmake-generate-compile-commands, clang-tidy]
+  skip: [cmake-generate-compile-commands, clang-tidy, doxygen-check]
   
 repos:
 
