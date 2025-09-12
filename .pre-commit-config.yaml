@@ -9,7 +9,7 @@ repos:
   - repo: local
     hooks:
       - id: cmake-generate-compile-commands
-        name: CMake configure (make compile_commands.json)        
+        name: check CMake-configure (make compile_commands.json)        
         language: system
         entry: bash -c 'cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DENABLE_DEBUG=ON -DENABLE_TESTS=OFF -DENABLE_EXAMPLES=ON -DENABLE_CUDA=OFF -DENABLE_HIP=OFF'
         pass_filenames: false
@@ -40,11 +40,13 @@ repos:
       - id: check-merge-conflict
       - id: check-symlinks
       - id: mixed-line-ending
+        name: check mixed-line-ending
 
   - repo: https://github.com/pre-commit/mirrors-clang-format
     rev: v21.1.0
     hooks:
     - id: clang-format
+      name: check clang-format
       files: ^(Source/|Exec/)
 
 
