@@ -48,7 +48,7 @@ jobs:
         run: |
           source /opt/intel/oneapi/setvars.sh
           cmake -S . -B build \
-          -DCMAKE_CXX_COMPILER=icpx
+          -DCMAKE_CXX_COMPILER=icpx \
           -DCMAKE_EXPORT_COMPILE_COMMANDS=OFF \
           -DENABLE_TESTS=ON \
           -DENABLE_EXAMPLES=OFF \
