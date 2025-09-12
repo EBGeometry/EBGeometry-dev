@@ -18,7 +18,7 @@ DartConfiguration.tcl
 Docs/*
 !Docs/.nojekyll
 !Docs/Sphinx
-!Docs/doxyfile
+!Docs/doxyfile.conf
 !Docs/README.md
 Docs/Sphinx/build/*
 
