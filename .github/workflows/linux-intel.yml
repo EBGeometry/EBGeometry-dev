@@ -23,6 +23,11 @@ jobs:
         run: |
           sudo apt-get update
 
+      - name: Install Intel oneAPI Toolkit
+        uses: NOAA-EMC/ci-install-intel-toolkit@v1
+        with:
+          toolkit: 'base'
+
       - name: Install Catch2
         run: |
           git clone https://github.com/catchorg/Catch2.git
@@ -33,25 +38,10 @@ jobs:
           make -j $(nproc)
           sudo make install                  
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get -y --no-install-recommends install csh libgetopt-complete-perl
-
-      - name: Install Intel oneAPI
-        working-directory: /tmp        
-        run: |
-          wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
-          sudo apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
-          rm GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
-          echo "deb https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
-          sudo apt-get update
-          sudo apt-get install intel-oneapi-compiler-fortran intel-oneapi-compiler-dpcpp-cpp
-          sudo apt-get install intel-oneapi-mpi intel-oneapi-mpi-devel intel-oneapi-mkl                    
-
       - name: Configure and build
         working-directory: ${{ matrix.directory }}
         run: |
+          source /opt/intel/oneapi/setvars.sh
           cmake -S . -B build \
           -DCMAKE_CXX_COMPILER=icpx
           -DCMAKE_EXPORT_COMPILE_COMMANDS=OFF \
