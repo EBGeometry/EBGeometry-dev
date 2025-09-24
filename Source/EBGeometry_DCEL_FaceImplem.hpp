@@ -238,7 +238,7 @@ namespace EBGeometry::DCEL {
 
         const Real curDist = m_edgeList[curEdge].signedDistance(a_x0);
 
-        minDist = (std::abs(curDist) < std::abs(minDist)) ? curDist : minDist;
+        minDist = (abs(curDist) < abs(minDist)) ? curDist : minDist;
 
         // Go to next edge and exit if we've circulated all half-edges
         // in this face.
@@ -276,7 +276,7 @@ namespace EBGeometry::DCEL {
 
         const Real curDist2 = m_edgeList[curEdge].unsignedDistance2(a_x0);
 
-        minDist2 = (std::abs(curDist2) < std::abs(minDist2)) ? curDist2 : minDist2;
+        minDist2 = (abs(curDist2) < abs(minDist2)) ? curDist2 : minDist2;
 
         // Go to next edge and exit if we've circulated all half-edges
         // in this face.
@@ -556,7 +556,7 @@ namespace EBGeometry::DCEL {
       EBGEOMETRY_EXPECT(curEdge >= 0);
     }
 
-    area = Real(0.5) * std::abs(area);
+    area = Real(0.5) * abs(area);
 
     return area;
   }

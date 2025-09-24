@@ -163,7 +163,7 @@ namespace EBGeometry::DCEL {
 
     Real sumTheta = this->computeSubtendedAngle(projectedPoint);
 
-    sumTheta = static_cast<Real>(std::abs(sumTheta) / Real(2. * M_PI));
+    sumTheta = static_cast<Real>(abs(sumTheta) / Real(2. * M_PI));
 
     return (round(sumTheta) == 1);
   }
@@ -185,7 +185,7 @@ namespace EBGeometry::DCEL {
     int projectDir = 0;
 
     for (int dir = 1; dir < 3; dir++) {
-      if (std::abs(a_normal[dir]) > std::abs(a_normal[projectDir])) {
+      if (abs(a_normal[dir]) > abs(a_normal[projectDir])) {
         projectDir = dir;
       }
     }
