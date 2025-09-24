@@ -43,7 +43,7 @@ repos:
         name: check mixed-line-ending
 
   - repo: https://github.com/pre-commit/mirrors-clang-format
-    rev: v21.1.0
+    rev: v21.1.1
     hooks:
     - id: clang-format
       name: check clang-format
