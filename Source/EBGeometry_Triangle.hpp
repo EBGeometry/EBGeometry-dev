@@ -13,6 +13,7 @@
 #define EBGeometry_Triangle
 
 // Our includes
+#include "EBGeometry_Alignas.hpp"
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_GPUTypes.hpp"
 #include "EBGeometry_Macros.hpp"
@@ -44,7 +45,7 @@ namespace EBGeometry {
     the ed
   */
   template <typename MetaData>
-  class Triangle
+  class alignas(EBGEOMETRY_ALIGNAS) Triangle
   {
   public:
     /*!
