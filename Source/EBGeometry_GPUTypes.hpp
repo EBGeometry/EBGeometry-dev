@@ -12,6 +12,10 @@
 #ifndef EBGeometry_GPUTypes
 #define EBGeometry_GPUTypes
 
+// Std includes
+#include <cmath>
+#include <type_traits>
+
 // Our includes
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_Macros.hpp"
@@ -25,24 +29,12 @@ namespace EBGeometry {
     @param[in] y Number to compare.     
   */
   EBGEOMETRY_GPU_HOST_DEVICE
+  template <typename T>
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-  Real
-  min(const Real& x, const Real& y) noexcept
+  constexpr T
+  min(const T& x, const T& y) noexcept
   {
-    return x <= y ? x : y;
-  }
-
-  /*!
-    @brief Minimum operation of two numbers.
-    @param[in] x Number to compare.
-    @param[in] y Number to compare.     
-  */
-  EBGEOMETRY_GPU_HOST_DEVICE
-  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-  int
-  min(const int& x, const int& y) noexcept
-  {
-    return x <= y ? x : y;
+    return (x <= y) ? x : y;
   }
 
   /*!
@@ -51,24 +43,46 @@ namespace EBGeometry {
     @param[in] y Number to compare.     
   */
   EBGEOMETRY_GPU_HOST_DEVICE
+  template <typename T>
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-  Real
-  max(const Real& x, const Real& y) noexcept
+  constexpr T
+  max(const T& x, const T& y) noexcept
   {
-    return x >= y ? x : y;
+    return (x >= y) ? x : y;
   }
 
   /*!
-    @brief Maximum operation of two numbers.
-    @param[in] x Number to compare.
-    @param[in] y Number to compare.     
+    @brief Sign of number. > 1 if positive, < 1 if negative, and 0 if zero.
+    @param[in] x Input number
   */
   EBGEOMETRY_GPU_HOST_DEVICE
+  template <typename T>
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-  int
-  max(const int& x, const int& y) noexcept
+  constexpr int
+  sgn(const T& x) noexcept
   {
-    return x >= y ? x : y;
+    return (x > T(0)) - (x < T(0));
+  }
+
+  /*!
+    @brief Sign of number. > 1 if positive, < 1 if negative, and 0 if zero.
+    @param[in] x Input number
+  */
+  EBGEOMETRY_GPU_HOST_DEVICE
+  template <typename T>
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+  constexpr T
+  abs(const T& x) noexcept
+  {
+    if constexpr (std::is_floating_point_v<T>) {
+      return std::fabs(x);
+    }
+    else if constexpr (std::is_signed_v<T>) {
+      return std::abs(x);
+    }
+    else {
+      return x;
+    }
   }
 
   /*!
@@ -80,7 +94,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    Real
+    constexpr Real
     max() noexcept
     {
       return EBGeometry::MaximumReal;
@@ -91,7 +105,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    Real
+    constexpr Real
     min() noexcept
     {
       return EBGeometry::MinimumReal;
@@ -102,7 +116,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    Real
+    constexpr Real
     lowest() noexcept
     {
       return EBGeometry::LowestReal;
@@ -113,7 +127,7 @@ namespace EBGeometry {
     */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    Real
+    constexpr Real
     eps() noexcept
     {
       return EBGeometry::Epsilon;

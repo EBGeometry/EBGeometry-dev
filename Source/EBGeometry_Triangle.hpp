@@ -15,7 +15,6 @@
 // Our includes
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_GPUTypes.hpp"
-#include "EBGeometry_Triangle2D.hpp"
 #include "EBGeometry_Macros.hpp"
 #include "EBGeometry_Vec.hpp"
 
@@ -249,15 +248,6 @@ namespace EBGeometry {
     getMetaData() const noexcept;
 
     /*!
-      @brief Compute the signed distance from the input point x to the triangle
-      @param[in] a_point Point
-    */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    Real
-    signedDistance(const Vec3& a_point) const noexcept;
-
-    /*!
       @brief Check if a line passes through the triangle.
       @details Returns true if the line segment passes through the triangle, edges of the triangle,
       or through one of the vertices.
@@ -268,6 +258,15 @@ namespace EBGeometry {
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     bool
     intersects(const Vec3& a_x0, const Vec3& a_x1) const noexcept;
+
+    /*!
+      @brief Compute the signed distance from the input point x to the triangle
+      @param[in] a_point Point
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    Real
+    signedDistance(const Vec3& a_point) const noexcept;
 
   protected:
     /*!
@@ -290,28 +289,9 @@ namespace EBGeometry {
     Vec3 m_edgeNormals[3]{Vec3::max(), Vec3::max(), Vec3::max()};
 
     /*!
-      @brief 2D projection of the triangle to one of the Cartesian coordinate directions
-    */
-    Triangle2D m_triangle2D;
-
-    /*!
       @brief Triangle meta-data normals
     */
     MetaData m_metaData;
-
-    /*!
-      @brief Returns the "projection" of a point to an edge.
-      @details This function parametrizes the edge as x(t) = x0 + (x1-x0)*t and
-      returns where on the this edge the point a_x0 projects. If projects onto the
-      edge if t = [0,1] and to one of the start/end vertices otherwise.
-      @param[in] a_point Query point
-      @param[in] a_x0 Starting edge coordinate
-      @param[in] a_x1 Final edge coordinate	
-    */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    Real
-    projectPointToEdge(const Vec3& a_point, const Vec3& a_x0, const Vec3& a_x1) const noexcept;
   };
 } // namespace EBGeometry
 

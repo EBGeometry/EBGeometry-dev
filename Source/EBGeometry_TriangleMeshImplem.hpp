@@ -69,7 +69,7 @@ namespace EBGeometry {
     for (long long int i = 0; i < this->m_numTriangles; i++) {
       const Real curDist = m_triangles[i].signedDistance(a_point);
 
-      dist = (std::abs(curDist) < std::abs(dist)) ? curDist : dist;
+      dist = (abs(curDist) < abs(dist)) ? curDist : dist;
     }
 
     return dist;

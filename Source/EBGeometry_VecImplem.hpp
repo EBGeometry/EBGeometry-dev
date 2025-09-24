@@ -429,7 +429,7 @@ namespace EBGeometry {
 
     for (size_t dir = 0; dir < 3; dir++) {
       if (a_doAbs) {
-        if (std::abs(m_X[dir]) < std::abs(m_X[mDir])) {
+        if (abs(m_X[dir]) < abs(m_X[mDir])) {
           mDir = dir;
         }
       }
@@ -451,7 +451,7 @@ namespace EBGeometry {
 
     for (size_t dir = 0; dir < 3; dir++) {
       if (a_doAbs) {
-        if (std::abs(m_X[dir]) > std::abs(m_X[mDir])) {
+        if (abs(m_X[dir]) > abs(m_X[mDir])) {
           mDir = dir;
         }
       }
