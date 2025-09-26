@@ -46,7 +46,7 @@ namespace EBGeometry {
   TriangleCollection<MetaData, LayoutType::AoS>::operator[](int i) const noexcept
   {
     EBGEOMETRY_EXPECT(i >= 0 && i < m_size);
-    
+
     return m_triangles[i];
   }
 
@@ -122,12 +122,12 @@ namespace EBGeometry {
     }
 
     Real ret = EBGeometry::Limits::max();
-    
+
     for (int i = 0; i < m_size; ++i) {
       Vec3 vertexPositions[3];
       Vec3 vertexNormals[3];
       Vec3 edgeNormals[3];
-      
+
       vertexPositions[0] = m_vertexPositions[0][i];
       vertexPositions[1] = m_vertexPositions[1][i];
       vertexPositions[2] = m_vertexPositions[2][i];
@@ -143,7 +143,6 @@ namespace EBGeometry {
       const Real d = signedDistanceTriangle(m_triangleNormal[i], vertexPositions, vertexNormals, edgeNormals, a_point);
 
       ret = (abs(d) < abs(ret)) ? d : ret;
-      
     }
     return ret;
   }
