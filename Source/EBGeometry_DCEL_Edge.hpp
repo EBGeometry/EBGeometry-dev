@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2025 Robert Marskar
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
 /**
  * @file   EBGeometry_DCEL_Edge.hpp
  * @brief  Declaration of an edge class for use in DCEL descriptions of polygon

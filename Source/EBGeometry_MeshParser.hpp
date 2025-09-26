@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2025 Robert Marskar
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
 /**
  * @file   EBGeometry_MeshParser.hpp
  * @brief  Utility functions for reading files into EBGeometry data structures

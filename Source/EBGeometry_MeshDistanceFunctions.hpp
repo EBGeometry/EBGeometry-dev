@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2025 Robert Marskar
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
 /**
  * @file    EBGeometry_MeshDistanceFunctions.hpp
  * @brief   Declaration of various mesh-based distance functions.

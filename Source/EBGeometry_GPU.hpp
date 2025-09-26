@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2025 Robert Marskar
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
 /**
  * @file   EBGeometry_GPU.hpp
  * @brief  Declaration of GPU interface with various GPU backends

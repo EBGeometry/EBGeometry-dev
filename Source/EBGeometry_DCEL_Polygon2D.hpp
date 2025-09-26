@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2025 Robert Marskar
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
 /**
  * @file   EBGeometry_DCEL_Polygon2D.hpp
  * @brief  Declaration of a two-dimensional polygon class for embedding 3D

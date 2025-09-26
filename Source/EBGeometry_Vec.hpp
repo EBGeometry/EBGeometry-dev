@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2025 Robert Marskar
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
 /**
  * @file   EBGeometry_Vec.hpp
  * @brief  Declaration of 2D and 3D point/vector classes with templated

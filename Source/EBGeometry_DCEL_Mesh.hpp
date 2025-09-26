@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2025 Robert Marskar
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
 /**
  * @file   EBGeometry_DCEL_Mesh.hpp
  * @brief  Declaration of a mesh class which stores a DCEL mesh (with signed
