@@ -256,7 +256,7 @@ namespace EBGeometry {
     ret = (t3 > 0.0 && t3 < 1.0 && y3.length() < abs(ret)) ? y3.length() * sgn(dot(m_edgeNormals[2], y3)) : ret;
 
     // Note that s0 + s1 + s2 >= 2.0 is a point-in-polygon test.
-    return (s0 + s1 + s2 >= 2.0) ? m_triangleNormal.dot(p1) : ret;
+    return (s0 + s1 + s2 >= 2.0) ? dot(m_triangleNormal, p1) : ret;
   }
 } // namespace EBGeometry
 

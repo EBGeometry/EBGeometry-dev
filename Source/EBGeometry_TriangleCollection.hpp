@@ -23,18 +23,6 @@
 namespace EBGeometry {
 
   /**
-   * @enum LayoutType
-   * @brief Layout type for TriangleCollection.
-   * @details Controls whether the triangle data is presented as Array-of-Structs (AoS)
-   *          or Structure-of-Arrays (SoA).
-   */
-  enum class LayoutType
-  {
-    AoS,
-    SoA
-  };
-
-  /**
    * @brief Templated TriangleCollection declaration (primary).
    * @tparam MetaData  User metadata stored per triangle.
    * @tparam Layout    Layout type (AoS or SoA).

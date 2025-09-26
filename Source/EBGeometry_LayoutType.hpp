@@ -15,12 +15,12 @@
 namespace EBGeometry {
 
   /**
- * @enum LayoutType
- * @brief Enumerates memory layout policies for collections.
- * @details
- * - `AoS`: Array-of-Structs layout, e.g., contiguous array of Triangle objects.
- * - `SoA`: Structure-of-Arrays layout, e.g., separate contiguous arrays for each field.
- */
+   * @enum LayoutType
+   * @brief Enumerates memory layout policies.
+   * @details
+   * - `AoS`: Array-of-Structs layout, e.g., contiguous array of Triangle objects.
+   * - `SoA`: Structure-of-Arrays layout, e.g., separate contiguous arrays for each field.
+   */
   enum class LayoutType
   {
     AoS, ///< Array-of-Structs layout.

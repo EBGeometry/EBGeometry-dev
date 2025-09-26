@@ -18,7 +18,8 @@ namespace EBGeometry {
 
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
-  TriangleCollection<MetaData, LayoutType::AoS>::TriangleCollection(const TriangleT* a_triangles, int a_size) noexcept :
+  TriangleCollection<MetaData, LayoutType::AoS>::TriangleCollection(const Triangle<MetaData>* a_triangles,
+                                                                    int                       a_size) noexcept :
     m_triangles(a_triangles),
     m_size(a_size)
   {}
@@ -26,7 +27,7 @@ namespace EBGeometry {
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
   void
-  TriangleCollection<MetaData, LayoutType::AoS>::setData(const TriangleT* a_triangles, int a_size) noexcept
+  TriangleCollection<MetaData, LayoutType::AoS>::setData(const Triangle<MetaData>* a_triangles, int a_size) noexcept
   {
     m_triangles = a_triangles;
     m_size      = a_size;
@@ -42,7 +43,7 @@ namespace EBGeometry {
 
   template <typename MetaData>
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-  const typename TriangleCollection<MetaData, LayoutType::AoS>::TriangleT&
+  const typename TriangleCollection<MetaData, LayoutType::AoS>::Triangle<MetaData>&
   TriangleCollection<MetaData, LayoutType::AoS>::operator[](int i) const noexcept
   {
     EBGEOMETRY_EXPECT(i >= 0 && i < m_size);
@@ -117,10 +118,6 @@ namespace EBGeometry {
   Real
   TriangleCollection<MetaData, LayoutType::SoA>::signedDistance(const Vec3& a_point) const noexcept
   {
-    if (m_size <= 0 || m_triangleNormal == nullptr) {
-      return EBGeometry::Limits::max();
-    }
-
     Real ret = EBGeometry::Limits::max();
 
     for (int i = 0; i < m_size; ++i) {
@@ -150,31 +147,34 @@ namespace EBGeometry {
   template <typename MetaData>
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
   Real
-  TriangleCollection<MetaData, LayoutType::SoA>::signedDistanceTriangle(
-    const Vec3& triN, const Vec3 vp[3], const Vec3 vn[3], const Vec3 en[3], const Vec3& p) noexcept
+  TriangleCollection<MetaData, LayoutType::SoA>::signedDistanceTriangle(const Vec3& a_triangleNormal,
+                                                                        const Vec3  a_vertexPositions[3],
+                                                                        const Vec3  a_vertexNormals[3],
+                                                                        const Vec3  a_edgeNormals[3],
+                                                                        const Vec3& a_point) noexcept
   {
 #ifdef EBGEOMETRY_DEBUG
     for (int i = 0; i < 3; ++i) {
-      EBGEOMETRY_ALWAYS_EXPECT(abs(triN[i]) < EBGeometry::Limits::max());
-      EBGEOMETRY_ALWAYS_EXPECT(abs(vp[i]) < EBGeometry::Limits::max());
-      EBGEOMETRY_ALWAYS_EXPECT(abs(vn[i]) < EBGeometry::Limits::max());
-      EBGEOMETRY_ALWAYS_EXPECT(abs(en[i]) < EBGeometry::Limits::max());
+      EBGEOMETRY_ALWAYS_EXPECT(abs(a_triangleNormal[i]) < EBGeometry::Limits::max());
+      EBGEOMETRY_ALWAYS_EXPECT(abs(a_vertexPositions[i]) < EBGeometry::Limits::max());
+      EBGEOMETRY_ALWAYS_EXPECT(abs(a_vertexNormals[i]) < EBGeometry::Limits::max());
+      EBGEOMETRY_ALWAYS_EXPECT(abs(a_edgeNormals[i]) < EBGeometry::Limits::max());
     }
 #endif
 
     Real ret = EBGeometry::Limits::max();
 
-    const Vec3 v21 = vp[1] - vp[0];
-    const Vec3 v32 = vp[2] - vp[1];
-    const Vec3 v13 = vp[0] - vp[2];
+    const Vec3 v21 = a_vertexPositions[1] - a_vertexPositions[0];
+    const Vec3 v32 = a_vertexPositions[2] - a_vertexPositions[1];
+    const Vec3 v13 = a_vertexPositions[0] - a_vertexPositions[2];
 
-    const Vec3 p1 = p - vp[0];
-    const Vec3 p2 = p - vp[1];
-    const Vec3 p3 = p - vp[2];
+    const Vec3 p1 = a_point - a_vertexPositions[0];
+    const Vec3 p2 = a_point - a_vertexPositions[1];
+    const Vec3 p3 = a_point - a_vertexPositions[2];
 
-    const Real s0 = sgn(dot(cross(v21, triN), p1));
-    const Real s1 = sgn(dot(cross(v32, triN), p2));
-    const Real s2 = sgn(dot(cross(v13, triN), p3));
+    const Real s0 = sgn(dot(cross(v21, a_triangleNormal), p1));
+    const Real s1 = sgn(dot(cross(v32, a_triangleNormal), p2));
+    const Real s2 = sgn(dot(cross(v13, a_triangleNormal), p3));
 
     const Real t1 = dot(p1, v21) / dot(v21, v21);
     const Real t2 = dot(p2, v32) / dot(v32, v32);
@@ -185,19 +185,18 @@ namespace EBGeometry {
     const Vec3 y3 = p3 - t3 * v13;
 
     // Distance to vertices
-    ret = (p1.length() > abs(ret)) ? ret : p1.length() * sgn(vn[0].dot(p1));
-    ret = (p2.length() > abs(ret)) ? ret : p2.length() * sgn(vn[1].dot(p2));
-    ret = (p3.length() > abs(ret)) ? ret : p3.length() * sgn(vn[2].dot(p3));
+    ret = (p1.length() > abs(ret)) ? ret : p1.length() * sgn(dot(a_vertexNormals[0], p1));
+    ret = (p2.length() > abs(ret)) ? ret : p2.length() * sgn(dot(a_vertexNormals[1], p2));
+    ret = (p3.length() > abs(ret)) ? ret : p3.length() * sgn(dot(a_vertexNormals[2], p3));
 
     // Distance to edges
-    ret = (t1 > Real(0) && t1 < Real(1) && y1.length() < abs(ret)) ? y1.length() * sgn(en[0].dot(y1)) : ret;
-    ret = (t2 > Real(0) && t2 < Real(1) && y2.length() < abs(ret)) ? y2.length() * sgn(en[1].dot(y2)) : ret;
-    ret = (t3 > Real(0) && t3 < Real(1) && y3.length() < abs(ret)) ? y3.length() * sgn(en[2].dot(y3)) : ret;
+    ret = (t1 > Real(0) && t1 < Real(1) && y1.length() < abs(ret)) ? y1.length() * sgn(a_edgeNormals[0].dot(y1)) : ret;
+    ret = (t2 > Real(0) && t2 < Real(1) && y2.length() < abs(ret)) ? y2.length() * sgn(a_edgeNormals[1].dot(y2)) : ret;
+    ret = (t3 > Real(0) && t3 < Real(1) && y3.length() < abs(ret)) ? y3.length() * sgn(a_edgeNormals[2].dot(y3)) : ret;
 
     // Point-in-triangle: s0 + s1 + s2 >= 2.0
-    return (s0 + s1 + s2 >= Real(2)) ? triN.dot(p1) : ret;
+    return (s0 + s1 + s2 >= Real(2)) ? dot(a_triangleNormal, p1) : ret;
   }
-
 } // namespace EBGeometry
 
 #endif // EBGeometry_TriangleCollectionImplem
