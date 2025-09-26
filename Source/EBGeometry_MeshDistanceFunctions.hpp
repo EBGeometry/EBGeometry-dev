@@ -3,11 +3,11 @@
  * Please refer to Copyright.txt and LICENSE in the EBGeometry root directory.
  */
 
-/*!
-  @file    EBGeometry_MeshDistanceFunctions.hpp
-  @brief   Declaration of various mesh-based distance functions.
-  @author  Robert Marskar
-*/
+/**
+ * @file    EBGeometry_MeshDistanceFunctions.hpp
+ * @brief   Declaration of various mesh-based distance functions.
+ * @author  Robert Marskar
+ */
 
 #ifndef EBGeometry_MeshDistanceFunctions
 #define EBGeometry_MeshDistanceFunctions

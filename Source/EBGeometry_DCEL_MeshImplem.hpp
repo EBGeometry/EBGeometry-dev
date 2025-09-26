@@ -3,11 +3,11 @@
  * Please refer to Copyright.txt and LICENSE in the EBGeometry root directory.
  */
 
-/*!
-  @file   EBGeometry_DCEL_MeshImplem.hpp
-  @brief  Implementation of EBGeometry_DCEL_Mesh.hpp
-  @author Robert Marskar
-*/
+/**
+ * @file   EBGeometry_DCEL_MeshImplem.hpp
+ * @brief  Implementation of EBGeometry_DCEL_Mesh.hpp
+ * @author Robert Marskar
+ */
 
 #ifndef EBGeometry_DCEL_MeshImplem
 #define EBGeometry_DCEL_MeshImplem

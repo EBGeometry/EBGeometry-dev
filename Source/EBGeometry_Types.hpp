@@ -3,18 +3,20 @@
  * Please refer to Copyright.txt and LICENSE in the EBGeometry root directory.
  */
 
-/*!
-  @file   EBGeometry_Types.hpp
-  @brief  Compile-time precision specification
-  @author Robert Marskar
-*/
+/**
+ * @file   EBGeometry_Types.hpp
+ * @brief  Compile-time precision specification
+ * @author Robert Marskar
+ */
 
 #ifndef EBGeometry_Types
 #define EBGeometry_Types
 
 #include <cfloat>
 
-/*! \cond */
+/**
+ * \cond
+ */
 #ifdef EBGEOMETRY_USE_DOUBLE
 namespace EBGeometry {
   using Real                 = double;
@@ -32,6 +34,8 @@ namespace EBGeometry {
   constexpr Real Epsilon     = FLT_EPSILON;
 } // namespace EBGeometry
 #endif
-/*! \endcond */
+/**
+ * \endcond
+ */
 
 #endif

@@ -3,11 +3,11 @@
  * Please refer to Copyright.txt and LICENSE in the EBGeometry root directory.
  */
 
-/*!
-  @file    EBGeometry_TriangleMeshImplem.hpp
-  @brief   Implementation of EBGeometry_TriangleMesh.hpp
-  @author  Robert Marskar
-*/
+/**
+ * @file    EBGeometry_TriangleMeshImplem.hpp
+ * @brief   Implementation of EBGeometry_TriangleMesh.hpp
+ * @author  Robert Marskar
+ */
 
 #ifndef EBGeometry_TriangleMeshImplem
 #define EBGeometry_TriangleMeshImplem

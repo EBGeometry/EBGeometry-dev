@@ -3,11 +3,11 @@
  * Please refer to Copyright.txt and LICENSE in the EBGeometry root directory.
  */
 
-/*!
-  @file   EBGeometry_VecImplem.hpp
-  @brief  Implementation of EBGeometry_Vec.hpp
-  @author Robert Marskar
-*/
+/**
+ * @file   EBGeometry_VecImplem.hpp
+ * @brief  Implementation of EBGeometry_Vec.hpp
+ * @author Robert Marskar
+ */
 #pragma once
 #ifndef EBGeometry_VecImplem
 #define EBGeometry_VecImplem

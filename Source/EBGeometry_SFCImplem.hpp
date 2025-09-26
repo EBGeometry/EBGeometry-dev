@@ -3,11 +3,11 @@
  * Please refer to Copyright.txt and LICENSE in the EBGeometry root directory.
  */
 
-/*!
-  @file   EBGeometry_SFCImplem.hpp
-  @brief  Implementation of EBGeometry_SFC.hpp
-  @author Robert Marskar
-*/
+/**
+ * @file   EBGeometry_SFCImplem.hpp
+ * @brief  Implementation of EBGeometry_SFC.hpp
+ * @author Robert Marskar
+ */
 
 #ifndef EBGeometry_SFCImplem
 #define EBGeometry_SFCImplem

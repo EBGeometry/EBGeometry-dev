@@ -3,12 +3,11 @@
  * Please refer to Copyright.txt and LICENSE in the EBGeometry root directory.
  */
 
-/*!
-  @file   EBGeometry_Alignas.hpp
-  @brief  Declaration of alignment sizes for various architectures
-  precision. 
-  @author Robert Marskar
-*/
+/**
+ * @file   EBGeometry_Alignas.hpp
+ * @brief  Declaration of alignment sizes for various architectures
+ * @author Robert Marskar
+ */
 
 #ifndef EBGeometry_Alignas
 #define EBGeometry_Alignas
@@ -18,10 +17,10 @@
 #include <new>
 #include <type_traits>
 
-/*!
+/**
  * @brief Alignment size used for EBGeometry types.
  *
- * This constant expands to the natural alignment required by the
+ * @details This constant expands to the natural alignment required by the
  * highest available SIMD instruction set at compile time:
  * - **64 bytes** if AVX-512 is available
  * - **32 bytes** if AVX/AVX2 is available

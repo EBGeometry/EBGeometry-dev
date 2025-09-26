@@ -3,11 +3,11 @@
  * Please refer to Copyright.txt and LICENSE in the EBGeometry root directory.
  */
 
-/*!
-  @file   EBGeometry_DCEL_VertexImplem.hpp
-  @brief  Implementation of EBGeometry_DCEL_Vertex.hpp
-  @author Robert Marskar
-*/
+/**
+ * @file   EBGeometry_DCEL_VertexImplem.hpp
+ * @brief  Implementation of EBGeometry_DCEL_Vertex.hpp
+ * @author Robert Marskar
+ */
 
 #ifndef EBGeometry_DCEL_VertexImplem
 #define EBGeometry_DCEL_VertexImplem

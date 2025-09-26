@@ -3,11 +3,11 @@
  * Please refer to Copyright.txt and LICENSE in the EBGeometry root directory.
  */
 
-/*!
-  @file   EBGeometry_Macros.hpp
-  @brief  Various EBGeometry macros
-  @author Robert Marskar
-*/
+/**
+ * @file   EBGeometry_Macros.hpp
+ * @brief  Various EBGeometry macros
+ * @author Robert Marskar
+ */
 
 #ifndef EBGeometry_Macros
 #define EBGeometry_Macros
@@ -15,7 +15,9 @@
 #include <cassert>
 #include <iostream>
 
-/*! \cond */
+/**
+ * \cond
+ */
 
 static unsigned long long int EBGEOMETRY_ASSERTION_FAILURES = 0;
 
@@ -46,6 +48,8 @@ static unsigned long long int EBGEOMETRY_ASSERTION_FAILURES = 0;
 #define EBGEOMETRY_INLINE inline
 // End inline macros
 
-/*! \endcond */
+/**
+ * \endcond
+ */
 
 #endif

@@ -3,11 +3,11 @@
  * Please refer to Copyright.txt and LICENSE in the EBGeometry root directory.
  */
 
-/*!
-  @file   EBGeometry_GPUTypes.hpp
-  @brief  Declaration of various useful implementation of std-like classes for GPUs
-  @author Robert Marskar
-*/
+/**
+ * @file   EBGeometry_GPUTypes.hpp
+ * @brief  Declaration of various useful implementation of std-like classes for GPUs
+ * @author Robert Marskar
+ */
 
 #ifndef EBGeometry_GPUTypes
 #define EBGeometry_GPUTypes
@@ -23,11 +23,11 @@
 
 namespace EBGeometry {
 
-  /*!
-    @brief Minimum operation of two numbers.
-    @param[in] x Number to compare.
-    @param[in] y Number to compare.     
-  */
+  /**
+   * @brief Minimum operation of two numbers.
+   * @param[in] x Number to compare.
+   * @param[in] y Number to compare.
+   */
   EBGEOMETRY_GPU_HOST_DEVICE
   template <typename T>
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -37,11 +37,11 @@ namespace EBGeometry {
     return (x <= y) ? x : y;
   }
 
-  /*!
-    @brief Maximum operation of two numbers.
-    @param[in] x Number to compare.
-    @param[in] y Number to compare.     
-  */
+  /**
+   * @brief Maximum operation of two numbers.
+   * @param[in] x Number to compare.
+   * @param[in] y Number to compare.
+   */
   EBGEOMETRY_GPU_HOST_DEVICE
   template <typename T>
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -51,10 +51,10 @@ namespace EBGeometry {
     return (x >= y) ? x : y;
   }
 
-  /*!
-    @brief Sign of number. > 1 if positive, < 1 if negative, and 0 if zero.
-    @param[in] x Input number
-  */
+  /**
+   * @brief Sign of number. > 1 if positive, < 1 if negative, and 0 if zero.
+   * @param[in] x Input number
+   */
   EBGEOMETRY_GPU_HOST_DEVICE
   template <typename T>
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -64,10 +64,10 @@ namespace EBGeometry {
     return (x > T(0)) - (x < T(0));
   }
 
-  /*!
-    @brief Sign of number. > 1 if positive, < 1 if negative, and 0 if zero.
-    @param[in] x Input number
-  */
+  /**
+   * @brief Sign of number. > 1 if positive, < 1 if negative, and 0 if zero.
+   * @param[in] x Input number
+   */
   EBGEOMETRY_GPU_HOST_DEVICE
   template <typename T>
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -85,13 +85,13 @@ namespace EBGeometry {
     }
   }
 
-  /*!
-    @brief Various useful limits so that we can use numeric_limits<>-like functionality on the GPU.
-  */
+  /**
+   * @brief Various useful limits so that we can use numeric_limits<>-like functionality on the GPU.
+   */
   namespace Limits {
-    /*!
-      @brief Maximum representable number.
-    */
+    /**
+     * @brief Maximum representable number.
+     */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     constexpr Real
@@ -100,9 +100,9 @@ namespace EBGeometry {
       return EBGeometry::MaximumReal;
     }
 
-    /*!
-      @brief Minimum representable number.
-    */
+    /**
+     * @brief Minimum representable number.
+     */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     constexpr Real
@@ -111,9 +111,9 @@ namespace EBGeometry {
       return EBGeometry::MinimumReal;
     }
 
-    /*!
-      @brief Lowest representable number.
-    */
+    /**
+     * @brief Lowest representable number.
+     */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     constexpr Real
@@ -122,9 +122,9 @@ namespace EBGeometry {
       return EBGeometry::LowestReal;
     }
 
-    /*!
-      @brief Machine precision.
-    */
+    /**
+     * @brief Machine precision.
+     */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     constexpr Real
