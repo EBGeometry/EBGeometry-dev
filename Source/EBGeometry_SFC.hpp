@@ -19,7 +19,6 @@
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_Macros.hpp"
 
-// Our includes
 namespace EBGeometry::SFC {
 
   /**
