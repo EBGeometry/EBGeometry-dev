@@ -1,8 +1,3 @@
-/* EBGeometry
- * Copyright © 2024 Robert Marskar
- * Please refer to Copyright.txt and LICENSE in the EBGeometry root directory.
- */
-
 /**
  * @file   EBGeometry_CSG.hpp
  * @brief  Declaration of a CSG operations for implicit functions.

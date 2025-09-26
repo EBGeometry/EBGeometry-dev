@@ -1,8 +1,3 @@
-/* EBGeometry
- * Copyright © 2024 Robert Marskar
- * Please refer to Copyright.txt and LICENSE in the EBGeometry root directory.
- */
-
 /**
  * @file   EBGeometry_DCEL_Vertex.hpp
  * @brief  Declaration of a vertex class for use in DCEL descriptions of polygon

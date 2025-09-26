@@ -1,8 +1,3 @@
-/* EBGeometry
- * Copyright © 2024 Robert Marskar
- * Please refer to Copyright.txt and LICENSE in the EBGeometry root directory.
- */
-
 /**
  * @file   EBGeometry_Vec.hpp
  * @brief  Declaration of 2D and 3D point/vector classes with templated
@@ -94,7 +89,7 @@ namespace EBGeometry {
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     Real&
     x() noexcept;
-    
+
     /**
      * @brief Get x-component
      */

@@ -1,8 +1,3 @@
-/* EBGeometry
- * Copyright © 2024 Robert Marskar
- * Please refer to Copyright.txt and LICENSE in the EBGeometry root directory.
- */
-
 /**
  * @file   EBGeometry_DCEL_Edge.hpp
  * @brief  Declaration of an edge class for use in DCEL descriptions of polygon

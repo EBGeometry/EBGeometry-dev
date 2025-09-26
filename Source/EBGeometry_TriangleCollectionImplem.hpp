@@ -1,8 +1,3 @@
-/* EBGeometry
- * Copyright © 2025
- * Please refer to Copyright.txt and LICENSE in the EBGeometry root directory.
- */
-
 /**
  * @file   EBGeometry_TriangleCollectionImplem.hpp
  * @author Robert Marskar

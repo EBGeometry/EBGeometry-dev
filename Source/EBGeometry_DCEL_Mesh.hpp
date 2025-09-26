@@ -1,8 +1,3 @@
-/* EBGeometry
- * Copyright © 2024 Robert Marskar
- * Please refer to Copyright.txt and LICENSE in the EBGeometry root directory.
- */
-
 /**
  * @file   EBGeometry_DCEL_Mesh.hpp
  * @brief  Declaration of a mesh class which stores a DCEL mesh (with signed
