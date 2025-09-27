@@ -135,6 +135,8 @@ namespace EBGeometry {
   Vec2
   Vec2::operator/(const Real& s) const noexcept
   {
+    EBGEOMETRY_EXPECT(s != Real(0));
+
     const Real is = Real(1.0) / s;
 
     return Vec2(m_x * is, m_y * is);
@@ -174,6 +176,8 @@ namespace EBGeometry {
   Vec2&
   Vec2::operator/=(const Real& s) noexcept
   {
+    EBGEOMETRY_EXPECT(s != Real(0));
+
     const Real is = Real(1.0) / s;
 
     m_x *= is;
@@ -246,7 +250,7 @@ namespace EBGeometry {
 
     Vec3 v = Vec3::zero();
 
-    v[a_dir] = 1.0;
+    v[a_dir] = Real(1.0);
 
     return v;
   }
@@ -328,6 +332,10 @@ namespace EBGeometry {
   Vec3
   Vec3::operator/(const Vec3& v) const noexcept
   {
+    EBGEOMETRY_EXPECT(v[0] != Real(0));
+    EBGEOMETRY_EXPECT(v[1] != Real(0));
+    EBGEOMETRY_EXPECT(v[2] != Real(0));
+
     return Vec3(m_X[0] / v[0], m_X[1] / v[1], m_X[2] / v[2]);
   }
 
@@ -368,6 +376,8 @@ namespace EBGeometry {
   Vec3&
   Vec3::operator/=(const Real& s) noexcept
   {
+    EBGEOMETRY_EXPECT(s != Real(0));
+
     const Real is = Real(1.0) / s;
 
     m_X[0] *= is;

@@ -435,7 +435,7 @@ namespace EBGeometry {
 
     /**
      * @brief Return component in vector. (i=0 => x and so on)
-     * @param[in] i Index. Must be < 3
+     * @param[in] i Index. Must be <= 2
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -444,7 +444,7 @@ namespace EBGeometry {
 
     /**
      * @brief Return non-modifiable component in vector. (i=0 => x and so on)
-     * @param[in] i Index. Must be < 3
+     * @param[in] i Index. Must be <= 2
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
