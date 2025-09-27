@@ -1,13 +1,12 @@
-/* EBGeometry
- * Copyright © 2024 Robert Marskar
- * Please refer to Copyright.txt and LICENSE in the EBGeometry root directory.
- */
+// SPDX-FileCopyrightText: 2025 Robert Marskar
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
 
-/*!
-  @file   EBGeometry_GPU.hpp
-  @brief  Declaration of GPU interface with various GPU backends
-  @author Robert Marskar
-*/
+/**
+ * @file   EBGeometry_GPU.hpp
+ * @brief  Declaration of GPU interface with various GPU backends
+ * @author Robert Marskar
+ */
 
 #ifndef EBGeometry_GPU
 #define EBGeometry_GPU
@@ -49,16 +48,16 @@
 
 namespace EBGeometry {
 
-  /*!
-  @brief Enum for describing memory locations in host and device
-  @details
-
-  Invalid: Unknown location
-  Host: CPU (host)
-  Pinned: Device pinned memory
-  Unified: Device unified memory
-  Global: Device global memory
-*/
+  /**
+   * @brief Enum for describing memory locations in host and device
+   * @details
+   *
+   * Invalid: Unknown location
+   * Host: CPU (host)
+   * Pinned: Device pinned memory
+   * Unified: Device unified memory
+   * Global: Device global memory
+   */
   enum class MemoryLocation // NOLINT
   {
     Invalid,
@@ -69,10 +68,10 @@ namespace EBGeometry {
   };
 
   namespace GPU {
-    /*!
-    @brief Check if an object is allocated on the device or on the host. Pointer should not be null.
-    @return True if the object lives on the device and false otherwise.
-  */
+    /**
+     * @brief Check if an object is allocated on the device or on the host. Pointer should not be null.
+     * @return True if the object lives on the device and false otherwise.
+     */
     template <typename T>
     EBGEOMETRY_GPU_HOST
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE

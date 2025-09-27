@@ -1,13 +1,12 @@
-/* EBGeometry
- * Copyright © 2024 Robert Marskar
- * Please refer to Copyright.txt and LICENSE in the EBGeometry root directory.
- */
+// SPDX-FileCopyrightText: 2025 Robert Marskar
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
 
-/*!
-  @file   EBGeometry_TriangleImplem.hpp
-  @brief  Implementation of EBGeometry_Triangle.hpp
-  @author Robert Marskar
-*/
+/**
+ * @file   EBGeometry_TriangleImplem.hpp
+ * @brief  Implementation of EBGeometry_Triangle.hpp
+ * @author Robert Marskar
+ */
 
 #ifndef EBGeometry_TriangleImplem
 #define EBGeometry_TriangleImplem
@@ -251,12 +250,12 @@ namespace EBGeometry {
     ret = (p3.length() > abs(ret)) ? ret : p3.length() * sgn(m_vertexNormals[2].dot(p3));
 
     // Distance to edges
-    ret = (t1 > 0.0 && t1 < 1.0 && y1.length() < abs(ret)) ? y1.length() * sgn(m_edgeNormals[0].dot(y1)) : ret;
-    ret = (t2 > 0.0 && t2 < 1.0 && y2.length() < abs(ret)) ? y2.length() * sgn(m_edgeNormals[1].dot(y2)) : ret;
-    ret = (t3 > 0.0 && t3 < 1.0 && y3.length() < abs(ret)) ? y3.length() * sgn(m_edgeNormals[2].dot(y3)) : ret;
+    ret = (t1 > 0.0 && t1 < 1.0 && y1.length() < abs(ret)) ? y1.length() * sgn(dot(m_edgeNormals[0], y1)) : ret;
+    ret = (t2 > 0.0 && t2 < 1.0 && y2.length() < abs(ret)) ? y2.length() * sgn(dot(m_edgeNormals[1], y2)) : ret;
+    ret = (t3 > 0.0 && t3 < 1.0 && y3.length() < abs(ret)) ? y3.length() * sgn(dot(m_edgeNormals[2], y3)) : ret;
 
     // Note that s0 + s1 + s2 >= 2.0 is a point-in-polygon test.
-    return (s0 + s1 + s2 >= 2.0) ? m_triangleNormal.dot(p1) : ret;
+    return (s0 + s1 + s2 >= 2.0) ? dot(m_triangleNormal, p1) : ret;
   }
 } // namespace EBGeometry
 

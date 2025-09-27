@@ -1,13 +1,12 @@
-/* EBGeometry
- * Copyright © 2024 Robert Marskar
- * Please refer to Copyright.txt and LICENSE in the EBGeometry root directory.
- */
+// SPDX-FileCopyrightText: 2025 Robert Marskar
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
 
-/*!
-  @file   EBGeometry_VecImplem.hpp
-  @brief  Implementation of EBGeometry_Vec.hpp
-  @author Robert Marskar
-*/
+/**
+ * @file   EBGeometry_VecImplem.hpp
+ * @brief  Implementation of EBGeometry_Vec.hpp
+ * @author Robert Marskar
+ */
 #pragma once
 #ifndef EBGeometry_VecImplem
 #define EBGeometry_VecImplem
@@ -80,7 +79,7 @@ namespace EBGeometry {
   Vec2
   Vec2::min() noexcept
   {
-    return Vec2(EBGeometry::Limits::lowest(), EBGeometry::Limits::lowest());
+    return Vec2(EBGeometry::Limits::min(), EBGeometry::Limits::min());
   }
 
   EBGEOMETRY_ALWAYS_INLINE
@@ -88,6 +87,13 @@ namespace EBGeometry {
   Vec2::max() noexcept
   {
     return Vec2(EBGeometry::Limits::max(), EBGeometry::Limits::max());
+  }
+
+  EBGEOMETRY_ALWAYS_INLINE
+  Vec2
+  Vec2::lowest() noexcept
+  {
+    return Vec2(EBGeometry::Limits::lowest(), EBGeometry::Limits::lowest());
   }
 
   EBGEOMETRY_ALWAYS_INLINE
@@ -129,6 +135,8 @@ namespace EBGeometry {
   Vec2
   Vec2::operator/(const Real& s) const noexcept
   {
+    EBGEOMETRY_EXPECT(s != Real(0));
+
     const Real is = Real(1.0) / s;
 
     return Vec2(m_x * is, m_y * is);
@@ -168,6 +176,8 @@ namespace EBGeometry {
   Vec2&
   Vec2::operator/=(const Real& s) noexcept
   {
+    EBGEOMETRY_EXPECT(s != Real(0));
+
     const Real is = Real(1.0) / s;
 
     m_x *= is;
@@ -187,7 +197,7 @@ namespace EBGeometry {
   Real
   Vec2::length() const noexcept
   {
-    return static_cast<Real>(sqrt(m_x * m_x + m_y * m_y)); // NOLINT
+    return static_cast<Real>(EBGeometry::sqrt(m_x * m_x + m_y * m_y));
   }
 
   EBGEOMETRY_ALWAYS_INLINE
@@ -202,13 +212,6 @@ namespace EBGeometry {
   operator*(const Real& s, const Vec2& a_other) noexcept
   {
     return a_other * s;
-  }
-
-  EBGEOMETRY_ALWAYS_INLINE
-  Vec2
-  operator/(const Real& s, const Vec2& a_other) noexcept
-  {
-    return a_other / s;
   }
 
   EBGEOMETRY_ALWAYS_INLINE
@@ -243,9 +246,11 @@ namespace EBGeometry {
   Vec3
   Vec3::unit(const size_t a_dir) noexcept
   {
+    EBGEOMETRY_EXPECT(a_dir < 3);
+
     Vec3 v = Vec3::zero();
 
-    v[a_dir] = 1.0;
+    v[a_dir] = Real(1.0);
 
     return v;
   }
@@ -317,6 +322,8 @@ namespace EBGeometry {
   Vec3
   Vec3::operator/(const Real& s) const noexcept
   {
+    EBGEOMETRY_EXPECT(s != Real(0));
+
     const Real is = Real(1.0) / s;
     return Vec3(is * m_X[0], is * m_X[1], is * m_X[2]);
   }
@@ -325,6 +332,10 @@ namespace EBGeometry {
   Vec3
   Vec3::operator/(const Vec3& v) const noexcept
   {
+    EBGEOMETRY_EXPECT(v[0] != Real(0));
+    EBGEOMETRY_EXPECT(v[1] != Real(0));
+    EBGEOMETRY_EXPECT(v[2] != Real(0));
+
     return Vec3(m_X[0] / v[0], m_X[1] / v[1], m_X[2] / v[2]);
   }
 
@@ -365,6 +376,8 @@ namespace EBGeometry {
   Vec3&
   Vec3::operator/=(const Real& s) noexcept
   {
+    EBGEOMETRY_EXPECT(s != Real(0));
+
     const Real is = Real(1.0) / s;
 
     m_X[0] *= is;
@@ -400,28 +413,6 @@ namespace EBGeometry {
   }
 
   EBGEOMETRY_ALWAYS_INLINE
-  Vec3
-  Vec3::min(const Vec3& u) noexcept
-  {
-    m_X[0] = EBGeometry::min(m_X[0], u[0]);
-    m_X[1] = EBGeometry::min(m_X[1], u[1]);
-    m_X[2] = EBGeometry::min(m_X[2], u[2]);
-
-    return *this;
-  }
-
-  EBGEOMETRY_ALWAYS_INLINE
-  Vec3
-  Vec3::max(const Vec3& u) noexcept
-  {
-    m_X[0] = EBGeometry::max(m_X[0], u[0]);
-    m_X[1] = EBGeometry::max(m_X[1], u[1]);
-    m_X[2] = EBGeometry::max(m_X[2], u[2]);
-
-    return *this;
-  }
-
-  EBGEOMETRY_ALWAYS_INLINE
   size_t
   Vec3::minDir(const bool a_doAbs) const noexcept
   {
@@ -429,7 +420,7 @@ namespace EBGeometry {
 
     for (size_t dir = 0; dir < 3; dir++) {
       if (a_doAbs) {
-        if (abs(m_X[dir]) < abs(m_X[mDir])) {
+        if (EBGeometry::abs(m_X[dir]) < EBGeometry::abs(m_X[mDir])) {
           mDir = dir;
         }
       }
@@ -451,7 +442,7 @@ namespace EBGeometry {
 
     for (size_t dir = 0; dir < 3; dir++) {
       if (a_doAbs) {
-        if (abs(m_X[dir]) > abs(m_X[mDir])) {
+        if (EBGeometry::abs(m_X[dir]) > EBGeometry::abs(m_X[mDir])) {
           mDir = dir;
         }
       }
@@ -529,7 +520,7 @@ namespace EBGeometry {
   Real
   Vec3::length() const noexcept
   {
-    return static_cast<Real>(sqrt(m_X[0] * m_X[0] + m_X[1] * m_X[1] + m_X[2] * m_X[2])); // NOLINT
+    return static_cast<Real>(EBGeometry::sqrt(m_X[0] * m_X[0] + m_X[1] * m_X[1] + m_X[2] * m_X[2]));
   }
 
   EBGEOMETRY_ALWAYS_INLINE
@@ -572,13 +563,6 @@ namespace EBGeometry {
   operator*(const Real& s, const Vec3& a_other) noexcept
   {
     return a_other * s;
-  }
-
-  EBGEOMETRY_ALWAYS_INLINE
-  Vec3
-  operator/(const Real& s, const Vec3& a_other) noexcept
-  {
-    return a_other / s;
   }
 
   EBGEOMETRY_ALWAYS_INLINE
