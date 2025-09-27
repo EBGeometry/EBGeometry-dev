@@ -119,7 +119,7 @@ namespace EBGeometry {
     y() const noexcept;
 
     /**
-     * @brief Return av vector with x = y = 0
+     * @brief Return a vector with x = y = 0
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -127,7 +127,7 @@ namespace EBGeometry {
     zero() noexcept;
 
     /**
-     * @brief Return av vector with x = y = 1
+     * @brief Return a vector with x = y = 1
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -149,6 +149,14 @@ namespace EBGeometry {
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     static Vec2
     max() noexcept;
+
+    /**
+     * @brief Return lowest possible representative vector.
+     */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    static Vec2
+    lowest() noexcept;
 
     /**
      * @brief Assignment operator. Sets this.x = a_other.x and this.y = a_other.y
@@ -293,8 +301,8 @@ namespace EBGeometry {
     length() const noexcept;
 
     /**
-     * @brief Compute square of vector
-     * @return Returns length of vector, i.e. (this->x)*(this->x) +
+     * @brief Compute square length of vector
+     * @return Returns squared length of vector, i.e. (this->x)*(this->x) +
      * (this->y)*(this->y)
      */
     EBGEOMETRY_GPU_HOST_DEVICE
@@ -377,7 +385,7 @@ namespace EBGeometry {
     ~Vec3() noexcept = default;
 
     /**
-     * @brief Return av vector with x = y = z = 0
+     * @brief return a vector with x = y = z = 0
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -385,7 +393,7 @@ namespace EBGeometry {
     zero() noexcept;
 
     /**
-     * @brief Return av vector with x = y = z = 1
+     * @brief return a vector with x = y = z = 1
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -393,7 +401,7 @@ namespace EBGeometry {
     one() noexcept;
 
     /**
-     * @brief Return av vector with x = y = z = 1
+     * @brief return a vector with x = y = z = 1
      * @param[in] a_dir Direction
      */
     EBGEOMETRY_GPU_HOST_DEVICE
@@ -657,30 +665,6 @@ namespace EBGeometry {
     operator/=(const Real& s) noexcept;
 
     /**
-     * @brief Vector minimum function. Returns a new vector with componentwise
-     * minimums.
-     * @param[in] u Other vector
-     * @return Returns a new vector with X[0] = std::min(this->X[0], u.X[0]) (and
-     * same for the other components)
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    Vec3
-    min(const Vec3& u) noexcept;
-
-    /**
-     * @brief Vector maximum function. Returns a new vector with componentwise
-     * maximums.
-     * @param[in] u Other vector
-     * @return Returns a new vector with X[0] = std::minmax->X[0], u.X[0]) (and
-     * same for the other components)
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    Vec3
-    max(const Vec3& u) noexcept;
-
-    /**
      * @brief Vector cross product
      * @param[in] u Other vector
      * @returns Returns the cross product between (*this) and u
@@ -758,21 +742,9 @@ namespace EBGeometry {
    * @return Returns a new vector with components x = s*a_other.x (and same for y)
    */
   EBGEOMETRY_GPU_HOST_DEVICE
-  EBGEOMETRY_ALWAYS_INLINE
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
   Vec2
   operator*(const Real& s, const Vec2& a_other) noexcept;
-
-  /**
-   * @brief Division operator in the form s*Vec2.
-   * @param[in] s Division factor
-   * @param[in] a_other Other vector
-   * @return Returns a new vector with components x = (1/s)*a_other.x (and same for
-   * y)
-   */
-  EBGEOMETRY_GPU_HOST_DEVICE
-  EBGEOMETRY_ALWAYS_INLINE
-  Vec2
-  operator/(const Real& s, const Vec2& a_other) noexcept;
 
   /**
    * @brief Minimum function. Returns new vector with component-wise minimums.
@@ -781,7 +753,7 @@ namespace EBGeometry {
    * @return Returns new vector with components x = std::min(u.x, v.x).
    */
   EBGEOMETRY_GPU_HOST_DEVICE
-  EBGEOMETRY_ALWAYS_INLINE
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
   Vec2
   min(const Vec2& u, const Vec2& v) noexcept;
 
@@ -792,7 +764,7 @@ namespace EBGeometry {
    * @return Returns new vector with components x = std::max(u.x, v.x).
    */
   EBGEOMETRY_GPU_HOST_DEVICE
-  EBGEOMETRY_ALWAYS_INLINE
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
   Vec2
   max(const Vec2& u, const Vec2& v) noexcept;
 
@@ -802,7 +774,7 @@ namespace EBGeometry {
    * @param[in] v Other vector
    */
   EBGEOMETRY_GPU_HOST_DEVICE
-  EBGEOMETRY_ALWAYS_INLINE
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
   Real
   dot(const Vec2& u, const Vec2& v) noexcept;
 
@@ -811,7 +783,7 @@ namespace EBGeometry {
    * @param[in] v Vector.
    */
   EBGEOMETRY_GPU_HOST_DEVICE
-  EBGEOMETRY_ALWAYS_INLINE
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
   Real
   length(const Vec2& v) noexcept;
 
@@ -822,20 +794,9 @@ namespace EBGeometry {
    * @return Returns new vector with components X[0] = s*X[0] and so on.
    */
   EBGEOMETRY_GPU_HOST_DEVICE
-  EBGEOMETRY_ALWAYS_INLINE
-  Vec3
-  operator*(const Real& s, const Vec3& u) noexcept;
-
-  /**
-   * @brief Division operator.
-   * @param[in] s Division scalar
-   * @param[in] u Vector
-   * @return Returns new vector with components X[0] = X[0]/s and so on.
-   */
-  EBGEOMETRY_GPU_HOST_DEVICE
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
   Vec3
-  operator/(const Real& s, const Vec3& u) noexcept;
+  operator*(const Real& s, const Vec3& u) noexcept;
 
   /**
    * @brief Minimum function. Returns new vector with component-wise minimums.
