@@ -4,13 +4,12 @@
 
 /**
  * @file   EBGeometry_Vec.hpp
- * @brief  Declaration of 2D and 3D point/vector classes with templated
- * precision.
+ * @brief  Declaration of 2D and 3D point/vector classes.
  * @author Robert Marskar
  */
 
-#ifndef EBGeometry_Vec
-#define EBGeometry_Vec
+#ifndef EBGEOMETRY_VEC_HPP
+#define EBGEOMETRY_VEC_HPP
 
 // Std includes
 #include <array>
@@ -283,7 +282,7 @@ namespace EBGeometry {
     /**
      * @brief Dot product operator
      * @param[in] a_other other vector
-     * @details Returns the dot product, i.e. this->x*a_other.x + this->y+a_other.y
+     * @details Returns the dot product, i.e. this->x*a_other.x + this->y*a_other.y
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -385,7 +384,7 @@ namespace EBGeometry {
     ~Vec3() noexcept = default;
 
     /**
-     * @brief return a vector with x = y = z = 0
+     * @brief Return a vector with x = y = z = 0
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -393,7 +392,7 @@ namespace EBGeometry {
     zero() noexcept;
 
     /**
-     * @brief return a vector with x = y = z = 1
+     * @brief Return a vector with x = y = z = 1
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -401,7 +400,7 @@ namespace EBGeometry {
     one() noexcept;
 
     /**
-     * @brief return a vector with x = y = z = 1
+     * @brief Return a unit vector along a_dir
      * @param[in] a_dir Direction
      */
     EBGEOMETRY_GPU_HOST_DEVICE
@@ -852,6 +851,6 @@ namespace EBGeometry {
   length(const Vec3& v) noexcept;
 } // namespace EBGeometry
 
-#include "EBGeometry_VecImplem.hpp" // NOLINT
+#include "EBGeometry_VecImplem.hpp"
 
 #endif
