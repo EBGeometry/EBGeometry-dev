@@ -188,10 +188,11 @@ namespace EBGeometry {
     EBGEOMETRY_EXPECT(edge2.length() > EBGeometry::Limits::eps());
     EBGEOMETRY_EXPECT(ray.length() > EBGeometry::Limits::eps());
 
-    const Real det    = -dot(ray, m_triangleNormal);
-    const Real invDet = Real(1.0) / det;
+    const Real det = -dot(ray, m_triangleNormal);
 
     EBGEOMETRY_EXPECT(EBGeometry::abs(det) > EBGeometry ::Limits::eps());
+
+    const Real invDet = Real(1.0) / det;
 
     const Vec3 AO  = a_x0 - m_vertexPositions[0];
     const Vec3 DAO = cross(AO, ray);
@@ -200,10 +201,10 @@ namespace EBGeometry {
     const Real v = -dot(edge1, DAO) * invDet;
     const Real t = dot(AO, m_triangleNormal) * invDet;
 
-    const bool a = abs(det) > epsilon;
+    const bool a = EBGeometry::abs(det) > epsilon;
     const bool b = (t >= 0.0) && (t <= 1.0);
-    const bool c = (u >= 0.0) && (abs(u - 1.0) >= 0.0);
-    const bool d = (v >= 0.0) && (abs(u + v - 1.0) >= 0.0);
+    const bool c = (u >= 0.0) && (u <= 1.0);
+    const bool d = (v >= 0.0) && (u + v) <= 1.0;
 
     return (a && b && c && d);
   }
@@ -214,11 +215,11 @@ namespace EBGeometry {
   Triangle<MetaData>::signedDistance(const Vec3& a_point) const noexcept
   {
     // Perform extra checks in debug mode -- if any of these fail then something is uninitialized.
-    EBGEOMETRY_EXPECT(m_triangleNormal.length() < EBGeometry::Limits::max());
+    EBGEOMETRY_EXPECT(m_triangleNormal.length() == Real(1.0));
     for (int i = 0; i < 3; i++) {
       EBGEOMETRY_EXPECT(m_vertexPositions[i].length() < EBGeometry::Limits::max());
-      EBGEOMETRY_EXPECT(m_vertexNormals[i].length() < EBGeometry::Limits::max());
-      EBGEOMETRY_EXPECT(m_edgeNormals[i].length() < EBGeometry::Limits::max());
+      EBGEOMETRY_EXPECT(m_vertexNormals[i].length() == Real(1.0));
+      EBGEOMETRY_EXPECT(m_edgeNormals[i].length() == Real(1.0));
     }
 
     // Here is a message from the past: If one wants, one can precompute v21, v32, v13
@@ -233,6 +234,10 @@ namespace EBGeometry {
     EBGEOMETRY_EXPECT(v21.length2() > EBGeometry::Limits::eps());
     EBGEOMETRY_EXPECT(v32.length2() > EBGeometry::Limits::eps());
     EBGEOMETRY_EXPECT(v13.length2() > EBGeometry::Limits::eps());
+
+    EBGEOMETRY_EXPECT(v21.length2() < EBGeometry::Limits::max());
+    EBGEOMETRY_EXPECT(v32.length2() < EBGeometry::Limits::max());
+    EBGEOMETRY_EXPECT(v13.length2() < EBGeometry::Limits::max());
 
     const Vec3 p1 = a_point - m_vertexPositions[0];
     const Vec3 p2 = a_point - m_vertexPositions[1];
@@ -256,9 +261,13 @@ namespace EBGeometry {
     ret = (p3.length() > abs(ret)) ? ret : p3.length() * sgn(m_vertexNormals[2].dot(p3));
 
     // Distance to edges
-    ret = (t1 > 0.0 && t1 < 1.0 && y1.length() < abs(ret)) ? y1.length() * sgn(dot(m_edgeNormals[0], y1)) : ret;
-    ret = (t2 > 0.0 && t2 < 1.0 && y2.length() < abs(ret)) ? y2.length() * sgn(dot(m_edgeNormals[1], y2)) : ret;
-    ret = (t3 > 0.0 && t3 < 1.0 && y3.length() < abs(ret)) ? y3.length() * sgn(dot(m_edgeNormals[2], y3)) : ret;
+    const Real l1 = y1.length();
+    const Real l2 = y2.length();
+    const Real l3 = y3.length();
+
+    ret = (t1 > 0.0 && t1 < 1.0 && l1 < EBGeometry::abs(ret)) ? l1 * sgn(dot(m_edgeNormals[0], y1)) : ret;
+    ret = (t2 > 0.0 && t2 < 1.0 && l2 < EBGeometry::abs(ret)) ? l2 * sgn(dot(m_edgeNormals[1], y2)) : ret;
+    ret = (t3 > 0.0 && t3 < 1.0 && l3 < EBGeometry::abs(ret)) ? l3 * sgn(dot(m_edgeNormals[2], y3)) : ret;
 
     // Note that s0 + s1 + s2 >= 2.0 is a point-in-polygon test.
     return (s0 + s1 + s2 >= 2.0) ? dot(m_triangleNormal, p1) : ret;
