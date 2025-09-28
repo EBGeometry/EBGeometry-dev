@@ -19,7 +19,7 @@ namespace EBGeometry {
 
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
-  Triangle<MetaData>::Triangle(const Vec3 a_vertexPositions[3]) noexcept
+  Triangle<MetaData>::Triangle(const Vec3 (&a_vertexPositions)[3]) noexcept
   {
     this->setVertexPositions(a_vertexPositions);
   }
@@ -29,13 +29,15 @@ namespace EBGeometry {
   void
   Triangle<MetaData>::setNormal(const Vec3& a_normal) noexcept
   {
-    this->m_triangleNormal = a_normal;
+    EBGEOMETRY_EXPECT(a_normal.length() > EBGeometry::Limits::eps());
+
+    this->m_triangleNormal = a_normal / a_normal.length();
   }
 
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
   void
-  Triangle<MetaData>::setVertexPositions(const Vec3 a_vertexPositions[3]) noexcept
+  Triangle<MetaData>::setVertexPositions(const Vec3 (&a_vertexPositions)[3]) noexcept
   {
     m_vertexPositions[0] = a_vertexPositions[0];
     m_vertexPositions[1] = a_vertexPositions[1];
@@ -47,7 +49,7 @@ namespace EBGeometry {
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
   void
-  Triangle<MetaData>::setVertexNormals(const Vec3 a_vertexNormals[3]) noexcept
+  Triangle<MetaData>::setVertexNormals(const Vec3 (&a_vertexNormals)[3]) noexcept
   {
     m_vertexNormals[0] = a_vertexNormals[0];
     m_vertexNormals[1] = a_vertexNormals[1];
@@ -57,7 +59,7 @@ namespace EBGeometry {
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
   void
-  Triangle<MetaData>::setEdgeNormals(const Vec3 a_edgeNormals[3]) noexcept
+  Triangle<MetaData>::setEdgeNormals(const Vec3 (&a_edgeNormals)[3]) noexcept
   {
     m_edgeNormals[0] = a_edgeNormals[0];
     m_edgeNormals[1] = a_edgeNormals[1];
@@ -189,6 +191,8 @@ namespace EBGeometry {
     const Real det    = -dot(ray, m_triangleNormal);
     const Real invDet = Real(1.0) / det;
 
+    EBGEOMETRY_EXPECT(EBGeometry::abs(det) > EBGeometry ::Limits::eps());
+
     const Vec3 AO  = a_x0 - m_vertexPositions[0];
     const Vec3 DAO = cross(AO, ray);
 
@@ -210,14 +214,12 @@ namespace EBGeometry {
   Triangle<MetaData>::signedDistance(const Vec3& a_point) const noexcept
   {
     // Perform extra checks in debug mode -- if any of these fail then something is uninitialized.
-#ifdef EBGEOMETRY_DEBUG
+    EBGEOMETRY_EXPECT(m_triangleNormal.length() < EBGeometry::Limits::max());
     for (int i = 0; i < 3; i++) {
-      EBGEOMETRY_ALWAYS_EXPECT(abs(m_triangleNormal[i]) < EBGeometry::Limits::max());
-      EBGEOMETRY_ALWAYS_EXPECT(abs(m_vertexPositions[i]) < EBGeometry::Limits::max());
-      EBGEOMETRY_ALWAYS_EXPECT(abs(m_vertexNormals[i]) < EBGeometry::Limits::max());
-      EBGEOMETRY_ALWAYS_EXPECT(abs(m_edgeNormals[i]) < EBGeometry::Limits::max());
+      EBGEOMETRY_EXPECT(m_vertexPositions[i].length() < EBGeometry::Limits::max());
+      EBGEOMETRY_EXPECT(m_vertexNormals[i].length() < EBGeometry::Limits::max());
+      EBGEOMETRY_EXPECT(m_edgeNormals[i].length() < EBGeometry::Limits::max());
     }
-#endif
 
     // Here is a message from the past: If one wants, one can precompute v21, v32, v13
     // as well as many other quantities (e.g., v21.cross(m_triangleNormal)). This might
@@ -227,6 +229,10 @@ namespace EBGeometry {
     const Vec3 v21 = m_vertexPositions[1] - m_vertexPositions[0];
     const Vec3 v32 = m_vertexPositions[2] - m_vertexPositions[1];
     const Vec3 v13 = m_vertexPositions[0] - m_vertexPositions[2];
+
+    EBGEOMETRY_EXPECT(v21.length2() > EBGeometry::Limits::eps());
+    EBGEOMETRY_EXPECT(v32.length2() > EBGeometry::Limits::eps());
+    EBGEOMETRY_EXPECT(v13.length2() > EBGeometry::Limits::eps());
 
     const Vec3 p1 = a_point - m_vertexPositions[0];
     const Vec3 p2 = a_point - m_vertexPositions[1];

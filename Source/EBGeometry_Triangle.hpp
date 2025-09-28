@@ -76,7 +76,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Triangle(const Vec3 a_vertexPositions[3]) noexcept;
+    Triangle(const Vec3 (&a_vertexPositions)[3]) noexcept;
 
     /**
      * @brief Destructor (does nothing).
@@ -119,7 +119,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     void
-    setVertexPositions(const Vec3 a_vertexPositions[3]) noexcept;
+    setVertexPositions(const Vec3 (&a_vertexPositions)[3]) noexcept;
 
     /**
      * @brief Set the triangle vertex normals
@@ -128,7 +128,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     void
-    setVertexNormals(const Vec3 a_vertexNormals[3]) noexcept;
+    setVertexNormals(const Vec3 (&a_vertexNormals)[3]) noexcept;
 
     /**
      * @brief Set the triangle edge normals
@@ -137,7 +137,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     void
-    setEdgeNormals(const Vec3 a_edgeNormals[3]) noexcept;
+    setEdgeNormals(const Vec3 (&a_edgeNormals)[3]) noexcept;
 
     /**
      * @brief Set the triangle meta-data
