@@ -8,8 +8,8 @@
  * @author Robert Marskar
  */
 
-#ifndef EBGeometry_TriangleImplem
-#define EBGeometry_TriangleImplem
+#ifndef EBGEOMETRY_TRIANGLEIMPLEM_HPP
+#define EBGEOMETRY_TRIANGLEIMPLEM_HPP
 
 // Our includes
 #include "EBGeometry_Triangle.hpp"

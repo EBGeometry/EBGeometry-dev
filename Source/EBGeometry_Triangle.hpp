@@ -8,8 +8,8 @@
  * @author Robert Marskar
  */
 
-#ifndef EBGeometry_Triangle
-#define EBGeometry_Triangle
+#ifndef EBGEOMETRY_TRIANGLE_HPP
+#define EBGEOMETRY_TRIANGLE_HPP
 
 // Our includes
 #include "EBGeometry_Alignas.hpp"
