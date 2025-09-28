@@ -8,8 +8,8 @@
  * @author Robert Marskar
  */
 
-#ifndef EBGeometry_Alignas
-#define EBGeometry_Alignas
+#ifndef EBGEOMETRY_ALIGNAS_HPP
+#define EBGEOMETRY_ALIGNAS_HPP
 
 // Std includes
 #include <cstddef>

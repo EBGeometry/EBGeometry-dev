@@ -8,15 +8,15 @@
  * @author Robert Marskar
  */
 
-#ifndef EBGeometry_DCEL
-#define EBGeometry_DCEL
+#ifndef EBGEOMETRY_DCEL_HPP
+#define EBGEOMETRY_DCEL_HPP
 
 namespace EBGeometry::DCEL {
 
   /**
    * @brief Enum for putting some logic into how vertex normal weights are calculated.
    */
-  enum class VertexNormalWeight // NOLINT
+  enum class VertexNormalWeight
   {
     None,
     Angle

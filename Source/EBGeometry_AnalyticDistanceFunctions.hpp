@@ -32,7 +32,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    PlaneSDF() noexcept = default;
+    constexpr PlaneSDF() noexcept = default;
 
     /**
      * @brief Full constructor
@@ -41,7 +41,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    PlaneSDF(const Vec3& a_point, const Vec3& a_normal) noexcept :
+    constexpr PlaneSDF(const Vec3& a_point, const Vec3& a_normal) noexcept :
       m_point(a_point),
       m_normal(a_normal)
     {
@@ -56,7 +56,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    PlaneSDF(const PlaneSDF& a_plane) noexcept = default;
+    constexpr PlaneSDF(const PlaneSDF& a_plane) noexcept = default;
 
     /**
      * @brief Move constructor.
@@ -64,14 +64,14 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    PlaneSDF(PlaneSDF&& a_plane) noexcept = default;
+    constexpr PlaneSDF(PlaneSDF&& a_plane) noexcept = default;
 
     /**
      * @brief Destructor
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    ~PlaneSDF() noexcept override = default;
+    constexpr ~PlaneSDF() noexcept override = default;
 
     /**
      * @brief Copy assignment.
@@ -79,7 +79,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    PlaneSDF&
+    constexpr PlaneSDF&
     operator=(const PlaneSDF& a_plane) noexcept = default;
 
     /**
@@ -88,7 +88,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    PlaneSDF&
+    constexpr PlaneSDF&
     operator=(PlaneSDF&& a_plane) noexcept = default;
 
     /**
@@ -97,7 +97,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    Real
+    constexpr Real
     value(const Vec3& a_point) const noexcept override
     {
       return dot((a_point - m_point), m_normal);
@@ -127,7 +127,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    SphereSDF() noexcept = default;
+    constexpr SphereSDF() noexcept = default;
 
     /**
      * @brief Full constructor.
@@ -136,7 +136,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    SphereSDF(const Vec3& a_center, const Real& a_radius) noexcept :
+    constexpr SphereSDF(const Vec3& a_center, const Real& a_radius) noexcept :
       m_center(a_center),
       m_radius(a_radius)
     {
@@ -149,7 +149,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    SphereSDF(const SphereSDF& a_sphere) noexcept = default;
+    constexpr SphereSDF(const SphereSDF& a_sphere) noexcept = default;
 
     /**
      * @brief Move constructor.
@@ -157,14 +157,14 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    SphereSDF(SphereSDF&& a_sphere) noexcept = default;
+    constexpr SphereSDF(SphereSDF&& a_sphere) noexcept = default;
 
     /**
      * @brief Destructor.
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    ~SphereSDF() noexcept override = default;
+    constexpr ~SphereSDF() noexcept override = default;
 
     /**
      * @brief Copy assignment.
@@ -172,7 +172,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    SphereSDF&
+    constexpr SphereSDF&
     operator=(const SphereSDF& a_sphere) noexcept = default;
 
     /**
@@ -181,7 +181,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    SphereSDF&
+    constexpr SphereSDF&
     operator=(SphereSDF&& a_sphere) noexcept = default;
 
     /**
@@ -190,7 +190,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    Real
+    constexpr Real
     value(const Vec3& a_point) const noexcept override
     {
       return (a_point - m_center).length() - m_radius;
@@ -220,7 +220,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    BoxSDF() noexcept = default;
+    constexpr BoxSDF() noexcept = default;
 
     /**
      * @brief Full constructor. Sets the low and high corner.
@@ -230,7 +230,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    BoxSDF(const Vec3& a_loCorner, const Vec3& a_hiCorner) noexcept :
+    constexpr BoxSDF(const Vec3& a_loCorner, const Vec3& a_hiCorner) noexcept :
       m_loCorner(a_loCorner),
       m_hiCorner(a_hiCorner)
     {
@@ -245,7 +245,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    BoxSDF(const BoxSDF& a_box) noexcept = default;
+    constexpr BoxSDF(const BoxSDF& a_box) noexcept = default;
 
     /**
      * @brief Move constructor.
@@ -253,14 +253,14 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    BoxSDF(BoxSDF&& a_box) noexcept = default;
+    constexpr BoxSDF(BoxSDF&& a_box) noexcept = default;
 
     /**
      * @brief Destructor
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    ~BoxSDF() noexcept override = default;
+    constexpr ~BoxSDF() noexcept override = default;
 
     /**
      * @brief Copy assignment operator
@@ -268,7 +268,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    BoxSDF&
+    constexpr BoxSDF&
     operator=(const BoxSDF& a_box) noexcept = default;
 
     /**
@@ -277,7 +277,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    BoxSDF&
+    constexpr BoxSDF&
     operator=(BoxSDF&& a_box) noexcept = default;
 
     /**
@@ -286,7 +286,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    Real
+    constexpr Real
     value(const Vec3& a_point) const noexcept override
     {
       // For each coordinate direction, we have delta[dir] if a_point[dir] falls  \
@@ -331,7 +331,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    TorusSDF() noexcept = default;
+    constexpr TorusSDF() noexcept = default;
 
     /**
      * @brief Full constructor. Sets the center and the radii. The torus lies in the xy plane.
@@ -342,7 +342,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    TorusSDF(const Vec3& a_center, const Real& a_majorRadius, const Real& a_minorRadius) noexcept :
+    constexpr TorusSDF(const Vec3& a_center, const Real& a_majorRadius, const Real& a_minorRadius) noexcept :
       m_center(a_center),
       m_majorRadius(a_majorRadius),
       m_minorRadius(a_minorRadius)
@@ -356,7 +356,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    TorusSDF(const TorusSDF& a_torus) noexcept = default;
+    constexpr TorusSDF(const TorusSDF& a_torus) noexcept = default;
 
     /**
      * @brief Move constructor.
@@ -364,14 +364,14 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    TorusSDF(TorusSDF&& a_torus) noexcept = default;
+    constexpr TorusSDF(TorusSDF&& a_torus) noexcept = default;
 
     /**
      * @brief Destructor
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    ~TorusSDF() noexcept override = default;
+    constexpr ~TorusSDF() noexcept override = default;
 
     /**
      * @brief Copy assignment operator
@@ -379,7 +379,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    TorusSDF&
+    constexpr TorusSDF&
     operator=(const TorusSDF& a_torus) noexcept = default;
 
     /**
@@ -388,7 +388,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    TorusSDF&
+    constexpr TorusSDF&
     operator=(TorusSDF&& a_torus) noexcept = default;
 
     /**
@@ -397,7 +397,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    Real
+    constexpr Real
     value(const Vec3& a_point) const noexcept override
     {
       const auto p   = a_point - m_center;

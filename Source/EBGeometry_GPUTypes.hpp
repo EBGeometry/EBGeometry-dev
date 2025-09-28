@@ -155,7 +155,7 @@ namespace EBGeometry {
     constexpr Real
     max() noexcept
     {
-      return EBGeometry::MaximumReal;
+      return std::numeric_limits<Real>::max();
     }
 
     /**
@@ -166,7 +166,7 @@ namespace EBGeometry {
     constexpr Real
     min() noexcept
     {
-      return EBGeometry::MinimumReal;
+      return std::numeric_limits<Real>::min();
     }
 
     /**
@@ -177,7 +177,7 @@ namespace EBGeometry {
     constexpr Real
     lowest() noexcept
     {
-      return EBGeometry::LowestReal;
+      return std::numeric_limits<Real>::lowest();
     }
 
     /**
@@ -188,7 +188,7 @@ namespace EBGeometry {
     constexpr Real
     eps() noexcept
     {
-      return EBGeometry::Epsilon;
+      return std::numeric_limits<Real>::epsilon();
     }
   } // namespace Limits
 } // namespace EBGeometry
