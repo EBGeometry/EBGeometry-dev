@@ -8,21 +8,21 @@
  * @author  Robert Marskar
  */
 
-#ifndef EBGeometry_AnalyticDistanceFunctions
-#define EBGeometry_AnalyticDistanceFunctions
+#ifndef EBGEOMETRY_ANALYTICDISTANCEFUNCTIONS_HPP
+#define EBGEOMETRY_ANALYTICDISTANCEFUNCTIONS_HPP
 
-#include "EBGeometry_Types.hpp"
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_GPUTypes.hpp"
 #include "EBGeometry_ImplicitFunction.hpp"
 #include "EBGeometry_Macros.hpp"
+#include "EBGeometry_Types.hpp"
 #include "EBGeometry_Vec.hpp"
 
 namespace EBGeometry {
 
   /**
    * @brief Signed distance function for a plane.
-   * @details User species a point on the plane and the outward normal vector.
+   * @details User specifies a point on the plane and the outward normal vector.
    */
   class PlaneSDF : public ImplicitFunction
   {
@@ -45,7 +45,7 @@ namespace EBGeometry {
       m_point(a_point),
       m_normal(a_normal)
     {
-      EBGEOMETRY_EXPECT(m_normal.length() > EBGeometry::Limits::min());
+      EBGEOMETRY_EXPECT(m_normal.length() > EBGeometry::Limits::eps());
 
       m_normal = m_normal / m_normal.length();
     }
@@ -74,7 +74,7 @@ namespace EBGeometry {
     ~PlaneSDF() noexcept override = default;
 
     /**
-     * @brief Copy assignmnt.
+     * @brief Copy assignment.
      * @param[in] a_plane Other plane
      */
     EBGEOMETRY_GPU_HOST_DEVICE
@@ -112,7 +112,7 @@ namespace EBGeometry {
     /**
      * @brief Plane normal vector
      */
-    Vec3 m_normal = Vec3::one();
+    Vec3 m_normal = Vec3::unit(2);
   };
 
   /**
@@ -416,12 +416,12 @@ namespace EBGeometry {
     /**
      * @brief Torus major radius
      */
-    Real m_majorRadius;
+    Real m_majorRadius = 1.0;
 
     /**
      * @brief Torus minor radius
      */
-    Real m_minorRadius;
+    Real m_minorRadius = 0.1;
   };
 } // namespace EBGeometry
 
