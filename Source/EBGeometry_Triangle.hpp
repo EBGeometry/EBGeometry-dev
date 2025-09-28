@@ -52,7 +52,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Triangle() noexcept = default;
+    constexpr Triangle() noexcept = default;
 
     /**
      * @brief Copy constructor.
@@ -60,7 +60,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Triangle(const Triangle& a_otherTriangle) noexcept = default;
+    constexpr Triangle(const Triangle& a_otherTriangle) noexcept = default;
 
     /**
      * @brief Move constructor.
@@ -68,7 +68,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Triangle(Triangle&& a_otherTriangle) noexcept = default;
+    constexpr Triangle(Triangle&& a_otherTriangle) noexcept = default;
 
     /**
      * @brief Full constructor.
@@ -76,14 +76,14 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Triangle(const Vec3 (&a_vertexPositions)[3]) noexcept;
+    constexpr Triangle(const Vec3 (&a_vertexPositions)[3]) noexcept;
 
     /**
      * @brief Destructor (does nothing).
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    ~Triangle() noexcept = default;
+    constexpr ~Triangle() noexcept = default;
 
     /**
      * @brief Copy assignment.
@@ -91,7 +91,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Triangle&
+    constexpr Triangle&
     operator=(const Triangle& a_otherTriangle) noexcept = default;
 
     /**
@@ -100,7 +100,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Triangle&
+    constexpr Triangle&
     operator=(Triangle&& a_otherTriangle) noexcept = default;
 
     /**
@@ -109,7 +109,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    void
+    constexpr void
     setNormal(const Vec3& a_normal) noexcept;
 
     /**
@@ -118,7 +118,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    void
+    constexpr void
     setVertexPositions(const Vec3 (&a_vertexPositions)[3]) noexcept;
 
     /**
@@ -127,7 +127,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    void
+    constexpr void
     setVertexNormals(const Vec3 (&a_vertexNormals)[3]) noexcept;
 
     /**
@@ -136,7 +136,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    void
+    constexpr void
     setEdgeNormals(const Vec3 (&a_edgeNormals)[3]) noexcept;
 
     /**
@@ -145,7 +145,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    void
+    constexpr void
     setMetaData(const MetaData& a_metaData) noexcept;
 
     /**
@@ -154,7 +154,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    void
+    constexpr void
     computeNormal() noexcept;
 
     /**
@@ -163,7 +163,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    Vec3&
+    constexpr Vec3&
     getNormal() noexcept;
 
     /**
@@ -172,7 +172,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    const Vec3&
+    constexpr const Vec3&
     getNormal() const noexcept;
 
     /**
@@ -181,7 +181,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    Vec3*
+    constexpr Vec3*
     getVertexPositions() noexcept;
 
     /**
@@ -190,7 +190,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    const Vec3*
+    constexpr const Vec3*
     getVertexPositions() const noexcept;
 
     /**
@@ -199,7 +199,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    Vec3*
+    constexpr Vec3*
     getVertexNormals() noexcept;
 
     /**
@@ -208,7 +208,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    const Vec3*
+    constexpr const Vec3*
     getVertexNormals() const noexcept;
 
     /**
@@ -217,7 +217,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    Vec3*
+    constexpr Vec3*
     getEdgeNormals() noexcept;
 
     /**
@@ -226,7 +226,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    const Vec3*
+    constexpr const Vec3*
     getEdgeNormals() const noexcept;
 
     /**
@@ -235,7 +235,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    MetaData&
+    constexpr MetaData&
     getMetaData() noexcept;
 
     /**
@@ -244,7 +244,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    const MetaData&
+    constexpr const MetaData&
     getMetaData() const noexcept;
 
     /**
@@ -256,7 +256,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    bool
+    constexpr bool
     intersects(const Vec3& a_x0, const Vec3& a_x1) const noexcept;
 
     /**
@@ -265,7 +265,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    Real
+    constexpr Real
     signedDistance(const Vec3& a_point) const noexcept;
 
   protected:
