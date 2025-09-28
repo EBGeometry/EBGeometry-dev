@@ -28,7 +28,6 @@
 #include <hip/hip_runtime.h>
 #endif
 
-// CUDA definitions
 #if defined(EBGEOMETRY_ENABLE_CUDA)
 #define EBGEOMETRY_ENABLE_GPU
 #define EBGEOMETRY_GPU_HOST __host__
@@ -46,8 +45,7 @@
 #define EBGEOMETRY_GPU_DEVICE
 #define EBGEOMETRY_GPU_GLOBAL
 #define EBGEOMETRY_GPU_HOST_DEVICE
-
-#endif // <--- End CUDA definition
+#endif
 
 namespace EBGeometry {
 
@@ -61,7 +59,7 @@ namespace EBGeometry {
    * Unified: Device unified memory
    * Global: Device global memory
    */
-  enum class MemoryLocation // NOLINT
+  enum class MemoryLocation
   {
     Invalid,
     Host,
