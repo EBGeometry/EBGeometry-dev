@@ -13,8 +13,6 @@
 
 // Std includes
 #include <cstddef>
-#include <new>
-#include <type_traits>
 
 /**
  * @brief Alignment size used for EBGeometry types.

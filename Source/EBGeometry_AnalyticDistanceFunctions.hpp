@@ -401,8 +401,8 @@ namespace EBGeometry {
     value(const Vec3& a_point) const noexcept override
     {
       const auto p   = a_point - m_center;
-      const auto rho = sqrt(p[0] * p[0] + p[1] * p[1]) - m_majorRadius;
-      const auto d   = sqrt(rho * rho + p[2] * p[2]) - m_minorRadius;
+      const auto rho = EBGeometry::sqrt(p[0] * p[0] + p[1] * p[1]) - m_majorRadius;
+      const auto d   = EBGeometry::sqrt(rho * rho + p[2] * p[2]) - m_minorRadius;
 
       return Real(d);
     }
