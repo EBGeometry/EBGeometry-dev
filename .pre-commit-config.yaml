@@ -49,4 +49,10 @@ repos:
       name: check clang-format
       files: ^(Source/|Exec/)
 
+    repos:
+      - repo: https://github.com/fsfe/reuse-tool
+        rev: v6.1.0 # Use the latest stable version of reuse-tool
+        hooks:
+          - id: reuse      
+
 
