@@ -1,12 +1,12 @@
-/* EBGeometry
- * Copyright © 2024 Robert Marskar
- * Please refer to Copyright.txt and LICENSE in the EBGeometry root directory.
+// SPDX-FileCopyrightText: 2025 Robert Marskar
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
+/**
+ * @file   EBGeometry_Polygon2DImplem.hpp
+ * @brief  Implementation of EBGeometry_Polygon2D.hpp
+ * @author Robert Marskar
  */
-/*!
-  @file   EBGeometry_Polygon2DImplem.hpp
-  @brief  Implementation of EBGeometry_Polygon2D.hpp
-  @author Robert Marskar
-*/
 
 #ifndef EBGeometry_Polygon2DImplem
 #define EBGeometry_Polygon2DImplem
