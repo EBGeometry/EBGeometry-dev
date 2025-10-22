@@ -18,6 +18,7 @@
 #include "Source/EBGeometry_MeshDistanceFunctions.hpp"
 #include "Source/EBGeometry_MeshParser.hpp"
 #include "Source/EBGeometry_SFC.hpp"
+#include "Source/EBGeometry_Span.hpp"
 #include "Source/EBGeometry_Triangle.hpp"
 #include "Source/EBGeometry_TriangleMesh.hpp"
 #include "Source/EBGeometry_Types.hpp"
