@@ -4,7 +4,7 @@
 
 /**
  * @file   EBGeometry_Macros.hpp
- * @brief  Various EBGeometry macros for assertions, debugging, and inlining.
+ * @brief  Various EBGeometry macros for assertions, debugging, inlining, and aliasing qualifiers.
  * @author Robert Marskar
  */
 
@@ -27,7 +27,7 @@ static unsigned long long int EBGEOMETRY_ASSERTION_FAILURES = 0;
  * @defgroup Macros EBGeometry Macros
  * @brief Collection of utility macros for EBGeometry.
  *
- * This group contains assertion, debugging, and inlining macros
+ * This group contains assertion, debugging, inlining, and aliasing macros
  * that provide consistent behavior across compilers and build modes.
  * @{
  */
@@ -97,6 +97,32 @@ static unsigned long long int EBGEOMETRY_ASSERTION_FAILURES = 0;
  * forcing compiler-specific attributes.
  */
 #define EBGEOMETRY_INLINE inline
+
+/**
+ * @def EBGEOMETRY_RESTRICT
+ * @brief Portable aliasing qualifier that maps to the compiler's restrict extension.
+ *
+ * Many compilers support a non-standard `restrict`-like qualifier that enables
+ * more aggressive optimizations by promising non-aliasing pointers/references.
+ * This macro expands to:
+ * - `__restrict__` for Clang and GCC.
+ * - `__restrict`  for MSVC and Intel compilers (ICC, ICX, oneAPI).
+ * - Empty definition on unknown compilers (no-op).
+ *
+ * @warning Only use ::EBGEOMETRY_RESTRICT when you can *guarantee* that two or more
+ *          qualified pointers/references do not alias the same memory region.
+ *          Violating this promise yields undefined behavior.
+ *
+ * @note Typical usage is to qualify local raw pointers extracted from views/spans
+ *       inside hot loops (e.g., signed-distance sweeps) to improve auto-vectorization.
+ */
+#if defined(__clang__) || defined(__GNUC__)
+#define EBGEOMETRY_RESTRICT __restrict__
+#elif defined(_MSC_VER) || defined(__INTEL_COMPILER) || defined(__INTEL_LLVM_COMPILER)
+#define EBGEOMETRY_RESTRICT __restrict
+#else
+#define EBGEOMETRY_RESTRICT
+#endif
 
 /** @} */ // end of Macros group
 

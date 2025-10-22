@@ -8,8 +8,8 @@
  * @brief  Implementation of EBGeometry_TriangleCollection.hpp
  */
 
-#ifndef EBGeometry_TriangleCollectionImplem
-#define EBGeometry_TriangleCollectionImplem
+#ifndef EBGEOMETRY_TRIANGLECOLLECTIONIMPLEM_HPP
+#define EBGEOMETRY_TRIANGLECOLLECTIONIMPLEM_HPP
 
 #include "EBGeometry_TriangleCollection.hpp"
 
@@ -17,19 +17,18 @@ namespace EBGeometry {
 
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
-  TriangleCollection<MetaData, LayoutType::AoS>::TriangleCollection(const Triangle<MetaData>* a_triangles,
-                                                                    int                       a_size) noexcept :
-    m_triangles(a_triangles),
-    m_size(a_size)
+  TriangleCollection<MetaData, LayoutType::AoS>::TriangleCollection(
+    EBGeometry::Span<const Triangle<MetaData>> a_triangles) noexcept :
+    m_triangles(a_triangles)
   {}
 
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
   void
-  TriangleCollection<MetaData, LayoutType::AoS>::setData(const Triangle<MetaData>* a_triangles, int a_size) noexcept
+  TriangleCollection<MetaData, LayoutType::AoS>::setData(
+    EBGeometry::Span<const Triangle<MetaData>> a_triangles) noexcept
   {
     m_triangles = a_triangles;
-    m_size      = a_size;
   }
 
   template <typename MetaData>
@@ -37,7 +36,7 @@ namespace EBGeometry {
   int
   TriangleCollection<MetaData, LayoutType::AoS>::size() const noexcept
   {
-    return m_size;
+    return m_triangles.size();
   }
 
   template <typename MetaData>
@@ -53,16 +52,14 @@ namespace EBGeometry {
   template <typename MetaData>
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
   Real
-  TriangleCollection<MetaData, LayoutType::AoS>::signedDistance(const Vec3& a_point) const noexcept
+  TriangleCollection<MetaData, LayoutType::AoS>::operator()(const Vec3& a_point) const noexcept
   {
     Real ret = EBGeometry::Limits::max();
 
-    for (int i = 0; i < m_size; ++i) {
-      EBGEOMETRY_EXPECT(m_triangles != nullptr);
+    for (int i = 0; i < m_triangles.length(); ++i) {
+      const Real d = m_triangles[i].value(a_point);
 
-      const Real d = m_triangles[i].signedDistance(a_point);
-
-      ret = (abs(d) < abs(ret)) ? d : ret;
+      ret = (EBGeometry::abs(d) < EBGeometry::abs(ret)) ? d : ret;
     }
 
     return ret
@@ -70,14 +67,22 @@ namespace EBGeometry {
 
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
-  TriangleCollection<MetaData, LayoutType::SoA>::TriangleCollection(const Vec3*     a_triangleNormal,
-                                                                    const Vec3*     a_vertexPositions[3],
-                                                                    const Vec3*     a_vertexNormals[3],
-                                                                    const Vec3*     a_edgeNormals[3],
-                                                                    const MetaData* a_metaData,
-                                                                    int             a_size) noexcept
+  TriangleCollection<MetaData, LayoutType::SoA>::TriangleCollection(
+    EBGeometry::Span<const Vec3>                a_triangleNormals,
+    EBGeometry::Span<const std::array<Vec3, 3>> a_vertexPositions,
+    EBGeometry::Span<const std::array<Vec3, 3>> a_vertexNormals,
+    EBGeometry::Span<const std::array<Vec3, 3>> a_edgeNormals,
+    EBGeometry::Span<const MetaData>            a_metaData) noexcept :
+    m_triangleNormals(a_triangleNormals),
+    m_vertexPositions(a_vertexPositions),
+    m_vertexNormals(a_vertexNormals),
+    m_edgeNormals(a_edgeNormals),
+    m_metaData(a_metaData)
   {
-    setData(a_triangleNormal, a_vertexPositions, a_vertexNormals, a_edgeNormals, a_metaData, a_size);
+    EBGEOMETRY_EXPECT(m_vertexPositions.size() == m_triangleNormals.size());
+    EBGEOMETRY_EXPECT(m_vertexNormals.size() == m_triangleNormals.size());
+    EBGEOMETRY_EXPECT(m_edgeNormals.size() == m_triangleNormals.size());
+    EBGEOMETRY_EXPECT(m_metaData.size() == m_triangleNormals.size());
   }
 
   template <typename MetaData>
@@ -196,6 +201,7 @@ namespace EBGeometry {
     // Point-in-triangle: s0 + s1 + s2 >= 2.0
     return (s0 + s1 + s2 >= Real(2)) ? dot(a_triangleNormal, p1) : ret;
   }
+#endif
 } // namespace EBGeometry
 
 #endif // EBGeometry_TriangleCollectionImplem

@@ -41,7 +41,6 @@ namespace EBGeometry {
    * this project. If the query point projects to the inside of the triangle, the distance is simply the
    * projected distance onto the triangle plane. If it projects to the outside of the triangle, we check the
    * distance against the triangle edges and vertices.
-   * the ed
    */
   template <typename MetaData>
   class alignas(EBGEOMETRY_ALIGNAS) Triangle
@@ -266,7 +265,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     constexpr Real
-    signedDistance(const Vec3& a_point) const noexcept;
+    value(const Vec3& a_point) const noexcept;
 
   protected:
     /**
