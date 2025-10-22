@@ -256,9 +256,9 @@ namespace EBGeometry {
     const Vec3 y3 = p3 - t3 * v13;
 
     // Distance to vertices
-    ret = (p1.length() > abs(ret)) ? ret : p1.length() * sgn(m_vertexNormals[0].dot(p1));
-    ret = (p2.length() > abs(ret)) ? ret : p2.length() * sgn(m_vertexNormals[1].dot(p2));
-    ret = (p3.length() > abs(ret)) ? ret : p3.length() * sgn(m_vertexNormals[2].dot(p3));
+    ret = (p1.length() > EBGeometry::abs(ret)) ? ret : p1.length() * sgn(m_vertexNormals[0].dot(p1));
+    ret = (p2.length() > EBGeometry::abs(ret)) ? ret : p2.length() * sgn(m_vertexNormals[1].dot(p2));
+    ret = (p3.length() > EBGeometry::abs(ret)) ? ret : p3.length() * sgn(m_vertexNormals[2].dot(p3));
 
     // Distance to edges
     const Real l1 = y1.length();
