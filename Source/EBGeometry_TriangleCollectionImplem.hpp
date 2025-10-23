@@ -18,8 +18,7 @@ namespace EBGeometry {
   template <typename MetaData>
   EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
-  constexpr TriangleCollection<MetaData, LayoutType::AoS>::TriangleCollection(
-    EBGeometry::Span<const Triangle<MetaData>> a_triangles) noexcept :
+  constexpr TriangleCollection<MetaData, LayoutType::AoS>::TriangleCollection(EBGeometry::Span<const Triangle<MetaData>> a_triangles) noexcept :
     m_triangles(a_triangles)
   {}
 
@@ -27,8 +26,7 @@ namespace EBGeometry {
   EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   constexpr void
-  TriangleCollection<MetaData, LayoutType::AoS>::setData(
-    EBGeometry::Span<const Triangle<MetaData>> a_triangles) noexcept
+  TriangleCollection<MetaData, LayoutType::AoS>::setData(EBGeometry::Span<const Triangle<MetaData>> a_triangles) noexcept
   {
     m_triangles = a_triangles;
   }
@@ -36,10 +34,10 @@ namespace EBGeometry {
   template <typename MetaData>
   EBGEOMETRY_GPU_HOST_DEVICE
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-  int
-  TriangleCollection<MetaData, LayoutType::AoS>::size() const noexcept
+  constexpr int
+  TriangleCollection<MetaData, LayoutType::AoS>::length() const noexcept
   {
-    return m_triangles.size();
+    return m_triangles.length();
   }
 
   template <typename MetaData>
@@ -62,18 +60,17 @@ namespace EBGeometry {
   template <typename MetaData>
   EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
-  TriangleCollection<MetaData, LayoutType::SoA>::TriangleCollection(
-    EBGeometry::Span<const Vec3>     a_triangleNormals,
-    EBGeometry::Span<const Vec3>     a_firstVertexPositions,
-    EBGeometry::Span<const Vec3>     a_secondVertexPositions,
-    EBGeometry::Span<const Vec3>     a_thirdVertexPositions,
-    EBGeometry::Span<const Vec3>     a_firstVertexNormals,
-    EBGeometry::Span<const Vec3>     a_secondVertexNormals,
-    EBGeometry::Span<const Vec3>     a_thirdVertexNormals,
-    EBGeometry::Span<const Vec3>     a_firstEdgeNormals,
-    EBGeometry::Span<const Vec3>     a_secondEdgeNormals,
-    EBGeometry::Span<const Vec3>     a_thirdEdgeNormals,
-    EBGeometry::Span<const MetaData> a_metaData) noexcept
+  constexpr TriangleCollection<MetaData, LayoutType::SoA>::TriangleCollection(EBGeometry::Span<const Vec3>     a_triangleNormals,
+                                                                              EBGeometry::Span<const Vec3>     a_firstVertexPositions,
+                                                                              EBGeometry::Span<const Vec3>     a_secondVertexPositions,
+                                                                              EBGeometry::Span<const Vec3>     a_thirdVertexPositions,
+                                                                              EBGeometry::Span<const Vec3>     a_firstVertexNormals,
+                                                                              EBGeometry::Span<const Vec3>     a_secondVertexNormals,
+                                                                              EBGeometry::Span<const Vec3>     a_thirdVertexNormals,
+                                                                              EBGeometry::Span<const Vec3>     a_firstEdgeNormals,
+                                                                              EBGeometry::Span<const Vec3>     a_secondEdgeNormals,
+                                                                              EBGeometry::Span<const Vec3>     a_thirdEdgeNormals,
+                                                                              EBGeometry::Span<const MetaData> a_metaData) noexcept
   {
     this->setData(a_triangleNormals,
                   a_firstVertexPositions,
@@ -116,25 +113,25 @@ namespace EBGeometry {
     m_thirdEdgeNormals      = a_thirdEdgeNormals;
     m_metaData              = a_metaData;
 
-    EBGEOMETRY_EXPECT(m_firstVertexPositions.size() == m_triangleNormals.size());
-    EBGEOMETRY_EXPECT(m_secondVertexPositions.size() == m_triangleNormals.size());
-    EBGEOMETRY_EXPECT(m_thirdVertexPositions.size() == m_triangleNormals.size());
-    EBGEOMETRY_EXPECT(m_firstVertexNormals.size() == m_triangleNormals.size());
-    EBGEOMETRY_EXPECT(m_secondVertexNormals.size() == m_triangleNormals.size());
-    EBGEOMETRY_EXPECT(m_thirdVertexNormals.size() == m_triangleNormals.size());
-    EBGEOMETRY_EXPECT(m_firstEdgeNormals.size() == m_triangleNormals.size());
-    EBGEOMETRY_EXPECT(m_secondEdgeNormals.size() == m_triangleNormals.size());
-    EBGEOMETRY_EXPECT(m_thirdEdgeNormals.size() == m_triangleNormals.size());
-    EBGEOMETRY_EXPECT(m_metaData.size() == m_triangleNormals.size());
+    EBGEOMETRY_EXPECT(m_firstVertexPositions.length() == m_triangleNormals.length());
+    EBGEOMETRY_EXPECT(m_secondVertexPositions.length() == m_triangleNormals.length());
+    EBGEOMETRY_EXPECT(m_thirdVertexPositions.length() == m_triangleNormals.length());
+    EBGEOMETRY_EXPECT(m_firstVertexNormals.length() == m_triangleNormals.length());
+    EBGEOMETRY_EXPECT(m_secondVertexNormals.length() == m_triangleNormals.length());
+    EBGEOMETRY_EXPECT(m_thirdVertexNormals.length() == m_triangleNormals.length());
+    EBGEOMETRY_EXPECT(m_firstEdgeNormals.length() == m_triangleNormals.length());
+    EBGEOMETRY_EXPECT(m_secondEdgeNormals.length() == m_triangleNormals.length());
+    EBGEOMETRY_EXPECT(m_thirdEdgeNormals.length() == m_triangleNormals.length());
+    EBGEOMETRY_EXPECT(m_metaData.length() == m_triangleNormals.length());
   }
 
   template <typename MetaData>
   EBGEOMETRY_GPU_HOST_DEVICE
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-  int
-  TriangleCollection<MetaData, LayoutType::SoA>::size() const noexcept
+  constexpr int
+  TriangleCollection<MetaData, LayoutType::SoA>::length() const noexcept
   {
-    return m_triangleNormals.size();
+    return m_triangleNormals.length();
   }
 
   template <typename MetaData>
@@ -145,7 +142,7 @@ namespace EBGeometry {
   {
     Real ret = EBGeometry::Limits::max();
 
-    const int numTriangles = m_triangleNormals.size();
+    const int numTriangles = m_triangleNormals.length();
 
     Vec3 vertexPositions[3];
     Vec3 vertexNormals[3];
@@ -164,7 +161,7 @@ namespace EBGeometry {
       edgeNormals[1] = m_secondEdgeNormals[i];
       edgeNormals[2] = m_thirdEdgeNormals[i];
 
-      const Real d = signedDistanceTriangle(m_triangleNormal[i], vertexPositions, vertexNormals, edgeNormals, a_point);
+      const Real d = signedDistanceTriangle(m_triangleNormals[i], vertexPositions, vertexNormals, edgeNormals, a_point);
 
       ret = (EBGeometry::abs(d) < EBGeometry::abs(ret)) ? d : ret;
     }
@@ -176,21 +173,19 @@ namespace EBGeometry {
   EBGEOMETRY_GPU_HOST_DEVICE
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
   Real
-  TriangleCollection<MetaData, LayoutType::SoA>::signedDistanceTriangle(const Vec3& a_triangleNormal,
-                                                                        const Vec3* EBGEOMETRY_RESTRICT
-                                                                          a_vertexPositions,
+  TriangleCollection<MetaData, LayoutType::SoA>::signedDistanceTriangle(const Vec3&                     a_triangleNormal,
+                                                                        const Vec3* EBGEOMETRY_RESTRICT a_vertexPositions,
                                                                         const Vec3* EBGEOMETRY_RESTRICT a_vertexNormals,
                                                                         const Vec3* EBGEOMETRY_RESTRICT a_edgeNormals,
-                                                                        const Vec3& a_point) noexcept
+                                                                        const Vec3&                     a_point) noexcept
+
   {
-#ifdef EBGEOMETRY_DEBUG
+    EBGEOMETRY_EXPECT(a_triangleNormal.length() == Real(1));
     for (int i = 0; i < 3; ++i) {
-      EBGEOMETRY_ALWAYS_EXPECT(EBGeometry::abs(a_triangleNormal[i]) < EBGeometry::Limits::max());
-      EBGEOMETRY_ALWAYS_EXPECT(EBGeometry::abs(a_vertexPositions[i]) < EBGeometry::Limits::max());
-      EBGEOMETRY_ALWAYS_EXPECT(EBGeometry::abs(a_vertexNormals[i]) < EBGeometry::Limits::max());
-      EBGEOMETRY_ALWAYS_EXPECT(EBGeometry::abs(a_edgeNormals[i]) < EBGeometry::Limits::max());
+      EBGEOMETRY_EXPECT(a_vertexPositions[i].length() < EBGeometry::Limits::max());
+      EBGEOMETRY_EXPECT(a_vertexNormals[i].length() == Real(1));
+      EBGEOMETRY_EXPECT(a_edgeNormals[i].length() == Real(1));
     }
-#endif
 
     Real ret = EBGeometry::Limits::max();
 

@@ -15,10 +15,11 @@
 #include "EBGeometry_Alignas.hpp"
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_GPUTypes.hpp"
+#include "EBGeometry_LayoutType.hpp"
 #include "EBGeometry_Macros.hpp"
-#include "EBGeometry_Vec.hpp"
 #include "EBGeometry_Span.hpp"
 #include "EBGeometry_Triangle.hpp"
+#include "EBGeometry_Vec.hpp"
 
 namespace EBGeometry {
 
@@ -109,7 +110,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     constexpr int
-    size() const noexcept;
+    length() const noexcept;
 
     /**
      * @brief Compute the signed distance from a point to the collection.
@@ -247,7 +248,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     constexpr int
-    size() const noexcept;
+    length() const noexcept;
 
     /**
      * @brief Compute the signed distance from a point to the collection.
