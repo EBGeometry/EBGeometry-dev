@@ -8,8 +8,8 @@
  * @author Robert Marskar
  */
 
-#ifndef EBGeometry_GPUTypes
-#define EBGeometry_GPUTypes
+#ifndef EBGEOMETRY_GPUTYPES_HPP
+#define EBGEOMETRY_GPUTYPES_HPP
 
 // Std includes
 #include <cmath>
@@ -169,7 +169,7 @@ namespace EBGeometry {
     constexpr Real
     max() noexcept
     {
-      return std::numeric_limits<Real>::max();
+      return EBGeometry::REAL_MAX;
     }
 
     /**
@@ -180,7 +180,7 @@ namespace EBGeometry {
     constexpr Real
     min() noexcept
     {
-      return std::numeric_limits<Real>::min();
+      return EBGeometry::REAL_MIN;
     }
 
     /**
@@ -191,7 +191,7 @@ namespace EBGeometry {
     constexpr Real
     lowest() noexcept
     {
-      return std::numeric_limits<Real>::lowest();
+      return -EBGeometry::REAL_MAX;
     }
 
     /**
@@ -202,7 +202,7 @@ namespace EBGeometry {
     constexpr Real
     eps() noexcept
     {
-      return std::numeric_limits<Real>::epsilon();
+      return EBGeometry::REAL_EPSILON;
     }
   } // namespace Limits
 } // namespace EBGeometry
