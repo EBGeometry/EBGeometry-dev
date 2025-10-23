@@ -47,7 +47,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    TriangleCollection() noexcept = default;
+    constexpr TriangleCollection() noexcept = default;
 
     /**
      * @brief Copy constructor.
@@ -55,7 +55,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    TriangleCollection(const TriangleCollection& a_other) noexcept = default;
+    constexpr TriangleCollection(const TriangleCollection& a_other) noexcept = default;
 
     /**
      * @brief Move constructor.
@@ -63,7 +63,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    TriangleCollection(TriangleCollection&& a_other) noexcept = default;
+    constexpr TriangleCollection(TriangleCollection&& a_other) noexcept = default;
 
     /**
      * @brief Construct from raw pointer and size.
@@ -71,7 +71,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    TriangleCollection(EBGeometry::Span<const Triangle<MetaData>> a_triangles) noexcept;
+    constexpr explicit TriangleCollection(EBGeometry::Span<const Triangle<MetaData>> a_triangles) noexcept;
 
     /**
      * @brief Copy assignment.
@@ -80,7 +80,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    TriangleCollection&
+    constexpr TriangleCollection&
     operator=(const TriangleCollection& a_other) noexcept = default;
 
     /**
@@ -90,7 +90,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    TriangleCollection&
+    constexpr TriangleCollection&
     operator=(TriangleCollection&& a_other) noexcept = default;
 
     /**
@@ -99,7 +99,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    void
+    constexpr void
     setData(EBGeometry::Span<const Triangle<MetaData>> a_triangles) noexcept;
 
     /**
@@ -108,7 +108,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    int
+    constexpr int
     size() const noexcept;
 
     /**
@@ -146,7 +146,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    TriangleCollection() noexcept = default;
+    constexpr TriangleCollection() noexcept = default;
 
     /**
      * @brief Copy constructor.
@@ -154,7 +154,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    TriangleCollection(const TriangleCollection& a_other) noexcept = default;
+    constexpr TriangleCollection(const TriangleCollection& a_other) noexcept = default;
 
     /**
      * @brief Move constructor.
@@ -162,7 +162,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    TriangleCollection(TriangleCollection&& a_other) noexcept = default;
+    constexpr TriangleCollection(TriangleCollection&& a_other) noexcept = default;
 
     /**
      * @brief Construct from raw arrays of triangle data.
@@ -174,11 +174,11 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    TriangleCollection(EBGeometry::Span<const Vec3>                a_triangleNormals,
-                       EBGeometry::Span<const std::array<Vec3, 3>> a_vertexPositions,
-                       EBGeometry::Span<const std::array<Vec3, 3>> a_vertexNormals,
-                       EBGeometry::Span<const std::array<Vec3, 3>> a_edgeNormals,
-                       EBGeometry::Span<const MetaData>            a_metaData) noexcept;
+    constexpr explicit TriangleCollection(EBGeometry::Span<const Vec3>                a_triangleNormals,
+                                          EBGeometry::Span<const std::array<Vec3, 3>> a_vertexPositions,
+                                          EBGeometry::Span<const std::array<Vec3, 3>> a_vertexNormals,
+                                          EBGeometry::Span<const std::array<Vec3, 3>> a_edgeNormals,
+                                          EBGeometry::Span<const MetaData>            a_metaData) noexcept;
 
     /**
      * @brief Copy assignment.
@@ -187,7 +187,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    TriangleCollection&
+    constexpr TriangleCollection&
     operator=(const TriangleCollection& a_other) noexcept = default;
 
     /**
@@ -197,7 +197,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    TriangleCollection&
+    constexpr TriangleCollection&
     operator=(TriangleCollection&& a_other) noexcept = default;
 
     /**
@@ -210,7 +210,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    void
+    constexpr void
     setData(EBGeometry::Span<const Vec3>                a_triangleNormals,
             EBGeometry::Span<const std::array<Vec3, 3>> a_vertexPositions,
             EBGeometry::Span<const std::array<Vec3, 3>> a_vertexNormals,
@@ -223,7 +223,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    int
+    constexpr int
     size() const noexcept;
 
     /**
@@ -238,25 +238,6 @@ namespace EBGeometry {
     value(const Vec3& a_point) const noexcept;
 
   protected:
-    /**
-     * @brief Compute signed distance to a single triangle given its SoA fields.
-     * @param[in] a_triangleNormal Face normal of triangle.
-     * @param[in] a_vertexPositions Array of vertex positions (length 3).
-     * @param[in] a_vertexNormals Array of vertex normals (length 3).
-     * @param[in] a_edgeNormals Array of edge normals (length 3).
-     * @param[in] a_point Query point.
-     * @return Signed distance to triangle.
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    static Real
-    signedDistanceTriangle(const Vec3&                     a_triangleNormal,
-                           const Vec3* EBGEOMETRY_RESTRICT a_vertexPositions,
-                           const Vec3* EBGEOMETRY_RESTRICT a_vertexNormals,
-                           const Vec3* EBGEOMETRY_RESTRICT a_edgeNormals,
-                           const Vec3&                     a_point) noexcept;
-
-  private:
     /**
        @brief Pointer to array of triangle face normals.
     */
@@ -281,6 +262,24 @@ namespace EBGeometry {
        @brief Pointer to array of triangle vertex positions
     */
     EBGeometry::Span<const MetaData> m_metaData{};
+
+    /**
+     * @brief Compute signed distance to a single triangle given its SoA fields.
+     * @param[in] a_triangleNormal Face normal of triangle.
+     * @param[in] a_vertexPositions Array of vertex positions (length 3).
+     * @param[in] a_vertexNormals Array of vertex normals (length 3).
+     * @param[in] a_edgeNormals Array of edge normals (length 3).
+     * @param[in] a_point Query point.
+     * @return Signed distance to triangle.
+     */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    static Real
+    signedDistanceTriangle(const Vec3&                     a_triangleNormal,
+                           const Vec3* EBGEOMETRY_RESTRICT a_vertexPositions,
+                           const Vec3* EBGEOMETRY_RESTRICT a_vertexNormals,
+                           const Vec3* EBGEOMETRY_RESTRICT a_edgeNormals,
+                           const Vec3&                     a_point) noexcept;
   };
 } // namespace EBGeometry
 

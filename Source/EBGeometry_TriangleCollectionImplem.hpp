@@ -17,14 +17,14 @@ namespace EBGeometry {
 
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
-  TriangleCollection<MetaData, LayoutType::AoS>::TriangleCollection(
+  constexpr explicit TriangleCollection<MetaData, LayoutType::AoS>::TriangleCollection(
     EBGeometry::Span<const Triangle<MetaData>> a_triangles) noexcept :
     m_triangles(a_triangles)
   {}
 
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
-  void
+  constexpr void
   TriangleCollection<MetaData, LayoutType::AoS>::setData(
     EBGeometry::Span<const Triangle<MetaData>> a_triangles) noexcept
   {
@@ -41,18 +41,8 @@ namespace EBGeometry {
 
   template <typename MetaData>
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-  const typename TriangleCollection<MetaData, LayoutType::AoS>::Triangle<MetaData>&
-  TriangleCollection<MetaData, LayoutType::AoS>::operator[](int i) const noexcept
-  {
-    EBGEOMETRY_EXPECT(i >= 0 && i < m_size);
-
-    return m_triangles[i];
-  }
-
-  template <typename MetaData>
-  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
   Real
-  TriangleCollection<MetaData, LayoutType::AoS>::operator()(const Vec3& a_point) const noexcept
+  TriangleCollection<MetaData, LayoutType::AoS>::value(const Vec3& a_point) const noexcept
   {
     Real ret = EBGeometry::Limits::max();
 

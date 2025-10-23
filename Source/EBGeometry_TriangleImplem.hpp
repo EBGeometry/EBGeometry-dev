@@ -19,9 +19,9 @@ namespace EBGeometry {
 
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
-  constexpr Triangle<MetaData>::Triangle(const Vec3 (&a_vertexPositions)[3]) noexcept
+  constexpr explicit Triangle<MetaData>::Triangle(const Vec3& a_x1, const Vec3& a_x2, const Vec3& a_x3) noexcept
   {
-    this->setVertexPositions(a_vertexPositions);
+    this->setVertexPositions(a_x1, a_x2, a_x3);
   }
 
   template <typename MetaData>
@@ -37,11 +37,11 @@ namespace EBGeometry {
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
   constexpr void
-  Triangle<MetaData>::setVertexPositions(const Vec3 (&a_vertexPositions)[3]) noexcept
+  Triangle<MetaData>::setVertexPositions(const Vec3& a_x1, const Vec3& a_x2, const Vec3& a_x3) noexcept
   {
-    m_vertexPositions[0] = a_vertexPositions[0];
-    m_vertexPositions[1] = a_vertexPositions[1];
-    m_vertexPositions[2] = a_vertexPositions[2];
+    m_vertexPositions[0] = a_x1;
+    m_vertexPositions[1] = a_x2;
+    m_vertexPositions[2] = a_x3;
 
     this->computeNormal();
   }
@@ -49,21 +49,21 @@ namespace EBGeometry {
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
   constexpr void
-  Triangle<MetaData>::setVertexNormals(const Vec3 (&a_vertexNormals)[3]) noexcept
+  Triangle<MetaData>::setVertexNormals(const Vec3& a_n1, const Vec3& a_n2, const Vec3& a_n3) noexcept
   {
-    m_vertexNormals[0] = a_vertexNormals[0];
-    m_vertexNormals[1] = a_vertexNormals[1];
-    m_vertexNormals[2] = a_vertexNormals[2];
+    m_vertexNormals[0] = a_n1;
+    m_vertexNormals[1] = a_n2;
+    m_vertexNormals[2] = a_n3;
   }
 
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
   constexpr void
-  Triangle<MetaData>::setEdgeNormals(const Vec3 (&a_edgeNormals)[3]) noexcept
+  Triangle<MetaData>::setEdgeNormals(const Vec3& a_n1, const Vec3& a_n2, const Vec3& a_n3) noexcept
   {
-    m_edgeNormals[0] = a_edgeNormals[0];
-    m_edgeNormals[1] = a_edgeNormals[1];
-    m_edgeNormals[2] = a_edgeNormals[2];
+    m_edgeNormals[0] = a_n1;
+    m_edgeNormals[1] = a_n2;
+    m_edgeNormals[2] = a_n3;
   }
 
   template <typename MetaData>
@@ -82,6 +82,9 @@ namespace EBGeometry {
     const Vec3 x1x0 = m_vertexPositions[1] - m_vertexPositions[0];
     const Vec3 x2x1 = m_vertexPositions[2] - m_vertexPositions[1];
 
+    EBGEOMETRY_EXPECT(m_vertexPositions[0] != m_vertexPositions[1]);
+    EBGEOMETRY_EXPECT(m_vertexPositions[1] != m_vertexPositions[2]);
+    EBGEOMETRY_EXPECT(m_vertexPositions[2] != m_vertexPositions[0]);
     EBGEOMETRY_EXPECT(x1x0.length() > EBGeometry::Limits::eps());
     EBGEOMETRY_EXPECT(x2x1.length() > EBGeometry::Limits::eps());
 
@@ -216,6 +219,7 @@ namespace EBGeometry {
   {
     // Perform extra checks in debug mode -- if any of these fail then something is uninitialized.
     EBGEOMETRY_EXPECT(m_triangleNormal.length() == Real(1.0));
+
     for (int i = 0; i < 3; i++) {
       EBGEOMETRY_EXPECT(m_vertexPositions[i].length() < EBGeometry::Limits::max());
       EBGEOMETRY_EXPECT(m_vertexNormals[i].length() == Real(1.0));
@@ -243,9 +247,9 @@ namespace EBGeometry {
     const Vec3 p2 = a_point - m_vertexPositions[1];
     const Vec3 p3 = a_point - m_vertexPositions[2];
 
-    const Real s0 = sgn(dot(cross(v21, m_triangleNormal), p1));
-    const Real s1 = sgn(dot(cross(v32, m_triangleNormal), p2));
-    const Real s2 = sgn(dot(cross(v13, m_triangleNormal), p3));
+    const Real s0 = EBGeometry::sgn(dot(cross(v21, m_triangleNormal), p1));
+    const Real s1 = EBGeometry::sgn(dot(cross(v32, m_triangleNormal), p2));
+    const Real s2 = EBGeometry::sgn(dot(cross(v13, m_triangleNormal), p3));
 
     const Real t1 = dot(p1, v21) / dot(v21, v21);
     const Real t2 = dot(p2, v32) / dot(v32, v32);
@@ -256,18 +260,18 @@ namespace EBGeometry {
     const Vec3 y3 = p3 - t3 * v13;
 
     // Distance to vertices
-    ret = (p1.length() > EBGeometry::abs(ret)) ? ret : p1.length() * sgn(m_vertexNormals[0].dot(p1));
-    ret = (p2.length() > EBGeometry::abs(ret)) ? ret : p2.length() * sgn(m_vertexNormals[1].dot(p2));
-    ret = (p3.length() > EBGeometry::abs(ret)) ? ret : p3.length() * sgn(m_vertexNormals[2].dot(p3));
+    ret = (p1.length() > EBGeometry::abs(ret)) ? ret : p1.length() * EBGeometry::sgn(m_vertexNormals[0].dot(p1));
+    ret = (p2.length() > EBGeometry::abs(ret)) ? ret : p2.length() * EBGeometry::sgn(m_vertexNormals[1].dot(p2));
+    ret = (p3.length() > EBGeometry::abs(ret)) ? ret : p3.length() * EBGeometry::sgn(m_vertexNormals[2].dot(p3));
 
     // Distance to edges
     const Real l1 = y1.length();
     const Real l2 = y2.length();
     const Real l3 = y3.length();
 
-    ret = (t1 > 0.0 && t1 < 1.0 && l1 < EBGeometry::abs(ret)) ? l1 * sgn(dot(m_edgeNormals[0], y1)) : ret;
-    ret = (t2 > 0.0 && t2 < 1.0 && l2 < EBGeometry::abs(ret)) ? l2 * sgn(dot(m_edgeNormals[1], y2)) : ret;
-    ret = (t3 > 0.0 && t3 < 1.0 && l3 < EBGeometry::abs(ret)) ? l3 * sgn(dot(m_edgeNormals[2], y3)) : ret;
+    ret = (t1 > 0.0 && t1 < 1.0 && l1 < EBGeometry::abs(ret)) ? l1 * EBGeometry::sgn(dot(m_edgeNormals[0], y1)) : ret;
+    ret = (t2 > 0.0 && t2 < 1.0 && l2 < EBGeometry::abs(ret)) ? l2 * EBGeometry::sgn(dot(m_edgeNormals[1], y2)) : ret;
+    ret = (t3 > 0.0 && t3 < 1.0 && l3 < EBGeometry::abs(ret)) ? l3 * EBGeometry::sgn(dot(m_edgeNormals[2], y3)) : ret;
 
     // Note that s0 + s1 + s2 >= 2.0 is a point-in-polygon test.
     return (s0 + s1 + s2 >= 2.0) ? dot(m_triangleNormal, p1) : ret;

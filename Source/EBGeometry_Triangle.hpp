@@ -71,11 +71,29 @@ namespace EBGeometry {
 
     /**
      * @brief Full constructor.
+     * @param[in] a_x1 Position of first vertex.
+     * @param[in] a_x2 Position of second vertex.
+     * @param[in] a_x3 Position of third vertex.     
+     */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    constexpr explicit Triangle(const Vec3& a_x1, const Vec3& a_x2, const Vec3& a_x3) noexcept;
+
+    /**
+     * @brief Delete constructor to prevent misuse constructor.
      * @param[in] a_vertexPositions Triangle vertex positions
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    constexpr Triangle(const Vec3 (&a_vertexPositions)[3]) noexcept;
+    constexpr Triangle(const Vec3* a_vertexPositions) = delete;
+
+    /**
+     * @brief Delete constructor to prevent misuse constructor.
+     * @param[in] a_vertexPositions Triangle vertex positions
+     */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    constexpr Triangle(std::initializer_list<Vec3> a_vertexPositions) = delete;
 
     /**
      * @brief Destructor (does nothing).
@@ -113,30 +131,36 @@ namespace EBGeometry {
 
     /**
      * @brief Set the triangle vertex positions
-     * @param[in] a_vertexPositions Vertex positions
+     * @param[in] a_x1 Position of first vertex.
+     * @param[in] a_x2 Position of second vertex.
+     * @param[in] a_x3 Position of third vertex.          
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     constexpr void
-    setVertexPositions(const Vec3 (&a_vertexPositions)[3]) noexcept;
+    setVertexPositions(const Vec3& a_x1, const Vec3& a_x2, const Vec3& a_x3) noexcept;
 
     /**
      * @brief Set the triangle vertex normals
-     * @param[in] a_vertexNormals Vertex normals
+     * @param[in] a_n1 Normal of first vertex.
+     * @param[in] a_n2 Normal of second vertex.
+     * @param[in] a_n3 Normal of third vertex.          
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     constexpr void
-    setVertexNormals(const Vec3 (&a_vertexNormals)[3]) noexcept;
+    setVertexNormals(const Vec3& a_n1, const Vec3& a_n2, const Vec3& a_n3) noexcept;
 
     /**
      * @brief Set the triangle edge normals
-     * @param[in] a_edgeNormals Edge normals
+     * @param[in] a_n1 Normal of first edge (pointing from first vertex to second vertex)
+     * @param[in] a_n2 Normal of second edge (pointing from second vertex to third vertex)
+     * @param[in] a_n3 Normal of third edge (pointing from third vertex to first vertex)
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     constexpr void
-    setEdgeNormals(const Vec3 (&a_edgeNormals)[3]) noexcept;
+    setEdgeNormals(const Vec3& a_n1, const Vec3& a_n2, const Vec3& a_n3) noexcept;
 
     /**
      * @brief Set the triangle meta-data
