@@ -13,6 +13,8 @@
 
 #include "EBGeometry_TriangleCollection.hpp"
 
+#error "SoA version is not finished -- needs to be optimized"
+
 namespace EBGeometry {
 
   template <typename MetaData>
