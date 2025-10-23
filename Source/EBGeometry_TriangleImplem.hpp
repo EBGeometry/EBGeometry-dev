@@ -217,25 +217,42 @@ namespace EBGeometry {
   constexpr Real
   Triangle<MetaData>::value(const Vec3& a_point) const noexcept
   {
-    auto nearOne = [](Real x) -> bool { return EBGeometry::abs(x - Real(1)) <= Real(1E-6); };
+    const DistanceCandidate d = signedSquaredDistanceTriangle(m_triangleNormal, m_vertexPositions, m_vertexNormals, m_edgeNormals, a_point);
 
-    // Perform extra checks in debug mode -- if any of these fail then something is uninitialized.
-    EBGEOMETRY_EXPECT(nearOne(m_triangleNormal.length2()));
+    return sqrt(d.m_dist2) * d.m_sgn;
+  }
 
-    for (int i = 0; i < 3; i++) {
-      EBGEOMETRY_EXPECT(m_vertexPositions[i].length2() < EBGeometry::Limits::max());
-      EBGEOMETRY_EXPECT(nearOne(m_vertexNormals[i].length2()));
-      EBGEOMETRY_EXPECT(nearOne(m_edgeNormals[i].length2()));
+  EBGEOMETRY_GPU_HOST_DEVICE
+  EBGEOMETRY_ALWAYS_INLINE
+  void
+  compareDistanceHelper(DistanceCandidate& a_ret, Real a_curAbs, int a_curSgn, bool a_mask) noexcept
+  {
+    const bool better = a_mask && (a_curAbs < a_ret.m_dist2);
+
+    a_ret.m_dist2 = better ? a_curAbs : a_ret.m_dist2;
+    a_ret.m_sgn   = better ? a_curSgn : a_ret.m_sgn;
+  }
+
+  EBGEOMETRY_GPU_HOST_DEVICE
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+  DistanceCandidate
+  signedSquaredDistanceTriangle(const Vec3&                     a_triangleNormal,
+                                const Vec3* EBGEOMETRY_RESTRICT a_vertexPositions,
+                                const Vec3* EBGEOMETRY_RESTRICT a_vertexNormals,
+                                const Vec3* EBGEOMETRY_RESTRICT a_edgeNormals,
+                                const Vec3&                     a_point) noexcept
+
+  {
+    EBGEOMETRY_EXPECT(EBGeometry::nearOne(a_triangleNormal.length2()));
+    for (int i = 0; i < 3; ++i) {
+      EBGEOMETRY_EXPECT(a_vertexPositions[i].length2() < EBGeometry::Limits::max());
+      EBGEOMETRY_EXPECT(EBGeometry::nearOne(a_vertexNormals[i].length2()));
+      EBGEOMETRY_EXPECT(EBGeometry::nearOne(a_edgeNormals[i].length2()));
     }
 
-    // Here is a message from the past: If one wants, one can precompute v21, v32, v13
-    // as well as many other quantities (e.g., v21.cross(m_triangleNormal)). This might
-    // be helpful in order to speed things up a little bit.
-    Real ret = EBGeometry::Limits::max();
-
-    const Vec3 v21 = m_vertexPositions[1] - m_vertexPositions[0];
-    const Vec3 v32 = m_vertexPositions[2] - m_vertexPositions[1];
-    const Vec3 v13 = m_vertexPositions[0] - m_vertexPositions[2];
+    const Vec3 v21 = a_vertexPositions[1] - a_vertexPositions[0];
+    const Vec3 v32 = a_vertexPositions[2] - a_vertexPositions[1];
+    const Vec3 v13 = a_vertexPositions[0] - a_vertexPositions[2];
 
     EBGEOMETRY_EXPECT(v21.length2() > EBGeometry::Limits::eps());
     EBGEOMETRY_EXPECT(v32.length2() > EBGeometry::Limits::eps());
@@ -245,40 +262,42 @@ namespace EBGeometry {
     EBGEOMETRY_EXPECT(v32.length2() < EBGeometry::Limits::max());
     EBGEOMETRY_EXPECT(v13.length2() < EBGeometry::Limits::max());
 
-    const Vec3 p1 = a_point - m_vertexPositions[0];
-    const Vec3 p2 = a_point - m_vertexPositions[1];
-    const Vec3 p3 = a_point - m_vertexPositions[2];
+    const Vec3 p1 = a_point - a_vertexPositions[0];
+    const Vec3 p2 = a_point - a_vertexPositions[1];
+    const Vec3 p3 = a_point - a_vertexPositions[2];
 
-    const Real s0 = EBGeometry::sgn(dot(cross(v21, m_triangleNormal), p1));
-    const Real s1 = EBGeometry::sgn(dot(cross(v32, m_triangleNormal), p2));
-    const Real s2 = EBGeometry::sgn(dot(cross(v13, m_triangleNormal), p3));
+    const int s0 = EBGeometry::sgn(dot(cross(v21, a_triangleNormal), p1));
+    const int s1 = EBGeometry::sgn(dot(cross(v32, a_triangleNormal), p2));
+    const int s2 = EBGeometry::sgn(dot(cross(v13, a_triangleNormal), p3));
 
     const Real t1 = dot(p1, v21) / dot(v21, v21);
     const Real t2 = dot(p2, v32) / dot(v32, v32);
     const Real t3 = dot(p3, v13) / dot(v13, v13);
+    const Real d  = dot(a_triangleNormal, p1);
 
     const Vec3 y1 = p1 - t1 * v21;
     const Vec3 y2 = p2 - t2 * v32;
     const Vec3 y3 = p3 - t3 * v13;
 
+    // Point-in-triangle: s0 + s1 + s2 >= 2.0
+    const bool inside = (s0 + s1 + s2 >= 2);
+
+    // Return candidate.
+    DistanceCandidate ret;
+
     // Distance to vertices
-    ret = (p1.length() > EBGeometry::abs(ret)) ? ret : p1.length() * EBGeometry::sgn(m_vertexNormals[0].dot(p1));
-    ret = (p2.length() > EBGeometry::abs(ret)) ? ret : p2.length() * EBGeometry::sgn(m_vertexNormals[1].dot(p2));
-    ret = (p3.length() > EBGeometry::abs(ret)) ? ret : p3.length() * EBGeometry::sgn(m_vertexNormals[2].dot(p3));
+    compareDistanceHelper(ret, p1.length2(), EBGeometry::sgn(dot(a_vertexNormals[0], p1)), true);
+    compareDistanceHelper(ret, p2.length2(), EBGeometry::sgn(dot(a_vertexNormals[1], p2)), true);
+    compareDistanceHelper(ret, p3.length2(), EBGeometry::sgn(dot(a_vertexNormals[2], p3)), true);
 
     // Distance to edges
-    const Real l1 = y1.length();
-    const Real l2 = y2.length();
-    const Real l3 = y3.length();
+    compareDistanceHelper(ret, y1.length2(), EBGeometry::sgn(a_edgeNormals[0].dot(y1)), (t1 > 0.0 && t1 < 1.0));
+    compareDistanceHelper(ret, y2.length2(), EBGeometry::sgn(a_edgeNormals[1].dot(y2)), (t2 > 0.0 && t2 < 1.0));
+    compareDistanceHelper(ret, y3.length2(), EBGeometry::sgn(a_edgeNormals[2].dot(y3)), (t3 > 0.0 && t3 < 1.0));
 
-    ret = (t1 > 0.0 && t1 < 1.0 && l1 < EBGeometry::abs(ret)) ? l1 * EBGeometry::sgn(dot(m_edgeNormals[0], y1)) : ret;
-    ret = (t2 > 0.0 && t2 < 1.0 && l2 < EBGeometry::abs(ret)) ? l2 * EBGeometry::sgn(dot(m_edgeNormals[1], y2)) : ret;
-    ret = (t3 > 0.0 && t3 < 1.0 && l3 < EBGeometry::abs(ret)) ? l3 * EBGeometry::sgn(dot(m_edgeNormals[2], y3)) : ret;
+    compareDistanceHelper(ret, d * d, EBGeometry::sgn(dot(a_triangleNormal, p1)), inside);
 
-    // Point-in-triangle. s0 + s1 + s2 >= 2.0 is a point-in-polygon test.
-    const bool inside = (s0 > Real(0)) & (s1 >= Real(0)) & (s2 >= Real(0));
-
-    return inside ? dot(m_triangleNormal, p1) : ret;
+    return ret;
   }
 } // namespace EBGeometry
 

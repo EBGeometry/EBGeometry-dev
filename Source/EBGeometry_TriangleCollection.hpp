@@ -316,24 +316,6 @@ namespace EBGeometry {
        @brief Sequence of triangle metadata.
     */
     EBGeometry::Span<const MetaData> m_metaData{};
-
-    /**
-     * @brief Compute signed distance to a single triangle given its SoA fields.
-     * @param[in] a_triangleNormal Face normal of triangle.
-     * @param[in] a_vertexPositions Array of vertex positions (length 3).
-     * @param[in] a_vertexNormals Array of vertex normals (length 3).
-     * @param[in] a_edgeNormals Array of edge normals (length 3).
-     * @param[in] a_point Query point.
-     * @return Signed distance to triangle.
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    static Real
-    signedDistanceTriangle(const Vec3&                     a_triangleNormal,
-                           const Vec3* EBGEOMETRY_RESTRICT a_vertexPositions,
-                           const Vec3* EBGEOMETRY_RESTRICT a_vertexNormals,
-                           const Vec3* EBGEOMETRY_RESTRICT a_edgeNormals,
-                           const Vec3&                     a_point) noexcept;
   };
 } // namespace EBGeometry
 

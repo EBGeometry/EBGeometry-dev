@@ -316,8 +316,55 @@ namespace EBGeometry {
      */
     MetaData m_metaData;
   };
+
+  /**
+    @brief Simple POD struct that holds squared distance and sign
+  */
+  struct alignas(EBGEOMETRY_ALIGNAS) DistanceCandidate
+  {
+    /**
+       @brief Squared absolute distance
+    */
+    Real m_dist2 = EBGeometry::Limits::max();
+
+    /**
+       @brief Final signed distance = m_abs2 * m_sgn
+    */
+    int m_sgn = 1;
+  };
+
+  /**
+    @brief Helper function used when updating the distance to a triangle. Updates the DistanceCandidate if the
+    query distance is shorter (absolute value)
+    @param[in, out] a_ret Best candidate. 
+    @param[in] a_curAbs Candidate distance.
+    @param[in] a_retSgn Candidate distance sign
+    @param[in] a_mask For turning on/off the distance test. 
+  */
+  EBGEOMETRY_GPU_HOST_DEVICE
+  EBGEOMETRY_ALWAYS_INLINE
+  static void
+  compareDistanceHelper(DistanceCandidate& a_ret, Real a_curAbs, int a_curSgn, bool a_mask) noexcept;
+
+  /**
+     * @brief Compute squared distance and sign to a single triangle given its SoA fields. 
+     * @param[in] a_triangleNormal Face normal of triangle.
+     * @param[in] a_vertexPositions Array of vertex positions (length 3).
+     * @param[in] a_vertexNormals Array of vertex normals (length 3).
+     * @param[in] a_edgeNormals Array of edge normals (length 3).
+     * @param[in] a_point Query point.
+     * @return Squared distance to triangle and the corresponding sign.
+     */
+  EBGEOMETRY_GPU_HOST_DEVICE
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+  static DistanceCandidate
+  signedSquaredDistanceTriangle(const Vec3&                     a_triangleNormal,
+                                const Vec3* EBGEOMETRY_RESTRICT a_vertexPositions,
+                                const Vec3* EBGEOMETRY_RESTRICT a_vertexNormals,
+                                const Vec3* EBGEOMETRY_RESTRICT a_edgeNormals,
+                                const Vec3&                     a_point) noexcept;
 } // namespace EBGeometry
 
-#include "EBGeometry_TriangleImplem.hpp" // NOLINT
+#include "EBGeometry_TriangleImplem.hpp"
 
 #endif

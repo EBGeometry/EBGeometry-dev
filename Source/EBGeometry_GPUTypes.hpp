@@ -27,8 +27,8 @@ namespace EBGeometry {
    * @param[in] x Number to compare.
    * @param[in] y Number to compare.
    */
-  EBGEOMETRY_GPU_HOST_DEVICE
   template <typename T>
+  EBGEOMETRY_GPU_HOST_DEVICE
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
   constexpr T
   min(const T& x, const T& y) noexcept
@@ -41,8 +41,8 @@ namespace EBGeometry {
    * @param[in] x Number to compare.
    * @param[in] y Number to compare.
    */
-  EBGEOMETRY_GPU_HOST_DEVICE
   template <typename T>
+  EBGEOMETRY_GPU_HOST_DEVICE
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
   constexpr T
   max(const T& x, const T& y) noexcept
@@ -54,8 +54,8 @@ namespace EBGeometry {
    * @brief Sign of number. > 1 if positive, < 1 if negative, and 0 if zero.
    * @param[in] x Input number
    */
-  EBGEOMETRY_GPU_HOST_DEVICE
   template <typename T>
+  EBGEOMETRY_GPU_HOST_DEVICE
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
   constexpr int
   sgn(const T& x) noexcept
@@ -67,8 +67,8 @@ namespace EBGeometry {
    * @brief Sign of number. > 1 if positive, < 1 if negative, and 0 if zero.
    * @param[in] x Input number
    */
-  EBGEOMETRY_GPU_HOST_DEVICE
   template <typename T>
+  EBGEOMETRY_GPU_HOST_DEVICE
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
   constexpr T
   abs(const T& x) noexcept
@@ -82,6 +82,18 @@ namespace EBGeometry {
     else {
       return x;
     }
+  }
+
+  /**
+   * @brief Check that input number is close to one
+   * @param[in] x Input number
+   */
+  EBGEOMETRY_GPU_HOST_DEVICE
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+  constexpr bool
+  nearOne(const Real& x) noexcept
+  {
+    return (EBGeometry::abs(x) - Real(1)) <= Real(1E-6);
   }
 
   /**
@@ -122,7 +134,9 @@ namespace EBGeometry {
    * @note This function is `constexpr` where the backend permits evaluation at compile time.
    */
   template <class T>
-  constexpr inline T
+  EBGEOMETRY_GPU_HOST_DEVICE
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+  constexpr T
   sqrt(T x) noexcept
   {
 #if defined(SYCL_LANGUAGE_VERSION)
