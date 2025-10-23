@@ -23,15 +23,15 @@ namespace EBGeometry {
   EBGEOMETRY_ALWAYS_INLINE
   constexpr Span<T>::Span() noexcept :
     m_data(nullptr),
-    m_size(0)
+    m_length(0)
   {}
 
   template <typename T>
   EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
-  constexpr Span<T>::Span(const T* a_data, int a_size) noexcept :
+  constexpr Span<T>::Span(const T* a_data, int a_length) noexcept :
     m_data(a_data),
-    m_size(a_size)
+    m_length(a_length)
   {}
 
   template <typename T>
@@ -49,7 +49,7 @@ namespace EBGeometry {
   constexpr int
   Span<T>::length() const noexcept
   {
-    return m_size;
+    return m_length;
   }
 
   template <typename T>
@@ -67,7 +67,7 @@ namespace EBGeometry {
   constexpr const T*
   Span<T>::end() const noexcept
   {
-    return m_data + m_size;
+    return m_data + m_length;
   }
 } // namespace EBGeometry
 

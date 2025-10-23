@@ -165,21 +165,32 @@ namespace EBGeometry {
     constexpr TriangleCollection(TriangleCollection&& a_other) noexcept = default;
 
     /**
-     * @brief Construct from raw arrays of triangle data.
+     * @brief Set the SoA triangle data.
      * @param[in] a_triangleNormals Sequence of triangle face normals.
-     * @param[in] a_vertexPositions Sequence of triangle vertex positions.
-     * @param[in] a_vertexNormals Sequence of triangle vertex pseudonormals.
-     * @param[in] a_edgeNormals Sequence of edge pseudonormals.
-     * @param[in] a_metaData Sequence metadata objects for each triangle.
+     * @param[in] a_firstVertexPositions First triangle vertex positions.
+     * @param[in] a_secondVertexPositions Second triangle vertex positions.
+     * @param[in] a_thirdVertexPositions Third triangle vertex positions.
+     * @param[in] a_firstVertexNormals First triangle vertex normals.
+     * @param[in] a_secondVertexNormals Second triangle vertex normals.
+     * @param[in] a_thirdVertexNormals Third triangle vertex normals.
+     * @param[in] a_firstEdgeNormals First triangle edge normals.
+     * @param[in] a_secondEdgeNormals Second triangle edge normals.
+     * @param[in] a_thirdEdgeNormals Third triangle edge normals.     
+     * @param[in] a_metaData Sequence of metadata objects for each triangle.       
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    constexpr explicit TriangleCollection(EBGeometry::Span<const Vec3>                a_triangleNormals,
-                                          EBGeometry::Span<const std::array<Vec3, 3>> a_vertexPositions,
-                                          EBGeometry::Span<const std::array<Vec3, 3>> a_vertexNormals,
-                                          EBGeometry::Span<const std::array<Vec3, 3>> a_edgeNormals,
-                                          EBGeometry::Span<const MetaData>            a_metaData) noexcept;
-
+    constexpr explicit TriangleCollection(EBGeometry::Span<const Vec3>     a_triangleNormals,
+                                          EBGeometry::Span<const Vec3>     a_firstVertexPositions,
+                                          EBGeometry::Span<const Vec3>     a_secondVertexPositions,
+                                          EBGeometry::Span<const Vec3>     a_thirdVertexPositions,
+                                          EBGeometry::Span<const Vec3>     a_firstVertexNormals,
+                                          EBGeometry::Span<const Vec3>     a_secondVertexNormals,
+                                          EBGeometry::Span<const Vec3>     a_thirdVertexNormals,
+                                          EBGeometry::Span<const Vec3>     a_firstEdgeNormals,
+                                          EBGeometry::Span<const Vec3>     a_secondEdgeNormals,
+                                          EBGeometry::Span<const Vec3>     a_thirdEdgeNormals,
+                                          EBGeometry::Span<const MetaData> a_metaData) noexcept;
     /**
      * @brief Copy assignment.
      * @param[in] a_other Other collection to copy.
@@ -201,21 +212,33 @@ namespace EBGeometry {
     operator=(TriangleCollection&& a_other) noexcept = default;
 
     /**
-     * @brief Set the triangle data. 
+     * @brief Set the SoA triangle data.
      * @param[in] a_triangleNormals Sequence of triangle face normals.
-     * @param[in] a_vertexPositions Sequence of triangle vertex positions.
-     * @param[in] a_vertexNormals Sequence of triangle vertex pseudonormals.
-     * @param[in] a_edgeNormals Sequence of edge pseudonormals.
-     * @param[in] a_metaData Sequence metadata objects for each triangle.
+     * @param[in] a_firstVertexPositions First triangle vertex positions.
+     * @param[in] a_secondVertexPositions Second triangle vertex positions.
+     * @param[in] a_thirdVertexPositions Third triangle vertex positions.
+     * @param[in] a_firstVertexNormals First triangle vertex normals.
+     * @param[in] a_secondVertexNormals Second triangle vertex normals.
+     * @param[in] a_thirdVertexNormals Third triangle vertex normals.
+     * @param[in] a_firstEdgeNormals First triangle edge normals.
+     * @param[in] a_secondEdgeNormals Second triangle edge normals.
+     * @param[in] a_thirdEdgeNormals Third triangle edge normals.     
+     * @param[in] a_metaData Sequence of metadata objects for each triangle.
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     constexpr void
-    setData(EBGeometry::Span<const Vec3>                a_triangleNormals,
-            EBGeometry::Span<const std::array<Vec3, 3>> a_vertexPositions,
-            EBGeometry::Span<const std::array<Vec3, 3>> a_vertexNormals,
-            EBGeometry::Span<const std::array<Vec3, 3>> a_edgeNormals,
-            EBGeometry::Span<const MetaData>            a_metaData) noexcept;
+    setData(EBGeometry::Span<const Vec3>     a_triangleNormals,
+            EBGeometry::Span<const Vec3>     a_firstVertexPositions,
+            EBGeometry::Span<const Vec3>     a_secondVertexPositions,
+            EBGeometry::Span<const Vec3>     a_thirdVertexPositions,
+            EBGeometry::Span<const Vec3>     a_firstVertexNormals,
+            EBGeometry::Span<const Vec3>     a_secondVertexNormals,
+            EBGeometry::Span<const Vec3>     a_thirdVertexNormals,
+            EBGeometry::Span<const Vec3>     a_firstEdgeNormals,
+            EBGeometry::Span<const Vec3>     a_secondEdgeNormals,
+            EBGeometry::Span<const Vec3>     a_thirdEdgeNormals,
+            EBGeometry::Span<const MetaData> a_metaData) noexcept;
 
     /**
      * @brief Get the number of triangles in the collection.
@@ -239,27 +262,57 @@ namespace EBGeometry {
 
   protected:
     /**
-       @brief Pointer to array of triangle face normals.
+       @brief Sequence of triangle face normals. 
     */
     EBGeometry::Span<const Vec3> m_triangleNormals{};
 
     /**
-       @brief Pointer to array of triangle vertex positions
+       @brief Sequence of triangle vertex positions.
     */
-    EBGeometry::Span<const std::array<Vec3, 3>> m_vertexPositions{};
+    EBGeometry::Span<const Vec3> m_firstVertexPositions{};
 
     /**
-       @brief Pointer to array of triangle vertex positions
+       @brief Sequence of triangle vertex positions.
     */
-    EBGeometry::Span<const std::array<Vec3, 3>> m_vertexNormals{};
+    EBGeometry::Span<const Vec3> m_secondVertexPositions{};
 
     /**
-       @brief Pointer to array of triangle vertex positions
+       @brief Sequence of triangle vertex positions.
     */
-    EBGeometry::Span<const std::array<Vec3, 3>> m_edgeNormals{};
+    EBGeometry::Span<const Vec3> m_thirdVertexPositions{};
 
     /**
-       @brief Pointer to array of triangle vertex positions
+       @brief Sequence of triangle vertex normals on the first vertex in each triangle. 
+    */
+    EBGeometry::Span<const Vec3> m_firstVertexNormals{};
+
+    /**
+       @brief Sequence of triangle vertex normals on the second vertex in each triangle.        
+    */
+    EBGeometry::Span<const Vec3> m_secondVertexNormals{};
+
+    /**
+       @brief Sequence of triangle vertex normals on the third vertex in each triangle.               
+    */
+    EBGeometry::Span<const Vec3> m_thirdVertexNormals{};
+
+    /**
+       @brief Sequence of triangle edge normals.
+    */
+    EBGeometry::Span<const Vec3> m_firstEdgeNormals{};
+
+    /**
+       @brief Sequence of triangle edge normals.
+    */
+    EBGeometry::Span<const Vec3> m_secondEdgeNormals{};
+
+    /**
+       @brief Sequence of triangle edge normals.
+    */
+    EBGeometry::Span<const Vec3> m_thirdEdgeNormals{};
+
+    /**
+       @brief Sequence of triangle metadata.
     */
     EBGeometry::Span<const MetaData> m_metaData{};
 

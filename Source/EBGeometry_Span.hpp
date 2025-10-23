@@ -10,7 +10,7 @@
  * @details
  * A minimal, non-owning, contiguous view over a block of memory, similar in spirit
  * to `std::span` but designed to be usable in GPU device code. The span stores a
- * pointer and a size (in elements). Bounds checking is the caller's responsibility.
+ * pointer and a length (in elements). Bounds checking is the caller's responsibility.
  *
  * This type is trivially copyable and intended for POD-like usage across host and device.
  */
@@ -51,7 +51,7 @@ namespace EBGeometry {
     /**
      * @brief Number of elements in the span.
      */
-    int m_size = 0;
+    int m_length = 0;
 
     /**
      * @brief Default constructor. Constructs an empty span.
@@ -61,18 +61,18 @@ namespace EBGeometry {
     constexpr Span() noexcept;
 
     /**
-     * @brief Pointer + size constructor.
+     * @brief Pointer + length constructor.
      * @param[in] a_data Pointer to the first element in the sequence (non-owning).
-     * @param[in] a_size Number of elements in the sequence.
+     * @param[in] a_length Number of elements in the sequence.
      * @warning Caller is responsible for ensuring the memory region `[a_data, a_data + s)` is valid.
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    constexpr Span(const T* a_data, int a_size) noexcept;
+    constexpr Span(const T* a_data, int a_length) noexcept;
 
     /**
      * @brief Element access (no bounds checking).
-     * @param[in] i Index in the range `[0, size)`.
+     * @param[in] i Index in the range `[0, length)`.
      * @return Const reference to the i-th element.
      */
     EBGEOMETRY_GPU_HOST_DEVICE
