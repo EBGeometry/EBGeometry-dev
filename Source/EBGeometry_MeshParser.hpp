@@ -8,8 +8,8 @@
  * @author Robert Marskar
  */
 
-#ifndef EBGeometry_MeshParser
-#define EBGeometry_MeshParser
+#ifndef EBGEOMETRY_MESHPARSER_HPP
+#define EBGEOMETRY_MESHPARSER_HPP
 
 // Std includes
 #include <vector>
@@ -21,7 +21,7 @@
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_GPUTypes.hpp"
 #include "EBGeometry_Macros.hpp"
-#include "EBGeometry_TriangleMesh.hpp"
+#include "EBGeometry_Triangle.hpp"
 #include "EBGeometry_Vec.hpp"
 
 #warning "Implement a function that turns a triangle mesh into a DCEL mesh"

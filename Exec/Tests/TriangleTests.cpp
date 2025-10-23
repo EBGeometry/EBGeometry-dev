@@ -11,13 +11,12 @@ using namespace EBGeometry;
 
 TEST_CASE("Triangle_Constructors")
 {
-  Vec3 vertices[3];
 
-  vertices[0] = -Vec3::unit(0);
-  vertices[1] = Vec3::unit(0);
-  vertices[2] = Vec3::unit(1);
+  const auto v1 = -Vec3::unit(0);
+  const auto v2 = Vec3::unit(0);
+  const auto v3 = Vec3::unit(1);
 
-  Triangle<int> tri(vertices);
+  Triangle<int> tri(v1, v2, v3);
 }
 
 TEST_CASE("Triangle::intersects")
@@ -28,7 +27,7 @@ TEST_CASE("Triangle::intersects")
   vertices[1] = +Vec3::unit(0);
   vertices[2] = +Vec3::unit(1);
 
-  Triangle<int> tri(vertices);
+  Triangle<int> tri(vertices[0], vertices[1], vertices[2]);
 
   // Lines that are parallel to the triangle
   {

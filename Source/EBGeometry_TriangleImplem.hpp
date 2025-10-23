@@ -19,7 +19,7 @@ namespace EBGeometry {
 
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
-  constexpr explicit Triangle<MetaData>::Triangle(const Vec3& a_x1, const Vec3& a_x2, const Vec3& a_x3) noexcept
+  constexpr Triangle<MetaData>::Triangle(const Vec3& a_x1, const Vec3& a_x2, const Vec3& a_x3) noexcept
   {
     this->setVertexPositions(a_x1, a_x2, a_x3);
   }

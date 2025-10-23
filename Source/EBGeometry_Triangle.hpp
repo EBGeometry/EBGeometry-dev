@@ -4,7 +4,7 @@
 
 /**
  * @file   EBGeometry_Triangle.hpp
- * @brief  Declaration of a triangle class with signed distance functionality.
+ * @brief  Declaration of a triangle struct with signed distance functionality.
  * @author Robert Marskar
  */
 
@@ -21,29 +21,29 @@
 namespace EBGeometry {
 
   /**
-   * @brief Triangle class with signed distance functionality.
-   * @details This class represents a planar triangle and has a signed distance functionality. It is
-   * self-contained such that it can be directly copied to GPUs. The class contains a triangle face normal
+   * @brief Triangle struct with signed distance functionality.
+   * @details This struct represents a planar triangle and has a signed distance functionality. It is
+   * self-contained such that it can be directly copied to GPUs. The struct contains a triangle face normal
    * vector; three vertex positions, and normal vectors for the three vertices and three edges.
    *
-   * This class assumes that the vertices are organized with the right-hand rule. I.e., edges are enumerated
+   * This struct assumes that the vertices are organized with the right-hand rule. I.e., edges are enumerated
    * as follows:
    *
    * Edge 1 points from vertex 1 to vertex 2
    * Edge 2 points from vertex 2 to vertex 3
    * Edge 3 points from vertex 3 to vertex 0
    *
-   * This class can compute its own normal vector from the vertex positions, and the triangle orientation
+   * This struct can compute its own normal vector from the vertex positions, and the triangle orientation
    * is then implicitly given by the vertex order.
    *
    * To compute the distance from a point to the triangle, one must determine if the point projects to the
-   * "inside" or "outside" of the triangle. This class contains a 2D embedding of the triangle that can perform
+   * "inside" or "outside" of the triangle. This struct contains a 2D embedding of the triangle that can perform
    * this project. If the query point projects to the inside of the triangle, the distance is simply the
    * projected distance onto the triangle plane. If it projects to the outside of the triangle, we check the
    * distance against the triangle edges and vertices.
    */
   template <typename MetaData>
-  class alignas(EBGEOMETRY_ALIGNAS) Triangle
+  struct alignas(EBGEOMETRY_ALIGNAS) Triangle
   {
   public:
     /**

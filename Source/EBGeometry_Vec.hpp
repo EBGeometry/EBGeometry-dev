@@ -29,9 +29,8 @@ namespace EBGeometry {
    * @note Vec2 is primarily a utility class used together with DCEL signed distance
    * functionality.
    */
-  class Vec2
+  struct Vec2
   {
-  public:
     /**
      * @brief For outputting a vector to an output stream.
      */
@@ -76,7 +75,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    constexpr Vec2(const Real& a_x, const Real& a_y) noexcept;
+    constexpr explicit Vec2(const Real& a_x, const Real& a_y) noexcept;
 
     /**
      * @brief Destructor (does nothing)
@@ -326,9 +325,8 @@ namespace EBGeometry {
    * @details The class has a public-only interface. To change it's components one
    * can call the member functions, or set components directly, e.g. vec.x = 5.0
    */
-  class Vec3
+  struct Vec3
   {
-  public:
     /**
      * @brief For outputting a vector to an output stream.
      */
@@ -374,7 +372,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    constexpr Vec3(const Real& a_x, const Real& a_y, const Real& a_z) noexcept;
+    constexpr explicit Vec3(const Real& a_x, const Real& a_y, const Real& a_z) noexcept;
 
     /**
      * @brief Destructor (does nothing)

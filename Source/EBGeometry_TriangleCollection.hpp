@@ -8,8 +8,8 @@
  * @brief  Declaration of a triangle soup collection (AoS/SoA) with signed distance functionality.
  */
 
-#ifndef EBGeometry_TriangleCollection
-#define EBGeometry_TriangleCollection
+#ifndef EBGEOMETRY_TRIANGLECOLLECTION_HPP
+#define EBGEOMETRY_TRIANGLECOLLECTION_HPP
 
 // Our includes
 #include "EBGeometry_Alignas.hpp"
@@ -28,7 +28,7 @@ namespace EBGeometry {
    * @tparam Layout    Layout type (AoS or SoA).
    */
   template <typename MetaData, LayoutType Layout>
-  class alignas(EBGEOMETRY_ALIGNAS) TriangleCollection;
+  struct alignas(EBGEOMETRY_ALIGNAS) TriangleCollection;
 
   /**
    * @brief Array-of-Structs specialization of TriangleCollection.
@@ -38,7 +38,7 @@ namespace EBGeometry {
    * @tparam MetaData Metadata type stored per triangle.
    */
   template <typename MetaData>
-  class alignas(EBGEOMETRY_ALIGNAS) TriangleCollection<MetaData, LayoutType::AoS>
+  struct alignas(EBGEOMETRY_ALIGNAS) TriangleCollection<MetaData, LayoutType::AoS>
   {
   public:
     /**
@@ -137,7 +137,7 @@ namespace EBGeometry {
    * @tparam MetaData Metadata type stored per triangle.
    */
   template <typename MetaData>
-  class alignas(EBGEOMETRY_ALIGNAS) TriangleCollection<MetaData, LayoutType::SoA>
+  struct alignas(EBGEOMETRY_ALIGNAS) TriangleCollection<MetaData, LayoutType::SoA>
   {
   public:
     /**
