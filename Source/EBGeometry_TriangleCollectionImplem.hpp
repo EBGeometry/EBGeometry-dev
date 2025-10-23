@@ -180,11 +180,13 @@ namespace EBGeometry {
                                                                         const Vec3&                     a_point) noexcept
 
   {
-    EBGEOMETRY_EXPECT(a_triangleNormal.length() == Real(1));
+    auto nearOne = [](Real x) -> bool { return EBGeometry::abs(x - Real(1)) <= Real(1E-6); };
+
+    EBGEOMETRY_EXPECT(nearOne(a_triangleNormal.length2()));
     for (int i = 0; i < 3; ++i) {
-      EBGEOMETRY_EXPECT(a_vertexPositions[i].length() < EBGeometry::Limits::max());
-      EBGEOMETRY_EXPECT(a_vertexNormals[i].length() == Real(1));
-      EBGEOMETRY_EXPECT(a_edgeNormals[i].length() == Real(1));
+      EBGEOMETRY_EXPECT(a_vertexPositions[i].length2() < EBGeometry::Limits::max());
+      EBGEOMETRY_EXPECT(nearOne(a_vertexNormals[i].length2()));
+      EBGEOMETRY_EXPECT(nearOne(a_edgeNormals[i].length2()));
     }
 
     Real ret = EBGeometry::Limits::max();
@@ -193,13 +195,21 @@ namespace EBGeometry {
     const Vec3 v32 = a_vertexPositions[2] - a_vertexPositions[1];
     const Vec3 v13 = a_vertexPositions[0] - a_vertexPositions[2];
 
+    EBGEOMETRY_EXPECT(v21.length2() > EBGeometry::Limits::eps());
+    EBGEOMETRY_EXPECT(v32.length2() > EBGeometry::Limits::eps());
+    EBGEOMETRY_EXPECT(v13.length2() > EBGeometry::Limits::eps());
+
+    EBGEOMETRY_EXPECT(v21.length2() < EBGeometry::Limits::max());
+    EBGEOMETRY_EXPECT(v32.length2() < EBGeometry::Limits::max());
+    EBGEOMETRY_EXPECT(v13.length2() < EBGeometry::Limits::max());
+
     const Vec3 p1 = a_point - a_vertexPositions[0];
     const Vec3 p2 = a_point - a_vertexPositions[1];
     const Vec3 p3 = a_point - a_vertexPositions[2];
 
-    const Real s0 = sgn(dot(cross(v21, a_triangleNormal), p1));
-    const Real s1 = sgn(dot(cross(v32, a_triangleNormal), p2));
-    const Real s2 = sgn(dot(cross(v13, a_triangleNormal), p3));
+    const Real s0 = EBGeometry::sgn(dot(cross(v21, a_triangleNormal), p1));
+    const Real s1 = EBGeometry::sgn(dot(cross(v32, a_triangleNormal), p2));
+    const Real s2 = EBGeometry::sgn(dot(cross(v13, a_triangleNormal), p3));
 
     const Real t1 = dot(p1, v21) / dot(v21, v21);
     const Real t2 = dot(p2, v32) / dot(v32, v32);
@@ -210,19 +220,19 @@ namespace EBGeometry {
     const Vec3 y3 = p3 - t3 * v13;
 
     // Distance to vertices
-    ret = (p1.length() > EBGeometry::abs(ret)) ? ret : p1.length() * sgn(dot(a_vertexNormals[0], p1));
-    ret = (p2.length() > EBGeometry::abs(ret)) ? ret : p2.length() * sgn(dot(a_vertexNormals[1], p2));
-    ret = (p3.length() > EBGeometry::abs(ret)) ? ret : p3.length() * sgn(dot(a_vertexNormals[2], p3));
+    ret = (p1.length() > EBGeometry::abs(ret)) ? ret : p1.length() * EBGeometry::sgn(dot(a_vertexNormals[0], p1));
+    ret = (p2.length() > EBGeometry::abs(ret)) ? ret : p2.length() * EBGeometry::sgn(dot(a_vertexNormals[1], p2));
+    ret = (p3.length() > EBGeometry::abs(ret)) ? ret : p3.length() * EBGeometry::sgn(dot(a_vertexNormals[2], p3));
 
     // Distance to edges
-    // clang-format off
     ret = (t1 > Real(0) && t1 < Real(1) && y1.length() < EBGeometry::abs(ret)) ? y1.length() * EBGeometry::sgn(a_edgeNormals[0].dot(y1)) : ret;
     ret = (t2 > Real(0) && t2 < Real(1) && y2.length() < EBGeometry::abs(ret)) ? y2.length() * EBGeometry::sgn(a_edgeNormals[1].dot(y2)) : ret;
     ret = (t3 > Real(0) && t3 < Real(1) && y3.length() < EBGeometry::abs(ret)) ? y3.length() * EBGeometry::sgn(a_edgeNormals[2].dot(y3)) : ret;
-    // clang-format on
 
     // Point-in-triangle: s0 + s1 + s2 >= 2.0
-    return (s0 + s1 + s2 >= Real(2)) ? dot(a_triangleNormal, p1) : ret;
+    const bool inside = (s0 > Real(0)) & (s1 >= Real(0)) & (s2 >= Real(0));
+
+    return inside ? dot(a_triangleNormal, p1) : ret;
   }
 } // namespace EBGeometry
 

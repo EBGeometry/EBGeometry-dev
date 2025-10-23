@@ -217,13 +217,15 @@ namespace EBGeometry {
   constexpr Real
   Triangle<MetaData>::value(const Vec3& a_point) const noexcept
   {
+    auto nearOne = [](Real x) -> bool { return EBGeometry::abs(x - Real(1)) <= Real(1E-6); };
+
     // Perform extra checks in debug mode -- if any of these fail then something is uninitialized.
-    EBGEOMETRY_EXPECT(m_triangleNormal.length() == Real(1.0));
+    EBGEOMETRY_EXPECT(nearOne(m_triangleNormal.length2()));
 
     for (int i = 0; i < 3; i++) {
-      EBGEOMETRY_EXPECT(m_vertexPositions[i].length() < EBGeometry::Limits::max());
-      EBGEOMETRY_EXPECT(m_vertexNormals[i].length() == Real(1.0));
-      EBGEOMETRY_EXPECT(m_edgeNormals[i].length() == Real(1.0));
+      EBGEOMETRY_EXPECT(m_vertexPositions[i].length2() < EBGeometry::Limits::max());
+      EBGEOMETRY_EXPECT(nearOne(m_vertexNormals[i].length2()));
+      EBGEOMETRY_EXPECT(nearOne(m_edgeNormals[i].length2()));
     }
 
     // Here is a message from the past: If one wants, one can precompute v21, v32, v13
@@ -273,8 +275,10 @@ namespace EBGeometry {
     ret = (t2 > 0.0 && t2 < 1.0 && l2 < EBGeometry::abs(ret)) ? l2 * EBGeometry::sgn(dot(m_edgeNormals[1], y2)) : ret;
     ret = (t3 > 0.0 && t3 < 1.0 && l3 < EBGeometry::abs(ret)) ? l3 * EBGeometry::sgn(dot(m_edgeNormals[2], y3)) : ret;
 
-    // Note that s0 + s1 + s2 >= 2.0 is a point-in-polygon test.
-    return (s0 + s1 + s2 >= 2.0) ? dot(m_triangleNormal, p1) : ret;
+    // Point-in-triangle. s0 + s1 + s2 >= 2.0 is a point-in-polygon test.
+    const bool inside = (s0 > Real(0)) & (s1 >= Real(0)) & (s2 >= Real(0));
+
+    return inside ? dot(m_triangleNormal, p1) : ret;
   }
 } // namespace EBGeometry
 

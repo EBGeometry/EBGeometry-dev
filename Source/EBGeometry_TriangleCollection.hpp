@@ -5,7 +5,7 @@
 /**
  * @file   EBGeometry_TriangleCollection.hpp
  * @author Robert Marskar
- * @brief  Declaration of a triangle soup collection (AoS/SoA) with signed distance functionality.
+ * @brief  Declaration of a triangle soup/collection (AoS/SoA) with signed distance functionality.
  */
 
 #ifndef EBGEOMETRY_TRIANGLECOLLECTION_HPP
@@ -116,7 +116,7 @@ namespace EBGeometry {
      * @brief Compute the signed distance from a point to the collection.
      * @details Returns the signed distance to the closest triangle (by absolute value).
      * @param[in] a_point Query point.  
-     * @return Signed distance to the triangle soup.
+     * @return Signed distance to the triangle collection. Returns EBGeometry::Limits::max if there are no triangles     
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -254,7 +254,7 @@ namespace EBGeometry {
      * @brief Compute the signed distance from a point to the collection.
      * @details Returns the signed distance to the closest triangle (by absolute value).
      * @param[in] a_point Query point.
-     * @return Signed distance to the triangle soup.
+     * @return Signed distance to the triangle collection. Returns EBGeometry::Limits::max if there are no triangles
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -339,4 +339,4 @@ namespace EBGeometry {
 
 #include "EBGeometry_TriangleCollectionImplem.hpp"
 
-#endif // EBGeometry_TriangleCollection
+#endif
