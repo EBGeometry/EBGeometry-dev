@@ -13,7 +13,7 @@
 
 #include "EBGeometry_TriangleCollection.hpp"
 
-#error "SoA version is not finished -- needs to be optimized"
+#warning "SoA version is not finished -- needs to be optimized"
 
 namespace EBGeometry {
 
@@ -146,11 +146,11 @@ namespace EBGeometry {
 
     const int numTriangles = m_triangleNormals.length();
 
-    Vec3 vertexPositions[3];
-    Vec3 vertexNormals[3];
-    Vec3 edgeNormals[3];
-
     for (int i = 0; i < numTriangles; ++i) {
+      Vec3 vertexPositions[3];
+      Vec3 vertexNormals[3];
+      Vec3 edgeNormals[3];
+
       vertexPositions[0] = m_firstVertexPositions[i];
       vertexPositions[1] = m_secondVertexPositions[i];
       vertexPositions[2] = m_thirdVertexPositions[i];

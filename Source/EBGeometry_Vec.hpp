@@ -730,6 +730,11 @@ namespace EBGeometry {
      * @brief Vector components
      */
     Real m_X[3];
+
+    /**
+      @brief Padding 
+    */
+    Real m_pad = 0.0;
   };
 
   /**
@@ -850,5 +855,13 @@ namespace EBGeometry {
 } // namespace EBGeometry
 
 #include "EBGeometry_VecImplem.hpp"
+
+#ifdef EBGEOMETRY_USE_DOUBLE
+static_assert(sizeof(EBGeemetry::Vec2) == 16, "EBGeometry::Vec2 must be 16 bytes when EBGEOMETRY_USE_DOUBLE=ON");
+static_assert(sizeof(EBGeometry::Vec3) == 32, "EBGeometry::Vec3 must be 32 bytes when EBGEOMETRY_USE_DOUBLE=ON");
+#else
+static_assert(sizeof(EBGeometry::Vec2) == 8, "EBGeometry::Vec2 must be 8 bytes when EBGEOMETRY_USE_DOUBLE=OFF");
+static_assert(sizeof(EBGeometry::Vec3) == 16, "EBGeometry::Vec3 must be 16 bytes when EBGEOMETRY_USE_DOUBLE=OFF");
+#endif
 
 #endif
