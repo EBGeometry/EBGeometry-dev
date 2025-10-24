@@ -115,6 +115,7 @@ namespace EBGeometry {
     m_thirdEdgeNormals      = a_thirdEdgeNormals;
     m_metaData              = a_metaData;
 
+    // Sanity check on input sequences
     EBGEOMETRY_EXPECT(m_firstVertexPositions.length() == m_triangleNormals.length());
     EBGEOMETRY_EXPECT(m_secondVertexPositions.length() == m_triangleNormals.length());
     EBGEOMETRY_EXPECT(m_thirdVertexPositions.length() == m_triangleNormals.length());
@@ -142,34 +143,26 @@ namespace EBGeometry {
   Real
   TriangleCollection<MetaData, LayoutType::SoA>::value(const Vec3& a_point) const noexcept
   {
-    DistanceCandidate ret;
-
     const int numTriangles = m_triangleNormals.length();
 
+    Real retAbs = EBGeometry::Limits::max();
+    int  retSgn = 1;
+
+    EBGEOMETRY_PRAGMA_SIMD
     for (int i = 0; i < numTriangles; ++i) {
-      Vec3 vertexPositions[3];
-      Vec3 vertexNormals[3];
-      Vec3 edgeNormals[3];
+      Vec3 vp[3] = {m_firstVertexPositions[i], m_secondVertexPositions[i], m_thirdVertexPositions[i]};
+      Vec3 vn[3] = {m_firstVertexNormals[i], m_secondVertexNormals[i], m_thirdVertexNormals[i]};
+      Vec3 en[3] = {m_firstEdgeNormals[i], m_secondEdgeNormals[i], m_thirdEdgeNormals[i]};
 
-      vertexPositions[0] = m_firstVertexPositions[i];
-      vertexPositions[1] = m_secondVertexPositions[i];
-      vertexPositions[2] = m_thirdVertexPositions[i];
+      const DistanceCandidate d = EBGeometry::signedSquaredDistanceTriangle(m_triangleNormals[i], vp, vn, en, a_point);
 
-      vertexNormals[0] = m_firstVertexNormals[i];
-      vertexNormals[1] = m_secondVertexNormals[i];
-      vertexNormals[2] = m_thirdVertexNormals[i];
+      const bool better = (d.m_dist2 < retAbs);
 
-      edgeNormals[0] = m_firstEdgeNormals[i];
-      edgeNormals[1] = m_secondEdgeNormals[i];
-      edgeNormals[2] = m_thirdEdgeNormals[i];
-
-      const DistanceCandidate d =
-        EBGeometry::signedSquaredDistanceTriangle(m_triangleNormals[i], vertexPositions, vertexNormals, edgeNormals, a_point);
-
-      compareDistanceHelper(ret, d.m_dist2, d.m_sgn, true);
+      retAbs = better ? d.m_dist2 : retAbs;
+      retSgn = better ? d.m_sgn : retSgn;
     }
 
-    return sqrt(ret.m_dist2) * ret.m_sgn;
+    return (numTriangles == 0) ? EBGeometry::Limits::max() : EBGeometry::sqrt(retAbs) * retSgn;
   }
 
 } // namespace EBGeometry

@@ -29,7 +29,11 @@ namespace EBGeometry {
    * @note Vec2 is primarily a utility class used together with DCEL signed distance
    * functionality.
    */
-  struct Vec2
+#ifdef EBGEOMETRY_USE_DOUBLE
+  struct alignas(16) Vec2
+#else
+  struct alignas(8) Vec2
+#endif
   {
     /**
      * @brief For outputting a vector to an output stream.
@@ -56,7 +60,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    constexpr Vec2(const Vec2& u) noexcept = default;
+    constexpr explicit Vec2(const Vec2& u) noexcept = default;
 
     /**
      * @brief Move constructor
@@ -325,7 +329,11 @@ namespace EBGeometry {
    * @details The class has a public-only interface. To change it's components one
    * can call the member functions, or set components directly, e.g. vec.x = 5.0
    */
-  struct Vec3
+#if EBGEOMETRY_USE_DOUBLE
+  struct alignas(32) Vec3
+#else
+  struct alignas(16) Vec3
+#endif
   {
     /**
      * @brief For outputting a vector to an output stream.
@@ -438,6 +446,24 @@ namespace EBGeometry {
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     constexpr Real&
     operator[](size_t i) noexcept;
+
+    /**
+       @brief Return underlying data
+       @return Returns m_X
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    const Real*
+    data() const noexcept;
+
+    /**
+       @brief Return underlying data
+       @return Returns m_X
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    Real*
+    data() noexcept;
 
     /**
      * @brief Return non-modifiable component in vector. (i=0 => x and so on)
@@ -857,11 +883,23 @@ namespace EBGeometry {
 #include "EBGeometry_VecImplem.hpp"
 
 #ifdef EBGEOMETRY_USE_DOUBLE
-static_assert(sizeof(EBGeemetry::Vec2) == 16, "EBGeometry::Vec2 must be 16 bytes when EBGEOMETRY_USE_DOUBLE=ON");
+static_assert(sizeof(EBGeometry::Vec2) == 16, "EBGeometry::Vec2 must be 16 bytes when EBGEOMETRY_USE_DOUBLE=ON");
 static_assert(sizeof(EBGeometry::Vec3) == 32, "EBGeometry::Vec3 must be 32 bytes when EBGEOMETRY_USE_DOUBLE=ON");
+
+static_assert(alignof(EBGeometry::Vec2) == 16, "EBGeometry::Vec3 must align on 16 byte boundaries when EBGEOMETRY_USE_DOUBLE=ON");
+static_assert(alignof(EBGeometry::Vec3) == 32, "EBGeometry::Vec3 must align on 32 byte boundaries when EBGEOMETRY_USE_DOUBLE=ON");
 #else
 static_assert(sizeof(EBGeometry::Vec2) == 8, "EBGeometry::Vec2 must be 8 bytes when EBGEOMETRY_USE_DOUBLE=OFF");
 static_assert(sizeof(EBGeometry::Vec3) == 16, "EBGeometry::Vec3 must be 16 bytes when EBGEOMETRY_USE_DOUBLE=OFF");
+
+static_assert(alignof(EBGeometry::Vec2) == 8, "EBGeometry::Vec3 must align on 8 byte boundaries when EBGEOMETRY_USE_DOUBLE=ON");
+static_assert(alignof(EBGeometry::Vec3) == 16, "EBGeometry::Vec3 must align on 16 byte boundaries when EBGEOMETRY_USE_DOUBLE=ON");
 #endif
+
+static_assert(std::is_trivially_copyable_v<EBGeometry::Vec2>, "EBGeometry::Vec2 must be trivially copyable");
+static_assert(std::is_trivially_copyable_v<EBGeometry::Vec3>, "EBGeometry::Vec3 must be trivially copyable");
+
+static_assert(std::is_standard_layout_v<EBGeometry::Vec2>, "EBGeometry::Vec2 must be standard layout");
+static_assert(std::is_standard_layout_v<EBGeometry::Vec3>, "EBGeometry::Vec3 must be standard layout");
 
 #endif

@@ -124,6 +124,45 @@ static unsigned long long int EBGEOMETRY_ASSERTION_FAILURES = 0;
 #define EBGEOMETRY_RESTRICT
 #endif
 
+/**
+ * @def EBGEOMETRY_PRAGMA_SIMD
+ * @brief Hint compilers to vectorize the following loop. Device-safe (CUDA/HIP/SYCL).
+ *
+ * Usage:
+ *   EBGEOMETRY_PRAGMA_SIMD
+ *   for (int i = 0; i < n; ++i) { ... }
+ *
+ * Expands to:
+ * - Intel (ICC/ICX/oneAPI):    #pragma ivdep  +  #pragma vector always
+ * - Clang:                     #pragma clang loop vectorize(enable) interleave(enable)
+ * - GCC:                       #pragma GCC ivdep
+ * - MSVC:                      #pragma loop(ivdep)
+ * - CUDA/HIP/SYCL device code: (no-op)
+ */
+#ifndef EBGEOMETRY_DO_PRAGMA
+  #define EBGEOMETRY_DO_PRAGMA(x) _Pragma(#x)
+#endif
+
+#if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__) || defined(__SYCL_DEVICE_ONLY__)
+  // On GPU/SYCL device passes, leave empty to avoid unknown pragma issues.
+  #define EBGEOMETRY_PRAGMA_SIMD
+#else
+  #if defined(__INTEL_COMPILER) || defined(__INTEL_LLVM_COMPILER)
+    #define EBGEOMETRY_PRAGMA_SIMD \
+      EBGEOMETRY_DO_PRAGMA(ivdep) \
+      EBGEOMETRY_DO_PRAGMA(vector always)
+  #elif defined(__clang__)
+    #define EBGEOMETRY_PRAGMA_SIMD \
+      EBGEOMETRY_DO_PRAGMA(clang loop vectorize(enable) interleave(enable))
+  #elif defined(__GNUC__)
+    #define EBGEOMETRY_PRAGMA_SIMD EBGEOMETRY_DO_PRAGMA(GCC ivdep)
+  #elif defined(_MSC_VER)
+    #define EBGEOMETRY_PRAGMA_SIMD EBGEOMETRY_DO_PRAGMA(loop(ivdep))
+  #else
+    #define EBGEOMETRY_PRAGMA_SIMD
+  #endif
+#endif
+
 /** @} */ // end of Macros group
 
 #endif

@@ -81,6 +81,15 @@ namespace EBGeometry {
     operator[](int i) const noexcept;
 
     /**
+       @brief Get a pointer to the data
+       @return m_data
+    */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    constexpr const T*
+    data() const noexcept;
+
+    /**
      * @brief Number of elements in the span.
      * @return Number of elements.
      */

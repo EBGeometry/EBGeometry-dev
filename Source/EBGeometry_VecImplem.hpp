@@ -243,17 +243,16 @@ namespace EBGeometry {
   EBGEOMETRY_ALWAYS_INLINE
   constexpr Vec3::Vec3() noexcept
   {
-    (*this) = Vec3::zero();
+    (*this)     = Vec3::zero();
+    this->m_pad = Real(0);
   }
 
   EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
-  constexpr Vec3::Vec3(const Real& a_x, const Real& a_y, const Real& a_z) noexcept
-  {
-    this->m_X[0] = a_x;
-    this->m_X[1] = a_y;
-    this->m_X[2] = a_z;
-  }
+  constexpr Vec3::Vec3(const Real& a_x, const Real& a_y, const Real& a_z) noexcept :
+    m_X{a_x,a_y,a_z},
+    m_pad(0.0)
+  {}
 
   EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
@@ -459,6 +458,22 @@ namespace EBGeometry {
     EBGEOMETRY_EXPECT(i <= 2);
 
     return m_X[i];
+  }
+
+  EBGEOMETRY_GPU_HOST_DEVICE
+  EBGEOMETRY_ALWAYS_INLINE
+  Real*
+  Vec3::data() noexcept
+  {
+    return &m_X[0];
+  }
+
+  EBGEOMETRY_GPU_HOST_DEVICE
+  EBGEOMETRY_ALWAYS_INLINE
+  const Real*
+  Vec3::data() const noexcept
+  {
+    return &m_X[0];
   }
 
   EBGEOMETRY_GPU_HOST_DEVICE

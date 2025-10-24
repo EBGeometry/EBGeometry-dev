@@ -306,13 +306,14 @@ namespace EBGeometry {
      * @brief Triangle vertex normals
      */
     Vec3 m_vertexNormals[3]{Vec3::max(), Vec3::max(), Vec3::max()};
+
     /**
      * @brief Triangle edge normals
      */
     Vec3 m_edgeNormals[3]{Vec3::max(), Vec3::max(), Vec3::max()};
 
     /**
-     * @brief Triangle meta-data normals
+     * @brief Triangle meta-data
      */
     MetaData m_metaData;
   };
@@ -322,15 +323,21 @@ namespace EBGeometry {
   */
   struct alignas(EBGEOMETRY_ALIGNAS) DistanceCandidate
   {
+    constexpr DistanceCandidate()
+    {
+      this->m_dist2 = EBGeometry::Limits::max();
+      this->m_sgn   = 1;
+    }
+    
     /**
        @brief Squared absolute distance
     */
-    Real m_dist2 = EBGeometry::Limits::max();
+    Real m_dist2;
 
     /**
        @brief Final signed distance = m_abs2 * m_sgn
     */
-    int m_sgn = 1;
+    int m_sgn;
   };
 
   /**
