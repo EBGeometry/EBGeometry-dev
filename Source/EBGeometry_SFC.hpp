@@ -8,16 +8,21 @@
  * @author Robert Marskar
  */
 
-#ifndef EBGeometry_SFC
-#define EBGeometry_SFC
+#ifndef EBGEOMETRY_SFC_HPP
+#define EBGEOMETRY_SFC_HPP
 
 // Std includes
 #include <cstdint>
+#include <type_traits>
 
 // Our includes
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_Macros.hpp"
 
+/**
+ * @brief Namespace for holding space-filling curve functionality.
+ * @details The SFC code is always a 64-bit integer (this can be changed, but bit-shifts have to be redone in that case).
+ */
 namespace EBGeometry::SFC {
 
   /**
@@ -26,145 +31,116 @@ namespace EBGeometry::SFC {
   using Code = uint64_t;
 
   /**
-   * @brief Maximum available bits. Using same number = 21 for all dimensions (strictly speaking, we could use 32 bits in 2D and all 64 bits in 1D).
+   * @brief Alias for coordinate width
+   */
+  using IntType = uint32_t;
+
+  /**
+   * @brief Maximum available bits.
+   *
+   * Note: Morton implementation below assumes ValidBits <= 21 (3*21 = 63 bits).
    */
   static constexpr unsigned int ValidBits = 21;
 
   /**
-   * @brief Maximum permitted span along any spatial coordinate.
+   * @brief Maximum permitted span along any spatial coordinate (inclusive).
+   * Valid coordinates are in [0, ValidSpan].
    */
-  static constexpr Code ValidSpan = (static_cast<uint64_t>(1) << ValidBits) - 1;
+  static constexpr uint64_t ValidSpan = (static_cast<uint64_t>(1) << ValidBits) - 1;
 
   /**
-   * @brief Simple 3D cell index for usage with SFC codes.
+   * @brief Simple POD index for usage with SFC codes.
    */
-  class Index
+  struct Index
   {
-  public:
     /**
-     * @brief Default constructor. Sets the zero index.
+     * @brief Constructor — sets x, y, and z
+     * @param[in] a_x First coordinate
+     * @param[in] a_y Second coordinate
+     * @param[in] a_z Third coordinate
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Index() noexcept = default;
+    Index(uint32_t a_x, uint32_t a_y, uint32_t a_z) noexcept;
 
     /**
-     * @brief Full constructor. Create a cell index.
-     * @param[in] x Index in x-direction
-     * @param[in] y Index in y-direction
-     * @param[in] z Index in z-direction	
-    */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE
-    Index(unsigned int x, unsigned int y, unsigned int z) noexcept;
-
-    /**
-     * @brief Copy constructor.
-     * @param[in] a_index Other index
+     * @brief First index
      */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE
-    Index(const Index& a_index) noexcept = default;
+    uint32_t x{0};
 
     /**
-     * @brief Move constructor.
-     * @param[in] a_index Other index
+     * @brief Second index
      */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE
-    Index(Index&& a_index) noexcept = default;
+    uint32_t y{0};
 
     /**
-     * @brief Destructor.
+     * @brief Third index
      */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE
-    ~Index() noexcept = default;
-
-    /**
-     * @brief Copy assignment.
-     * @param[in] a_index Other index
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE
-    Index&
-    operator=(const Index& a_index) noexcept = default;
-
-    /**
-     * @brief Move assignment.
-     * @param[in, out] a_index Other index
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE
-    Index&
-    operator=(Index&& a_index) noexcept = default;
-
-    /**
-     * @brief Get the index
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    unsigned int
-    operator[](int a_dir) const noexcept;
-
-  protected:
-    /**
-     * @brief Logical cell index.
-     */
-    unsigned int m_indices[3]{0, 0, 0};
+    uint32_t z{0};
   };
 
-#if __cplusplus >= 202002L
   /**
-   * @brief Encodable SFC concept -- class must have a static function static uint64_t encode(const Index&). This is the main interface for SFCs
+   * @brief Encodable SFC concept -- class must have static encode/decode:
+   *        static uint64_t encode(const Index&);
+   *        static Index    decode(const uint64_t&);
    */
   template <typename S>
   concept Encodable = requires(const SFC::Index& point, const SFC::Code code) {
     { S::encode(point) } -> std::same_as<SFC::Code>;
     { S::decode(code) } -> std::same_as<SFC::Index>;
   };
-#endif
 
   /**
-   * @brief Implementation of the Morton SFC
+   * @brief Implementation of the Morton SFC (3D)
    */
   struct Morton
   {
     /**
-     * @brief Encode an input point into a Morton index with a 64-bit representation.
-     * @param[in] a_point
+     * @brief Helper function for interleaving every third bit.
+     * @param[in] v Input number coordinate.
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     static uint64_t
+    interleaveBits21(uint32_t v) noexcept;
+
+    /**
+     * @brief Helper function for compacting every third bit.
+     */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    static uint32_t
+    compactBits21(uint64_t x) noexcept;
+
+    /**
+     * @brief Encode an input point into a Morton index with a 64-bit representation.
+     * @param[in] a_point Input point.
+     */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    static Code
     encode(const Index& a_point) noexcept;
 
     /**
      * @brief Decode the 64-bit Morton code into an Index.
-     * @param[in] a_code Morton code
+     * @param[in] a_code SFC code
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     static Index
-    decode(const uint64_t& a_code) noexcept;
-
-  protected:
-    /**
-     * @brief Mask for magic-bits encoding of 3D Morton code
-     */
-    static constexpr uint_fast64_t Mask_64[6]{
-      0x1fffff, 0x1f00000000ffff, 0x1f0000ff0000ff, 0x100f00f00f00f00f, 0x10c30c30c30c30c3, 0x1249249249249249};
+    decode(const Code& a_code) noexcept;
   };
 
   /**
    * @brief Implementation of a nested index SFC.
-   * @details The SFC is encoded by the code = i + j * N + k * N * N in 3D, where i,j,k are the block indices.
+   * @details The SFC is encoded by code = i + j * N + k * N * N in 3D,
+   *          where N = ValidSpan + 1 is the extent per axis.
    */
   struct Nested
   {
     /**
-     * @brief Encode the input point into the SFC code.
-     * @param[in] a_point
+     * @brief Encoding function.
+     * @param[in] a_point Input point to turn into a SFC code
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -172,8 +148,8 @@ namespace EBGeometry::SFC {
     encode(const Index& a_point) noexcept;
 
     /**
-     * @brief Decode the 64-bit SFC code into an Index.
-     * @param[in] a_code SFC code.
+     * @brief Decoding function.
+     * @param[in] a_code SFC code to be turned into coordinate.
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -182,11 +158,17 @@ namespace EBGeometry::SFC {
   };
 } // namespace EBGeometry::SFC
 
-#if __cplusplus >= 202002L
-static_assert(EBGeometry::SFC::Encodable<EBGeometry::SFC::Morton>);
-static_assert(EBGeometry::SFC::Encodable<EBGeometry::SFC::Nested>);
-#endif
+static_assert(std::is_trivially_copyable<EBGeometry::SFC::Index>::value, "EBGeometry::SFC::Index must be trivially copyable");
+static_assert(std::is_standard_layout<EBGeometry::SFC::Index>::value, "EBGeometry::SFC::Index must have a standard layout");
 
-#include "EBGeometry_SFCImplem.hpp" // NOLINT
+static_assert(std::is_trivially_copyable<EBGeometry::SFC::Morton>::value, "EBGeometry::SFC::Morton must be trivially copyable");
+static_assert(std::is_standard_layout<EBGeometry::SFC::Morton>::value, "EBGeometry::SFC::Morton must have standard layout");
+static_assert(EBGeometry::SFC::Encodable<EBGeometry::SFC::Morton>, "EBGeometry::SFC::Morton must fulfill encodable concept");
+
+static_assert(std::is_trivially_copyable<EBGeometry::SFC::Nested>::value, "EBGeometry::SFC::Nested must be trivially copyable");
+static_assert(std::is_standard_layout<EBGeometry::SFC::Nested>::value, "EBGeometry::SFC::Nested must have standard layout");
+static_assert(EBGeometry::SFC::Encodable<EBGeometry::SFC::Nested>, "EBGeometry::SFC::Nested must fulfill encodable concept");
+
+#include "EBGeometry_SFCImplem.hpp"
 
 #endif

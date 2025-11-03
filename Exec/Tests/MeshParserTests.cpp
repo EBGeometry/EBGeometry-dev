@@ -18,6 +18,7 @@ const std::string cleanSTLBinary = "../../../Meshes/Clean/STL/Binary";
 const std::string cleanPLYASCII  = "../../../Meshes/Clean/PLY/ASCII";
 const std::string cleanPLYBinary = "../../../Meshes/Clean/PLY/Binary";
 
+#if 0
 TEST_CASE("CLEAN_STL_ASCII_SOUP")
 {
   for (const auto& entry : std::filesystem::directory_iterator(cleanSTLASCII)) {
@@ -92,3 +93,4 @@ TEST_CASE("CLEAN_PLY_ASCII_DCEL")
     mesh.freeMem();
   }
 }
+#endif

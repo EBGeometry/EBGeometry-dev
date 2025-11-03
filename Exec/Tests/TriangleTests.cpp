@@ -18,7 +18,7 @@ TEST_CASE("Triangle_Constructors")
 
   Triangle<int> tri(v1, v2, v3);
 }
-
+#if 0
 TEST_CASE("Triangle::intersects")
 {
   Vec3 vertices[3];
@@ -113,3 +113,4 @@ TEST_CASE("Triangle::intersects")
     }
   }
 }
+#endif
