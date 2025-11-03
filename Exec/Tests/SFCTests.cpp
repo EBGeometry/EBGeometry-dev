@@ -27,6 +27,7 @@ TEST_CASE("Index: basic properties & construction", "[sfc][index]")
   SECTION("Default-initialized values are zero")
   {
     Index a{0, 0, 0};
+
     REQUIRE(a.x == 0);
     REQUIRE(a.y == 0);
     REQUIRE(a.z == 0);
@@ -35,6 +36,7 @@ TEST_CASE("Index: basic properties & construction", "[sfc][index]")
   SECTION("Construct with typical values")
   {
     Index a{1, 2, 3};
+
     REQUIRE(a.x == 1);
     REQUIRE(a.y == 2);
     REQUIRE(a.z == 3);
@@ -96,9 +98,11 @@ TEST_CASE("Morton: reversibility on a small grid", "[sfc][morton][roundtrip]")
   for (IntType x = 0; x <= max; ++x) {
     for (IntType y = 0; y <= max; ++y) {
       for (IntType z = 0; z <= max; ++z) {
-        Index       p{x, y, z};
+        const Index p{x, y, z};
+
         const Code  c = Morton::encode(p);
         const Index q = Morton::decode(c);
+
         REQUIRE(q.x == x);
         REQUIRE(q.y == y);
         REQUIRE(q.z == z);
@@ -118,6 +122,7 @@ TEST_CASE("Morton: reversibility at edges", "[sfc][morton][edges]")
   for (const auto& p : points) {
     const Code  c = Morton::encode(p);
     const Index q = Morton::decode(c);
+
     REQUIRE(q.x == p.x);
     REQUIRE(q.y == p.y);
     REQUIRE(q.z == p.z);
@@ -184,6 +189,7 @@ TEST_CASE("Nested: known vectors and reversibility", "[sfc][nested]")
     for (const auto& p : points) {
       const Code  c = Nested::encode(p);
       const Index q = Nested::decode(c);
+
       REQUIRE(q.x == p.x);
       REQUIRE(q.y == p.y);
       REQUIRE(q.z == p.z);
@@ -192,6 +198,7 @@ TEST_CASE("Nested: known vectors and reversibility", "[sfc][nested]")
     // Also check that max code fits in 64-bit and matches N^3 - 1
     const Code maxCode = Nested::encode({max, max, max});
     REQUIRE(maxCode == (N * N * N - 1));
+
     // Sanity: N^3 - 1 == 2^63 - 1 for ValidBits=21 (fits in uint64_t)
     STATIC_REQUIRE(sizeof(Code) == 8);
     REQUIRE(maxCode <= std::numeric_limits<Code>::max());
