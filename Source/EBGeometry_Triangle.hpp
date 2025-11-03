@@ -35,12 +35,6 @@ namespace EBGeometry {
    *
    * This struct can compute its own normal vector from the vertex positions, and the triangle orientation
    * is then implicitly given by the vertex order.
-   *
-   * To compute the distance from a point to the triangle, one must determine if the point projects to the
-   * "inside" or "outside" of the triangle. This struct contains a 2D embedding of the triangle that can perform
-   * this project. If the query point projects to the inside of the triangle, the distance is simply the
-   * projected distance onto the triangle plane. If it projects to the outside of the triangle, we check the
-   * distance against the triangle edges and vertices.
    */
   template <typename MetaData>
   struct alignas(EBGEOMETRY_ALIGNAS) Triangle
@@ -321,14 +315,14 @@ namespace EBGeometry {
   /**
     @brief Simple POD struct that holds squared distance and sign
   */
-  struct alignas(EBGEOMETRY_ALIGNAS) DistanceCandidate
+  struct DistanceCandidate
   {
     constexpr DistanceCandidate()
     {
       this->m_dist2 = EBGeometry::Limits::max();
       this->m_sgn   = 1;
     }
-    
+
     /**
        @brief Squared absolute distance
     */
