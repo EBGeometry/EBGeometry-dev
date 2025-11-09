@@ -11,6 +11,10 @@
 #ifndef EBGEOMETRY_ANALYTICDISTANCEFUNCTIONS_HPP
 #define EBGEOMETRY_ANALYTICDISTANCEFUNCTIONS_HPP
 
+// Std includes
+#include <type_traits>
+
+// Our includes
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_GPUTypes.hpp"
 #include "EBGeometry_ImplicitFunction.hpp"
@@ -24,7 +28,7 @@ namespace EBGeometry {
    * @brief Signed distance function for a plane.
    * @details User specifies a point on the plane and the outward normal vector.
    */
-  class PlaneSDF : public ImplicitFunction
+  class PlaneSDF
   {
   public:
     /**
@@ -45,8 +49,6 @@ namespace EBGeometry {
       m_point(a_point),
       m_normal(a_normal)
     {
-      EBGEOMETRY_EXPECT(m_normal.length() > EBGeometry::Limits::eps());
-
       m_normal = m_normal / m_normal.length();
     }
 
@@ -71,7 +73,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    constexpr ~PlaneSDF() noexcept override = default;
+    constexpr ~PlaneSDF() noexcept = default;
 
     /**
      * @brief Copy assignment.
@@ -92,13 +94,13 @@ namespace EBGeometry {
     operator=(PlaneSDF&& a_plane) noexcept = default;
 
     /**
-     * @brief Signed distance function for sphere.
+     * @brief Signed distance function for the plane.
      * @param[in] a_point Position.
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     constexpr Real
-    value(const Vec3& a_point) const noexcept override
+    value(const Vec3& a_point) const noexcept
     {
       return dot((a_point - m_point), m_normal);
     }
@@ -115,11 +117,14 @@ namespace EBGeometry {
     Vec3 m_normal = Vec3::unit(2);
   };
 
+  static_assert(std::is_standard_layout<PlaneSDF>::value, "PlaneSDF must have standard layout");
+  static_assert(std::is_trivially_copyable<PlaneSDF>::value, "PlaneSDF must be trivially copyable");
+
   /**
    * @brief Signed distance field for sphere.
    * @details User specifies the center and radius.
    */
-  class SphereSDF : public ImplicitFunction
+  class SphereSDF
   {
   public:
     /**
@@ -164,7 +169,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    constexpr ~SphereSDF() noexcept override = default;
+    constexpr ~SphereSDF() noexcept = default;
 
     /**
      * @brief Copy assignment.
@@ -191,7 +196,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     constexpr Real
-    value(const Vec3& a_point) const noexcept override
+    value(const Vec3& a_point) const noexcept
     {
       return (a_point - m_center).length() - m_radius;
     }
@@ -208,11 +213,14 @@ namespace EBGeometry {
     Real m_radius = 1.0;
   };
 
+  static_assert(std::is_standard_layout<SphereSDF>::value, "SphereSDF must have standard layout");
+  static_assert(std::is_trivially_copyable<SphereSDF>::value, "SphereSDF must be trivially copyable");
+
   /**
    * @brief Signed distance field for an axis-aligned box.
    * @details User inputs low and high corners of the box.
    */
-  class BoxSDF : public ImplicitFunction
+  class BoxSDF
   {
   public:
     /**
@@ -260,7 +268,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    constexpr ~BoxSDF() noexcept override = default;
+    constexpr ~BoxSDF() noexcept = default;
 
     /**
      * @brief Copy assignment operator
@@ -287,7 +295,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     constexpr Real
-    value(const Vec3& a_point) const noexcept override
+    value(const Vec3& a_point) const noexcept
     {
       // For each coordinate direction, we have delta[dir] if a_point[dir] falls  \
       // between xLo and xHi. In this case delta[dir] will be the signed distance \
@@ -319,11 +327,14 @@ namespace EBGeometry {
     Vec3 m_hiCorner = 0.5 * Vec3::one();
   };
 
+  static_assert(std::is_standard_layout<BoxSDF>::value, "BoxSDF must have standard layout");
+  static_assert(std::is_trivially_copyable<BoxSDF>::value, "BoxSDF must be trivially copyable");
+
   /**
    * @brief Signed distance field for a torus
    * @details User inputs the center, major radius, and minor radius. The torus always lies in the xy plane
    */
-  class TorusSDF : public ImplicitFunction
+  class TorusSDF
   {
   public:
     /**
@@ -371,7 +382,7 @@ namespace EBGeometry {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    constexpr ~TorusSDF() noexcept override = default;
+    constexpr ~TorusSDF() noexcept = default;
 
     /**
      * @brief Copy assignment operator
@@ -398,7 +409,7 @@ namespace EBGeometry {
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     constexpr Real
-    value(const Vec3& a_point) const noexcept override
+    value(const Vec3& a_point) const noexcept
     {
       const auto p   = a_point - m_center;
       const auto rho = EBGeometry::sqrt(p[0] * p[0] + p[1] * p[1]) - m_majorRadius;
@@ -423,6 +434,10 @@ namespace EBGeometry {
      */
     Real m_minorRadius = 0.1;
   };
+
+  static_assert(std::is_standard_layout<TorusSDF>::value, "TorusSDF must have standard layout");
+  static_assert(std::is_trivially_copyable<TorusSDF>::value, "TorusSDF must be trivially copyable");
+
 } // namespace EBGeometry
 
 #endif
