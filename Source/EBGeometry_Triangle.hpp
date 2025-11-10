@@ -192,6 +192,17 @@ namespace EBGeometry {
     computeNormal() noexcept;
 
     /**
+     * @brief Compute precomputed edge data for performance optimization.
+     * @details Computes edge vectors, squared lengths, reciprocals, and cross products
+     *          that are reused in every distance query. This method should be called
+     *          whenever vertex positions or triangle normal change.
+     */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    constexpr void
+    computeEdgeData() noexcept;
+
+    /**
      * @brief Get the triangle normal vector.
      * @return m_triangleNormal
      */
@@ -324,13 +335,39 @@ namespace EBGeometry {
     Vec3 m_edgeNormals[3]{Vec3::max(), Vec3::max(), Vec3::max()};
 
     /**
+     * @brief Precomputed edge vectors (v21, v32, v13)
+     * @details These are computed once during construction/modification and reused
+     *          in every distance query to avoid redundant computation.
+     */
+    Vec3 m_edgeVectors[3]{Vec3::zero(), Vec3::zero(), Vec3::zero()};
+
+    /**
+     * @brief Precomputed squared lengths of edges (dot(edge, edge))
+     * @details Used for edge projection calculations in distance queries.
+     */
+    Real m_edgeSquaredLengths[3]{Real(0), Real(0), Real(0)};
+
+    /**
+     * @brief Precomputed reciprocals of squared edge lengths (1/dot(edge, edge))
+     * @details Allows replacing division with multiplication in hot path.
+     */
+    Real m_edgeInvSquaredLengths[3]{Real(0), Real(0), Real(0)};
+
+    /**
+     * @brief Precomputed cross products of edges with triangle normal
+     * @details Used for inside-triangle tests: cross(edge, triangleNormal).
+     *          Computing these once saves 3 cross products per query.
+     */
+    Vec3 m_edgeCrossNormals[3]{Vec3::zero(), Vec3::zero(), Vec3::zero()};
+
+    /**
      * @brief Triangle meta-data
      */
     MetaData m_metaData;
   };
 
   static_assert(std::is_trivially_copyable_v<Triangle<int>>, "Triangle must be trivially copyable for GPU compatibility");
-  static_assert(std::is_standard_layout_v<Triangle<int>>, "Triangle must have standard layout for GPU compatibility");  
+  static_assert(std::is_standard_layout_v<Triangle<int>>, "Triangle must have standard layout for GPU compatibility");
 
   /**
     @brief Simple POD struct that holds squared distance and sign
@@ -368,11 +405,15 @@ namespace EBGeometry {
   compareDistanceHelper(DistanceCandidate& a_ret, Real a_curAbs, int a_curSgn, bool a_mask) noexcept;
 
   /**
-     * @brief Compute squared distance and sign to a single triangle given its SoA fields. 
+     * @brief Compute squared distance and sign to a single triangle (optimized with precomputed data).
      * @param[in] a_triangleNormal Face normal of triangle.
      * @param[in] a_vertexPositions Array of vertex positions (length 3).
      * @param[in] a_vertexNormals Array of vertex normals (length 3).
      * @param[in] a_edgeNormals Array of edge normals (length 3).
+     * @param[in] a_edgeVectors Array of precomputed edge vectors (length 3).
+     * @param[in] a_edgeSquaredLengths Array of precomputed edge squared lengths (length 3).
+     * @param[in] a_edgeInvSquaredLengths Array of precomputed edge reciprocals (length 3).
+     * @param[in] a_edgeCrossNormals Array of precomputed edge cross products (length 3).
      * @param[in] a_point Query point.
      * @return Squared distance to triangle and the corresponding sign.
      */
@@ -383,6 +424,10 @@ namespace EBGeometry {
                                 const Vec3* EBGEOMETRY_RESTRICT a_vertexPositions,
                                 const Vec3* EBGEOMETRY_RESTRICT a_vertexNormals,
                                 const Vec3* EBGEOMETRY_RESTRICT a_edgeNormals,
+                                const Vec3* EBGEOMETRY_RESTRICT a_edgeVectors,
+                                const Real* EBGEOMETRY_RESTRICT a_edgeSquaredLengths,
+                                const Real* EBGEOMETRY_RESTRICT a_edgeInvSquaredLengths,
+                                const Vec3* EBGEOMETRY_RESTRICT a_edgeCrossNormals,
                                 const Vec3&                     a_point) noexcept;
 } // namespace EBGeometry
 

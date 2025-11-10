@@ -58,6 +58,6 @@ repos:
     rev: v6.1.0 # Use the latest stable version of reuse-tool
     hooks:
       - id: reuse
-      files: ^(Source)
+        files: ^(Source/|Exec/)
 
 

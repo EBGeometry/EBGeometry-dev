@@ -54,6 +54,7 @@ namespace EBGeometry {
     m_vertexPositions[2] = a_vx3;
 
     this->computeNormal();
+    this->computeEdgeData();
   }
 
   template <typename MetaData>
@@ -105,6 +106,35 @@ namespace EBGeometry {
     m_triangleNormal = m_triangleNormal / m_triangleNormal.length();
 
     EBGEOMETRY_EXPECT(nearOne(m_triangleNormal.length()));
+  }
+
+  template <typename MetaData>
+  EBGEOMETRY_ALWAYS_INLINE
+  constexpr void
+  Triangle<MetaData>::computeEdgeData() noexcept
+  {
+    constexpr Real eps = EBGeometry::Limits::eps();
+
+    // Compute edge vectors: v21, v32, v13
+    m_edgeVectors[0] = m_vertexPositions[1] - m_vertexPositions[0];
+    m_edgeVectors[1] = m_vertexPositions[2] - m_vertexPositions[1];
+    m_edgeVectors[2] = m_vertexPositions[0] - m_vertexPositions[2];
+
+    // Compute squared lengths and reciprocals
+    for (int i = 0; i < 3; i++) {
+      m_edgeSquaredLengths[i] = dot(m_edgeVectors[i], m_edgeVectors[i]);
+
+      EBGEOMETRY_EXPECT(m_edgeSquaredLengths[i] > eps);
+      EBGEOMETRY_EXPECT(m_edgeSquaredLengths[i] < EBGeometry::Limits::max());
+
+      // Compute reciprocal for fast division
+      m_edgeInvSquaredLengths[i] = Real(1.0) / m_edgeSquaredLengths[i];
+    }
+
+    // Compute cross products for inside-triangle tests
+    m_edgeCrossNormals[0] = cross(m_edgeVectors[0], m_triangleNormal);
+    m_edgeCrossNormals[1] = cross(m_edgeVectors[1], m_triangleNormal);
+    m_edgeCrossNormals[2] = cross(m_edgeVectors[2], m_triangleNormal);
   }
 
   template <typename MetaData>
@@ -228,7 +258,15 @@ namespace EBGeometry {
   constexpr Real
   Triangle<MetaData>::value(const Vec3& a_point) const noexcept
   {
-    const DistanceCandidate d = signedSquaredDistanceTriangle(m_triangleNormal, m_vertexPositions, m_vertexNormals, m_edgeNormals, a_point);
+    const DistanceCandidate d = signedSquaredDistanceTriangle(m_triangleNormal,
+                                                              m_vertexPositions,
+                                                              m_vertexNormals,
+                                                              m_edgeNormals,
+                                                              m_edgeVectors,
+                                                              m_edgeSquaredLengths,
+                                                              m_edgeInvSquaredLengths,
+                                                              m_edgeCrossNormals,
+                                                              a_point);
 
     return EBGeometry::sqrt(d.m_dist2) * d.m_sgn;
   }
@@ -251,6 +289,10 @@ namespace EBGeometry {
                                 const Vec3* EBGEOMETRY_RESTRICT a_vertexPositions,
                                 const Vec3* EBGEOMETRY_RESTRICT a_vertexNormals,
                                 const Vec3* EBGEOMETRY_RESTRICT a_edgeNormals,
+                                const Vec3* EBGEOMETRY_RESTRICT a_edgeVectors,
+                                const Real* EBGEOMETRY_RESTRICT a_edgeSquaredLengths,
+                                const Real* EBGEOMETRY_RESTRICT a_edgeInvSquaredLengths,
+                                const Vec3* EBGEOMETRY_RESTRICT a_edgeCrossNormals,
                                 const Vec3&                     a_point) noexcept
 
   {
@@ -265,19 +307,20 @@ namespace EBGeometry {
 
     constexpr Real eps = EBGeometry::Limits::eps();
 
-    const Vec3 v21 = a_vertexPositions[1] - a_vertexPositions[0];
-    const Vec3 v32 = a_vertexPositions[2] - a_vertexPositions[1];
-    const Vec3 v13 = a_vertexPositions[0] - a_vertexPositions[2];
+    // Use precomputed edge vectors instead of computing them
+    const Vec3& v21 = a_edgeVectors[0];
+    const Vec3& v32 = a_edgeVectors[1];
+    const Vec3& v13 = a_edgeVectors[2];
 
     // Sanity checks for degenerate vertices.
-    EBGEOMETRY_EXPECT(v21.length2() > eps);
-    EBGEOMETRY_EXPECT(v32.length2() > eps);
-    EBGEOMETRY_EXPECT(v13.length2() > eps);
+    EBGEOMETRY_EXPECT(a_edgeSquaredLengths[0] > eps);
+    EBGEOMETRY_EXPECT(a_edgeSquaredLengths[1] > eps);
+    EBGEOMETRY_EXPECT(a_edgeSquaredLengths[2] > eps);
 
     // Sanity checks for unbound vertices.
-    EBGEOMETRY_EXPECT(v21.length2() < EBGeometry::Limits::max());
-    EBGEOMETRY_EXPECT(v32.length2() < EBGeometry::Limits::max());
-    EBGEOMETRY_EXPECT(v13.length2() < EBGeometry::Limits::max());
+    EBGEOMETRY_EXPECT(a_edgeSquaredLengths[0] < EBGeometry::Limits::max());
+    EBGEOMETRY_EXPECT(a_edgeSquaredLengths[1] < EBGeometry::Limits::max());
+    EBGEOMETRY_EXPECT(a_edgeSquaredLengths[2] < EBGeometry::Limits::max());
 
     // Sanity checks for potentially inconsistent triangle orientations.
     EBGEOMETRY_EXPECT(dot(a_triangleNormal, cross(v21, -v32)) > 0.0);
@@ -286,17 +329,19 @@ namespace EBGeometry {
     const Vec3 p2 = a_point - a_vertexPositions[1];
     const Vec3 p3 = a_point - a_vertexPositions[2];
 
-    const Real d21 = dot(v21, v21);
-    const Real d32 = dot(v32, v32);
-    const Real d13 = dot(v13, v13);
+    // Use precomputed squared lengths
+    const Real d21 = a_edgeSquaredLengths[0];
+    const Real d32 = a_edgeSquaredLengths[1];
+    const Real d13 = a_edgeSquaredLengths[2];
 
     const bool okEdge1 = d21 > eps;
     const bool okEdge2 = d32 > eps;
     const bool okEdge3 = d13 > eps;
 
-    const Real t1 = okEdge1 ? dot(p1, v21) / d21 : Real(0);
-    const Real t2 = okEdge2 ? dot(p2, v32) / d32 : Real(0);
-    const Real t3 = okEdge3 ? dot(p3, v13) / d13 : Real(0);
+    // Use precomputed reciprocals (multiply instead of divide)
+    const Real t1 = okEdge1 ? dot(p1, v21) * a_edgeInvSquaredLengths[0] : Real(0);
+    const Real t2 = okEdge2 ? dot(p2, v32) * a_edgeInvSquaredLengths[1] : Real(0);
+    const Real t3 = okEdge3 ? dot(p3, v13) * a_edgeInvSquaredLengths[2] : Real(0);
 
     const Real d = dot(a_triangleNormal, p1);
 
@@ -304,10 +349,10 @@ namespace EBGeometry {
     const Vec3 y2 = okEdge2 ? p2 - t2 * v32 : Vec3::zero();
     const Vec3 y3 = okEdge3 ? p3 - t3 * v13 : Vec3::zero();
 
-    // Test if the projected point lies inside the triangle.
-    const bool insideEdge0 = dot(cross(v21, a_triangleNormal), p1) <= eps;
-    const bool insideEdge1 = dot(cross(v32, a_triangleNormal), p2) <= eps;
-    const bool insideEdge2 = dot(cross(v13, a_triangleNormal), p3) <= eps;
+    // Use precomputed cross products for inside-triangle tests
+    const bool insideEdge0 = dot(a_edgeCrossNormals[0], p1) <= eps;
+    const bool insideEdge1 = dot(a_edgeCrossNormals[1], p2) <= eps;
+    const bool insideEdge2 = dot(a_edgeCrossNormals[2], p3) <= eps;
 
     const bool insideTri = insideEdge0 & insideEdge1 & insideEdge2;
 
