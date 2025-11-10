@@ -19,9 +19,19 @@ namespace EBGeometry {
 
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
-  constexpr Triangle<MetaData>::Triangle(const Vec3& a_x1, const Vec3& a_x2, const Vec3& a_x3) noexcept
+  constexpr Triangle<MetaData>::Triangle(const Vec3& a_vx1,
+                                         const Vec3& a_vx2,
+                                         const Vec3& a_vx3,
+                                         const Vec3& a_vn1,
+                                         const Vec3& a_vn2,
+                                         const Vec3& a_vn3,
+                                         const Vec3& a_en1,
+                                         const Vec3& a_en2,
+                                         const Vec3& a_en3) noexcept
   {
-    this->setVertexPositions(a_x1, a_x2, a_x3);
+    this->setVertexPositions(a_vx1, a_vx2, a_vx3);
+    this->setVertexNormals(a_vn1, a_vn2, a_vn3);
+    this->setEdgeNormals(a_en1, a_en2, a_en3);
   }
 
   template <typename MetaData>
@@ -37,11 +47,11 @@ namespace EBGeometry {
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
   constexpr void
-  Triangle<MetaData>::setVertexPositions(const Vec3& a_x1, const Vec3& a_x2, const Vec3& a_x3) noexcept
+  Triangle<MetaData>::setVertexPositions(const Vec3& a_vx1, const Vec3& a_vx2, const Vec3& a_vx3) noexcept
   {
-    m_vertexPositions[0] = a_x1;
-    m_vertexPositions[1] = a_x2;
-    m_vertexPositions[2] = a_x3;
+    m_vertexPositions[0] = a_vx1;
+    m_vertexPositions[1] = a_vx2;
+    m_vertexPositions[2] = a_vx3;
 
     this->computeNormal();
   }
@@ -49,21 +59,21 @@ namespace EBGeometry {
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
   constexpr void
-  Triangle<MetaData>::setVertexNormals(const Vec3& a_n1, const Vec3& a_n2, const Vec3& a_n3) noexcept
+  Triangle<MetaData>::setVertexNormals(const Vec3& a_vn1, const Vec3& a_vn2, const Vec3& a_vn3) noexcept
   {
-    m_vertexNormals[0] = a_n1;
-    m_vertexNormals[1] = a_n2;
-    m_vertexNormals[2] = a_n3;
+    m_vertexNormals[0] = a_vn1 / a_vn1.length();
+    m_vertexNormals[1] = a_vn2 / a_vn2.length();
+    m_vertexNormals[2] = a_vn3 / a_vn3.length();
   }
 
   template <typename MetaData>
   EBGEOMETRY_ALWAYS_INLINE
   constexpr void
-  Triangle<MetaData>::setEdgeNormals(const Vec3& a_n1, const Vec3& a_n2, const Vec3& a_n3) noexcept
+  Triangle<MetaData>::setEdgeNormals(const Vec3& a_en1, const Vec3& a_en2, const Vec3& a_en3) noexcept
   {
-    m_edgeNormals[0] = a_n1;
-    m_edgeNormals[1] = a_n2;
-    m_edgeNormals[2] = a_n3;
+    m_edgeNormals[0] = a_en1 / a_en1.length();
+    m_edgeNormals[1] = a_en2 / a_en2.length();
+    m_edgeNormals[2] = a_en3 / a_en3.length();
   }
 
   template <typename MetaData>
@@ -94,7 +104,7 @@ namespace EBGeometry {
 
     m_triangleNormal = m_triangleNormal / m_triangleNormal.length();
 
-    EBGEOMETRY_EXPECT(m_triangleNormal.length() == Real(1.0));
+    EBGEOMETRY_EXPECT(nearOne(m_triangleNormal.length()));
   }
 
   template <typename MetaData>
@@ -191,9 +201,10 @@ namespace EBGeometry {
     EBGEOMETRY_EXPECT(edge2.length() > EBGeometry::Limits::eps());
     EBGEOMETRY_EXPECT(ray.length() > EBGeometry::Limits::eps());
 
-    const Real det = -dot(ray, m_triangleNormal);
+    const Real det    = -dot(ray, m_triangleNormal);
+    const Real absDet = EBGeometry::abs(det);
 
-    EBGEOMETRY_EXPECT(EBGeometry::abs(det) > EBGeometry ::Limits::eps());
+    EBGEOMETRY_EXPECT(absDet > EBGeometry::Limits::eps());
 
     const Real invDet = Real(1.0) / det;
 
@@ -204,7 +215,7 @@ namespace EBGeometry {
     const Real v = -dot(edge1, DAO) * invDet;
     const Real t = dot(AO, m_triangleNormal) * invDet;
 
-    const bool a = EBGeometry::abs(det) > epsilon;
+    const bool a = absDet > epsilon;
     const bool b = (t >= 0.0) && (t <= 1.0);
     const bool c = (u >= 0.0) && (u <= 1.0);
     const bool d = (v >= 0.0) && (u + v) <= 1.0;

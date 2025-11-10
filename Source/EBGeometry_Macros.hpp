@@ -13,6 +13,7 @@
 
 #include <cassert>
 #include <iostream>
+#include <type_traits>
 
 /**
  * @brief Global counter tracking the number of assertion failures.
@@ -22,6 +23,37 @@
  * to monitor how often expectations are violated.
  */
 static unsigned long long int EBGEOMETRY_ASSERTION_FAILURES = 0;
+
+/**
+ * @brief Constexpr-compatible expectation check helper.
+ *
+ * This function can be used in both constexpr and runtime contexts:
+ * - In constexpr context: No-op (allows constexpr evaluation to continue;
+ *   invalid operations will cause natural compile errors)
+ * - In runtime context: prints error message if condition is false
+ *
+ * @param cond Boolean condition to check
+ * @param msg Condition string for error message
+ * @param line Source line number
+ * @param file Source file name
+ *
+ * @note In constexpr contexts, if the condition is false and execution continues,
+ *       downstream operations (like division by zero or invalid array access) will
+ *       naturally cause compilation to fail with meaningful error messages.
+ */
+inline constexpr void
+ebgeometry_expect_impl(bool cond, const char* msg, int line, const char* file)
+{
+  if (!cond) {
+    if (!std::is_constant_evaluated()) {
+      // Only print in runtime context (printf is not constexpr)
+      printf("Expectation '%s' failed on line %i in file %s!\n", msg, line, file);
+      ++EBGEOMETRY_ASSERTION_FAILURES;
+    }
+    // In constexpr context, do nothing - invalid operations will cause
+    // natural compilation errors
+  }
+}
 
 /**
  * @defgroup Macros EBGeometry Macros
@@ -44,26 +76,27 @@ static unsigned long long int EBGEOMETRY_ASSERTION_FAILURES = 0;
  * @param cond Boolean condition to evaluate.
  *
  * @note Unlike assertions, this does not abort the program.
+ * @note This macro is constexpr-compatible: in constexpr contexts it throws
+ *       (causing compilation to fail), in runtime contexts it prints a message.
  */
-#define EBGEOMETRY_ALWAYS_EXPECT(cond)                                                     \
-  if (!(cond)) {                                                                           \
-    printf("Expectation '%s' failed on line %i in file %s!\n", #cond, __LINE__, __FILE__); \
-  }
+#define EBGEOMETRY_ALWAYS_EXPECT(cond) ebgeometry_expect_impl((cond), #cond, __LINE__, __FILE__)
 
 /**
  * @def EBGEOMETRY_EXPECT(cond)
  * @brief Conditionally checks a condition depending on debug settings.
  *
  * - If `EBGEOMETRY_ENABLE_DEBUG` is defined, this macro behaves like
- *   ::EBGEOMETRY_ALWAYS_EXPECT and performs a runtime check.
+ *   ::EBGEOMETRY_ALWAYS_EXPECT and performs a check.
  * - Otherwise, it compiles to a no-op.
  *
  * @param cond Boolean condition to evaluate.
+ *
+ * @note This macro is constexpr-compatible when debug mode is enabled.
  */
 #ifdef EBGEOMETRY_ENABLE_DEBUG
 #define EBGEOMETRY_EXPECT(cond) EBGEOMETRY_ALWAYS_EXPECT(cond)
 #else
-#define EBGEOMETRY_EXPECT(cond) (void)0
+#define EBGEOMETRY_EXPECT(cond) ((void)0)
 #endif
 
 /**

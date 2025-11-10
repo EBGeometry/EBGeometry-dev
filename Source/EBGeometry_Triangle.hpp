@@ -11,6 +11,9 @@
 #ifndef EBGEOMETRY_TRIANGLE_HPP
 #define EBGEOMETRY_TRIANGLE_HPP
 
+// Std includes
+#include <type_traits>
+
 // Our includes
 #include "EBGeometry_Alignas.hpp"
 #include "EBGeometry_GPU.hpp"
@@ -65,13 +68,27 @@ namespace EBGeometry {
 
     /**
      * @brief Full constructor.
-     * @param[in] a_x1 Position of first vertex.
-     * @param[in] a_x2 Position of second vertex.
-     * @param[in] a_x3 Position of third vertex.     
+     * @param[in] a_vx1 Position of first vertex.
+     * @param[in] a_vx2 Position of second vertex.
+     * @param[in] a_vx3 Position of third vertex.
+     * @param[in] a_vn1 Normal of first vertex.
+     * @param[in] a_vn2 Normal of second vertex.
+     * @param[in] a_vn3 Normal of third vertex.
+     * @param[in] a_en1 Normal of first edge (pointing from first vertex to second vertex).
+     * @param[in] a_en2 Normal of second edge (pointing from second vertex to third vertex).
+     * @param[in] a_en3 Normal of third edge (pointing from third vertex to first vertex).
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    constexpr explicit Triangle(const Vec3& a_x1, const Vec3& a_x2, const Vec3& a_x3) noexcept;
+    constexpr explicit Triangle(const Vec3& a_vx1,
+                                const Vec3& a_vx2,
+                                const Vec3& a_vx3,
+                                const Vec3& a_vn1,
+                                const Vec3& a_vn2,
+                                const Vec3& a_vn3,
+                                const Vec3& a_en1,
+                                const Vec3& a_en2,
+                                const Vec3& a_en3) noexcept;
 
     /**
      * @brief Delete constructor to prevent misuse constructor.
@@ -125,36 +142,36 @@ namespace EBGeometry {
 
     /**
      * @brief Set the triangle vertex positions
-     * @param[in] a_x1 Position of first vertex.
-     * @param[in] a_x2 Position of second vertex.
-     * @param[in] a_x3 Position of third vertex.          
+     * @param[in] a_vx1 Position of first vertex.
+     * @param[in] a_vx2 Position of second vertex.
+     * @param[in] a_vx3 Position of third vertex.
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     constexpr void
-    setVertexPositions(const Vec3& a_x1, const Vec3& a_x2, const Vec3& a_x3) noexcept;
+    setVertexPositions(const Vec3& a_vx1, const Vec3& a_vx2, const Vec3& a_vx3) noexcept;
 
     /**
      * @brief Set the triangle vertex normals
-     * @param[in] a_n1 Normal of first vertex.
-     * @param[in] a_n2 Normal of second vertex.
-     * @param[in] a_n3 Normal of third vertex.          
+     * @param[in] a_vn1 Normal of first vertex.
+     * @param[in] a_vn2 Normal of second vertex.
+     * @param[in] a_vn3 Normal of third vertex.
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     constexpr void
-    setVertexNormals(const Vec3& a_n1, const Vec3& a_n2, const Vec3& a_n3) noexcept;
+    setVertexNormals(const Vec3& a_vn1, const Vec3& a_vn2, const Vec3& a_vn3) noexcept;
 
     /**
      * @brief Set the triangle edge normals
-     * @param[in] a_n1 Normal of first edge (pointing from first vertex to second vertex)
-     * @param[in] a_n2 Normal of second edge (pointing from second vertex to third vertex)
-     * @param[in] a_n3 Normal of third edge (pointing from third vertex to first vertex)
+     * @param[in] a_en1 Normal of first edge (pointing from first vertex to second vertex)
+     * @param[in] a_en2 Normal of second edge (pointing from second vertex to third vertex)
+     * @param[in] a_en3 Normal of third edge (pointing from third vertex to first vertex)
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     constexpr void
-    setEdgeNormals(const Vec3& a_n1, const Vec3& a_n2, const Vec3& a_n3) noexcept;
+    setEdgeNormals(const Vec3& a_en1, const Vec3& a_en2, const Vec3& a_en3) noexcept;
 
     /**
      * @brief Set the triangle meta-data
@@ -311,6 +328,9 @@ namespace EBGeometry {
      */
     MetaData m_metaData;
   };
+
+  static_assert(std::is_trivially_copyable_v<Triangle<int>>, "Triangle must be trivially copyable for GPU compatibility");
+  static_assert(std::is_standard_layout_v<Triangle<int>>, "Triangle must have standard layout for GPU compatibility");  
 
   /**
     @brief Simple POD struct that holds squared distance and sign

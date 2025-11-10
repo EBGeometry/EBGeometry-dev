@@ -11,12 +11,27 @@ using namespace EBGeometry;
 
 TEST_CASE("Triangle_Constructors")
 {
-
   const auto v1 = -Vec3::unit(0);
   const auto v2 = Vec3::unit(0);
   const auto v3 = Vec3::unit(1);
 
-  Triangle<int> tri(v1, v2, v3);
+  // Compute triangle normal from vertices
+  const Vec3 edge1 = v2 - v1;
+  const Vec3 edge2 = v3 - v2;
+  const Vec3 triNormal = cross(edge1, edge2) / cross(edge1, edge2).length();
+
+  // Use triangle normal for vertex normals (simple approximation)
+  const Vec3 n1 = triNormal;
+  const Vec3 n2 = triNormal;
+  const Vec3 n3 = triNormal;
+
+  // Compute edge normals (perpendicular to edge, in triangle plane)
+  const Vec3 e1 = cross(triNormal, edge1) / cross(triNormal, edge1).length();
+  const Vec3 e2 = cross(triNormal, edge2) / cross(triNormal, edge2).length();
+  const Vec3 edge3 = v1 - v3;
+  const Vec3 e3 = cross(triNormal, edge3) / cross(triNormal, edge3).length();
+
+  Triangle<int> tri(v1, v2, v3, n1, n2, n3, e1, e2, e3);
 }
 #if 0
 TEST_CASE("Triangle::intersects")
@@ -27,7 +42,23 @@ TEST_CASE("Triangle::intersects")
   vertices[1] = +Vec3::unit(0);
   vertices[2] = +Vec3::unit(1);
 
-  Triangle<int> tri(vertices[0], vertices[1], vertices[2]);
+  // Compute triangle normal from vertices
+  const Vec3 edge1 = vertices[1] - vertices[0];
+  const Vec3 edge2 = vertices[2] - vertices[1];
+  const Vec3 triNormal = cross(edge1, edge2) / cross(edge1, edge2).length();
+
+  // Use triangle normal for vertex normals (simple approximation)
+  const Vec3 n1 = triNormal;
+  const Vec3 n2 = triNormal;
+  const Vec3 n3 = triNormal;
+
+  // Compute edge normals (perpendicular to edge, in triangle plane)
+  const Vec3 e1 = cross(triNormal, edge1) / cross(triNormal, edge1).length();
+  const Vec3 e2 = cross(triNormal, edge2) / cross(triNormal, edge2).length();
+  const Vec3 edge3 = vertices[0] - vertices[2];
+  const Vec3 e3 = cross(triNormal, edge3) / cross(triNormal, edge3).length();
+
+  Triangle<int> tri(vertices[0], vertices[1], vertices[2], n1, n2, n3, e1, e2, e3);
 
   // Lines that are parallel to the triangle
   {
