@@ -294,15 +294,15 @@ namespace EBGeometry {
     const bool okEdge2 = d32 > eps;
     const bool okEdge3 = d13 > eps;
 
-    const Real t1 = okEdge1 ? dot(p1, v21) / d21 : Real(0);
-    const Real t2 = okEdge2 ? dot(p2, v32) / d32 : Real(0);
-    const Real t3 = okEdge3 ? dot(p3, v13) / d13 : Real(0);
+    const Real t1 = dot(p1, v21) / (d21 + eps);
+    const Real t2 = dot(p2, v32) / (d32 + eps);
+    const Real t3 = dot(p3, v13) / (d13 + eps);
 
     const Real d = dot(a_triangleNormal, p1);
 
-    const Vec3 y1 = okEdge1 ? p1 - t1 * v21 : Vec3::zero();
-    const Vec3 y2 = okEdge2 ? p2 - t2 * v32 : Vec3::zero();
-    const Vec3 y3 = okEdge3 ? p3 - t3 * v13 : Vec3::zero();
+    const Vec3 y1 = p1 - t1 * v21;
+    const Vec3 y2 = p2 - t2 * v32;
+    const Vec3 y3 = p3 - t3 * v13;
 
     // Test if the projected point lies inside the triangle.
     const bool insideEdge0 = dot(cross(v21, a_triangleNormal), p1) <= eps;
