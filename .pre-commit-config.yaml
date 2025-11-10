@@ -1,3 +1,4 @@
+
 # SPDX-FileCopyrightText: 2025 Robert Marskar
 #
 # SPDX-License-Identifier: LGPL-3.0-or-later
@@ -56,6 +57,7 @@ repos:
   - repo: https://github.com/fsfe/reuse-tool
     rev: v6.1.0 # Use the latest stable version of reuse-tool
     hooks:
-      - id: reuse      
+      - id: reuse
+      files: ^(Source)
 
 
