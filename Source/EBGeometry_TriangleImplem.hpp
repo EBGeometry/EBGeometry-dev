@@ -11,6 +11,10 @@
 #ifndef EBGEOMETRY_TRIANGLEIMPLEM_HPP
 #define EBGEOMETRY_TRIANGLEIMPLEM_HPP
 
+// Std includes
+#include <bit>
+#include <cstdint>
+
 // Our includes
 #include "EBGeometry_Triangle.hpp"
 #include "EBGeometry_Macros.hpp"
@@ -236,12 +240,17 @@ namespace EBGeometry {
   EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   void
-  compareDistanceHelper(DistanceCandidate& a_ret, Real a_curAbs, int a_curSgn, bool a_mask) noexcept
+  compareDistanceHelper(DistanceCandidate& a_best, Real a_candDist2, int a_candSgn, int a_mask) noexcept
   {
-    const bool better = a_mask & (a_curAbs < a_ret.m_dist2);
+    const int better = a_mask & (a_candDist2 < a_best.m_dist2);
+    const int m      = -better;
 
-    a_ret.m_dist2 = better ? a_curAbs : a_ret.m_dist2;
-    a_ret.m_sgn   = better ? a_curSgn : a_ret.m_sgn;
+    const std::uint32_t bestBits = std::bit_cast<std::uint32_t>(a_best.m_dist2);
+    const std::uint32_t candBits = std::bit_cast<std::uint32_t>(a_candDist2);
+    const std::uint32_t newBits  = (bestBits & ~static_cast<std::uint32_t>(m)) | (candBits & static_cast<std::uint32_t>(m));
+
+    a_best.m_dist2 = std::bit_cast<Real>(newBits);
+    a_best.m_sgn   = (a_best.m_sgn & ~m) | (a_candSgn & m);
   }
 
   EBGEOMETRY_GPU_HOST_DEVICE

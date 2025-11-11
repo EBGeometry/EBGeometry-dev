@@ -330,7 +330,7 @@ namespace EBGeometry {
   };
 
   static_assert(std::is_trivially_copyable_v<Triangle<int>>, "Triangle must be trivially copyable for GPU compatibility");
-  static_assert(std::is_standard_layout_v<Triangle<int>>, "Triangle must have standard layout for GPU compatibility");  
+  static_assert(std::is_standard_layout_v<Triangle<int>>, "Triangle must have standard layout for GPU compatibility");
 
   /**
     @brief Simple POD struct that holds squared distance and sign
@@ -356,16 +356,18 @@ namespace EBGeometry {
 
   /**
     @brief Helper function used when updating the distance to a triangle. Updates the DistanceCandidate if the
-    query distance is shorter (absolute value)
-    @param[in, out] a_ret Best candidate. 
-    @param[in] a_curAbs Candidate distance.
+    query distance is shorter (absolute value).
+    @details The implementation of this function is a work-of-art. Way more complicated than it should be, which
+    was done in order ensure branchless behavior when inlined into signedSquaredDistanceTriangle.
+    @param[in, out] a_best Best candidate. 
+    @param[in] a_candDist2 Candidate square distance
     @param[in] a_retSgn Candidate distance sign
     @param[in] a_mask For turning on/off the distance test. 
   */
   EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   static void
-  compareDistanceHelper(DistanceCandidate& a_ret, Real a_curAbs, int a_curSgn, bool a_mask) noexcept;
+  compareDistanceHelper(DistanceCandidate& a_best, Real a_candDist2, int a_candSgn, int a_mask) noexcept;
 
   /**
      * @brief Compute squared distance and sign to a single triangle given its SoA fields. 
