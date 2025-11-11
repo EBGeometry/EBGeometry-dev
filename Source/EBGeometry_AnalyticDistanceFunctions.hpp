@@ -17,7 +17,6 @@
 // Our includes
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_GPUTypes.hpp"
-#include "EBGeometry_ImplicitFunction.hpp"
 #include "EBGeometry_Macros.hpp"
 #include "EBGeometry_Types.hpp"
 #include "EBGeometry_Vec.hpp"

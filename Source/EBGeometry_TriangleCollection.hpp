@@ -131,6 +131,119 @@ namespace EBGeometry {
      */
     EBGeometry::Span<const Triangle<MetaData>> m_triangles{};
   };
+  namespace EBGeometry {
+
+    /**
+   * @brief Struct-of-Arrays specialization of TriangleCollection.
+   *
+   * Layout:
+   *  - m_triangleNormals[i]       : triangle normal of triangle i
+   *  - m_vertexPositions[k][i]    : vertex position k (0,1,2) of triangle i
+   *  - m_vertexNormals[k][i]      : vertex normal k (0,1,2) of triangle i
+   *  - m_edgeNormals[k][i]        : edge normal k (0,1,2) of triangle i
+   *  - m_metadata[i]              : user metadata for triangle i
+   *
+   * All spans are non-owning views; the caller is responsible for lifetime.
+   */
+    template <typename MetaData>
+    struct alignas(EBGEOMETRY_ALIGNAS) TriangleCollection<MetaData, LayoutType::SoA>
+    {
+    public:
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE
+      constexpr TriangleCollection() noexcept = default;
+
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE
+      constexpr TriangleCollection(const TriangleCollection& a_other) noexcept = default;
+
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE
+      constexpr TriangleCollection(TriangleCollection&& a_other) noexcept = default;
+
+      /**
+     * @brief Construct from SoA spans.
+     *
+     * All spans must have the same length (number of triangles).
+     * Metadata may be empty if not needed for distance queries.
+     */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE
+      constexpr TriangleCollection(EBGeometry::Span<const Vec3>     a_triangleNormals,
+                                   EBGeometry::Span<const Vec3>     a_vertexPos0,
+                                   EBGeometry::Span<const Vec3>     a_vertexPos1,
+                                   EBGeometry::Span<const Vec3>     a_vertexPos2,
+                                   EBGeometry::Span<const Vec3>     a_vertexNorm0,
+                                   EBGeometry::Span<const Vec3>     a_vertexNorm1,
+                                   EBGeometry::Span<const Vec3>     a_vertexNorm2,
+                                   EBGeometry::Span<const Vec3>     a_edgeNorm0,
+                                   EBGeometry::Span<const Vec3>     a_edgeNorm1,
+                                   EBGeometry::Span<const Vec3>     a_edgeNorm2,
+                                   EBGeometry::Span<const MetaData> a_metadata = {}) noexcept;
+
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE
+      constexpr TriangleCollection&
+      operator=(const TriangleCollection& a_other) noexcept = default;
+
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE
+      constexpr TriangleCollection&
+      operator=(TriangleCollection&& a_other) noexcept = default;
+
+      /**
+     * @brief Set SoA data.
+     *
+     * All spans must have identical length (except metadata, which may be empty).
+     */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      EBGEOMETRY_ALWAYS_INLINE
+      constexpr void
+      setData(EBGeometry::Span<const Vec3>     a_triangleNormals,
+              EBGeometry::Span<const Vec3>     a_vertexPos0,
+              EBGeometry::Span<const Vec3>     a_vertexPos1,
+              EBGeometry::Span<const Vec3>     a_vertexPos2,
+              EBGeometry::Span<const Vec3>     a_vertexNorm0,
+              EBGeometry::Span<const Vec3>     a_vertexNorm1,
+              EBGeometry::Span<const Vec3>     a_vertexNorm2,
+              EBGeometry::Span<const Vec3>     a_edgeNorm0,
+              EBGeometry::Span<const Vec3>     a_edgeNorm1,
+              EBGeometry::Span<const Vec3>     a_edgeNorm2,
+              EBGeometry::Span<const MetaData> a_metadata = {}) noexcept;
+
+      /**
+     * @brief Number of triangles in the collection.
+     */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      constexpr int
+      length() const noexcept
+      {
+        return m_numTriangles;
+      }
+
+      /**
+     * @brief Compute signed distance to the collection (closest triangle).
+     *
+     * @return Signed distance. If there are no triangles, returns EBGeometry::Limits::max().
+     */
+      EBGEOMETRY_GPU_HOST_DEVICE
+      [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+      Real
+      value(const Vec3& a_point) const noexcept;
+
+    protected:
+      EBGeometry::Span<const Vec3>     m_triangleNormals{};
+      EBGeometry::Span<const Vec3>     m_vertexPositions[3]{}; // [0],[1],[2]
+      EBGeometry::Span<const Vec3>     m_vertexNormals[3]{};   // [0],[1],[2]
+      EBGeometry::Span<const Vec3>     m_edgeNormals[3]{};     // [0],[1],[2]
+      EBGeometry::Span<const MetaData> m_metadata{};
+
+      int m_numTriangles{0};
+    };
+
+  } // namespace EBGeometry
+
 } // namespace EBGeometry
 
 #include "EBGeometry_TriangleCollectionImplem.hpp"

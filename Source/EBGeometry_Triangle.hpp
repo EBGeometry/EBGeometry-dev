@@ -3,397 +3,350 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 /**
- * @file   EBGeometry_Triangle.hpp
- * @brief  Declaration of a triangle struct with signed distance functionality.
+ * @file   EBGeometry_TriangleCollection.hpp
  * @author Robert Marskar
+ * @brief  Declaration of a triangle soup/collection (AoS/SoA) with signed distance functionality.
  */
 
-#ifndef EBGEOMETRY_TRIANGLE_HPP
-#define EBGEOMETRY_TRIANGLE_HPP
-
-// Std includes
-#include <type_traits>
+#ifndef EBGEOMETRY_TRIANGLECOLLECTION_HPP
+#define EBGEOMETRY_TRIANGLECOLLECTION_HPP
 
 // Our includes
 #include "EBGeometry_Alignas.hpp"
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_GPUTypes.hpp"
+#include "EBGeometry_LayoutType.hpp"
 #include "EBGeometry_Macros.hpp"
+#include "EBGeometry_Span.hpp"
+#include "EBGeometry_Triangle.hpp"
 #include "EBGeometry_Vec.hpp"
 
 namespace EBGeometry {
 
   /**
-   * @brief Triangle struct with signed distance functionality.
-   * @details This struct represents a planar triangle and has a signed distance functionality. It is
-   * self-contained such that it can be directly copied to GPUs. The struct contains a triangle face normal
-   * vector; three vertex positions, and normal vectors for the three vertices and three edges.
+   * @brief Primary template for a collection of triangles with signed distance queries.
    *
-   * This struct assumes that the vertices are organized with the right-hand rule. I.e., edges are enumerated
-   * as follows:
+   * This primary template is specialized for different memory layouts:
+   *  - `LayoutType::AoS` : Array-of-Structs, storing `Triangle<MetaData>` elements.
+   *  - `LayoutType::SoA` : Struct-of-Arrays, storing separate arrays for triangle data.
    *
-   * Edge 1 points from vertex 1 to vertex 2
-   * Edge 2 points from vertex 2 to vertex 3
-   * Edge 3 points from vertex 3 to vertex 0
+   * @tparam MetaData User-defined metadata stored per triangle.
+   * @tparam Layout   Memory layout (AoS or SoA).
+   */
+  template <typename MetaData, LayoutType Layout>
+  struct alignas(EBGEOMETRY_ALIGNAS) TriangleCollection;
+
+  //=====================================================================
+  // AoS specialization
+  //=====================================================================
+
+  /**
+   * @brief Array-of-Structs specialization of TriangleCollection.
    *
-   * This struct can compute its own normal vector from the vertex positions, and the triangle orientation
-   * is then implicitly given by the vertex order.
+   * This specialization holds a non-owning span over an array of `Triangle<MetaData>`
+   * instances. It provides a convenient view and a signed-distance query function.
+   *
+   * @tparam MetaData User-defined metadata stored per triangle.
    */
   template <typename MetaData>
-  struct alignas(EBGEOMETRY_ALIGNAS) Triangle
+  struct alignas(EBGEOMETRY_ALIGNAS) TriangleCollection<MetaData, LayoutType::AoS>
   {
   public:
     /**
-     * @brief Default constructor. Does not put the triangle in a usable state.
+     * @brief Default constructor.
+     *
+     * Creates an empty collection: @c m_triangles is an empty span and
+     * @c length() returns 0.
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    constexpr Triangle() noexcept = default;
+    constexpr TriangleCollection() noexcept = default;
 
     /**
-     * @brief Copy constructor.
-     * @param[in] a_otherTriangle Other triangle.
+     * @brief Construct from a span of Triangle objects.
+     *
+     * The collection becomes a non-owning view over the given triangle span.
+     *
+     * @param[in] a_triangles Span over `Triangle<MetaData>` objects.
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    constexpr Triangle(const Triangle& a_otherTriangle) noexcept = default;
+    constexpr explicit TriangleCollection(EBGeometry::Span<const Triangle<MetaData>> a_triangles) noexcept;
 
     /**
-     * @brief Move constructor.
-     * @param[in, out] a_otherTriangle Other triangle.
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE
-    constexpr Triangle(Triangle&& a_otherTriangle) noexcept = default;
-
-    /**
-     * @brief Full constructor.
-     * @param[in] a_vx1 Position of first vertex.
-     * @param[in] a_vx2 Position of second vertex.
-     * @param[in] a_vx3 Position of third vertex.
-     * @param[in] a_vn1 Normal of first vertex.
-     * @param[in] a_vn2 Normal of second vertex.
-     * @param[in] a_vn3 Normal of third vertex.
-     * @param[in] a_en1 Normal of first edge (pointing from first vertex to second vertex).
-     * @param[in] a_en2 Normal of second edge (pointing from second vertex to third vertex).
-     * @param[in] a_en3 Normal of third edge (pointing from third vertex to first vertex).
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE
-    constexpr explicit Triangle(const Vec3& a_vx1,
-                                const Vec3& a_vx2,
-                                const Vec3& a_vx3,
-                                const Vec3& a_vn1,
-                                const Vec3& a_vn2,
-                                const Vec3& a_vn3,
-                                const Vec3& a_en1,
-                                const Vec3& a_en2,
-                                const Vec3& a_en3) noexcept;
-
-    /**
-     * @brief Delete constructor to prevent misuse constructor.
-     * @param[in] a_vertexPositions Triangle vertex positions
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE
-    constexpr Triangle(const Vec3* a_vertexPositions) = delete;
-
-    /**
-     * @brief Delete constructor to prevent misuse constructor.
-     * @param[in] a_vertexPositions Triangle vertex positions
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE
-    constexpr Triangle(std::initializer_list<Vec3> a_vertexPositions) = delete;
-
-    /**
-     * @brief Destructor (does nothing).
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE
-    constexpr ~Triangle() noexcept = default;
-
-    /**
-     * @brief Copy assignment.
-     * @param[in] a_otherTriangle Other triangle.
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE
-    constexpr Triangle&
-    operator=(const Triangle& a_otherTriangle) noexcept = default;
-
-    /**
-     * @brief Move assignment.
-     * @param[in, out] a_otherTriangle Other triangle.
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE
-    constexpr Triangle&
-    operator=(Triangle&& a_otherTriangle) noexcept = default;
-
-    /**
-     * @brief Set the triangle normal vector.
-     * @param[in] a_normal Normal vector (should be consistent with the vertex ordering!).
+     * @brief Set the triangle data for this collection.
+     *
+     * The collection becomes a non-owning view over the given triangle span.
+     *
+     * @param[in] a_triangles Span over `Triangle<MetaData>` objects.
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     constexpr void
-    setNormal(const Vec3& a_normal) noexcept;
+    setData(EBGeometry::Span<const Triangle<MetaData>> a_triangles) noexcept;
 
     /**
-     * @brief Set the triangle vertex positions
-     * @param[in] a_vx1 Position of first vertex.
-     * @param[in] a_vx2 Position of second vertex.
-     * @param[in] a_vx3 Position of third vertex.
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE
-    constexpr void
-    setVertexPositions(const Vec3& a_vx1, const Vec3& a_vx2, const Vec3& a_vx3) noexcept;
-
-    /**
-     * @brief Set the triangle vertex normals
-     * @param[in] a_vn1 Normal of first vertex.
-     * @param[in] a_vn2 Normal of second vertex.
-     * @param[in] a_vn3 Normal of third vertex.
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE
-    constexpr void
-    setVertexNormals(const Vec3& a_vn1, const Vec3& a_vn2, const Vec3& a_vn3) noexcept;
-
-    /**
-     * @brief Set the triangle edge normals
-     * @param[in] a_en1 Normal of first edge (pointing from first vertex to second vertex)
-     * @param[in] a_en2 Normal of second edge (pointing from second vertex to third vertex)
-     * @param[in] a_en3 Normal of third edge (pointing from third vertex to first vertex)
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE
-    constexpr void
-    setEdgeNormals(const Vec3& a_en1, const Vec3& a_en2, const Vec3& a_en3) noexcept;
-
-    /**
-     * @brief Set the triangle meta-data
-     * @param[in] a_metaData Triangle metadata.
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE
-    constexpr void
-    setMetaData(const MetaData& a_metaData) noexcept;
-
-    /**
-     * @brief Compute the triangle normal vector.
-     * @details This computes the normal vector from two of the triangle edges.
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE
-    constexpr void
-    computeNormal() noexcept;
-
-    /**
-     * @brief Get the triangle normal vector.
-     * @return m_triangleNormal
+     * @brief Get the number of triangles in the collection.
+     *
+     * @return The number of triangles referenced by the collection.
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    constexpr Vec3&
-    getNormal() noexcept;
+    constexpr int
+    length() const noexcept;
 
     /**
-     * @brief Get the triangle normal vector.
-     * @return m_triangleNormal
+     * @brief Compute the signed distance from a point to this triangle collection.
+     *
+     * The function finds the triangle in the collection that yields the
+     * smallest absolute signed distance to the query point and returns that
+     * signed distance. If the collection is empty, a sentinel value such as
+     * `EBGeometry::Limits::max` is returned (depending on DistanceCandidate
+     * initialization).
+     *
+     * @param[in] a_point Query point in 3D space.
+     * @return Signed distance to the closest triangle (by absolute value).
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    constexpr const Vec3&
-    getNormal() const noexcept;
-
-    /**
-     * @brief Get the vertex positions
-     * @return m_vertexPositions
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    constexpr Vec3*
-    getVertexPositions() noexcept;
-
-    /**
-     * @brief Get the vertex positions
-     * @return m_vertexPositions
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    constexpr const Vec3*
-    getVertexPositions() const noexcept;
-
-    /**
-     * @brief Get the vertex normals
-     * @return m_vertexNormals
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    constexpr Vec3*
-    getVertexNormals() noexcept;
-
-    /**
-     * @brief Get the vertex normals
-     * @return m_vertexNormals
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    constexpr const Vec3*
-    getVertexNormals() const noexcept;
-
-    /**
-     * @brief Get the edge normals
-     * @return m_edgeNormals
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    constexpr Vec3*
-    getEdgeNormals() noexcept;
-
-    /**
-     * @brief Get the edge normals
-     * @return m_edgeNormals
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    constexpr const Vec3*
-    getEdgeNormals() const noexcept;
-
-    /**
-     * @brief Get the triangle meta-data
-     * @return m_metaData
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    constexpr MetaData&
-    getMetaData() noexcept;
-
-    /**
-     * @brief Get the triangle meta-data
-     * @return m_metaData
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    constexpr const MetaData&
-    getMetaData() const noexcept;
-
-    /**
-     * @brief Check if a line passes through the triangle.
-     * @details Returns true if the line segment passes through the triangle, edges of the triangle,
-     * or through one of the vertices.
-     * @param[in] a_x0 One endpoint of the line
-     * @param[in] a_x1 Other endpoint of the line
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    constexpr bool
-    intersects(const Vec3& a_x0, const Vec3& a_x1) const noexcept;
-
-    /**
-     * @brief Compute the signed distance from the input point x to the triangle
-     * @param[in] a_point Point
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    constexpr Real
+    Real
     value(const Vec3& a_point) const noexcept;
 
   protected:
     /**
-     * @brief Triangle face normal
+     * @brief Non-owning span over the underlying triangle array.
+     *
+     * This span references externally stored `Triangle<MetaData>` objects.
+     * The collection does not manage the memory lifetime of these objects.
      */
-    Vec3 m_triangleNormal = Vec3::max();
-
-    /**
-     * @brief Triangle vertex positions
-     */
-    Vec3 m_vertexPositions[3]{Vec3::max(), Vec3::max(), Vec3::max()};
-
-    /**
-     * @brief Triangle vertex normals
-     */
-    Vec3 m_vertexNormals[3]{Vec3::max(), Vec3::max(), Vec3::max()};
-
-    /**
-     * @brief Triangle edge normals
-     */
-    Vec3 m_edgeNormals[3]{Vec3::max(), Vec3::max(), Vec3::max()};
-
-    /**
-     * @brief Triangle meta-data
-     */
-    MetaData m_metaData;
+    EBGeometry::Span<const Triangle<MetaData>> m_triangles{};
   };
 
-  static_assert(std::is_trivially_copyable_v<Triangle<short>>, "Triangle must be trivially copyable for GPU compatibility");
-  static_assert(std::is_trivially_copyable_v<Triangle<int>>, "Triangle must be trivially copyable for GPU compatibility");
-  static_assert(std::is_trivially_copyable_v<Triangle<long>>, "Triangle must be trivially copyable for GPU compatibility");
-
-  static_assert(std::is_standard_layout_v<Triangle<short>>, "Triangle must have standard layout for GPU compatibility");
-  static_assert(std::is_standard_layout_v<Triangle<int>>, "Triangle must have standard layout for GPU compatibility");
-  static_assert(std::is_standard_layout_v<Triangle<long>>, "Triangle must have standard layout for GPU compatibility");
+  //=====================================================================
+  // SoA specialization
+  //=====================================================================
 
   /**
-    @brief Simple POD struct that holds squared distance and sign
-  */
-  struct DistanceCandidate
+   * @brief Struct-of-Arrays specialization of TriangleCollection.
+   *
+   * This specialization uses parallel arrays (SoA layout) to store per-triangle
+   * data, which can improve memory access patterns and SIMD utilization.
+   *
+   * Each triangle @c i is represented by:
+   *  - @c m_tn[i]  : Triangle normal.
+   *  - @c m_vx1[i] : Position of vertex 1.
+   *  - @c m_vx2[i] : Position of vertex 2.
+   *  - @c m_vx3[i] : Position of vertex 3.
+   *  - @c m_vn1[i] : Normal at vertex 1.
+   *  - @c m_vn2[i] : Normal at vertex 2.
+   *  - @c m_vn3[i] : Normal at vertex 3.
+   *  - @c m_en1[i] : Edge-1 normal.
+   *  - @c m_en2[i] : Edge-2 normal.
+   *  - @c m_en3[i] : Edge-3 normal.
+   *  - @c m_metadata[i] : Optional user metadata associated with the triangle.
+   *
+   * All spans are non-owning views into externally managed memory.
+   *
+   * @tparam MetaData User-defined metadata stored per triangle.
+   */
+  template <typename MetaData>
+  struct alignas(EBGEOMETRY_ALIGNAS) TriangleCollection<MetaData, LayoutType::SoA>
   {
-    constexpr DistanceCandidate()
-    {
-      this->m_dist2 = EBGeometry::Limits::max();
-      this->m_sgn   = 1;
-    }
+  public:
+    /**
+     * @brief Default constructor.
+     *
+     * Creates an empty collection where all spans are empty, and
+     * @c m_numTriangles is set to zero.
+     */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    constexpr TriangleCollection() noexcept = default;
 
     /**
-       @brief Squared absolute distance
-    */
-    Real m_dist2;
+     * @brief Construct from SoA spans for all triangle data.
+     *
+     * All spans are assumed to have a consistent length (number of triangles).
+     * The metadata span @c a_metadata is optional; when empty, the collection
+     * will consider metadata as unused.
+     *
+     * @param[in] a_tn       Triangle normals span. Element @c i is the normal of triangle @c i.
+     * @param[in] a_vx1      Vertex-1 positions span. Element @c i is vertex 1 of triangle @c i.
+     * @param[in] a_vx2      Vertex-2 positions span. Element @c i is vertex 2 of triangle @c i.
+     * @param[in] a_vx3      Vertex-3 positions span. Element @c i is vertex 3 of triangle @c i.
+     * @param[in] a_vn1      Vertex-1 normals span. Element @c i is the normal at vertex 1 of triangle @c i.
+     * @param[in] a_vn2      Vertex-2 normals span. Element @c i is the normal at vertex 2 of triangle @c i.
+     * @param[in] a_vn3      Vertex-3 normals span. Element @c i is the normal at vertex 3 of triangle @c i.
+     * @param[in] a_en1      Edge-1 normals span for each triangle.
+     * @param[in] a_en2      Edge-2 normals span for each triangle.
+     * @param[in] a_en3      Edge-3 normals span for each triangle.
+     * @param[in] a_metadata Optional metadata span; element @c i corresponds to triangle @c i.
+     */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    constexpr TriangleCollection(EBGeometry::Span<const Vec3>     a_tn,
+                                 EBGeometry::Span<const Vec3>     a_vx1,
+                                 EBGeometry::Span<const Vec3>     a_vx2,
+                                 EBGeometry::Span<const Vec3>     a_vx3,
+                                 EBGeometry::Span<const Vec3>     a_vn1,
+                                 EBGeometry::Span<const Vec3>     a_vn2,
+                                 EBGeometry::Span<const Vec3>     a_vn3,
+                                 EBGeometry::Span<const Vec3>     a_en1,
+                                 EBGeometry::Span<const Vec3>     a_en2,
+                                 EBGeometry::Span<const Vec3>     a_en3,
+                                 EBGeometry::Span<const MetaData> a_metadata = {}) noexcept;
 
     /**
-       @brief Final signed distance = m_abs2 * m_sgn
-    */
-    int m_sgn;
+     * @brief Set the SoA data for this triangle collection.
+     *
+     * All spans are assumed to have consistent length (number of triangles).
+     * The metadata span @c a_metadata is optional; when empty, the collection
+     * will consider metadata as unused.
+     *
+     * @param[in] a_tn       Triangle normals span. Element @c i is the normal of triangle @c i.
+     * @param[in] a_vx1      Vertex-1 positions span. Element @c i is vertex 1 of triangle @c i.
+     * @param[in] a_vx2      Vertex-2 positions span. Element @c i is vertex 2 of triangle @c i.
+     * @param[in] a_vx3      Vertex-3 positions span. Element @c i is vertex 3 of triangle @c i.
+     * @param[in] a_vn1      Vertex-1 normals span. Element @c i is the normal at vertex 1 of triangle @c i.
+     * @param[in] a_vn2      Vertex-2 normals span. Element @c i is the normal at vertex 2 of triangle @c i.
+     * @param[in] a_vn3      Vertex-3 normals span. Element @c i is the normal at vertex 3 of triangle @c i.
+     * @param[in] a_en1      Edge-1 normals span for each triangle.
+     * @param[in] a_en2      Edge-2 normals span for each triangle.
+     * @param[in] a_en3      Edge-3 normals span for each triangle.
+     * @param[in] a_metadata Optional metadata span; element @c i corresponds to triangle @c i.
+     */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    EBGEOMETRY_ALWAYS_INLINE
+    constexpr void setData(EBGeometry::Span<const Vec3>     a_tn,
+                           EBGeometry::Span<const Vec3>     a_vx1,
+                           EBGeometry::Span<const Vec3>     a_vx2,
+                           EBGeometry::Span<const Vec3>     a_vx3,
+                           EBGeometry::Span<const Vec3>     a_vn1,
+                           EBGeometry::Span<const Vec3>     a_vn2,
+                           EBGeometry::Span<const Vec3>     a_vn3,
+                           EBGeometry::Span<const Vec3>     a_en1,
+                           EBGeometry::Span<const Vec3>     a_en2,
+                           EBGeometry::Span<const Vec3>     a_en3,
+                           EBGeometry::Span<const MetaData> a_metadata = {}) noexcept;
+
+    /**
+     * @brief Get the number of triangles in the collection.
+     *
+     * This corresponds to the length of @c m_tn and the other geometry spans.
+     *
+     * @return The number of triangles referenced by the SoA collection.
+     */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    constexpr int
+    length() const noexcept { return m_numTriangles; }
+
+    /**
+     * @brief Compute the signed distance from a point to this triangle collection.
+     *
+     * The function finds the triangle in the collection that yields the
+     * smallest absolute signed distance to the query point and returns that
+     * signed distance. If the collection is empty, a sentinel value such as
+     * `EBGeometry::Limits::max` is returned (depending on DistanceCandidate
+     * initialization).
+     *
+     * @param[in] a_point Query point in 3D space.
+     * @return Signed distance to the closest triangle (by absolute value).
+     */
+    EBGEOMETRY_GPU_HOST_DEVICE
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+    Real
+    value(const Vec3& a_point) const noexcept;
+
+  protected:
+    /**
+     * @brief Span of triangle normals.
+     *
+     * Element @c i is the triangle normal of triangle @c i.
+     */
+    EBGeometry::Span<const Vec3> m_tn{};
+
+    /**
+     * @brief Span of vertex-1 positions.
+     *
+     * Element @c i is the position of vertex 1 of triangle @c i.
+     */
+    EBGeometry::Span<const Vec3> m_vx1{};
+
+    /**
+     * @brief Span of vertex-2 positions.
+     *
+     * Element @c i is the position of vertex 2 of triangle @c i.
+     */
+    EBGeometry::Span<const Vec3> m_vx2{};
+
+    /**
+     * @brief Span of vertex-3 positions.
+     *
+     * Element @c i is the position of vertex 3 of triangle @c i.
+     */
+    EBGeometry::Span<const Vec3> m_vx3{};
+
+    /**
+     * @brief Span of vertex-1 normals.
+     *
+     * Element @c i is the normal at vertex 1 of triangle @c i.
+     */
+    EBGeometry::Span<const Vec3> m_vn1{};
+
+    /**
+     * @brief Span of vertex-2 normals.
+     *
+     * Element @c i is the normal at vertex 2 of triangle @c i.
+     */
+    EBGeometry::Span<const Vec3> m_vn2{};
+
+    /**
+     * @brief Span of vertex-3 normals.
+     *
+     * Element @c i is the normal at vertex 3 of triangle @c i.
+     */
+    EBGeometry::Span<const Vec3> m_vn3{};
+
+    /**
+     * @brief Span of edge-1 normals for each triangle.
+     *
+     * Element @c i is the edge-1 normal for triangle @c i.
+     */
+    EBGeometry::Span<const Vec3> m_en1{};
+
+    /**
+     * @brief Span of edge-2 normals for each triangle.
+     *
+     * Element @c i is the edge-2 normal for triangle @c i.
+     */
+    EBGeometry::Span<const Vec3> m_en2{};
+
+    /**
+     * @brief Span of edge-3 normals for each triangle.
+     *
+     * Element @c i is the edge-3 normal for triangle @c i.
+     */
+    EBGeometry::Span<const Vec3> m_en3{};
+
+    /**
+     * @brief Span of per-triangle metadata.
+     *
+     * Element @c i is the metadata associated with triangle @c i.
+     * This span may be empty if metadata is not used.
+     */
+    EBGeometry::Span<const MetaData> m_metadata{};
+
+    /**
+     * @brief Number of triangles in the collection.
+     *
+     * This is typically equal to the length of @c m_tn and the other geometry spans.
+     */
+    int m_numTriangles{0};
   };
 
-  /**
-    @brief Helper function used when updating the distance to a triangle. Updates the DistanceCandidate if the
-    query distance is shorter (absolute value).
-    @details The implementation of this function is a work-of-art. Way more complicated than it should be, which
-    was done in order ensure branchless behavior when inlined into signedSquaredDistanceTriangle.
-    @param[in, out] a_best Best candidate. 
-    @param[in] a_candDist2 Candidate square distance
-    @param[in] a_retSgn Candidate distance sign
-    @param[in] a_mask For turning on/off the distance test. 
-  */
-  template <class Real>
-  EBGEOMETRY_GPU_HOST_DEVICE
-  EBGEOMETRY_ALWAYS_INLINE
-  static void
-  compareDistanceHelper(DistanceCandidate& a_best, Real a_candDist2, int a_candSgn, int a_mask) noexcept;
-
-  /**
-     * @brief Compute squared distance and sign to a single triangle given its SoA fields. 
-     * @param[in] a_triangleNormal Face normal of triangle.
-     * @param[in] a_vertexPositions Array of vertex positions (length 3).
-     * @param[in] a_vertexNormals Array of vertex normals (length 3).
-     * @param[in] a_edgeNormals Array of edge normals (length 3).
-     * @param[in] a_point Query point.
-     * @return Squared distance to triangle and the corresponding sign.
-     */
-  EBGEOMETRY_GPU_HOST_DEVICE
-  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-  static DistanceCandidate
-  signedSquaredDistanceTriangle(const Vec3&                     a_triangleNormal,
-                                const Vec3* EBGEOMETRY_RESTRICT a_vertexPositions,
-                                const Vec3* EBGEOMETRY_RESTRICT a_vertexNormals,
-                                const Vec3* EBGEOMETRY_RESTRICT a_edgeNormals,
-                                const Vec3&                     a_point) noexcept;
 } // namespace EBGeometry
 
-#include "EBGeometry_TriangleImplem.hpp"
+#include "EBGeometry_TriangleCollectionImplem.hpp"
 
-#endif
+#endif // EBGEOMETRY_TRIANGLECOLLECTION_HPP
