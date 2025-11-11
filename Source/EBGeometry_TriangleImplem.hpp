@@ -14,6 +14,7 @@
 // Std includes
 #include <bit>
 #include <cstdint>
+#include <type_traits>
 
 // Our includes
 #include "EBGeometry_Triangle.hpp"
@@ -237,17 +238,22 @@ namespace EBGeometry {
     return EBGeometry::sqrt(d.m_dist2) * d.m_sgn;
   }
 
+  template <class Real>
   EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   void
   compareDistanceHelper(DistanceCandidate& a_best, Real a_candDist2, int a_candSgn, int a_mask) noexcept
   {
+    static_assert(std::is_floating_point_v<Real>, "EBGeometry::compareDistanceHelper expects a floating-point Real type");
+
     const int better = a_mask & (a_candDist2 < a_best.m_dist2);
     const int m      = -better;
 
-    const std::uint32_t bestBits = std::bit_cast<std::uint32_t>(a_best.m_dist2);
-    const std::uint32_t candBits = std::bit_cast<std::uint32_t>(a_candDist2);
-    const std::uint32_t newBits  = (bestBits & ~static_cast<std::uint32_t>(m)) | (candBits & static_cast<std::uint32_t>(m));
+    using UInt = std::conditional_t<sizeof(Real) == 4, std::uint32_t, std::uint64_t>;
+
+    const UInt bestBits = std::bit_cast<UInt>(a_best.m_dist2);
+    const UInt candBits = std::bit_cast<UInt>(a_candDist2);
+    const UInt newBits  = (bestBits & ~static_cast<UInt>(m)) | (candBits & static_cast<UInt>(m));
 
     a_best.m_dist2 = std::bit_cast<Real>(newBits);
     a_best.m_sgn   = (a_best.m_sgn & ~m) | (a_candSgn & m);

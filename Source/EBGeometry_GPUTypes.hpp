@@ -133,19 +133,53 @@ namespace EBGeometry {
    *       `double` where portable full precision is required.
    * @note This function is `constexpr` where the backend permits evaluation at compile time.
    */
+#include <type_traits>
+
   template <class T>
   EBGEOMETRY_GPU_HOST_DEVICE
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
   constexpr T
   sqrt(T x) noexcept
   {
+    static_assert(std::is_floating_point_v<T>, "EBGeometry::sqrt expects a floating-point type");
+
 #if defined(SYCL_LANGUAGE_VERSION)
-    return sycl::sqrt(x);
-#elif defined(__CUDACC__) || defined(__HIP_DEVICE_COMPILE__) || defined(__HIPCC__)
-    using ::sqrt;
+    using sycl::sqrt;
     return sqrt(x);
+#elif defined(__CUDACC__) || defined(__HIPCC__) || defined(__HIP_DEVICE_COMPILE__)
+#if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
+    if constexpr (std::is_same_v<T, float>) {
+      return __fsqrt_rn(x); // sqrt.rn.f32
+    }
+    else if constexpr (std::is_same_v<T, double>) {
+      return __dsqrt_rn(x); // sqrt.rn.f64
+    }
+    else {
+      using ::sqrt;
+      return sqrt(x);
+    }
 #else
-    return std::sqrt(x);
+    if constexpr (std::is_same_v<T, float>) {
+      return __builtin_sqrtf(x);
+    }
+    else if constexpr (std::is_same_v<T, double>) {
+      return __builtin_sqrt(x);
+    }
+    else {
+      return std::sqrt(x);
+    }
+#endif
+
+#else
+     if constexpr (std::is_same_v<T, float>) {
+      return __builtin_sqrtf(x);
+    }
+    else if constexpr (std::is_same_v<T, double>) {
+      return __builtin_sqrt(x);
+    }
+    else {
+       return std::sqrt(x);
+    }
 #endif
   }
 

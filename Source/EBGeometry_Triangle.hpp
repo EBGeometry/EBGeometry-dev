@@ -329,8 +329,13 @@ namespace EBGeometry {
     MetaData m_metaData;
   };
 
+  static_assert(std::is_trivially_copyable_v<Triangle<short>>, "Triangle must be trivially copyable for GPU compatibility");
   static_assert(std::is_trivially_copyable_v<Triangle<int>>, "Triangle must be trivially copyable for GPU compatibility");
+  static_assert(std::is_trivially_copyable_v<Triangle<long>>, "Triangle must be trivially copyable for GPU compatibility");
+
+  static_assert(std::is_standard_layout_v<Triangle<short>>, "Triangle must have standard layout for GPU compatibility");
   static_assert(std::is_standard_layout_v<Triangle<int>>, "Triangle must have standard layout for GPU compatibility");
+  static_assert(std::is_standard_layout_v<Triangle<long>>, "Triangle must have standard layout for GPU compatibility");
 
   /**
     @brief Simple POD struct that holds squared distance and sign
@@ -364,6 +369,7 @@ namespace EBGeometry {
     @param[in] a_retSgn Candidate distance sign
     @param[in] a_mask For turning on/off the distance test. 
   */
+  template <class Real>
   EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   static void
