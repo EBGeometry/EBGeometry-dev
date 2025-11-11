@@ -15,12 +15,12 @@ set (CMAKE_CXX_STANDARD 20)
 # Build settings.
 set(CMAKE_CXX_FLAGS "-O3 -march=native")
 
-option(ENABLE_DEBUG "ENABLE_DEBUG" ON)
+option(ENABLE_DEBUG "ENABLE_DEBUG" OFF  )
 option(ENABLE_TESTS "ENABLE_TESTS" ON)
 option(ENABLE_EXAMPLES "ENABLE_EXAMPLES" OFF)
 option(ENABLE_CUDA "ENABLE_CUDA" OFF)
 option(ENABLE_HIP "ENABLE_HIP" OFF)
-option(ENABLE_DOUBLE "ENABLE_DOUBLE" OFF)
+option(ENABLE_DOUBLE "ENABLE_DOUBLE" ON)
 
 # Header-only library
 add_library(ebgeometry INTERFACE)
@@ -63,6 +63,3 @@ endif()
 if(ENABLE_EXAMPLES)
   add_subdirectory(./Exec/Examples/EBGeometry_Shapes)
 endif()
-
-
-
