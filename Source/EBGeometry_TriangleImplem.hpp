@@ -254,6 +254,9 @@ namespace EBGeometry {
                                 const Vec3&                     a_point) noexcept
 
   {
+    // Return candidate.
+    DistanceCandidate ret;
+
     // Sanity checks on input normal vectors.
     EBGEOMETRY_EXPECT(EBGeometry::nearOne(a_triangleNormal.length2()));
     EBGEOMETRY_EXPECT(EBGeometry::nearOne(a_vertexNormals[0].length2()));
@@ -282,50 +285,76 @@ namespace EBGeometry {
     // Sanity checks for potentially inconsistent triangle orientations.
     EBGEOMETRY_EXPECT(dot(a_triangleNormal, cross(v21, -v32)) > 0.0);
 
+    // Distance to vertices.
     const Vec3 p1 = a_point - a_vertexPositions[0];
     const Vec3 p2 = a_point - a_vertexPositions[1];
     const Vec3 p3 = a_point - a_vertexPositions[2];
 
+    // Edge lengths and parametrizations of edges
     const Real d21 = dot(v21, v21);
     const Real d32 = dot(v32, v32);
     const Real d13 = dot(v13, v13);
-
-    const bool okEdge1 = d21 > eps;
-    const bool okEdge2 = d32 > eps;
-    const bool okEdge3 = d13 > eps;
 
     const Real t1 = dot(p1, v21) / (d21 + eps);
     const Real t2 = dot(p2, v32) / (d32 + eps);
     const Real t3 = dot(p3, v13) / (d13 + eps);
 
-    const Real d = dot(a_triangleNormal, p1);
-
     const Vec3 y1 = p1 - t1 * v21;
     const Vec3 y2 = p2 - t2 * v32;
     const Vec3 y3 = p3 - t3 * v13;
+
+    // Distances to vertices, edges, and triangle plane
+    const Real p1d2 = p1.length2();
+    const Real p2d2 = p2.length2();
+    const Real p3d2 = p3.length2();
+
+    const Real y1d2 = y1.length2();
+    const Real y2d2 = y2.length2();
+    const Real y3d2 = y3.length2();
+
+    const Real trid  = dot(a_triangleNormal, p1);
+    const Real trid2 = trid * trid;
+
+    // Sign to vertices, edges, and triangle plane
+    const int sgnV1 = EBGeometry::sgn(dot(a_vertexNormals[0], p1));
+    const int sgnV2 = EBGeometry::sgn(dot(a_vertexNormals[1], p2));
+    const int sgnV3 = EBGeometry::sgn(dot(a_vertexNormals[2], p3));
+
+    const int sgnE1 = EBGeometry::sgn(dot(a_edgeNormals[0], y1));
+    const int sgnE2 = EBGeometry::sgn(dot(a_edgeNormals[1], y2));
+    const int sgnE3 = EBGeometry::sgn(dot(a_edgeNormals[2], y3));
+
+    const int sgnTri = EBGeometry::sgn(trid);
 
     // Test if the projected point lies inside the triangle.
     const bool insideEdge0 = dot(cross(v21, a_triangleNormal), p1) <= eps;
     const bool insideEdge1 = dot(cross(v32, a_triangleNormal), p2) <= eps;
     const bool insideEdge2 = dot(cross(v13, a_triangleNormal), p3) <= eps;
+    const bool okEdge1     = d21 > eps;
+    const bool okEdge2     = d32 > eps;
+    const bool okEdge3     = d13 > eps;
 
-    const bool insideTri = insideEdge0 & insideEdge1 & insideEdge2;
+    // Masks for distance helper
+    const bool maskV1  = true;
+    const bool maskV2  = true;
+    const bool maskV3  = true;
+    const bool maskE1  = okEdge1 & (t1 > Real(0)) & (t1 < Real(1));
+    const bool maskE2  = okEdge2 & (t2 > Real(0)) & (t2 < Real(1));
+    const bool maskE3  = okEdge3 & (t3 > Real(0)) & (t3 < Real(1));
+    const bool maskTri = insideEdge0 & insideEdge1 & insideEdge2;
 
-    // Return candidate.
-    DistanceCandidate ret;
+    // Distances, signs, and masks
+    Real dist2[7] = {p1d2, p2d2, p3d2, y1d2, y2d2, y3d2, trid2};
+    int  sgn[7]   = {sgnV1, sgnV2, sgnV3, sgnE1, sgnE2, sgnE3, sgnTri};
+    bool mask[7]  = {maskV1, maskV2, maskV3, maskE1, maskE2, maskE3, maskTri};
 
-    // Distance to vertices.
-    compareDistanceHelper(ret, p1.length2(), EBGeometry::sgn(dot(a_vertexNormals[0], p1)), true);
-    compareDistanceHelper(ret, p2.length2(), EBGeometry::sgn(dot(a_vertexNormals[1], p2)), true);
-    compareDistanceHelper(ret, p3.length2(), EBGeometry::sgn(dot(a_vertexNormals[2], p3)), true);
-
-    // Distance to edges.
-    compareDistanceHelper(ret, y1.length2(), EBGeometry::sgn(dot(a_edgeNormals[0], y1)), okEdge1 & (t1 > Real(0)) & (t1 < Real(1)));
-    compareDistanceHelper(ret, y2.length2(), EBGeometry::sgn(dot(a_edgeNormals[1], y2)), okEdge2 & (t2 > Real(0)) & (t2 < Real(1)));
-    compareDistanceHelper(ret, y3.length2(), EBGeometry::sgn(dot(a_edgeNormals[2], y3)), okEdge3 & (t3 > Real(0)) & (t3 < Real(1)));
-
-    // Distance to inside of triangle.
-    compareDistanceHelper(ret, d * d, EBGeometry::sgn(d), insideTri);
+    compareDistanceHelper(ret, dist2[0], sgn[0], mask[0]);
+    compareDistanceHelper(ret, dist2[1], sgn[1], mask[1]);
+    compareDistanceHelper(ret, dist2[2], sgn[2], mask[2]);
+    compareDistanceHelper(ret, dist2[3], sgn[3], mask[3]);
+    compareDistanceHelper(ret, dist2[4], sgn[4], mask[4]);
+    compareDistanceHelper(ret, dist2[5], sgn[5], mask[5]);
+    compareDistanceHelper(ret, dist2[6], sgn[6], mask[6]);
 
     return ret;
   }
