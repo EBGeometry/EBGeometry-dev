@@ -133,8 +133,6 @@ namespace EBGeometry {
    *       `double` where portable full precision is required.
    * @note This function is `constexpr` where the backend permits evaluation at compile time.
    */
-#include <type_traits>
-
   template <class T>
   EBGEOMETRY_GPU_HOST_DEVICE
   [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -171,14 +169,14 @@ namespace EBGeometry {
 #endif
 
 #else
-     if constexpr (std::is_same_v<T, float>) {
+    if constexpr (std::is_same_v<T, float>) {
       return __builtin_sqrtf(x);
     }
     else if constexpr (std::is_same_v<T, double>) {
       return __builtin_sqrt(x);
     }
     else {
-       return std::sqrt(x);
+      return std::sqrt(x);
     }
 #endif
   }
