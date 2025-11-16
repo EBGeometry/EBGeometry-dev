@@ -139,9 +139,9 @@ namespace EBGeometry::DCEL {
     // This routine computes the normal vector using a weighted sum of all faces
     // that share this vertex.
     EBGEOMETRY_EXPECT(m_outgoingEdge >= 0);
-    EBGEOMETRY_EXPECT(m_vertexList != nullptr);
-    EBGEOMETRY_EXPECT(m_edgeList != nullptr);
-    EBGEOMETRY_EXPECT(m_faceList != nullptr);
+    EBGEOMETRY_EXPECT(m_vertexList.data() != nullptr);
+    EBGEOMETRY_EXPECT(m_edgeList.data() != nullptr);
+    EBGEOMETRY_EXPECT(m_faceList.data() != nullptr);
 
     m_normal = Vec3::zero();
 
@@ -185,9 +185,9 @@ namespace EBGeometry::DCEL {
     // angle of the face, which means the angle spanned by the incoming/outgoing
     // edges of the face that pass through this vertex.
     EBGEOMETRY_EXPECT(m_outgoingEdge >= 0);
-    EBGEOMETRY_EXPECT(m_vertexList != nullptr);
-    EBGEOMETRY_EXPECT(m_edgeList != nullptr);
-    EBGEOMETRY_EXPECT(m_faceList != nullptr);
+    EBGEOMETRY_EXPECT(m_vertexList.data() != nullptr);
+    EBGEOMETRY_EXPECT(m_edgeList.data() != nullptr);
+    EBGEOMETRY_EXPECT(m_faceList.data() != nullptr);
 
     int outgoingEdge = -1;
     int incomingEdge = -1;
