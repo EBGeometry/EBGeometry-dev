@@ -364,6 +364,13 @@ namespace EBGeometry::DCEL {
      */
     MetaData m_metaData = MetaData();
   };
+
+  // Static assertions to ensure GPU compatibility
+  static_assert(std::is_trivially_copyable_v<Vertex<DefaultMetaData>>,
+                "EBGeometry::DCEL::Vertex must be trivially copyable for GPU compatibility");
+  static_assert(std::is_standard_layout_v<Vertex<DefaultMetaData>>,
+                "EBGeometry::DCEL::Vertex must have standard layout for GPU compatibility");
+
 } // namespace EBGeometry::DCEL
 
 #include "EBGeometry_DCEL_VertexImplem.hpp" // NOLINT

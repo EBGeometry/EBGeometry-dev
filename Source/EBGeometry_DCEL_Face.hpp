@@ -439,6 +439,13 @@ namespace EBGeometry::DCEL {
     bool
     isPointInsideFace(const Vec3& a_p) const noexcept;
   };
+
+  // Static assertions to ensure GPU compatibility
+  static_assert(std::is_trivially_copyable_v<Face<DefaultMetaData>>,
+                "EBGeometry::DCEL::Face must be trivially copyable for GPU compatibility");
+  static_assert(std::is_standard_layout_v<Face<DefaultMetaData>>,
+                "EBGeometry::DCEL::Face must have standard layout for GPU compatibility");
+
 } // namespace EBGeometry::DCEL
 
 #include "EBGeometry_DCEL_FaceImplem.hpp" // NOLINT
