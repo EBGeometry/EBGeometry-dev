@@ -19,6 +19,7 @@
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_GPUTypes.hpp"
 #include "EBGeometry_Macros.hpp"
+#include "EBGeometry_Span.hpp"
 #include "EBGeometry_Vec.hpp"
 #include "EBGeometry_Types.hpp"
 
@@ -171,30 +172,30 @@ namespace EBGeometry::DCEL {
 
     /**
      * @brief Set the vertex list.
-     * @param[in] a_vertexList List (malloc'ed array) of vertices
+     * @param[in] a_vertexList Span view of vertices
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     void
-    setVertexList(const Vertex<MetaData>* a_vertexList) noexcept;
+    setVertexList(EBGeometry::Span<const Vertex<MetaData>> a_vertexList) noexcept;
 
     /**
      * @brief Set the edge list.
-     * @param[in] a_edgeList List (malloc'ed array) of edges
+     * @param[in] a_edgeList Span view of edges
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     void
-    setEdgeList(const Edge<MetaData>* a_edgeList) noexcept;
+    setEdgeList(EBGeometry::Span<const Edge<MetaData>> a_edgeList) noexcept;
 
     /**
      * @brief Set the face list.
-     * @param[in] a_faceList List (malloc'ed array) of faces
+     * @param[in] a_faceList Span view of faces
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     void
-    setFaceList(const Face<MetaData>* a_faceList) noexcept;
+    setFaceList(EBGeometry::Span<const Face<MetaData>> a_faceList) noexcept;
 
     /**
      * @brief Get the vertex list
@@ -202,7 +203,7 @@ namespace EBGeometry::DCEL {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    const Vertex<MetaData>*
+    EBGeometry::Span<const Vertex<MetaData>>
     getVertexList() const noexcept;
 
     /**
@@ -211,7 +212,7 @@ namespace EBGeometry::DCEL {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    const Edge<MetaData>*
+    EBGeometry::Span<const Edge<MetaData>>
     getEdgeList() const noexcept;
 
     /**
@@ -220,7 +221,7 @@ namespace EBGeometry::DCEL {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    const Face<MetaData>*
+    EBGeometry::Span<const Face<MetaData>>
     getFaceList() const noexcept;
 
     /**
@@ -356,19 +357,19 @@ namespace EBGeometry::DCEL {
 
   protected:
     /**
-     * @brief Vertex list
+     * @brief Span view of all vertices in the mesh.
      */
-    const Vertex<MetaData>* m_vertexList = nullptr;
+    EBGeometry::Span<const Vertex<MetaData>> m_vertexList{};
 
     /**
-     * @brief Edge list
+     * @brief Span view of all edges in the mesh.
      */
-    const Edge<MetaData>* m_edgeList = nullptr;
+    EBGeometry::Span<const Edge<MetaData>> m_edgeList{};
 
     /**
-     * @brief Face list
+     * @brief Span view of all faces in the mesh.
      */
-    const Face<MetaData>* m_faceList = nullptr;
+    EBGeometry::Span<const Face<MetaData>> m_faceList{};
 
     /**
      * @brief Starting vertex.

@@ -84,7 +84,7 @@ namespace EBGeometry::DCEL {
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE
   void
-  Edge<MetaData>::setVertexList(const Vertex<MetaData>* const a_vertexList) noexcept
+  Edge<MetaData>::setVertexList(EBGeometry::Span<const Vertex<MetaData>> a_vertexList) noexcept
   {
     m_vertexList = a_vertexList;
   }
@@ -92,7 +92,7 @@ namespace EBGeometry::DCEL {
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE
   void
-  Edge<MetaData>::setEdgeList(const Edge<MetaData>* const a_edgeList) noexcept
+  Edge<MetaData>::setEdgeList(EBGeometry::Span<const Edge<MetaData>> a_edgeList) noexcept
   {
     m_edgeList = a_edgeList;
   }
@@ -100,33 +100,33 @@ namespace EBGeometry::DCEL {
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE
   void
-  Edge<MetaData>::setFaceList(const Face<MetaData>* const a_faceList) noexcept
+  Edge<MetaData>::setFaceList(EBGeometry::Span<const Face<MetaData>> a_faceList) noexcept
   {
     m_faceList = a_faceList;
   }
 
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE
-  const Vertex<MetaData>*
+  EBGeometry::Span<const Vertex<MetaData>>
   Edge<MetaData>::getVertexList() const noexcept
   {
-    return (m_vertexList);
+    return m_vertexList;
   }
 
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE
-  const Edge<MetaData>*
+  EBGeometry::Span<const Edge<MetaData>>
   Edge<MetaData>::getEdgeList() const noexcept
   {
-    return (m_edgeList);
+    return m_edgeList;
   }
 
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE
-  const Face<MetaData>*
+  EBGeometry::Span<const Face<MetaData>>
   Edge<MetaData>::getFaceList() const noexcept
   {
-    return (m_faceList);
+    return m_faceList;
   }
 
   template <class MetaData>
