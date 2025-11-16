@@ -150,17 +150,20 @@ namespace EBGeometry::DCEL {
 
     while (curEdge != m_outgoingEdge) {
       curEdge = (curEdge < 0) ? m_outgoingEdge : curEdge;
+      EBGEOMETRY_EXPECT(curEdge >= 0 && curEdge < m_edgeList.length());
+
       curFace = m_edgeList[curEdge].getFace();
+      EBGEOMETRY_EXPECT(curFace >= 0 && curFace < m_faceList.length());
 
       m_normal += m_faceList[curFace].getNormal();
 
       // Jump to the pair edge and advance so we get the outgoing edge (from this vertex) on
       // the next polygon.
       curEdge = m_edgeList[curEdge].getPairEdge();
-      EBGEOMETRY_EXPECT(curEdge >= 0);
+      EBGEOMETRY_EXPECT(curEdge >= 0 && curEdge < m_edgeList.length());
 
       curEdge = m_edgeList[curEdge].getNextEdge();
-      EBGEOMETRY_EXPECT(curEdge >= 0);
+      EBGEOMETRY_EXPECT(curEdge >= 0 && curEdge < m_edgeList.length());
     }
 
     this->normalizeNormalVector();
@@ -197,24 +200,27 @@ namespace EBGeometry::DCEL {
 
       // Get the incoming and outgoing edges out of the origin vertex.
       outgoingEdge = (outgoingEdge < 0) ? m_outgoingEdge : outgoingEdge;
-      incomingEdge = m_edgeList[outgoingEdge].getPreviousEdge();
-      faceIndex    = m_edgeList[outgoingEdge].getFace();
+      EBGEOMETRY_EXPECT(outgoingEdge >= 0 && outgoingEdge < m_edgeList.length());
 
-      EBGEOMETRY_EXPECT(outgoingEdge >= 0);
-      EBGEOMETRY_EXPECT(incomingEdge >= 0);
+      incomingEdge = m_edgeList[outgoingEdge].getPreviousEdge();
+      EBGEOMETRY_EXPECT(incomingEdge >= 0 && incomingEdge < m_edgeList.length());
+
+      faceIndex = m_edgeList[outgoingEdge].getFace();
+      EBGEOMETRY_EXPECT(faceIndex >= 0 && faceIndex < m_faceList.length());
+
       EBGEOMETRY_EXPECT(outgoingEdge != incomingEdge);
-      EBGEOMETRY_EXPECT(faceIndex >= 0);
 
       // Vertices are named v0,v1,v2:
       // v0 = Origin vertex of incoming edge
       // v1 = this vertex
       // v2 = End vertex of outgoing edge.
       const int v0 = m_edgeList[incomingEdge].getVertex();
+      EBGEOMETRY_EXPECT(v0 >= 0 && v0 < m_vertexList.length());
+
       const int v2 = m_edgeList[outgoingEdge].getOtherVertex();
+      EBGEOMETRY_EXPECT(v2 >= 0 && v2 < m_vertexList.length());
 
       EBGEOMETRY_EXPECT(v0 != v2);
-      EBGEOMETRY_EXPECT(v0 >= 0);
-      EBGEOMETRY_EXPECT(v2 >= 0);
 
       const Vec3& x0 = m_vertexList[v0].getPosition();
       const Vec3& x1 = m_position;
@@ -239,12 +245,12 @@ namespace EBGeometry::DCEL {
 
       // Jump to the pair polygon.
       outgoingEdge = m_edgeList[outgoingEdge].getPairEdge();
-      EBGEOMETRY_EXPECT(outgoingEdge >= 0);
+      EBGEOMETRY_EXPECT(outgoingEdge >= 0 && outgoingEdge < m_edgeList.length());
 
       // Fetch the edge in the next polygon which has this vertex
       // as the starting vertex.
       outgoingEdge = m_edgeList[outgoingEdge].getNextEdge();
-      EBGEOMETRY_EXPECT(outgoingEdge >= 0);
+      EBGEOMETRY_EXPECT(outgoingEdge >= 0 && outgoingEdge < m_edgeList.length());
     }
 
     this->normalizeNormalVector();
