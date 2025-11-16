@@ -205,7 +205,7 @@ namespace EBGeometry {
    *
    * @note All spans are non-owning views. The caller is responsible for ensuring that
    *       all underlying arrays remain valid for the lifetime of this collection.
-   * @note All spans (except metadata) must have identical length equal to the number of triangles.
+   * @note All spans must have identical length equal to the number of triangles.
    */
     template <typename MetaData>
     struct alignas(EBGEOMETRY_ALIGNAS) TriangleCollection<MetaData, LayoutType::SoA>
@@ -240,8 +240,7 @@ namespace EBGeometry {
 
       /**
      * @brief Construct from SoA spans.
-     * @details All spans (except metadata) must have identical length equal to the number
-     *          of triangles. Metadata may be empty if not needed for distance queries.
+     * @details All spans must have identical length equal to the number of triangles.
      *
      * @param[in] a_triangleNormals Triangle normal vectors (one per triangle).
      * @param[in] a_vertexPos0      Positions of vertex 0 for all triangles.
@@ -253,7 +252,7 @@ namespace EBGeometry {
      * @param[in] a_edgeNorm0       Normals for edge 0 (between vertices 0 and 1) for all triangles.
      * @param[in] a_edgeNorm1       Normals for edge 1 (between vertices 1 and 2) for all triangles.
      * @param[in] a_edgeNorm2       Normals for edge 2 (between vertices 2 and 0) for all triangles.
-     * @param[in] a_metadata        Optional user metadata (one per triangle). May be empty.
+     * @param[in] a_metadata        User metadata (one per triangle, must match triangle count).
      */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE
@@ -267,7 +266,7 @@ namespace EBGeometry {
                                    EBGeometry::Span<const Vec3>     a_edgeNorm0,
                                    EBGeometry::Span<const Vec3>     a_edgeNorm1,
                                    EBGeometry::Span<const Vec3>     a_edgeNorm2,
-                                   EBGeometry::Span<const MetaData> a_metadata = {}) noexcept;
+                                   EBGeometry::Span<const MetaData> a_metadata) noexcept;
 
       /**
        * @brief Copy assignment operator.
@@ -294,8 +293,8 @@ namespace EBGeometry {
 
       /**
      * @brief Set SoA data.
-     * @details Updates all internal spans to point to new data. All spans (except metadata)
-     *          must have identical length equal to the number of triangles.
+     * @details Updates all internal spans to point to new data. All spans must have
+     *          identical length equal to the number of triangles.
      *
      * @param[in] a_triangleNormals Triangle normal vectors (one per triangle).
      * @param[in] a_vertexPos0      Positions of vertex 0 for all triangles.
@@ -307,7 +306,7 @@ namespace EBGeometry {
      * @param[in] a_edgeNorm0       Normals for edge 0 (between vertices 0 and 1) for all triangles.
      * @param[in] a_edgeNorm1       Normals for edge 1 (between vertices 1 and 2) for all triangles.
      * @param[in] a_edgeNorm2       Normals for edge 2 (between vertices 2 and 0) for all triangles.
-     * @param[in] a_metadata        Optional user metadata (one per triangle). May be empty.
+     * @param[in] a_metadata        User metadata (one per triangle, must match triangle count).
      */
       EBGEOMETRY_GPU_HOST_DEVICE
       EBGEOMETRY_ALWAYS_INLINE
@@ -322,7 +321,7 @@ namespace EBGeometry {
               EBGeometry::Span<const Vec3>     a_edgeNorm0,
               EBGeometry::Span<const Vec3>     a_edgeNorm1,
               EBGeometry::Span<const Vec3>     a_edgeNorm2,
-              EBGeometry::Span<const MetaData> a_metadata = {}) noexcept;
+              EBGeometry::Span<const MetaData> a_metadata) noexcept;
 
       /**
      * @brief Get the number of triangles in the collection.
@@ -376,7 +375,7 @@ namespace EBGeometry {
       EBGeometry::Span<const Vec3> m_edgeNormals[3]{}; // [0],[1],[2]
 
       /**
-       * @brief User metadata (one per triangle, optional).
+       * @brief User metadata (one per triangle).
        */
       EBGeometry::Span<const MetaData> m_metadata{};
 

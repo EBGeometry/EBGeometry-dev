@@ -11,6 +11,7 @@
 #ifndef EBGEOMETRY_TRIANGLECOLLECTIONIMPLEM_HPP
 #define EBGEOMETRY_TRIANGLECOLLECTIONIMPLEM_HPP
 
+#include "EBGeometry_Macros.hpp"
 #include "EBGeometry_TriangleCollection.hpp"
 
 namespace EBGeometry {
@@ -69,59 +70,84 @@ namespace EBGeometry {
   template <typename MetaData>
   EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
-  constexpr TriangleCollection<MetaData, LayoutType::SoA>::TriangleCollection(EBGeometry::Span<const Vec3>     a_tn,
-                                                                              EBGeometry::Span<const Vec3>     a_vx1,
-                                                                              EBGeometry::Span<const Vec3>     a_vx2,
-                                                                              EBGeometry::Span<const Vec3>     a_vx3,
-                                                                              EBGeometry::Span<const Vec3>     a_vn1,
-                                                                              EBGeometry::Span<const Vec3>     a_vn2,
-                                                                              EBGeometry::Span<const Vec3>     a_vn3,
-                                                                              EBGeometry::Span<const Vec3>     a_en1,
-                                                                              EBGeometry::Span<const Vec3>     a_en2,
-                                                                              EBGeometry::Span<const Vec3>     a_en3,
+  constexpr TriangleCollection<MetaData, LayoutType::SoA>::TriangleCollection(EBGeometry::Span<const Vec3>     a_triangleNormals,
+                                                                              EBGeometry::Span<const Vec3>     a_vertexPos0,
+                                                                              EBGeometry::Span<const Vec3>     a_vertexPos1,
+                                                                              EBGeometry::Span<const Vec3>     a_vertexPos2,
+                                                                              EBGeometry::Span<const Vec3>     a_vertexNorm0,
+                                                                              EBGeometry::Span<const Vec3>     a_vertexNorm1,
+                                                                              EBGeometry::Span<const Vec3>     a_vertexNorm2,
+                                                                              EBGeometry::Span<const Vec3>     a_edgeNorm0,
+                                                                              EBGeometry::Span<const Vec3>     a_edgeNorm1,
+                                                                              EBGeometry::Span<const Vec3>     a_edgeNorm2,
                                                                               EBGeometry::Span<const MetaData> a_metadata) noexcept :
-    m_tn(a_tn),
-    m_vx1(a_vx1),
-    m_vx2(a_vx2),
-    m_vx3(a_vx3),
-    m_vn1(a_vn1),
-    m_vn2(a_vn2),
-    m_vn3(a_vn3),
-    m_en1(a_en1),
-    m_en2(a_en2),
-    m_en3(a_en3),
-    m_metadata(a_metadata),
-    m_numTriangles(static_cast<int>(a_tn.length()))
-  {}
+    m_triangleNormals(a_triangleNormals),
+    m_numTriangles(static_cast<int>(a_triangleNormals.length()))
+  {
+    m_vertexPositions[0] = a_vertexPos0;
+    m_vertexPositions[1] = a_vertexPos1;
+    m_vertexPositions[2] = a_vertexPos2;
+    m_vertexNormals[0]   = a_vertexNorm0;
+    m_vertexNormals[1]   = a_vertexNorm1;
+    m_vertexNormals[2]   = a_vertexNorm2;
+    m_edgeNormals[0]     = a_edgeNorm0;
+    m_edgeNormals[1]     = a_edgeNorm1;
+    m_edgeNormals[2]     = a_edgeNorm2;
+    m_metadata           = a_metadata;
+
+    // Validate that all spans have identical length
+    EBGEOMETRY_EXPECT(a_vertexPos0.length() == m_numTriangles);
+    EBGEOMETRY_EXPECT(a_vertexPos1.length() == m_numTriangles);
+    EBGEOMETRY_EXPECT(a_vertexPos2.length() == m_numTriangles);
+    EBGEOMETRY_EXPECT(a_vertexNorm0.length() == m_numTriangles);
+    EBGEOMETRY_EXPECT(a_vertexNorm1.length() == m_numTriangles);
+    EBGEOMETRY_EXPECT(a_vertexNorm2.length() == m_numTriangles);
+    EBGEOMETRY_EXPECT(a_edgeNorm0.length() == m_numTriangles);
+    EBGEOMETRY_EXPECT(a_edgeNorm1.length() == m_numTriangles);
+    EBGEOMETRY_EXPECT(a_edgeNorm2.length() == m_numTriangles);
+    EBGEOMETRY_EXPECT(a_metadata.length() == m_numTriangles);
+  }
 
   template <typename MetaData>
   EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   constexpr void
-  TriangleCollection<MetaData, LayoutType::SoA>::setData(EBGeometry::Span<const Vec3>     a_tn,
-                                                         EBGeometry::Span<const Vec3>     a_vx1,
-                                                         EBGeometry::Span<const Vec3>     a_vx2,
-                                                         EBGeometry::Span<const Vec3>     a_vx3,
-                                                         EBGeometry::Span<const Vec3>     a_vn1,
-                                                         EBGeometry::Span<const Vec3>     a_vn2,
-                                                         EBGeometry::Span<const Vec3>     a_vn3,
-                                                         EBGeometry::Span<const Vec3>     a_en1,
-                                                         EBGeometry::Span<const Vec3>     a_en2,
-                                                         EBGeometry::Span<const Vec3>     a_en3,
+  TriangleCollection<MetaData, LayoutType::SoA>::setData(EBGeometry::Span<const Vec3>     a_triangleNormals,
+                                                         EBGeometry::Span<const Vec3>     a_vertexPos0,
+                                                         EBGeometry::Span<const Vec3>     a_vertexPos1,
+                                                         EBGeometry::Span<const Vec3>     a_vertexPos2,
+                                                         EBGeometry::Span<const Vec3>     a_vertexNorm0,
+                                                         EBGeometry::Span<const Vec3>     a_vertexNorm1,
+                                                         EBGeometry::Span<const Vec3>     a_vertexNorm2,
+                                                         EBGeometry::Span<const Vec3>     a_edgeNorm0,
+                                                         EBGeometry::Span<const Vec3>     a_edgeNorm1,
+                                                         EBGeometry::Span<const Vec3>     a_edgeNorm2,
                                                          EBGeometry::Span<const MetaData> a_metadata) noexcept
   {
-    m_tn           = a_tn;
-    m_vx1          = a_vx1;
-    m_vx2          = a_vx2;
-    m_vx3          = a_vx3;
-    m_vn1          = a_vn1;
-    m_vn2          = a_vn2;
-    m_vn3          = a_vn3;
-    m_en1          = a_en1;
-    m_en2          = a_en2;
-    m_en3          = a_en3;
-    m_metadata     = a_metadata;
-    m_numTriangles = static_cast<int>(a_tn.length());
+    m_triangleNormals    = a_triangleNormals;
+    m_vertexPositions[0] = a_vertexPos0;
+    m_vertexPositions[1] = a_vertexPos1;
+    m_vertexPositions[2] = a_vertexPos2;
+    m_vertexNormals[0]   = a_vertexNorm0;
+    m_vertexNormals[1]   = a_vertexNorm1;
+    m_vertexNormals[2]   = a_vertexNorm2;
+    m_edgeNormals[0]     = a_edgeNorm0;
+    m_edgeNormals[1]     = a_edgeNorm1;
+    m_edgeNormals[2]     = a_edgeNorm2;
+    m_metadata           = a_metadata;
+    m_numTriangles       = static_cast<int>(a_triangleNormals.length());
+
+    // Validate that all spans have identical length
+    EBGEOMETRY_EXPECT(a_vertexPos0.length() == m_numTriangles);
+    EBGEOMETRY_EXPECT(a_vertexPos1.length() == m_numTriangles);
+    EBGEOMETRY_EXPECT(a_vertexPos2.length() == m_numTriangles);
+    EBGEOMETRY_EXPECT(a_vertexNorm0.length() == m_numTriangles);
+    EBGEOMETRY_EXPECT(a_vertexNorm1.length() == m_numTriangles);
+    EBGEOMETRY_EXPECT(a_vertexNorm2.length() == m_numTriangles);
+    EBGEOMETRY_EXPECT(a_edgeNorm0.length() == m_numTriangles);
+    EBGEOMETRY_EXPECT(a_edgeNorm1.length() == m_numTriangles);
+    EBGEOMETRY_EXPECT(a_edgeNorm2.length() == m_numTriangles);
+    EBGEOMETRY_EXPECT(a_metadata.length() == m_numTriangles);
   }
 
   template <typename MetaData>
@@ -136,11 +162,11 @@ namespace EBGeometry {
 
     EBGEOMETRY_PRAGMA_SIMD
     for (int i = 0; i < numTriangles; ++i) {
-      const Vec3 vx[3] = {m_vx1[i], m_vx2[i], m_vx3[i]};
-      const Vec3 vn[3] = {m_vn1[i], m_vn2[i], m_vn3[i]};
-      const Vec3 en[3] = {m_en1[i], m_en2[i], m_en3[i]};
+      const Vec3 vx[3] = {m_vertexPositions[0][i], m_vertexPositions[1][i], m_vertexPositions[2][i]};
+      const Vec3 vn[3] = {m_vertexNormals[0][i], m_vertexNormals[1][i], m_vertexNormals[2][i]};
+      const Vec3 en[3] = {m_edgeNormals[0][i], m_edgeNormals[1][i], m_edgeNormals[2][i]};
 
-      const DistanceCandidate cand = signedSquaredDistanceTriangle(m_tn[i], vx, vn, en, a_point);
+      const DistanceCandidate cand = signedSquaredDistanceTriangle(m_triangleNormals[i], vx, vn, en, a_point);
 
       compareDistanceHelper(best, cand.m_dist2, cand.m_sgn, 1);
     }
