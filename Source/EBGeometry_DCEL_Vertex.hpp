@@ -7,6 +7,16 @@
  * @brief  Declaration of a vertex class for use in DCEL descriptions of polygon
  * tessellations.
  * @author Robert Marskar
+ *
+ * @details This file provides the Vertex class for doubly-connected edge list (DCEL)
+ * mesh representations. The implementation uses EBGeometry::Span for non-owning
+ * references to mesh data, ensuring GPU compatibility and memory safety.
+ *
+ * Key features:
+ * - Trivially copyable and standard layout for GPU execution
+ * - Robust normal computation algorithms with numerical safeguards
+ * - Comprehensive bounds checking to prevent undefined behavior
+ * - Support for both simple averaging and angle-weighted normal computation
  */
 
 #ifndef EBGeometry_DCEL_Vertex
@@ -23,16 +33,27 @@
 namespace EBGeometry::DCEL {
 
   /**
-   * @brief Class which represents a vertex node in a double-edge connected list (DCEL).
+   * @brief Class which represents a vertex node in a doubly-connected edge list (DCEL).
    * @details This class is used in DCEL functionality which stores polygonal
    * surfaces in a mesh. The Vertex class has a position, a normal vector, and a
    * reference (index) to one of the outgoing edges from the vertex.
    *
+   * The vertex stores non-owning Span references to the complete mesh arrays
+   * (vertices, edges, faces), enabling efficient topological traversal and normal
+   * computation algorithms.
+   *
+   * @tparam MetaData User-defined metadata type attached to the vertex.
+   *
    * @note The normal vector is outgoing, i.e. a point x is "outside" the vertex if
    * the dot product between n and (x - x0) is positive.
    *
-   * @note This class is GPU-copyable with the exception of the edge list which must be
-   * set appropriately for the device storage.
+   * @note This class is trivially copyable and has standard layout, making it
+   * suitable for GPU execution. The Span references can be safely copied to GPU
+   * memory and used in device code.
+   *
+   * @note Normal computation algorithms (computeVertexNormalAverage and
+   * computeVertexNormalAngleWeighted) include robust bounds checking and
+   * numerical safeguards to prevent undefined behavior.
    */
   template <class MetaData>
   class Vertex
@@ -220,7 +241,16 @@ namespace EBGeometry::DCEL {
     /**
      * @brief Compute the vertex normal, using an average of the normal vectors of all faces
      * sharing this vertex.
-     * @details This computes the vertex normal as n = sum(normal(face))/num(faces)
+     * @details This computes the vertex normal as n = sum(normal(face))/num(faces).
+     *
+     * The algorithm traverses the half-edge cycle around this vertex, accumulating
+     * face normals. The implementation includes:
+     * - Bounds checking on all array accesses
+     * - Validation of Span data pointers
+     * - Infinite loop detection for malformed DCEL structures
+     *
+     * @note Requires valid mesh topology (properly connected half-edges forming a cycle).
+     * @note The outgoing edge index (m_outgoingEdge) must be set before calling.
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
@@ -230,9 +260,23 @@ namespace EBGeometry::DCEL {
     /**
      * @brief Compute the vertex normal, using the pseudonormal algorithm which
      * weights the normal with the subtended angle to each connected face.
-     * @details This computes the normal vector using the pseudnormal algorithm from
+     * @details This computes the normal vector using the pseudonormal algorithm from
      * Baerentzen and Aanes in "Signed distance computation using the angle
-     * weighted pseudonormal" (DOI: 10.1109/TVCG.2005.49)
+     * weighted pseudonormal" (DOI: 10.1109/TVCG.2005.49).
+     *
+     * The algorithm weights each face normal by the angle it subtends at this vertex:
+     * n = sum(angle_i * normal_i) / |sum(angle_i * normal_i)|
+     *
+     * The implementation includes robust numerical handling:
+     * - Bounds checking on all array accesses
+     * - Division by zero prevention for edge normalization
+     * - Domain clamping for acos to prevent NaN from floating-point errors
+     * - Infinite loop detection for malformed DCEL structures
+     * - Validation of non-degenerate geometry
+     *
+     * @note Requires valid mesh topology with non-degenerate faces.
+     * @note More accurate than simple averaging for irregular meshes.
+     * @note The outgoing edge index (m_outgoingEdge) must be set before calling.
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
