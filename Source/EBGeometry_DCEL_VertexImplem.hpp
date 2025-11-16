@@ -148,7 +148,12 @@ namespace EBGeometry::DCEL {
     int curEdge = -1;
     int curFace = -1;
 
+    int       iterCount = 0;
+    const int maxIters  = m_edgeList.length(); // Cannot have more iterations than edges
+
     while (curEdge != m_outgoingEdge) {
+      EBGEOMETRY_EXPECT(iterCount < maxIters); // Detect malformed DCEL structure
+      iterCount++;
       curEdge = (curEdge < 0) ? m_outgoingEdge : curEdge;
       EBGEOMETRY_EXPECT(curEdge >= 0 && curEdge < m_edgeList.length());
 
@@ -196,7 +201,12 @@ namespace EBGeometry::DCEL {
     int incomingEdge = -1;
     int faceIndex    = -1;
 
+    int       iterCount = 0;
+    const int maxIters  = m_edgeList.length(); // Cannot have more iterations than edges
+
     while (outgoingEdge != m_outgoingEdge) {
+      EBGEOMETRY_EXPECT(iterCount < maxIters); // Detect malformed DCEL structure
+      iterCount++;
 
       // Get the incoming and outgoing edges out of the origin vertex.
       outgoingEdge = (outgoingEdge < 0) ? m_outgoingEdge : outgoingEdge;
@@ -219,7 +229,6 @@ namespace EBGeometry::DCEL {
 
       const int v2 = m_edgeList[outgoingEdge].getOtherVertex();
       EBGEOMETRY_EXPECT(v2 >= 0 && v2 < m_vertexList.length());
-
       EBGEOMETRY_EXPECT(v0 != v2);
 
       const Vec3& x0 = m_vertexList[v0].getPosition();
@@ -233,11 +242,18 @@ namespace EBGeometry::DCEL {
       Vec3 a = x2 - x1;
       Vec3 b = x0 - x1;
 
-      a = a / a.length();
-      b = b / b.length();
+      const Real aLen = a.length();
+      const Real bLen = b.length();
+      EBGEOMETRY_EXPECT(aLen > EBGeometry::Limits::eps());
+      EBGEOMETRY_EXPECT(bLen > EBGeometry::Limits::eps());
+
+      a = a / aLen;
+      b = b / bLen;
 
       const Vec3& faceNormal = m_faceList[faceIndex].getNormal();
-      const Real  alpha      = static_cast<Real>(acos(dot(a, b)));
+      const Real  dotProduct = dot(a, b);
+      const Real  clampedDot = EBGeometry::min(Real(1.0), EBGeometry::max(Real(-1.0), dotProduct));
+      const Real  alpha      = static_cast<Real>(acos(clampedDot));
 
       EBGEOMETRY_EXPECT(faceNormal.length() > 0.0);
 
