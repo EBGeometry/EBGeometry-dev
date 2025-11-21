@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2025 Robert Marskar
+
+SPDX-License-Identifier: LGPL-3.0-or-later
+-->
+
 This folder contains various surface grids, remarks on where the data was obtained, and what was done with it.
 
 Meshes are organized into clean and dirty meshes. These meshes are subjected to different tests in EBGeometry.

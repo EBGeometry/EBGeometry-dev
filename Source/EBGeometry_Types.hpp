@@ -1,37 +1,40 @@
-/* EBGeometry
- * Copyright © 2024 Robert Marskar
- * Please refer to Copyright.txt and LICENSE in the EBGeometry root directory.
+// SPDX-FileCopyrightText: 2025 Robert Marskar
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
+/**
+ * @file   EBGeometry_Types.hpp
+ * @author Robert Marskar
+ * @brief  Various compile-time specifications for EBGeometry
  */
 
-/*!
-  @file   EBGeometry_Types.hpp
-  @brief  Compile-time precision specification
-  @author Robert Marskar
-*/
+#ifndef EBGEOMETRY_TYPES_HPP
+#define EBGEOMETRY_TYPES_HPP
 
-#ifndef EBGeometry_Types
-#define EBGeometry_Types
-
-#include <cfloat>
-
-/*! \cond */
+/**
+ * @namespace EBGeometry
+ * @brief Namespace containing types and constants for EBGeometry.
+ */
 #ifdef EBGEOMETRY_USE_DOUBLE
 namespace EBGeometry {
-  using Real                 = double;
-  constexpr Real MaximumReal = DBL_MAX;
-  constexpr Real MinimumReal = DBL_MIN;
-  constexpr Real LowestReal  = -DBL_MAX;
-  constexpr Real Epsilon     = DBL_EPSILON;
+  /**
+   * @typedef Real
+   * @brief Floating-point type used throughout EBGeometry.
+   *
+   * Defined as `double` when `EBGEOMETRY_USE_DOUBLE` is enabled.
+   */
+  using Real = double;
 } // namespace EBGeometry
 #else
 namespace EBGeometry {
-  using Real                 = float;
-  constexpr Real MaximumReal = FLT_MAX;
-  constexpr Real MinimumReal = FLT_MIN;
-  constexpr Real LowestReal  = -FLT_MAX;
-  constexpr Real Epsilon     = FLT_EPSILON;
+  /**
+   * @typedef Real
+   * @brief Floating-point type used throughout EBGeometry.
+   *
+   * Defined as `float` when `EBGEOMETRY_USE_DOUBLE` is not enabled.
+   */
+  using Real = float;
 } // namespace EBGeometry
 #endif
-/*! \endcond */
 
 #endif
