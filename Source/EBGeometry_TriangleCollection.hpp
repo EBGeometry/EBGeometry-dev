@@ -170,18 +170,18 @@ namespace EBGeometry {
 
   // Static assertions for AoS TriangleCollection
   static_assert(std::is_trivially_copyable_v<TriangleCollection<short, LayoutType::AoS>>,
-                "TriangleCollection<AoS> must be trivially copyable");
+                "TriangleCollection<AoS> must be trivially copyable for GPU compatibility");
   static_assert(std::is_trivially_copyable_v<TriangleCollection<int, LayoutType::AoS>>,
-                "TriangleCollection<AoS> must be trivially copyable");
+                "TriangleCollection<AoS> must be trivially copyable for GPU compatibility");
   static_assert(std::is_trivially_copyable_v<TriangleCollection<long, LayoutType::AoS>>,
-                "TriangleCollection<AoS> must be trivially copyable");
+                "TriangleCollection<AoS> must be trivially copyable for GPU compatibility");
 
   static_assert(std::is_standard_layout_v<TriangleCollection<short, LayoutType::AoS>>,
-                "TriangleCollection<AoS> must have standard layout");
+                "TriangleCollection<AoS> must have standard layout for GPU compatibility");
   static_assert(std::is_standard_layout_v<TriangleCollection<int, LayoutType::AoS>>,
-                "TriangleCollection<AoS> must have standard layout");
+                "TriangleCollection<AoS> must have standard layout for GPU compatibility");
   static_assert(std::is_standard_layout_v<TriangleCollection<long, LayoutType::AoS>>,
-                "TriangleCollection<AoS> must have standard layout");
+                "TriangleCollection<AoS> must have standard layout for GPU compatibility");
 
   /**
    * @brief Struct-of-Arrays specialization of TriangleCollection.
@@ -401,18 +401,18 @@ namespace EBGeometry {
 
   // Static assertions for SoA TriangleCollection
   static_assert(std::is_trivially_copyable_v<TriangleCollection<short, LayoutType::SoA>>,
-                "TriangleCollection<SoA> must be trivially copyable");
+                "TriangleCollection<SoA> must be trivially copyable for GPU compatibility");
   static_assert(std::is_trivially_copyable_v<TriangleCollection<int, LayoutType::SoA>>,
-                "TriangleCollection<SoA> must be trivially copyable");
+                "TriangleCollection<SoA> must be trivially copyable for GPU compatibility");
   static_assert(std::is_trivially_copyable_v<TriangleCollection<long, LayoutType::SoA>>,
-                "TriangleCollection<SoA> must be trivially copyable");
+                "TriangleCollection<SoA> must be trivially copyable for GPU compatibility");
 
   static_assert(std::is_standard_layout_v<TriangleCollection<short, LayoutType::SoA>>,
-                "TriangleCollection<SoA> must have standard layout");
+                "TriangleCollection<SoA> must have standard layout for GPU compatibility");
   static_assert(std::is_standard_layout_v<TriangleCollection<int, LayoutType::SoA>>,
-                "TriangleCollection<SoA> must have standard layout");
+                "TriangleCollection<SoA> must have standard layout for GPU compatibility");
   static_assert(std::is_standard_layout_v<TriangleCollection<long, LayoutType::SoA>>,
-                "TriangleCollection<SoA> must have standard layout");
+                "TriangleCollection<SoA> must have standard layout for GPU compatibility");
 
 } // namespace EBGeometry
 
