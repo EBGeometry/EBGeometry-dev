@@ -19,8 +19,8 @@
  * - Support for both simple averaging and angle-weighted normal computation
  */
 
-#ifndef EBGeometry_DCEL_Vertex
-#define EBGeometry_DCEL_Vertex
+#ifndef EBGEOMETRY_DCEL_VERTEX_HPP
+#define EBGEOMETRY_DCEL_VERTEX_HPP
 
 // Our includes
 #include "EBGeometry_DCEL.hpp"

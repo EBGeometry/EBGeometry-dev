@@ -8,8 +8,8 @@
  * @author Robert Marskar
  */
 
-#ifndef EBGeometry_DCEL_VertexImplem
-#define EBGeometry_DCEL_VertexImplem
+#ifndef EBGEOMETRY_DCEL_VERTEXIMPLEM_HPP
+#define EBGEOMETRY_DCEL_VERTEXIMPLEM_HPP
 
 // Std includes
 #include <cmath>
