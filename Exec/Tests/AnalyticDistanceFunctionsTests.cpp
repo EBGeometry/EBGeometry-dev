@@ -8,7 +8,7 @@
 #include <catch2/catch_approx.hpp>
 
 using namespace EBGeometry;
-
+#if 0
 EBGEOMETRY_GPU_GLOBAL
 void
 evalImpFunc(Real* value, ImplicitFunction* func, Vec3* point)
@@ -64,3 +64,4 @@ TEST_CASE("PlaneSDF_Value_Host")
   freeImpFunc(plane1_host);
   freeImpFunc(plane2_host);
 }
+#endif

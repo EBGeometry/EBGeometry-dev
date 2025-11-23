@@ -39,7 +39,7 @@ endif()
 
 if(ENABLE_CUDA)
   add_compile_definitions(EBGEOMETRY_ENABLE_CUDA)
-  
+
   enable_language(CUDA)
   project(EBGeometry LANGUAGES CUDA CXX)
 
@@ -49,6 +49,9 @@ if(ENABLE_CUDA)
     set(CMAKE_CUDA_STANDARD 20)
     set(CMAKE_CUDA_STANDARD_REQUIRED ON)
   endif()
+
+  # Enable relaxed constexpr for CUDA to allow constexpr host functions in device code
+  set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --expt-relaxed-constexpr")
 endif()
 
 if(ENABLE_HIP)

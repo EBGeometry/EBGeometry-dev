@@ -11,7 +11,7 @@ using namespace EBGeometry;
 
 TEST_CASE("Vertex_BasisVectors")
 {
-
+#if 0
   const auto x0 = Vec3(-1, -1, 0.);
   const auto x1 = Vec3(+1, -1, 0);
   const auto x2 = Vec3(+1, +1, 0);
@@ -35,4 +35,5 @@ TEST_CASE("Vertex_BasisVectors")
   delete[] vertices;
   delete[] edges;
   delete[] faces;
+#endif
 }

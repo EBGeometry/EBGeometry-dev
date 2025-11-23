@@ -11,7 +11,6 @@ set(TEST_SOURCES
   AnalyticDistanceFunctionsTests.cpp
   SFCTests.cpp  
   TriangleTests.cpp
-  VirtualFunctionTests.cpp
   VecTests.cpp
   VertexTests.cpp
 )

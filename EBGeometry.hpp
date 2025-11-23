@@ -4,7 +4,7 @@
 
 #include "Source/EBGeometry_Alignas.hpp"
 #include "Source/EBGeometry_AnalyticDistanceFunctions.hpp"
-#include "Source/EBGeometry_CSG.hpp"
+//#include "Source/EBGeometry_CSG.hpp"
 //#include "Source/EBGeometry_DCEL.hpp"
 //#include "Source/EBGeometry_DCEL_Edge.hpp"
 //#include "Source/EBGeometry_DCEL_Face.hpp"

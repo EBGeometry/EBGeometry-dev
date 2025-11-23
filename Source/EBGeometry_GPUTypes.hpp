@@ -14,6 +14,7 @@
 // Std includes
 #include <cmath>
 #include <type_traits>
+#include <bit>
 
 // Our includes
 #include "EBGeometry_GPU.hpp"
@@ -94,6 +95,45 @@ namespace EBGeometry {
   nearOne(const Real& x) noexcept
   {
     return (EBGeometry::abs(x) - Real(1)) <= Real(1E-6);
+  }
+
+  /**
+   * @brief GPU-compatible bit_cast for reinterpreting values between types.
+   * @details This function provides a safe type reinterpretation that works on both
+   *          CPU and GPU. On the host, it uses std::bit_cast for standards compliance.
+   *          On CUDA devices, it uses union-based type punning which is explicitly
+   *          allowed by the CUDA programming model.
+   *
+   * @tparam To Target type (must be trivially copyable and same size as From)
+   * @tparam From Source type (must be trivially copyable and same size as To)
+   * @param[in] src Source value to reinterpret
+   * @return Value of type To with the same bit pattern as src
+   *
+   * @note This is primarily used for branchless comparison operations where
+   *       floating-point values need to be manipulated as integers.
+   */
+  template <typename To, typename From>
+  EBGEOMETRY_GPU_HOST_DEVICE
+  [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
+  constexpr To
+  gpu_bit_cast(const From& src) noexcept
+  {
+    static_assert(sizeof(To) == sizeof(From), "gpu_bit_cast requires types of equal size");
+    static_assert(std::is_trivially_copyable_v<To>, "To must be trivially copyable for gpu_bit_cast");
+    static_assert(std::is_trivially_copyable_v<From>, "From must be trivially copyable for gpu_bit_cast");
+
+#ifdef __CUDA_ARCH__
+    // Device code: use union-based type punning (allowed in CUDA)
+    union {
+      From from;
+      To   to;
+    } u;
+    u.from = src;
+    return u.to;
+#else
+    // Host code: use std::bit_cast for standards compliance
+    return std::bit_cast<To>(src);
+#endif
   }
 
   /**

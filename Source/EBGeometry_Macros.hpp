@@ -8,12 +8,17 @@
  * @author Robert Marskar
  */
 
-#ifndef EBGeometry_Macros
-#define EBGeometry_Macros
+#ifndef EBGEOMETRY_MACROS_HPP
+#define EBGEOMETRY_MACROS_HPP
 
+// Std includes
 #include <cassert>
 #include <iostream>
+#include <cstdint>
 #include <type_traits>
+
+// Our includes
+#include "EBGeometry_GPU.hpp"
 
 /**
  * @brief Global counter tracking the number of assertion failures.
@@ -23,37 +28,6 @@
  * to monitor how often expectations are violated.
  */
 static unsigned long long int EBGEOMETRY_ASSERTION_FAILURES = 0;
-
-/**
- * @brief Constexpr-compatible expectation check helper.
- *
- * This function can be used in both constexpr and runtime contexts:
- * - In constexpr context: No-op (allows constexpr evaluation to continue;
- *   invalid operations will cause natural compile errors)
- * - In runtime context: prints error message if condition is false
- *
- * @param cond Boolean condition to check
- * @param msg Condition string for error message
- * @param line Source line number
- * @param file Source file name
- *
- * @note In constexpr contexts, if the condition is false and execution continues,
- *       downstream operations (like division by zero or invalid array access) will
- *       naturally cause compilation to fail with meaningful error messages.
- */
-inline constexpr void
-ebgeometry_expect_impl(bool cond, const char* msg, int line, const char* file)
-{
-  if (!cond) {
-    if (!std::is_constant_evaluated()) {
-      // Only print in runtime context (printf is not constexpr)
-      printf("Expectation '%s' failed on line %i in file %s!\n", msg, line, file);
-      ++EBGEOMETRY_ASSERTION_FAILURES;
-    }
-    // In constexpr context, do nothing - invalid operations will cause
-    // natural compilation errors
-  }
-}
 
 /**
  * @defgroup Macros EBGeometry Macros
@@ -158,23 +132,6 @@ ebgeometry_expect_impl(bool cond, const char* msg, int line, const char* file)
 #endif
 
 /**
- * @def EBGEOMETRY_DO_PRAGMA(x)
- * @brief Internal helper macro for emitting `_Pragma` directives.
- *
- * Wraps its argument in quotes and passes it to `_Pragma`, enabling
- * pragma-based compiler hints to be generated inside other macros.
- *
- * @param x The pragma directive (without surrounding quotes).
- *
- * @internal
- * This macro is not intended for direct user consumption, but is exposed
- * to allow portable pragma expansion in other EBGeometry macros.
- */
-#ifndef EBGEOMETRY_DO_PRAGMA
-#define EBGEOMETRY_DO_PRAGMA(x) _Pragma(#x)
-#endif
-
-/**
  * @def EBGEOMETRY_PRAGMA_SIMD
  * @brief Portable loop-vectorization hint for CPU builds.
  *
@@ -207,20 +164,68 @@ ebgeometry_expect_impl(bool cond, const char* msg, int line, const char* file)
 #define EBGEOMETRY_PRAGMA_SIMD
 #else
 #if defined(__INTEL_COMPILER) || defined(__INTEL_LLVM_COMPILER)
-#define EBGEOMETRY_PRAGMA_SIMD \
-  EBGEOMETRY_DO_PRAGMA(ivdep)  \
-  EBGEOMETRY_DO_PRAGMA(vector always)
+#define EBGEOMETRY_PRAGMA_SIMD _Pragma("ivdep") _Pragma("vector always")
 #elif defined(__clang__)
-#define EBGEOMETRY_PRAGMA_SIMD EBGEOMETRY_DO_PRAGMA(clang loop vectorize(enable) interleave(enable))
+#define EBGEOMETRY_PRAGMA_SIMD _Pragma("clang loop vectorize(enable) interleave(enable)")
 #elif defined(__GNUC__)
-#define EBGEOMETRY_PRAGMA_SIMD EBGEOMETRY_DO_PRAGMA(GCC ivdep)
+#define EBGEOMETRY_PRAGMA_SIMD _Pragma("GCC ivdep")
 #elif defined(_MSC_VER)
-#define EBGEOMETRY_PRAGMA_SIMD EBGEOMETRY_DO_PRAGMA(loop(ivdep))
+#define EBGEOMETRY_PRAGMA_SIMD _Pragma("loop(ivdep)")
 #else
 #define EBGEOMETRY_PRAGMA_SIMD
 #endif
 #endif
 
 /** @} */ // end of Macros group
+
+/**
+ * @brief Constexpr-compatible expectation check helper with GPU support.
+ *
+ * This function can be used in constexpr, runtime, and GPU device contexts:
+ * - In constexpr context: No-op (allows constexpr evaluation to continue;
+ *   invalid operations will cause natural compile errors)
+ * - In runtime context: prints error message if condition is false
+ * - In CUDA device context: prints error message using device printf
+ *
+ * @param cond Boolean condition to check
+ * @param msg Condition string for error message
+ * @param line Source line number
+ * @param file Source file name
+ *
+ * @note In constexpr contexts, if the condition is false and execution continues,
+ *       downstream operations (like division by zero or invalid array access) will
+ *       naturally cause compilation to fail with meaningful error messages.
+ * @note On CUDA devices, printf is supported but the output may be buffered.
+ */
+#ifdef __CUDACC__
+// CUDA compilation: can't use constexpr with __host__ __device__ in inline functions reliably
+__host__ __device__ inline void
+ebgeometry_expect_impl(bool cond, const char* msg, int line, const char* file)
+{
+  if (!cond) {
+#ifdef __CUDA_ARCH__
+    // Device code: use CUDA printf (allowed in device code)
+    printf("Expectation '%s' failed on line %i in file %s!\n", msg, line, file);
+#else
+    // Host code in CUDA compilation
+    printf("Expectation '%s' failed on line %i in file %s!\n", msg, line, file);
+    ++EBGEOMETRY_ASSERTION_FAILURES;
+#endif
+  }
+}
+#else
+// Non-CUDA compilation: use constexpr for better compile-time checking
+inline constexpr void
+ebgeometry_expect_impl(bool cond, const char* msg, int line, const char* file)
+{
+  if (!cond) {
+    if (!std::is_constant_evaluated()) {
+      // Only print in runtime context (printf is not constexpr)
+      printf("Expectation '%s' failed on line %i in file %s!\n", msg, line, file);
+      ++EBGEOMETRY_ASSERTION_FAILURES;
+    }
+  }
+}
+#endif
 
 #endif

@@ -342,7 +342,8 @@ namespace EBGeometry {
   */
   struct DistanceCandidate
   {
-    constexpr DistanceCandidate()
+    EBGEOMETRY_GPU_HOST_DEVICE
+    constexpr DistanceCandidate() noexcept
     {
       this->m_dist2 = EBGeometry::Limits::max();
       this->m_sgn   = 1;

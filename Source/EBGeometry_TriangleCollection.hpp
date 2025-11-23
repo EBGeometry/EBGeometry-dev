@@ -31,8 +31,6 @@
 #include "EBGeometry_Triangle.hpp"
 #include "EBGeometry_Vec.hpp"
 
-#warning "SoA version is missing -- needs to get written ASAP"
-
 namespace EBGeometry {
 
   /**

@@ -233,7 +233,11 @@ namespace EBGeometry {
   constexpr Real
   Triangle<MetaData>::value(const Vec3& a_point) const noexcept
   {
-    const DistanceCandidate d = signedSquaredDistanceTriangle(m_triangleNormal, m_vertexPositions, m_vertexNormals, m_edgeNormals, a_point);
+    const DistanceCandidate d = signedSquaredDistanceTriangle(m_triangleNormal,
+                                                              m_vertexPositions,
+                                                              m_vertexNormals,
+                                                              m_edgeNormals,
+                                                              a_point);
 
     return EBGeometry::sqrt(d.m_dist2) * d.m_sgn;
   }
@@ -244,18 +248,19 @@ namespace EBGeometry {
   void
   compareDistanceHelper(DistanceCandidate& a_best, Real a_candDist2, int a_candSgn, int a_mask) noexcept
   {
-    static_assert(std::is_floating_point_v<Real>, "EBGeometry::compareDistanceHelper expects a floating-point Real type");
+    static_assert(std::is_floating_point_v<Real>,
+                  "EBGeometry::compareDistanceHelper expects a floating-point Real type");
 
     const int better = a_mask & (a_candDist2 < a_best.m_dist2);
     const int m      = -better;
 
     using UInt = std::conditional_t<sizeof(Real) == 4, std::uint32_t, std::uint64_t>;
 
-    const UInt bestBits = std::bit_cast<UInt>(a_best.m_dist2);
-    const UInt candBits = std::bit_cast<UInt>(a_candDist2);
+    const UInt bestBits = EBGeometry::gpu_bit_cast<UInt>(a_best.m_dist2);
+    const UInt candBits = EBGeometry::gpu_bit_cast<UInt>(a_candDist2);
     const UInt newBits  = (bestBits & ~static_cast<UInt>(m)) | (candBits & static_cast<UInt>(m));
 
-    a_best.m_dist2 = std::bit_cast<Real>(newBits);
+    a_best.m_dist2 = EBGeometry::gpu_bit_cast<Real>(newBits);
     a_best.m_sgn   = (a_best.m_sgn & ~m) | (a_candSgn & m);
   }
 
