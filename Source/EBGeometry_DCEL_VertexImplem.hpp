@@ -21,12 +21,14 @@
 namespace EBGeometry::DCEL {
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   Vertex<MetaData>::Vertex(const Vec3& a_position) noexcept :
     m_position(a_position)
   {}
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   Vertex<MetaData>::Vertex(const Vec3& a_position, const Vec3& a_normal) noexcept :
     m_position(a_position),
@@ -34,6 +36,7 @@ namespace EBGeometry::DCEL {
   {}
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   Vertex<MetaData>::Vertex(const Vec3& a_position, const Vec3& a_normal, int a_edge) noexcept :
     m_position(a_position),
@@ -78,6 +81,8 @@ namespace EBGeometry::DCEL {
   void
   Vertex<MetaData>::setVertexList(EBGeometry::Span<const Vertex<MetaData>> a_vertexList) noexcept
   {
+    EBGEOMETRY_EXPECT(a_vertexList.data() != nullptr);
+    EBGEOMETRY_EXPECT(a_vertexList.length() > 0);
     m_vertexList = a_vertexList;
   }
 
@@ -86,6 +91,8 @@ namespace EBGeometry::DCEL {
   void
   Vertex<MetaData>::setEdgeList(EBGeometry::Span<const Edge<MetaData>> a_edgeList) noexcept
   {
+    EBGEOMETRY_EXPECT(a_edgeList.data() != nullptr);
+    EBGEOMETRY_EXPECT(a_edgeList.length() > 0);
     m_edgeList = a_edgeList;
   }
 
@@ -94,6 +101,8 @@ namespace EBGeometry::DCEL {
   void
   Vertex<MetaData>::setFaceList(EBGeometry::Span<const Face<MetaData>> a_faceList) noexcept
   {
+    EBGEOMETRY_EXPECT(a_faceList.data() != nullptr);
+    EBGEOMETRY_EXPECT(a_faceList.length() > 0);
     m_faceList = a_faceList;
   }
 
@@ -126,9 +135,18 @@ namespace EBGeometry::DCEL {
   void
   Vertex<MetaData>::normalizeNormalVector() noexcept
   {
-    EBGEOMETRY_EXPECT(m_normal.length() > 0.0);
+    const Real len = m_normal.length();
 
-    m_normal = m_normal / m_normal.length();
+    EBGEOMETRY_EXPECT(len > 0.0);
+
+    // Runtime check for zero-length normal to prevent division by zero
+    if (len > EBGeometry::Limits::eps()) {
+      m_normal = m_normal / len;
+    }
+    else {
+      // Degenerate case: set to default upward normal
+      m_normal = Vec3(0.0, 0.0, 1.0);
+    }
   }
 
   template <class MetaData>
@@ -139,9 +157,13 @@ namespace EBGeometry::DCEL {
     // This routine computes the normal vector using a weighted sum of all faces
     // that share this vertex.
     EBGEOMETRY_EXPECT(m_outgoingEdge >= 0);
+    EBGEOMETRY_EXPECT(m_outgoingEdge < m_edgeList.length());
     EBGEOMETRY_EXPECT(m_vertexList.data() != nullptr);
+    EBGEOMETRY_EXPECT(m_vertexList.length() > 0);
     EBGEOMETRY_EXPECT(m_edgeList.data() != nullptr);
+    EBGEOMETRY_EXPECT(m_edgeList.length() > 0);
     EBGEOMETRY_EXPECT(m_faceList.data() != nullptr);
+    EBGEOMETRY_EXPECT(m_faceList.length() > 0);
 
     m_normal = Vec3::zero();
 
@@ -171,6 +193,10 @@ namespace EBGeometry::DCEL {
       EBGEOMETRY_EXPECT(curEdge >= 0 && curEdge < m_edgeList.length());
     }
 
+    // Ensure accumulated normal has non-zero length before normalizing
+    // (prevents division by zero when opposing face normals cancel out)
+    EBGEOMETRY_EXPECT(m_normal.length() > EBGeometry::Limits::eps());
+
     this->normalizeNormalVector();
   }
 
@@ -193,9 +219,13 @@ namespace EBGeometry::DCEL {
     // angle of the face, which means the angle spanned by the incoming/outgoing
     // edges of the face that pass through this vertex.
     EBGEOMETRY_EXPECT(m_outgoingEdge >= 0);
+    EBGEOMETRY_EXPECT(m_outgoingEdge < m_edgeList.length());
     EBGEOMETRY_EXPECT(m_vertexList.data() != nullptr);
+    EBGEOMETRY_EXPECT(m_vertexList.length() > 0);
     EBGEOMETRY_EXPECT(m_edgeList.data() != nullptr);
+    EBGEOMETRY_EXPECT(m_edgeList.length() > 0);
     EBGEOMETRY_EXPECT(m_faceList.data() != nullptr);
+    EBGEOMETRY_EXPECT(m_faceList.length() > 0);
 
     int outgoingEdge = -1;
     int incomingEdge = -1;
@@ -268,6 +298,10 @@ namespace EBGeometry::DCEL {
       outgoingEdge = m_edgeList[outgoingEdge].getNextEdge();
       EBGEOMETRY_EXPECT(outgoingEdge >= 0 && outgoingEdge < m_edgeList.length());
     }
+
+    // Ensure accumulated normal has non-zero length before normalizing
+    // (prevents division by zero when angle-weighted normals cancel out)
+    EBGEOMETRY_EXPECT(m_normal.length() > EBGeometry::Limits::eps());
 
     this->normalizeNormalVector();
   }
