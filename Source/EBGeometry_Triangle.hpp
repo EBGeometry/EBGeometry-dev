@@ -329,13 +329,13 @@ namespace EBGeometry {
     MetaData m_metaData;
   };
 
-  static_assert(std::is_trivially_copyable_v<Triangle<short>>, "Triangle must be trivially copyable for GPU compatibility");
-  static_assert(std::is_trivially_copyable_v<Triangle<int>>, "Triangle must be trivially copyable for GPU compatibility");
-  static_assert(std::is_trivially_copyable_v<Triangle<long>>, "Triangle must be trivially copyable for GPU compatibility");
+  static_assert(std::is_trivially_copyable_v<Triangle<short>>, "Triangle must be trivially copyable");
+  static_assert(std::is_trivially_copyable_v<Triangle<int>>, "Triangle must be trivially copyable");
+  static_assert(std::is_trivially_copyable_v<Triangle<long>>, "Triangle must be trivially copyable");
 
-  static_assert(std::is_standard_layout_v<Triangle<short>>, "Triangle must have standard layout for GPU compatibility");
-  static_assert(std::is_standard_layout_v<Triangle<int>>, "Triangle must have standard layout for GPU compatibility");
-  static_assert(std::is_standard_layout_v<Triangle<long>>, "Triangle must have standard layout for GPU compatibility");
+  static_assert(std::is_standard_layout_v<Triangle<short>>, "Triangle must have standard layout");
+  static_assert(std::is_standard_layout_v<Triangle<int>>, "Triangle must have standard layout");
+  static_assert(std::is_standard_layout_v<Triangle<long>>, "Triangle must have standard layout");
 
   /**
     @brief Simple POD struct that holds squared distance and sign

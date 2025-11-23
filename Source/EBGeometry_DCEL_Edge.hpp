@@ -427,11 +427,8 @@ namespace EBGeometry::DCEL {
     projectPointToEdge(const Vec3& a_x0) const noexcept;
   };
 
-  // Static assertions to ensure GPU compatibility
-  static_assert(std::is_trivially_copyable_v<Edge<DefaultMetaData>>,
-                "EBGeometry::DCEL::Edge must be trivially copyable for GPU compatibility");
-  static_assert(std::is_standard_layout_v<Edge<DefaultMetaData>>,
-                "EBGeometry::DCEL::Edge must have standard layout for GPU compatibility");
+  static_assert(std::is_trivially_copyable_v<Edge<DefaultMetaData>>, "DCEL::Edge must be trivially copyable");
+  static_assert(std::is_standard_layout_v<Edge<DefaultMetaData>>, "DCEL::Edge must have standard layout");
 
 } // namespace EBGeometry::DCEL
 

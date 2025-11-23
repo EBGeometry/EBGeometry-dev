@@ -168,6 +168,21 @@ namespace EBGeometry {
     EBGeometry::Span<const Triangle<MetaData>> m_triangles{};
   };
 
+  // Static assertions for AoS TriangleCollection
+  static_assert(std::is_trivially_copyable_v<TriangleCollection<short, LayoutType::AoS>>,
+                "TriangleCollection<AoS> must be trivially copyable");
+  static_assert(std::is_trivially_copyable_v<TriangleCollection<int, LayoutType::AoS>>,
+                "TriangleCollection<AoS> must be trivially copyable");
+  static_assert(std::is_trivially_copyable_v<TriangleCollection<long, LayoutType::AoS>>,
+                "TriangleCollection<AoS> must be trivially copyable");
+
+  static_assert(std::is_standard_layout_v<TriangleCollection<short, LayoutType::AoS>>,
+                "TriangleCollection<AoS> must have standard layout");
+  static_assert(std::is_standard_layout_v<TriangleCollection<int, LayoutType::AoS>>,
+                "TriangleCollection<AoS> must have standard layout");
+  static_assert(std::is_standard_layout_v<TriangleCollection<long, LayoutType::AoS>>,
+                "TriangleCollection<AoS> must have standard layout");
+
   /**
    * @brief Struct-of-Arrays specialization of TriangleCollection.
    * @details In SoA layout, triangle components are stored in separate arrays rather than
@@ -383,6 +398,21 @@ namespace EBGeometry {
        */
     int m_numTriangles{0};
   };
+
+  // Static assertions for SoA TriangleCollection
+  static_assert(std::is_trivially_copyable_v<TriangleCollection<short, LayoutType::SoA>>,
+                "TriangleCollection<SoA> must be trivially copyable");
+  static_assert(std::is_trivially_copyable_v<TriangleCollection<int, LayoutType::SoA>>,
+                "TriangleCollection<SoA> must be trivially copyable");
+  static_assert(std::is_trivially_copyable_v<TriangleCollection<long, LayoutType::SoA>>,
+                "TriangleCollection<SoA> must be trivially copyable");
+
+  static_assert(std::is_standard_layout_v<TriangleCollection<short, LayoutType::SoA>>,
+                "TriangleCollection<SoA> must have standard layout");
+  static_assert(std::is_standard_layout_v<TriangleCollection<int, LayoutType::SoA>>,
+                "TriangleCollection<SoA> must have standard layout");
+  static_assert(std::is_standard_layout_v<TriangleCollection<long, LayoutType::SoA>>,
+                "TriangleCollection<SoA> must have standard layout");
 
 } // namespace EBGeometry
 
