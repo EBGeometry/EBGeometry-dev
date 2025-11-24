@@ -326,16 +326,20 @@ namespace EBGeometry::DCEL {
     EBGEOMETRY_EXPECT(this->getOtherVertex() >= 0);
     EBGEOMETRY_EXPECT(this->getOtherVertex() < m_vertexList.length());
 
-    // Project point to edge
-    const Real t = this->projectPointToEdge(a_x0);
-
     Real retval = EBGeometry::Limits::max();
 
-    if (t <= 0.0) {
+    constexpr Real eps  = EBGeometry::Limits::eps();
+    constexpr Real zero = Real(0);
+    constexpr Real one  = Real(1);
+
+    // Project the point to edge
+    const Real t = this->projectPointToEdge(a_x0);
+
+    if (t <= zero) {
       // Closest point is the starting vertex.
       retval = m_vertexList[this->getVertex()].signedDistance(a_x0);
     }
-    else if (t >= 1.0) {
+    else if (t >= one) {
       // Closest point is the end vertex.
       retval = m_vertexList[this->getOtherVertex()].signedDistance(a_x0);
     }
@@ -344,11 +348,10 @@ namespace EBGeometry::DCEL {
       const Vec3 x2x1      = this->getX2X1();
       const Vec3 linePoint = m_vertexList[m_vertex].getPosition() + t * x2x1;
       const Vec3 delta     = a_x0 - linePoint;
-      const Real dot       = m_normal.dot(delta);
+      const Real proj      = dot(m_normal, delta);
+      const int  sgn       = EBGeometry::sgn(proj);
 
-      const int sgn = (dot > 0.0) ? 1 : -1;
-
-      retval = Real(sgn) * delta.length();
+      retval = (EBGeometry::abs(proj) > eps) ? sgn * delta.length() : 0.0;
     }
 
     return retval;
@@ -360,14 +363,17 @@ namespace EBGeometry::DCEL {
   Real
   Edge<MetaData>::unsignedDistance2(const Vec3& a_x0) const noexcept
   {
-    EBGEOMETRY_EXPECT(m_vertexList != nullptr);
+    EBGEOMETRY_EXPECT(m_vertexList.data() != nullptr);
     EBGEOMETRY_EXPECT(m_vertex >= 0);
+    EBGEOMETRY_EXPECT(m_vertex < m_vertexList.length());
+    EBGEOMETRY_EXPECT(this->getOtherVertex() >= 0);
+    EBGEOMETRY_EXPECT(this->getOtherVertex() < m_vertexList.length());
 
-    constexpr Real zero = 0.0;
-    constexpr Real one  = 1.0;
+    constexpr Real zero = Real(0);
+    constexpr Real one  = Real(1);
 
-    // Project point to edge and restrict to edge length.
-    const auto t = std::min(std::max(zero, this->projectPointToEdge(a_x0)), one);
+    // Project point to edge and clamp to edge length.
+    const Real t = std::min(std::max(zero, this->projectPointToEdge(a_x0)), one);
 
     // Compute distance to this edge.
     const Vec3 x2x1      = this->getX2X1();

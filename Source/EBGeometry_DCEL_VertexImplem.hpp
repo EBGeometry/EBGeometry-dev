@@ -387,8 +387,8 @@ namespace EBGeometry::DCEL {
   {
     const Vec3 delta = a_x0 - m_position;
     const Real dist  = delta.length();
-    const Real dot   = m_normal.dot(delta);
-    const int  sign  = (dot > 0.0) ? 1 : -1;
+    const Real proj  = dot(m_normal, delta);
+    const int  sign  = EBGeometry::sgn(proj);
 
     return (dist != 0.0) ? Real(sign) * dist : 0.0;
   }
@@ -399,9 +399,8 @@ namespace EBGeometry::DCEL {
   Real
   Vertex<MetaData>::unsignedDistance2(const Vec3& a_x0) const noexcept
   {
-    const Vec3 delta = a_x0 - m_position;
 
-    return delta.dot(delta);
+    return (a_x0 - m_position).length2();
   }
 
   template <class MetaData>
