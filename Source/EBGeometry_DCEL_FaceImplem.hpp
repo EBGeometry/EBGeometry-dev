@@ -101,7 +101,7 @@ namespace EBGeometry::DCEL {
   template <class MetaData>
   EBGEOMETRY_ALWAYS_INLINE
   void
-  Face<MetaData>::setInsideOutsideAlgorithm(const Polygon2D::InsideOutsideAlgorithm& a_algorithm) noexcept
+  Face<MetaData>::setInsideOutsideAlgorithm(const EmbeddedFace2D::InsideOutsideAlgorithm& a_algorithm) noexcept
   {
     m_poly2Algorithm = a_algorithm;
   }
@@ -472,10 +472,10 @@ namespace EBGeometry::DCEL {
     const int numEdges = this->getNumEdges();
 
     EBGEOMETRY_EXPECT(numEdges >= 3);
+    EBGEOMETRY_EXPECT(numEdges <= MaxFaceVertices);
 
-    // clang-tidy wants us to handle exceptions here, but there can
-    // be no exceptions in device code.
-    Vec3* vertexCoordinates = new Vec3[numEdges]; // NOLINT
+    // Stack-allocate vertex coordinates
+    Vec3 vertexCoordinates[MaxFaceVertices];
 
     int curEdge = -1;
     int counter = 0;
@@ -484,6 +484,7 @@ namespace EBGeometry::DCEL {
       curEdge = (curEdge < 0) ? m_edge : curEdge;
 
       EBGEOMETRY_EXPECT(curEdge >= 0);
+      EBGEOMETRY_EXPECT(counter < MaxFaceVertices);
 
       const int vertex = m_edgeList[curEdge].getVertex();
 
@@ -500,9 +501,13 @@ namespace EBGeometry::DCEL {
       counter++;
     }
 
-    m_polygon2D.define(m_normal, counter, vertexCoordinates);
+    m_polygon2DNumPoints = counter;
 
-    delete[] vertexCoordinates;
+    // Create Span views and pass to EmbeddedFace2D
+    EBGeometry::Span<const Vec3> vertexSpan(vertexCoordinates, counter);
+    EBGeometry::Span<Vec2>       polygon2DSpan(m_polygon2DPoints, counter);
+
+    m_embeddedFace2D.define(m_normal, vertexSpan, polygon2DSpan);
   }
 
   template <class MetaData>
@@ -575,7 +580,7 @@ namespace EBGeometry::DCEL {
   {
     const Vec3 p = this->projectPointIntoFacePlane(a_p);
 
-    return m_polygon2D.isPointInside(p, m_poly2Algorithm);
+    return m_embeddedFace2D.isPointInside(p, m_poly2Algorithm);
   }
 } // namespace EBGeometry::DCEL
 

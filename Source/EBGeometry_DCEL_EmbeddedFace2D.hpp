@@ -3,19 +3,20 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 /**
- * @file   EBGeometry_DCEL_Polygon2D.hpp
+ * @file   EBGeometry_DCEL_EmbeddedFace2D.hpp
  * @brief  Declaration of a two-dimensional polygon class for embedding 3D
  * polygon faces
  * @author Robert Marskar
  */
 
-#ifndef EBGEOMETRY_POLYGON2D_HPP
-#define EBGEOMETRY_POLYGON2D_HPP
+#ifndef EBGEOMETRY_DCEL_EMBEDDEDFACE2D_HPP
+#define EBGEOMETRY_DCEL_EMBEDDEDFACE2D_HPP
 
 // Our includes
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_GPUTypes.hpp"
 #include "EBGeometry_Macros.hpp"
+#include "EBGeometry_Span.hpp"
 #include "EBGeometry_Vec.hpp"
 
 namespace EBGeometry::DCEL {
@@ -37,7 +38,7 @@ namespace EBGeometry::DCEL {
    * which checks how many times a ray cast from the point crosses the edges of the
    * polygon.
    */
-  class Polygon2D
+  class EmbeddedFace2D
   {
   public:
     /**
@@ -56,70 +57,71 @@ namespace EBGeometry::DCEL {
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Polygon2D() noexcept = default;
+    EmbeddedFace2D() noexcept = default;
 
     /**
      * @brief Full constructor
      * @param[in] a_normal Normal vector of the 3D polygon face
-     * @param[in] a_numPoints Number of vertices
-     * @param[in] a_points Vertex coordinates of the 3D polygon face
+     * @param[in] a_points Span view of vertex coordinates of the 3D polygon face
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Polygon2D(const Vec3& a_normal, int a_numPoints, const Vec3* a_points) noexcept;
+    EmbeddedFace2D(const Vec3& a_normal, EBGeometry::Span<const Vec3> a_points) noexcept;
 
     /**
      * @brief Copy constructor.
-     * @param[in] a_polygon2D Object to copy
+     * @param[in] a_embeddedFace2D Object to copy
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Polygon2D(const Polygon2D& a_polygon2D) noexcept;
+    EmbeddedFace2D(const EmbeddedFace2D& a_embeddedFace2D) noexcept = default;
 
     /**
-     * @brief Move constructor (but performs a copy anyways).
-     * @param[in, out] a_polygon2D Object to move
+     * @brief Move constructor.
+     * @param[in, out] a_embeddedFace2D Object to move
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Polygon2D(Polygon2D&& a_polygon2D) noexcept;
+    EmbeddedFace2D(EmbeddedFace2D&& a_embeddedFace2D) noexcept = default;
 
     /**
      * @brief Destructor (does nothing)
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    ~Polygon2D() noexcept;
+    ~EmbeddedFace2D() noexcept = default;
 
     /**
      * @brief Copy assignment.
-     * @param[in] a_polygon2D Object to copy
+     * @param[in] a_embeddedFace2D Object to copy
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Polygon2D&
-    operator=(const Polygon2D& a_polygon2D) noexcept;
+    EmbeddedFace2D&
+    operator=(const EmbeddedFace2D& a_embeddedFace2D) noexcept = default;
 
     /**
-     * @brief Move assignment (but performs a copy anyways)
-     * @param[in, out] a_polygon2D Object to move
+     * @brief Move assignment.
+     * @param[in, out] a_embeddedFace2D Object to move
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
-    Polygon2D&
-    operator=(Polygon2D&& a_polygon2D) noexcept;
+    EmbeddedFace2D&
+    operator=(EmbeddedFace2D&& a_embeddedFace2D) noexcept = default;
 
     /**
-     * @brief Define function. This find the direction to ignore and then computes
+     * @brief Define function. This finds the direction to ignore and then computes
      * the 2D points.
      * @param[in] a_normal Normal vector for polygon face
-     * @param[in] a_numPoints Number of vertices
-     * @param[in] a_points Vertex coordinates for polygon face.
+     * @param[in] a_points Span view of vertex coordinates for polygon face
+     * @param[in] a_polygon2DPoints Span view for storing the computed 2D points
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     void
-    define(const Vec3& a_normal, int a_numPoints, const Vec3* a_points) noexcept;
+    define(const Vec3&                  a_normal,
+           EBGeometry::Span<const Vec3> a_points,
+           EBGeometry::Span<Vec2>       a_polygon2DPoints) noexcept;
 
     /**
      * @brief Check if a point is inside or outside the 2D polygon
@@ -179,15 +181,11 @@ namespace EBGeometry::DCEL {
     int m_yDir = -1;
 
     /**
-     * @brief Number of vertex points.
+     * @brief Non-owning view of 2D polygon vertex coordinates.
+     * @details This is a Span view into a stack-allocated array owned by Face.
+     * Contains the position of the vertices, projected into 2D.
      */
-    int m_numPoints = -1;
-
-    /**
-     * @brief List of points in 2D.
-     * @details This is the position of the vertices, projected into 2D
-     */
-    Vec2* m_points = nullptr;
+    EBGeometry::Span<const Vec2> m_points{};
 
     /**
      * @brief Project a 3D point onto the 2D polygon plane (this ignores one of the
@@ -232,6 +230,6 @@ namespace EBGeometry::DCEL {
   };
 } // namespace EBGeometry::DCEL
 
-#include "EBGeometry_DCEL_Polygon2DImplem.hpp" // NOLINT
+#include "EBGeometry_DCEL_EmbeddedFace2DImplem.hpp" // NOLINT
 
 #endif

@@ -3,112 +3,33 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 /**
- * @file   EBGeometry_Polygon2DImplem.hpp
- * @brief  Implementation of EBGeometry_Polygon2D.hpp
+ * @file   EBGeometry_DCEL_EmbeddedFace2DImplem.hpp
+ * @brief  Implementation of EBGeometry_DCEL_EmbeddedFace2D.hpp
  * @author Robert Marskar
  */
 
-#ifndef EBGeometry_Polygon2DImplem
-#define EBGeometry_Polygon2DImplem
+#ifndef EBGEOMETRY_DCEL_EMBEDDEDFACE2DIMPLEM_HPP
+#define EBGEOMETRY_DCEL_EMBEDDEDFACE2DIMPLEM_HPP
 
 // Std includes
 #include <cmath>
 
 // Our includes
-#include "EBGeometry_DCEL_Polygon2D.hpp"
+#include "EBGeometry_DCEL_EmbeddedFace2D.hpp"
 #include "EBGeometry_Macros.hpp"
 
 namespace EBGeometry::DCEL {
 
   EBGEOMETRY_ALWAYS_INLINE
-  Polygon2D::Polygon2D(const Vec3& a_normal, int a_numPoints, const Vec3* a_points) noexcept
+  EmbeddedFace2D::EmbeddedFace2D(const Vec3& a_normal, EBGeometry::Span<const Vec3> a_points) noexcept
   {
-    this->define(a_normal, a_numPoints, a_points);
-  }
-
-  EBGEOMETRY_ALWAYS_INLINE
-  Polygon2D::Polygon2D(const Polygon2D& a_polygon2D) noexcept :
-    m_xDir(a_polygon2D.m_xDir),
-    m_yDir(a_polygon2D.m_yDir),
-    m_numPoints(a_polygon2D.m_numPoints)
-  {
-    EBGEOMETRY_EXPECT(m_numPoints >= 3);
-
-    m_points = new Vec2[m_numPoints]; // NOLINT
-
-    for (int i = 0; i < m_numPoints; i++) {
-      m_points[i] = a_polygon2D.m_points[i];
-    }
-  }
-
-  EBGEOMETRY_ALWAYS_INLINE
-  Polygon2D::Polygon2D(Polygon2D&& a_polygon2D) noexcept :
-    m_xDir(a_polygon2D.m_xDir),
-    m_yDir(a_polygon2D.m_yDir),
-    m_numPoints(a_polygon2D.m_numPoints)
-  {
-    EBGEOMETRY_EXPECT(m_numPoints >= 3);
-
-    m_points = new Vec2[m_numPoints]; // NOLINT
-
-    for (int i = 0; i < m_numPoints; i++) {
-      m_points[i] = a_polygon2D.m_points[i];
-    }
-  }
-
-  EBGEOMETRY_ALWAYS_INLINE
-  Polygon2D::~Polygon2D() noexcept
-  {
-    if (m_points != nullptr && m_numPoints > 0) {
-      delete[] m_points;
-    }
-  }
-
-  EBGEOMETRY_ALWAYS_INLINE
-  Polygon2D&
-  Polygon2D::operator=(const Polygon2D& a_polygon2D) noexcept
-  {
-    if (this != &a_polygon2D) {
-      m_xDir      = a_polygon2D.m_xDir;
-      m_yDir      = a_polygon2D.m_yDir;
-      m_numPoints = a_polygon2D.m_numPoints;
-
-      EBGEOMETRY_EXPECT(m_numPoints >= 3);
-
-      m_points = new Vec2[m_numPoints]; // NOLINT
-
-      for (int i = 0; i < m_numPoints; i++) {
-        m_points[i] = a_polygon2D.m_points[i];
-      }
-    }
-
-    return *this;
-  }
-
-  EBGEOMETRY_ALWAYS_INLINE
-  Polygon2D&
-  Polygon2D::operator=(Polygon2D&& a_polygon2D) noexcept
-  {
-    if (this != &a_polygon2D) {
-      m_xDir      = a_polygon2D.m_xDir;
-      m_yDir      = a_polygon2D.m_yDir;
-      m_numPoints = a_polygon2D.m_numPoints;
-
-      EBGEOMETRY_EXPECT(m_numPoints >= 3);
-
-      m_points = new Vec2[m_numPoints]; // NOLINT
-
-      for (int i = 0; i < m_numPoints; i++) {
-        m_points[i] = a_polygon2D.m_points[i];
-      }
-    }
-
-    return *this;
+    // Note: This constructor signature changed but Face doesn't use it directly anymore.
+    // Face now calls define() explicitly with its own storage.
   }
 
   EBGEOMETRY_ALWAYS_INLINE
   bool
-  Polygon2D::isPointInside(const Vec3& a_point, InsideOutsideAlgorithm a_algorithm) const noexcept
+  EmbeddedFace2D::isPointInside(const Vec3& a_point, InsideOutsideAlgorithm a_algorithm) const noexcept
   {
     bool ret = false;
 
@@ -135,7 +56,7 @@ namespace EBGeometry::DCEL {
 
   EBGEOMETRY_ALWAYS_INLINE
   bool
-  Polygon2D::isPointInsidePolygonWindingNumber(const Vec3& a_point) const noexcept
+  EmbeddedFace2D::isPointInsidePolygonWindingNumber(const Vec3& a_point) const noexcept
   {
     const Vec2 projectedPoint = this->projectPoint(a_point);
 
@@ -146,7 +67,7 @@ namespace EBGeometry::DCEL {
 
   EBGEOMETRY_ALWAYS_INLINE
   bool
-  Polygon2D::isPointInsidePolygonCrossingNumber(const Vec3& a_point) const noexcept
+  EmbeddedFace2D::isPointInsidePolygonCrossingNumber(const Vec3& a_point) const noexcept
   {
     const Vec2 projectedPoint = this->projectPoint(a_point);
 
@@ -157,7 +78,7 @@ namespace EBGeometry::DCEL {
 
   EBGEOMETRY_ALWAYS_INLINE
   bool
-  Polygon2D::isPointInsidePolygonSubtend(const Vec3& a_point) const noexcept
+  EmbeddedFace2D::isPointInsidePolygonSubtend(const Vec3& a_point) const noexcept
   {
     const Vec2 projectedPoint = this->projectPoint(a_point);
 
@@ -170,18 +91,25 @@ namespace EBGeometry::DCEL {
 
   EBGEOMETRY_ALWAYS_INLINE
   Vec2
-  Polygon2D::projectPoint(const Vec3& a_point) const noexcept
+  EmbeddedFace2D::projectPoint(const Vec3& a_point) const noexcept
   {
     return Vec2(a_point[m_xDir], a_point[m_yDir]);
   }
 
   EBGEOMETRY_ALWAYS_INLINE
   void
-  Polygon2D::define(const Vec3& a_normal, int a_numPoints, const Vec3* a_points) noexcept
+  EmbeddedFace2D::define(const Vec3&                  a_normal,
+                         EBGeometry::Span<const Vec3> a_points,
+                         EBGeometry::Span<Vec2>       a_polygon2DPoints) noexcept
   {
-    EBGEOMETRY_EXPECT(a_numPoints >= 3);
-    EBGEOMETRY_EXPECT(a_points != nullptr);
+    EBGEOMETRY_EXPECT(a_points.length() >= 3);
+    EBGEOMETRY_EXPECT(a_points.data() != nullptr);
+    EBGEOMETRY_EXPECT(a_polygon2DPoints.data() != nullptr);
+    EBGEOMETRY_EXPECT(a_points.length() == a_polygon2DPoints.length());
 
+    const int numPoints = a_points.length();
+
+    // Find the direction with the largest normal component (this is the one we'll project out)
     int projectDir = 0;
 
     for (int dir = 1; dir < 3; dir++) {
@@ -190,6 +118,7 @@ namespace EBGeometry::DCEL {
       }
     }
 
+    // Determine which two directions we'll keep for the 2D embedding
     m_xDir = 3;
     m_yDir = 0;
 
@@ -200,21 +129,22 @@ namespace EBGeometry::DCEL {
       }
     }
 
-    // Add NOLINT to memory allocation. clang-tidy wants exception handling but there are
-    // no exception on the GPU.
-    m_numPoints = a_numPoints;
-    m_points    = new Vec2[m_numPoints]; // NOLINT
-
-    for (int i = 0; i < a_numPoints; i++) {
-      m_points[i] = this->projectPoint(a_points[i]);
+    // Project all 3D vertices to 2D and store in the provided array
+    for (int i = 0; i < numPoints; i++) {
+      a_polygon2DPoints[i] = this->projectPoint(a_points[i]);
     }
+
+    // Store a Span view into the array
+    m_points = EBGeometry::Span<const Vec2>(a_polygon2DPoints.data(), numPoints);
   }
 
   EBGEOMETRY_ALWAYS_INLINE
   int
-  Polygon2D::computeWindingNumber(const Vec2& a_point) const noexcept
+  EmbeddedFace2D::computeWindingNumber(const Vec2& a_point) const noexcept
   {
     int windingNumber = 0;
+
+    const int numPoints = m_points.length();
 
     constexpr Real zero = Real(0.0);
 
@@ -223,11 +153,11 @@ namespace EBGeometry::DCEL {
     };
 
     // Loop through all edges of the polygon
-    for (int i = 0; i < m_numPoints; i++) {
+    for (int i = 0; i < numPoints; i++) {
 
       const Vec2& P  = a_point;
       const Vec2& p1 = m_points[i];
-      const Vec2& p2 = m_points[(i + 1) % m_numPoints];
+      const Vec2& p2 = m_points[(i + 1) % numPoints];
 
       const Real res = isLeft(p1, p2, P);
 
@@ -248,13 +178,15 @@ namespace EBGeometry::DCEL {
 
   EBGEOMETRY_ALWAYS_INLINE
   int
-  Polygon2D::computeCrossingNumber(const Vec2& a_point) const noexcept
+  EmbeddedFace2D::computeCrossingNumber(const Vec2& a_point) const noexcept
   {
     int crossingNumber = 0;
 
-    for (int i = 0; i < m_numPoints; i++) {
+    const int numPoints = m_points.length();
+
+    for (int i = 0; i < numPoints; i++) {
       const Vec2& p1 = m_points[i];
-      const Vec2& p2 = m_points[(i + 1) % m_numPoints];
+      const Vec2& p2 = m_points[(i + 1) % numPoints];
 
       const bool upwardCrossing   = (p1.y() <= a_point.y()) && (p2.y() > a_point.y());
       const bool downwardCrossing = (p1.y() > a_point.y()) && (p2.y() <= a_point.y());
@@ -273,13 +205,15 @@ namespace EBGeometry::DCEL {
 
   EBGEOMETRY_ALWAYS_INLINE
   Real
-  Polygon2D::computeSubtendedAngle(const Vec2& a_point) const noexcept
+  EmbeddedFace2D::computeSubtendedAngle(const Vec2& a_point) const noexcept
   {
     Real sumTheta = 0.0;
 
-    for (int i = 0; i < m_numPoints; i++) {
+    const int numPoints = m_points.length();
+
+    for (int i = 0; i < numPoints; i++) {
       const Vec2 p1 = m_points[i] - a_point;
-      const Vec2 p2 = m_points[(i + 1) % m_numPoints] - a_point;
+      const Vec2 p2 = m_points[(i + 1) % numPoints] - a_point;
 
       const Real theta1 = static_cast<Real>(atan2(p1.y(), p1.x()));
       const Real theta2 = static_cast<Real>(atan2(p2.y(), p2.x()));

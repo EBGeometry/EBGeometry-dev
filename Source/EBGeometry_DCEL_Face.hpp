@@ -14,12 +14,14 @@
 
 // Our includes
 #include "EBGeometry_DCEL.hpp"
-#include "EBGeometry_DCEL_Polygon2D.hpp"
+#include "EBGeometry_DCEL_EmbeddedFace2D.hpp"
 #include "EBGeometry_GPU.hpp"
 #include "EBGeometry_GPUTypes.hpp"
 #include "EBGeometry_Macros.hpp"
 #include "EBGeometry_Span.hpp"
 #include "EBGeometry_Vec.hpp"
+
+#warning "I should probably just get rid of embedded face 2d and add the corresponding methods directly into this class"
 
 namespace EBGeometry::DCEL {
 
@@ -194,7 +196,7 @@ namespace EBGeometry::DCEL {
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
     void
-    setInsideOutsideAlgorithm(const Polygon2D::InsideOutsideAlgorithm& a_algorithm) noexcept;
+    setInsideOutsideAlgorithm(const EmbeddedFace2D::InsideOutsideAlgorithm& a_algorithm) noexcept;
 
     /**
      * @brief Get the number of edges in the polygon
@@ -359,15 +361,30 @@ namespace EBGeometry::DCEL {
     MetaData m_metaData = MetaData();
 
     /**
+     * @brief Maximum number of vertices/edges per face
+     */
+    static constexpr int MaxFaceVertices = 16;
+
+    /**
+     * @brief Stack-allocated array for 2D polygon vertex coordinates
+     */
+    Vec2 m_polygon2DPoints[MaxFaceVertices];
+
+    /**
+     * @brief Number of points currently in use in m_polygon2DPoints
+     */
+    int m_polygon2DNumPoints = 0;
+
+    /**
      * @brief 2D embedding of this polygon. This is the 2D view of the current
      * object projected along its normal vector cardinal.
      */
-    Polygon2D m_polygon2D;
+    EmbeddedFace2D m_embeddedFace2D;
 
     /**
      * @brief Algorithm for inside/outside tests
      */
-    Polygon2D::InsideOutsideAlgorithm m_poly2Algorithm = Polygon2D::InsideOutsideAlgorithm::CrossingNumber;
+    EmbeddedFace2D::InsideOutsideAlgorithm m_poly2Algorithm = EmbeddedFace2D::InsideOutsideAlgorithm::CrossingNumber;
 
     /**
      * @brief Compute the centroid position of this polygon
