@@ -27,14 +27,14 @@ namespace EBGeometry::DCEL {
   /**
    * @brief Class which represents a half-edge in a doubly connected edge list.
    * @details This class is used in DCEL functionality which stores polygonal
-   * surfaces in a mesh. The information contain in an Edge object contains the
+   * surfaces in a mesh. The information contained in an Edge object contains the
    * necessary object for logically circulating the inside of a polygon face. This
    * means that a polygon face has a double-connected list of half-edges which
    * circulate the interior of the face. The Edge object is such a half-edge; it
    * represents the outgoing half-edge from a vertex, located such that it can be
    * logically represented as a half edge circulating the inside of a polygon face.
    * It stores the corresponding half-edge on the other face that shares this edge.
-   * Since class is used with DCEL functionality and signed distance fields, it also
+   * Since this class is used with DCEL functionality and signed distance fields, it also
    * has a signed distance function and thus a pseudonormal vector.
    *
    * @note The normal vector is outgoing, i.e. a point x is "outside" if the dot
@@ -45,7 +45,7 @@ namespace EBGeometry::DCEL {
   {
   public:
     /**
-     * @brief Default constructors. Creates an invalid edge
+     * @brief Default constructor. Creates an invalid edge
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
@@ -104,7 +104,7 @@ namespace EBGeometry::DCEL {
     operator=(const Edge& a_edge) noexcept = default;
 
     /**
-     * @brief Copy assignment
+     * @brief Move assignment
      * @param[in, out] a_edge Other edge
      */
     EBGEOMETRY_GPU_HOST_DEVICE
@@ -114,7 +114,7 @@ namespace EBGeometry::DCEL {
 
     /**
      * @brief Set the starting vertex
-     * @param[in] a_vertex Starting vertex.
+     * @param[in] a_vertex Starting vertex index.
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
@@ -123,7 +123,7 @@ namespace EBGeometry::DCEL {
 
     /**
      * @brief Set the previous edge
-     * @param[in] a_previousEdge Previous edge
+     * @param[in] a_previousEdge Previous edge index
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
@@ -132,7 +132,7 @@ namespace EBGeometry::DCEL {
 
     /**
      * @brief Set the pair edge
-     * @param[in] a_pairEdge Pair edge (for jumping to the opposite polygon)
+     * @param[in] a_pairEdge Pair edge index (for jumping to the opposite polygon)
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
@@ -141,7 +141,7 @@ namespace EBGeometry::DCEL {
 
     /**
      * @brief Set the next edge
-     * @param[in] a_nextEdge Next edge around the polygon
+     * @param[in] a_nextEdge Next edge index around the polygon
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
@@ -150,7 +150,7 @@ namespace EBGeometry::DCEL {
 
     /**
      * @brief Set the polygon face.
-     * @param[in] a_face Polygon face.
+     * @param[in] a_face Polygon face index.
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
@@ -240,7 +240,9 @@ namespace EBGeometry::DCEL {
     normalizeNormalVector() noexcept;
 
     /**
-     * @brief Compute the normal vector
+     * @brief Compute the normal vector as the average of the two adjacent face normals
+     * @details The normal is computed as the average of this half-edge's face normal
+     * and the pair half-edge's face normal, then normalized to unit length.
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
@@ -331,10 +333,10 @@ namespace EBGeometry::DCEL {
     /**
      * @brief Get the signed distance to this half edge
      * @details This routine will check if the input point projects to the edge or
-     * one of the vertices. If it projectes to one of the vertices we compute the
+     * one of the vertices. If it projects to one of the vertices we compute the
      * signed distance to the corresponding vertex. Otherwise we compute the
      * projection to the edge and compute the sign from the normal vector.
-     * @param[in] a_x0 Query point     
+     * @param[in] a_x0 Query point
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -344,7 +346,7 @@ namespace EBGeometry::DCEL {
     /**
      * @brief Get the squared unsigned distance to this half edge.
      * @details This routine will check if the input point projects to the edge or
-     * one of the vertices. If it projectes to one of the vertices we compute the
+     * one of the vertices. If it projects to one of the vertices we compute the
      * squared distance to the corresponding vertex. Otherwise we compute the
      * squared distance of the projection to the edge. This is slightly faster than
      * signedDistance() as it avoids the square root.
@@ -409,6 +411,7 @@ namespace EBGeometry::DCEL {
     /**
      * @brief Return the vector pointing along this edge.
      * @details Returns the vector pointing from the starting index to the end index
+     * @return Vector from starting vertex to ending vertex (x2 - x1)
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -418,9 +421,10 @@ namespace EBGeometry::DCEL {
     /**
      * @brief Returns the "projection" of a point to an edge.
      * @details This function parametrizes the edge as x(t) = x0 + (x1-x0)*t and
-     * returns where on the this edge the point a_x0 projects. If projects onto the
-     * edge if t = [0,1] and to one of the start/end vertices otherwise.
+     * returns where on this edge the point a_x0 projects. The point projects onto the
+     * edge interior if t ∈ [0,1] and to one of the start/end vertices otherwise.
      * @param[in] a_x0 Query point
+     * @return Projection parameter t, where t=0 is start vertex, t=1 is end vertex
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
