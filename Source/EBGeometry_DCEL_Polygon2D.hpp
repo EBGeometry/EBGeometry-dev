@@ -9,8 +9,8 @@
  * @author Robert Marskar
  */
 
-#ifndef EBGeometry_Polygon2D
-#define EBGeometry_Polygon2D
+#ifndef EBGEOMETRY_POLYGON2D_HPP
+#define EBGEOMETRY_POLYGON2D_HPP
 
 // Our includes
 #include "EBGeometry_GPU.hpp"
@@ -22,7 +22,7 @@ namespace EBGeometry::DCEL {
   /**
    * @brief Class for embedding a polygon face into 2D.
    * @details This class is required for determining whether or not a 3D point
-   * projected to the plane of an N-sided polygon lies inside or outside the
+   * projected to the plane of an N-sided planar polygon lies inside or outside the
    * polygon face. To do this we compute the 2D embedding of the polygon face,
    * reducing the problem to a tractable dimension where we can use well-tested
    * algorithm. The 2D embedding of a polygon occurs by taking a set of 3D points
@@ -44,7 +44,7 @@ namespace EBGeometry::DCEL {
      * @brief Supported algorithms for performing inside/outside tests when
      * checking if a point projects to the inside or outside of a polygon face.
      */
-    enum class InsideOutsideAlgorithm // NOLINT (clang-tidy might complain that size is too large)
+    enum class InsideOutsideAlgorithm
     {
       SubtendedAngle,
       CrossingNumber,
