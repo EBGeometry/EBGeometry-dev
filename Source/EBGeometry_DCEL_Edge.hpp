@@ -32,10 +32,10 @@ namespace EBGeometry::DCEL {
    * means that a polygon face has a double-connected list of half-edges which
    * circulate the interior of the face. The Edge object is such a half-edge; it
    * represents the outgoing half-edge from a vertex, located such that it can be
-   * logically represented as a half edge on the "inside" of a polygon face.
-   * corresponding half-edge on the other face that shares this edge. Since this
-   * class is used with DCEL functionality and signed distance fields, this class
-   * also has a signed distance function and thus a "normal vector".
+   * logically represented as a half edge circulating the inside of a polygon face.
+   * It stores the corresponding half-edge on the other face that shares this edge.
+   * Since class is used with DCEL functionality and signed distance fields, it also
+   * has a signed distance function and thus a pseudonormal vector.
    *
    * @note The normal vector is outgoing, i.e. a point x is "outside" if the dot
    * product between n and (x - x0) is positive.

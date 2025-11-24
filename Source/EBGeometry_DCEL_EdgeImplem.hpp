@@ -8,8 +8,8 @@
  * @author Robert Marskar
  */
 
-#ifndef EBGeometry_DCEL_EdgeImplem
-#define EBGeometry_DCEL_EdgeImplem
+#ifndef EBGEOMETRY_DCEL_EDGEIMPLEM_HPP
+#define EBGEOMETRY_DCEL_EDGEIMPLEM_HPP
 
 // Our includes
 #include "EBGeometry_DCEL_Edge.hpp"
@@ -187,9 +187,9 @@ namespace EBGeometry::DCEL {
 
     const Real len = m_normal.length();
 
-    EBGEOMETRY_ALWAYS_EXPECT(m_normal.length() > eps);
+    EBGEOMETRY_ALWAYS_EXPECT(len > eps);
 
-    m_normal = (m_normal.length() > eps) ? m_normal / len : Vec3::unit(2);
+    m_normal = (len > eps) ? m_normal / len : Vec3::unit(2);
   }
 
   template <class MetaData>
@@ -207,9 +207,9 @@ namespace EBGeometry::DCEL {
   int
   Edge<MetaData>::getOtherVertex() const noexcept
   {
-    EBGEOMETRY_ALWAYS_EXPECT(m_edgeList.data() != nullptr);
-    EBGEOMETRY_ALWAYS_EXPECT(m_nextEdge >= 0);
-    EBGEOMETRY_ALWAYS_EXPECT(m_nextEdge < m_edgeList.length());
+    EBGEOMETRY_EXPECT(m_edgeList.data() != nullptr);
+    EBGEOMETRY_EXPECT(m_nextEdge >= 0);
+    EBGEOMETRY_EXPECT(m_nextEdge < m_edgeList.length());
 
     return m_edgeList[m_nextEdge].getVertex();
   }
