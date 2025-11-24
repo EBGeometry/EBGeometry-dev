@@ -169,7 +169,7 @@ namespace EBGeometry::DCEL {
 
     /**
      * @brief Set the metadata
-     * @param[in] a_metaData
+     * @param[in] a_metaData User-defined meta-data to attach to this vertex
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
@@ -232,6 +232,7 @@ namespace EBGeometry::DCEL {
 
     /**
      * @brief Normalize the normal vector to a length of 1.
+     * @note If the normal vector has zero length, it is set to the unit z-normal (the mesh will then be garbage).
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
@@ -282,15 +283,6 @@ namespace EBGeometry::DCEL {
     EBGEOMETRY_ALWAYS_INLINE
     void
     computeVertexNormalAngleWeighted() noexcept;
-
-    /**
-     * @brief Get the outgoing edge
-     * @return m_edge
-     */
-    EBGEOMETRY_GPU_HOST_DEVICE
-    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
-    int
-    getEdge() const noexcept;
 
     /**
      * @brief Return modifiable vertex position.
@@ -347,7 +339,7 @@ namespace EBGeometry::DCEL {
      * @brief Get the squared unsigned distance to this vertex
      * @details This is faster to compute than signedDistance, and might be
      * preferred for some algorithms.
-     * @return Returns the vector length of (a_x - m_position)
+     * @return Returns the squared vector length of (a_x0 - m_position)
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -404,7 +396,7 @@ namespace EBGeometry::DCEL {
     Vec3 m_normal = Vec3::zero();
 
     /**
-     * @brief MetaData-data for this vertex
+     * @brief Meta-data for this vertex
      */
     MetaData m_metaData = MetaData();
   };
