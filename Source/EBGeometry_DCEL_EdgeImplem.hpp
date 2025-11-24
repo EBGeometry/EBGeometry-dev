@@ -18,12 +18,14 @@
 namespace EBGeometry::DCEL {
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   Edge<MetaData>::Edge(int a_vertex) noexcept :
     m_vertex(a_vertex)
   {}
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   Edge<MetaData>::Edge(int a_vertex, int a_previousEdge, int a_pairEdge, int a_nextEdge, int a_face) noexcept :
     m_vertex(a_vertex),
@@ -34,6 +36,7 @@ namespace EBGeometry::DCEL {
   {}
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   void
   Edge<MetaData>::setVertex(int a_vertex) noexcept
@@ -42,6 +45,7 @@ namespace EBGeometry::DCEL {
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   void
   Edge<MetaData>::setPreviousEdge(int a_previousEdge) noexcept
@@ -50,6 +54,7 @@ namespace EBGeometry::DCEL {
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   void
   Edge<MetaData>::setPairEdge(int a_pairEdge) noexcept
@@ -58,6 +63,7 @@ namespace EBGeometry::DCEL {
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   void
   Edge<MetaData>::setNextEdge(int a_nextEdge) noexcept
@@ -66,6 +72,7 @@ namespace EBGeometry::DCEL {
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   void
   Edge<MetaData>::setFace(int a_face) noexcept
@@ -74,6 +81,7 @@ namespace EBGeometry::DCEL {
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   void
   Edge<MetaData>::setMetaData(const MetaData& a_metaData) noexcept
@@ -82,6 +90,7 @@ namespace EBGeometry::DCEL {
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   void
   Edge<MetaData>::setVertexList(EBGeometry::Span<const Vertex<MetaData>> a_vertexList) noexcept
@@ -90,6 +99,7 @@ namespace EBGeometry::DCEL {
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   void
   Edge<MetaData>::setEdgeList(EBGeometry::Span<const Edge<MetaData>> a_edgeList) noexcept
@@ -98,6 +108,7 @@ namespace EBGeometry::DCEL {
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   void
   Edge<MetaData>::setFaceList(EBGeometry::Span<const Face<MetaData>> a_faceList) noexcept
@@ -106,6 +117,7 @@ namespace EBGeometry::DCEL {
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   EBGeometry::Span<const Vertex<MetaData>>
   Edge<MetaData>::getVertexList() const noexcept
@@ -114,6 +126,7 @@ namespace EBGeometry::DCEL {
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   EBGeometry::Span<const Edge<MetaData>>
   Edge<MetaData>::getEdgeList() const noexcept
@@ -122,6 +135,7 @@ namespace EBGeometry::DCEL {
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   EBGeometry::Span<const Face<MetaData>>
   Edge<MetaData>::getFaceList() const noexcept
@@ -130,6 +144,7 @@ namespace EBGeometry::DCEL {
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   void
   Edge<MetaData>::setNormal(const Vec3& a_normal) noexcept
@@ -138,17 +153,24 @@ namespace EBGeometry::DCEL {
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   void
   Edge<MetaData>::computeNormal() noexcept
   {
-    EBGEOMETRY_EXPECT(m_edgeList != nullptr);
-    EBGEOMETRY_EXPECT(m_faceList != nullptr);
-    EBGEOMETRY_EXPECT(m_face >= 0);
-    EBGEOMETRY_EXPECT(m_pairEdge >= 0);
-    EBGEOMETRY_EXPECT(m_edgeList[m_pairEdge].getFace() >= 0);
+    EBGEOMETRY_ALWAYS_EXPECT(m_faceList.data() != nullptr);
+    EBGEOMETRY_ALWAYS_EXPECT(m_face >= 0);
+    EBGEOMETRY_ALWAYS_EXPECT(m_face < m_faceList.length());
+
+    EBGEOMETRY_ALWAYS_EXPECT(m_edgeList.data() != nullptr);
+    EBGEOMETRY_ALWAYS_EXPECT(m_pairEdge >= 0);
+    EBGEOMETRY_ALWAYS_EXPECT(m_pairEdge < m_edgeList.length());
+
+    EBGEOMETRY_ALWAYS_EXPECT(m_edgeList[m_pairEdge].getFace() >= 0);
+    EBGEOMETRY_ALWAYS_EXPECT(m_edgeList[m_pairEdge].getFace() < m_faceList.length());
 
     m_normal = Vec3::zero();
+
     m_normal += m_faceList[m_face].getNormal();
     m_normal += m_faceList[m_edgeList[m_pairEdge].getFace()].getNormal();
 
@@ -156,16 +178,22 @@ namespace EBGeometry::DCEL {
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   void
   Edge<MetaData>::normalizeNormalVector() noexcept
   {
-    EBGEOMETRY_EXPECT(m_normal.length() > EBGeometry::Limits::min());
+    constexpr Real eps = EBGeometry::Limits::eps();
 
-    m_normal = m_normal / m_normal.length();
+    const Real len = m_normal.length();
+
+    EBGEOMETRY_ALWAYS_EXPECT(m_normal.length() > eps);
+
+    m_normal = (m_normal.length() > eps) ? m_normal / len : Vec3::unit(2);
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   int
   Edge<MetaData>::getVertex() const noexcept
@@ -174,17 +202,20 @@ namespace EBGeometry::DCEL {
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   int
   Edge<MetaData>::getOtherVertex() const noexcept
   {
-    EBGEOMETRY_EXPECT(m_edgeList != nullptr);
-    EBGEOMETRY_EXPECT(m_nextEdge >= 0);
+    EBGEOMETRY_ALWAYS_EXPECT(m_edgeList.data() != nullptr);
+    EBGEOMETRY_ALWAYS_EXPECT(m_nextEdge >= 0);
+    EBGEOMETRY_ALWAYS_EXPECT(m_nextEdge < m_edgeList.length());
 
     return m_edgeList[m_nextEdge].getVertex();
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   int
   Edge<MetaData>::getPreviousEdge() const noexcept
@@ -193,6 +224,7 @@ namespace EBGeometry::DCEL {
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   int
   Edge<MetaData>::getPairEdge() const noexcept
@@ -201,6 +233,7 @@ namespace EBGeometry::DCEL {
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   int
   Edge<MetaData>::getNextEdge() const noexcept
@@ -209,6 +242,7 @@ namespace EBGeometry::DCEL {
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   int
   Edge<MetaData>::getFace() const noexcept
@@ -217,37 +251,43 @@ namespace EBGeometry::DCEL {
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   const Vec3&
   Edge<MetaData>::getNormal() const noexcept
   {
-    return (m_normal);
+    return m_normal;
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   MetaData&
   Edge<MetaData>::getMetaData() noexcept
   {
-    return (m_metaData);
+    return m_metaData;
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   const MetaData&
   Edge<MetaData>::getMetaData() const noexcept
   {
-    return (m_metaData);
+    return m_metaData;
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   Vec3
   Edge<MetaData>::getX2X1() const noexcept
   {
-    EBGEOMETRY_EXPECT(m_vertexList != nullptr);
-    EBGEOMETRY_EXPECT(this->getVertex() >= 0);
+    EBGEOMETRY_EXPECT(m_vertexList.data() != nullptr);
+    EBGEOMETRY_EXPECT(m_vertex >= 0);
+    EBGEOMETRY_EXPECT(m_vertex < m_vertexList.length());
     EBGEOMETRY_EXPECT(this->getOtherVertex() >= 0);
+    EBGEOMETRY_EXPECT(this->getOtherVertex() < m_vertexList.length());
 
     const auto& x1 = m_vertexList[this->getVertex()].getPosition();
     const auto& x2 = m_vertexList[this->getOtherVertex()].getPosition();
@@ -256,32 +296,40 @@ namespace EBGeometry::DCEL {
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   Real
   Edge<MetaData>::projectPointToEdge(const Vec3& a_x0) const noexcept
   {
-    EBGEOMETRY_EXPECT(m_vertexList != nullptr);
+    EBGEOMETRY_EXPECT(m_vertexList.data() != nullptr);
     EBGEOMETRY_EXPECT(m_vertex >= 0);
+    EBGEOMETRY_EXPECT(m_vertex < m_vertexList.length());
 
-    const auto p    = a_x0 - m_vertexList[m_vertex].getPosition();
-    const auto x2x1 = this->getX2X1();
+    const Vec3 p    = a_x0 - m_vertexList[m_vertex].getPosition();
+    const Vec3 x2x1 = this->getX2X1();
+    const Real len  = dot(x2x1, x2x1);
 
-    return p.dot(x2x1) / (x2x1.dot(x2x1));
+    EBGEOMETRY_EXPECT(len > EBGeometry::Limits::eps());
+
+    return (len > EBGeometry::Limits::eps()) ? dot(p, x2x1) / len : 0.0;
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   Real
   Edge<MetaData>::signedDistance(const Vec3& a_x0) const noexcept
   {
-    EBGEOMETRY_EXPECT(m_vertexList != nullptr);
+    EBGEOMETRY_EXPECT(m_vertexList.data() != nullptr);
     EBGEOMETRY_EXPECT(this->getVertex() >= 0);
+    EBGEOMETRY_EXPECT(this->getVertex() < m_vertexList.length());
     EBGEOMETRY_EXPECT(this->getOtherVertex() >= 0);
+    EBGEOMETRY_EXPECT(this->getOtherVertex() < m_vertexList.length());
 
     // Project point to edge
     const Real t = this->projectPointToEdge(a_x0);
 
-    Real retval = 0.0;
+    Real retval = EBGeometry::Limits::max();
 
     if (t <= 0.0) {
       // Closest point is the starting vertex.
@@ -307,6 +355,7 @@ namespace EBGeometry::DCEL {
   }
 
   template <class MetaData>
+  EBGEOMETRY_GPU_HOST_DEVICE
   EBGEOMETRY_ALWAYS_INLINE
   Real
   Edge<MetaData>::unsignedDistance2(const Vec3& a_x0) const noexcept

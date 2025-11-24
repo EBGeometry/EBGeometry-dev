@@ -9,9 +9,8 @@
  * @author Robert Marskar
  */
 
-#pragma once
-#ifndef EBGeometry_DCEL_Edge
-#define EBGeometry_DCEL_Edge
+#ifndef EBGEOMETRY_DCEL_EDGE_HPP
+#define EBGEOMETRY_DCEL_EDGE_HPP
 
 // Our includes
 #include "EBGeometry_DCEL.hpp"
@@ -40,9 +39,6 @@ namespace EBGeometry::DCEL {
    *
    * @note The normal vector is outgoing, i.e. a point x is "outside" if the dot
    * product between n and (x - x0) is positive.
-   *
-   * @note This class is GPU-copyable, with the exception of the vertex list which must
-   * be set to point to the correct place on the GPU.
    */
   template <class MetaData>
   class Edge
@@ -163,7 +159,7 @@ namespace EBGeometry::DCEL {
 
     /**
      * @brief Set the metadata
-     * @param[in] a_metaData
+     * @param[in] a_metaData Meta-data for this edge.
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
@@ -202,7 +198,7 @@ namespace EBGeometry::DCEL {
      * @return m_vertexList
      */
     EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     EBGeometry::Span<const Vertex<MetaData>>
     getVertexList() const noexcept;
 
@@ -211,7 +207,7 @@ namespace EBGeometry::DCEL {
      * @return m_edgeList
      */
     EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     EBGeometry::Span<const Edge<MetaData>>
     getEdgeList() const noexcept;
 
@@ -220,7 +216,7 @@ namespace EBGeometry::DCEL {
      * @return m_faceList
      */
     EBGEOMETRY_GPU_HOST_DEVICE
-    EBGEOMETRY_ALWAYS_INLINE
+    [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
     EBGeometry::Span<const Face<MetaData>>
     getFaceList() const noexcept;
 
@@ -235,6 +231,8 @@ namespace EBGeometry::DCEL {
 
     /**
      * @brief Normalize the normal vector, ensuring it has a length of 1
+     * @note If the original normal vector has zero length, m_normal is set to
+     * the unit z-vector (mesh will then be garbage).
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     EBGEOMETRY_ALWAYS_INLINE
@@ -260,7 +258,7 @@ namespace EBGeometry::DCEL {
 
     /**
      * @brief Get the end vertex
-     * @return Returns m_vertex
+     * @return Returns the vertex at the other end of this half edge.
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -336,6 +334,7 @@ namespace EBGeometry::DCEL {
      * one of the vertices. If it projectes to one of the vertices we compute the
      * signed distance to the corresponding vertex. Otherwise we compute the
      * projection to the edge and compute the sign from the normal vector.
+     * @param[in] a_x0 Query point     
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -343,12 +342,13 @@ namespace EBGeometry::DCEL {
     signedDistance(const Vec3& a_x0) const noexcept;
 
     /**
-     * @brief Get the signed distance to this half edge
+     * @brief Get the squared unsigned distance to this half edge.
      * @details This routine will check if the input point projects to the edge or
      * one of the vertices. If it projectes to one of the vertices we compute the
      * squared distance to the corresponding vertex. Otherwise we compute the
-     * squared distance of the projection to the edge. This is faster than
-     * signedDistance()
+     * squared distance of the projection to the edge. This is slightly faster than
+     * signedDistance() as it avoids the square root.
+     * @param[in] a_x0 Query point
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -402,7 +402,7 @@ namespace EBGeometry::DCEL {
     Vec3 m_normal = Vec3::zero();
 
     /**
-     * @brief MetaData-data attached to this edge
+     * @brief Meta-data attached to this edge
      */
     MetaData m_metaData = MetaData();
 
@@ -420,6 +420,7 @@ namespace EBGeometry::DCEL {
      * @details This function parametrizes the edge as x(t) = x0 + (x1-x0)*t and
      * returns where on the this edge the point a_x0 projects. If projects onto the
      * edge if t = [0,1] and to one of the start/end vertices otherwise.
+     * @param[in] a_x0 Query point
      */
     EBGEOMETRY_GPU_HOST_DEVICE
     [[nodiscard]] EBGEOMETRY_ALWAYS_INLINE
@@ -427,11 +428,13 @@ namespace EBGeometry::DCEL {
     projectPointToEdge(const Vec3& a_x0) const noexcept;
   };
 
-  static_assert(std::is_trivially_copyable_v<Edge<DefaultMetaData>>, "DCEL::Edge must be trivially copyable");
-  static_assert(std::is_standard_layout_v<Edge<DefaultMetaData>>, "DCEL::Edge must have standard layout");
+  static_assert(std::is_trivially_copyable_v<Edge<DefaultMetaData>>,
+                "DCEL::Edge must be trivially copyable for GPU compatibility");
+  static_assert(std::is_standard_layout_v<Edge<DefaultMetaData>>,
+                "DCEL::Edge must have standard layout for GPU compatibility");
 
 } // namespace EBGeometry::DCEL
 
-#include "EBGeometry_DCEL_EdgeImplem.hpp" // NOLINT
+#include "EBGeometry_DCEL_EdgeImplem.hpp"
 
 #endif
